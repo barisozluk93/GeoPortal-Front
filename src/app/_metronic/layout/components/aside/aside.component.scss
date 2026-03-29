@@ -1,0 +1,20 @@
+  .brand {
+  color: #fff;
+  border: 0;
+  background: transparent;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--gp-primary), var(--gp-accent));
+  color: #fff;
+  font-weight: 800;
+}
+
+.brand small {
+  color: rgba(233, 240, 255, 0.72);
+}

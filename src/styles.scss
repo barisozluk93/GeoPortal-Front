@@ -1,0 +1,106 @@
+/* You can add global styles to this file, and also import other style files */
+@import "./assets/sass/style.scss";
+// Replace above style with this css file to enable RTL styles
+// @import "./assets/css/style.rtl";
+@import './assets/sass/plugins.scss';
+// @import "./assets/css/style.rtl.css";
+@import "./assets/sass/style.angular.scss";
+
+// Keenicons - High quality and pixel perfect font icons available in 3 styles, duotone, outline and solid for Metronic elements
+@import "./assets/plugins/keenicons/duotone/style.css";
+@import "./assets/plugins/keenicons/outline/style.css";
+@import "./assets/plugins/keenicons/solid/style.css";
+
+
+.aside-fixed.aside-secondary-enabled[data-kt-sticky-header=on] .header {
+    left: 0px !important;
+}
+
+.aside-secondary-enabled.aside-fixed .wrapper {
+    padding-left: 0px !important;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    cursor: pointer;
+}
+
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "ol/ol.css";
+
+:root {
+  --gp-bg: #081321;
+  --gp-panel: rgba(7, 17, 31, 0.78);
+  --gp-panel-soft: rgba(255,255,255,0.08);
+  --gp-line: rgba(255,255,255,0.10);
+  --gp-text-soft: #607188;
+  --gp-text-light: rgba(233, 240, 255, 0.80);
+  --gp-primary: #2c63ff;
+  --gp-accent: #28d7c5;
+  --gp-shadow: 0 24px 64px rgba(3, 10, 21, 0.22);
+  --gp-radius: 22px;
+}
+
+html, body {
+  min-height: 100%;
+  background: 
+  radial-gradient(circle at top, rgba(39, 76, 164, 0.18) 0%, rgba(8, 12, 22, 0) 30%), linear-gradient(180deg, #07111f 0%, #0a1424 100%) !important;
+  ; 
+}
+
+.glass {
+  background: var(--gp-panel);
+  border: 1px solid var(--gp-line);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--gp-shadow);
+}
+
+.btn-gp {
+  border-radius: 999px;
+  min-height: 42px;
+  padding: 0 18px;
+}
+
+.btn-gp-primary {
+  color: #fff;
+  background: #2c63ff;
+  border: 0;
+  box-shadow: 0 0 20px rgba(44, 99, 255, 0.35);
+}
+
+.btn-gp-secondary {
+  color: #fff;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--gp-line);
+}
+
+.form-control.gp-dark,
+.form-select.gp-dark {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+.form-control.gp-dark::placeholder {
+  color: rgba(233, 240, 255, 0.60);
+}
+
+.card.gp-card {
+  border: 1px solid rgba(12,29,52,0.08);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(8, 17, 33, 0.08);
+}
+
+.wrapper {
+  padding-top: 0px !important;
+}
+
+.container-xxl {
+  max-width: 100% !important;
+  padding: 0 0 !important;
+}
+
+.content {
+  padding: 0 0 !important;
+}
+

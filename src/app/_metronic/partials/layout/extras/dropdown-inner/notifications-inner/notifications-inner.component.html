@@ -1,0 +1,58 @@
+<div
+  class="d-flex flex-column bgi-no-repeat rounded-top"
+  [style.background-image]="'url(./assets/media/misc/pattern-1.jpg)'"
+>
+  <h3 class="text-white fw-bold px-9 mt-10 mb-6">
+    {{'NOTIFICATIONS' | translate}} <span class="fs-8 opacity-75 ps-3">{{totalNotificationCount}} {{'NOTIFICATION' | translate}}</span>
+  </h3>
+
+</div>
+
+<div class="tab-content">
+  <div
+    class="tab-pane fade"
+    id="kt_topbar_notifications_1"
+    role="tabpanel"
+    class="show active"
+  >
+    <div class="scroll-y mh-325px my-5 px-8" *ngIf="notifications.length > 0">
+      <div *ngFor="let notification of notifications" class="d-flex flex-stack py-4">
+        <div class="d-flex align-items-center">
+          <div  (click)="delete(notification.id)" class="symbol symbol-35px me-4">
+            <span class="symbol-label" [ngClass]="'bg-light-danger'">
+              <span
+                [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
+                class="svg-icon svg-icon-2"
+                [ngClass]="'svg-icon-danger'"
+              ></span>
+            </span>
+          </div>
+
+          <div class="mb-0 me-2">
+            <a href="{{notification.link}}" (click)="goToOrder(notification.id)" [ngClass]="notification.isReaded ? 'text-gray-500 fs-7 fw-bolder' : 'text-gray-800 fs-7 text-hover-primary fw-bolder'">
+              {{ notification.message }}
+            </a>
+            <!-- <div class="text-gray-500 fs-7">{{ alert.description }}</div> -->
+          </div>
+        </div>
+
+        <span class="badge badge-light fs-8">{{ notification.time }}</span>
+      </div>
+    </div>
+    <div class="scroll-y mh-325px my-5 px-8" *ngIf="notifications.length == 0">
+      {{'NO_DATA_AVAILABLE' | translate}}
+    </div>
+    <!-- <div class="py-3 text-center border-top">
+      <a
+        routerLink="/crafted/pages/profile"
+        class="btn btn-color-gray-600 btn-active-color-primary"
+      >
+        View All
+        <span
+          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr064.svg'"
+          class="svg-icon svg-icon-5"
+        ></span>
+      </a>
+    </div> -->
+  </div>
+</div>

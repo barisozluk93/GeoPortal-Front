@@ -1,0 +1,55 @@
+<style>
+  .brand {
+    color: #fff;
+    border: 0;
+    background: transparent;
+  }
+
+  .brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--gp-primary), var(--gp-accent));
+    color: #fff;
+    font-weight: 800;
+  }
+
+  .brand small {
+    color: rgba(233, 240, 255, 0.72);
+  }
+</style>
+<div [ngClass]="headerContainerCssClasses" class="d-flex align-items-center justify-content-between"
+  id="kt_header_container" style="padding: 0 100px !important;">
+  <!-- <app-page-title #ktPageTitle
+    class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap mt-n5 mt-lg-0 me-lg-2 pb-2 pb-lg-0"
+    data-kt-swapper="true" data-kt-swapper-mode="prepend"
+    data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}"></app-page-title> -->
+
+  <a *ngIf="!isMobile" routerLink="/landing/map" class="d-flex align-items-center" style="width: 200px !important;">
+    <button class="brand d-inline-flex align-items-center gap-3">
+      <span class="brand-mark">G</span>
+      <span class="text-start" style="width: 150px !important;">
+        <strong class="d-block">{{ 'brandTitle' | translate }}</strong>
+        <small>{{ 'brandSubtitle' | translate }}</small>
+      </span>
+    </button>
+  </a>
+  <!-- begin::Wrapper -->
+  <div class="d-flex d-lg-none align-items-center ms-n2 me-2">
+    <!--begin::Aside mobile toggle-->
+    <div class="aside-toggle btn btn-icon btn-active-icon-primary" id="kt_aside_toggle" *ngIf="isUserLoggedIn">
+      <span [inlineSVG]="'./assets/media/icons/duotune/abstract/abs015.svg'" class="svg-icon svg-icon-1"></span>
+    </div>
+    <!--end::Aside mobile toggle-->
+    <!--begin::Logo-->
+    <!-- <a routerLink="/dashboard" class="d-flex align-items-center">
+      <img alt="Logo" src="./assets/media/logos/favicon.png" class="h-30px" />
+    </a> -->
+    <!--end::Logo-->
+  </div>
+  <!-- end::Wrapper -->
+  <app-header-menu *ngIf="!isMobile"></app-header-menu>
+  <app-topbar [isAdminPanel]="isAdminPanel" class="d-flex flex-shrink-0"></app-topbar>
+</div>

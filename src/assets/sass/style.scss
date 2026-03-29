@@ -1,0 +1,120 @@
+//
+// Theme style
+//
+
+// Initialize
+@import "init";
+
+// Components
+@import "./core/components/components";
+@import "components/components";
+
+// Layout
+@import "layout/layout";
+
+
+// Custom menu overrides
+.menu,
+.aside .menu,
+.landing-header .menu {
+  .menu-item {
+    > .menu-link {
+      background-color: transparent !important;
+      position: relative;
+
+      .menu-title,
+      .menu-icon i,
+      .menu-icon .svg-icon,
+      .menu-arrow,
+      .menu-bullet,
+      & {
+        color: #fff !important;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        background-color: #2c63ff;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.2s ease;
+        pointer-events: none;
+      }
+
+      &:hover,
+      &.active {
+        background-color: transparent !important;
+      }
+
+      &:hover::after,
+      &.active::after {
+        transform: scaleX(1);
+      }
+    }
+
+    &.active > .menu-link,
+    &.here > .menu-link,
+    &.show > .menu-link,
+    &.showing > .menu-link,
+    &:hover > .menu-link {
+      background-color: transparent !important;
+
+      .menu-title,
+      .menu-icon i,
+      .menu-icon .svg-icon,
+      .menu-arrow,
+      .menu-bullet,
+      & {
+        color: #fff !important;
+      }
+    }
+
+    &.active > .menu-link::after,
+    &.here > .menu-link::after,
+    &.show > .menu-link::after,
+    &.showing > .menu-link::after,
+    &:hover > .menu-link::after {
+      transform: scaleX(1);
+    }
+  }
+}
+
+.sidebar-nav {
+  .nav-link {
+    background-color: transparent !important;
+    position: relative;
+
+    i,
+    .svg-icon,
+    span {
+      color: #fff !important;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background-color: #2c63ff;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover,
+    &.active {
+      background-color: transparent !important;
+    }
+
+    &:hover::after,
+    &.active::after {
+      transform: scaleX(1);
+    }
+  }
+}

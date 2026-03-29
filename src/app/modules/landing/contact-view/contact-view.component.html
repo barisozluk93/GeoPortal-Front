@@ -1,0 +1,89 @@
+<section class="contact-page">
+  <div class="contact-hero">
+    <div class="contact-overlay"></div>
+
+    <div class="container contact-hero-content">
+      <div class="contact-grid">
+        <div class="contact-left">
+          <div class="gp-kicker">{{ 'CONTACT_KICKER' | translate }}</div>
+          <h1 class="gp-title">{{ 'CONTACT_TITLE' | translate }}</h1>
+          <p class="gp-copy">{{ 'CONTACT_COPY' | translate }}</p>
+        </div>
+
+        <div class="contact-right">
+          <div class="gp-card panel-card p-4">
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <input
+                    class="form-control gp-input"
+                    type="text"
+                    formControlName="fullName"
+                    [placeholder]="'FULL_NAME' | translate"
+                  />
+                  <small class="text-danger" *ngIf="f['fullName'].touched && f['fullName'].invalid">
+                    {{ 'VALIDATION_FULL_NAME' | translate }}
+                  </small>
+                </div>
+
+                <div class="col-md-6">
+                  <input
+                    class="form-control gp-input"
+                    type="text"
+                    formControlName="organization"
+                    [placeholder]="'ORGANIZATION' | translate"
+                  />
+                </div>
+
+                <div class="col-12">
+                  <input
+                    class="form-control gp-input"
+                    type="email"
+                    formControlName="businessEmail"
+                    [placeholder]="'BUSINESS_EMAIL' | translate"
+                  />
+                  <small class="text-danger" *ngIf="f['businessEmail'].touched && f['businessEmail'].invalid">
+                    {{ 'VALIDATION_EMAIL' | translate }}
+                  </small>
+                </div>
+
+                <div class="col-12">
+                  <input
+                    class="form-control gp-input"
+                    type="text"
+                    formControlName="subject"
+                    [placeholder]="'SUBJECT' | translate"
+                  />
+                  <small class="text-danger" *ngIf="f['subject'].touched && f['subject'].invalid">
+                    {{ 'VALIDATION_SUBJECT' | translate }}
+                  </small>
+                </div>
+
+                <div class="col-12">
+                  <textarea
+                    class="form-control gp-input"
+                    rows="6"
+                    formControlName="message"
+                    [placeholder]="'MESSAGE' | translate"
+                  ></textarea>
+                  <small class="text-danger" *ngIf="f['message'].touched && f['message'].invalid">
+                    {{ 'VALIDATION_MESSAGE' | translate }}
+                  </small>
+                </div>
+
+                <div class="col-12">
+                  <button
+                    type="submit"
+                    class="btn btn-gp btn-gp-primary w-100"
+                  >
+                    {{ 'SEND_MESSAGE' | translate }}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

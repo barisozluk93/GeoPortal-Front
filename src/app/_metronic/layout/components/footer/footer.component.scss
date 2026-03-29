@@ -1,0 +1,141 @@
+
+.gp-footer {
+  position: relative;
+  background:
+    radial-gradient(circle at top, rgba(39, 76, 164, 0.18) 0%, rgba(8, 12, 22, 0) 30%),
+    linear-gradient(180deg, #07111f 0%, #0a1424 100%);
+  padding: 80px 0 40px;
+  color: #ffffff;
+}
+
+.container {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* GRID */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 40px;
+}
+
+/* BRAND */
+.footer-logo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.footer-desc {
+  color: rgba(230, 236, 255, 0.7);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 320px;
+}
+
+.footer-social {
+  margin-top: 20px;
+}
+
+/* LINKEDIN BUTTON */
+.social-link-advanced {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  transition: all 0.2s ease;
+}
+
+.social-link-advanced svg {
+  color: #4c8cff;
+}
+
+.social-link-advanced:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* COLUMNS */
+.footer-title {
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  color: #dbe7ff;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.footer-col a {
+  display: block;
+  text-decoration: none;
+  color: rgba(230, 236, 255, 0.7);
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+}
+
+.footer-col a:hover {
+  color: #ffffff;
+}
+
+/* BOTTOM */
+.footer-bottom {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-copy {
+  font-size: 0.85rem;
+  color: rgba(230, 236, 255, 0.6);
+}
+
+.footer-legal-links {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-legal-links a {
+  font-size: 0.85rem;
+  color: rgba(230, 236, 255, 0.6);
+  text-decoration: none;
+}
+
+.footer-legal-links a:hover {
+  color: #ffffff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

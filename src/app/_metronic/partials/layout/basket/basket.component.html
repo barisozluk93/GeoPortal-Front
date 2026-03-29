@@ -1,0 +1,143 @@
+<div class="basket-card" (click)="showBasket()">
+  <div class="basket-content">
+    <div class="basket-icon-wrapper">
+      <button type="button" class="basket-btn">
+        <i
+          [inlineSVG]="'./assets/media/icons/duotune/ecommerce/ecm001.svg'"
+          class="svg-icon basket-icon"
+        ></i>
+
+        <span *ngIf="basket?.length" class="basket-badge">
+          {{ basket.length }}
+        </span>
+      </button>
+    </div>
+
+    <div class="basket-info">
+      <span class="basket-label">{{ "MY_BASKET" | translate }}</span>
+      <span class="basket-total">{{ total }} ₺</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .basket-card {
+  height: 48px;
+  min-width: 170px;
+  padding: 0 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  user-select: none;
+
+  display: flex;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(44, 99, 255, 0.18);
+  backdrop-filter: blur(8px);
+
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(44, 99, 255, 0.45);
+    box-shadow: 0 8px 24px rgba(44, 99, 255, 0.18);
+    transform: translateY(-1px);
+  }
+}
+
+.basket-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.basket-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.basket-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  outline: none;
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(44, 99, 255, 0.12);
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: rgba(44, 99, 255, 0.2);
+  }
+}
+
+.basket-icon {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+
+  svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  path {
+    fill: #ffffff !important;
+  }
+}
+
+.basket-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #2c63ff;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+
+  box-shadow: 0 0 0 3px rgba(7, 22, 48, 0.95);
+}
+
+.basket-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  line-height: 1.1;
+}
+
+.basket-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 2px;
+}
+
+.basket-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c63ff;
+  letter-spacing: 0.2px;
+}
+</style>
