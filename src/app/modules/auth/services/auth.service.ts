@@ -74,7 +74,7 @@ export class AuthService implements OnDestroy {
     localStorage.removeItem("basket");
     localStorage.removeItem(this.authLocalStorageToken);
     this.currentUserSubject.next(undefined);
-    this.router.navigate(['/'], {
+    this.router.navigate(['/landing/map'], {
       queryParams: {},
     });
   }

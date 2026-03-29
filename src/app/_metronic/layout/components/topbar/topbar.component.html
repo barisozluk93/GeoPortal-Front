@@ -32,16 +32,39 @@
   <app-user-inner [isAdminPanel]="isAdminPanel"></app-user-inner>
 </div>
 
-<div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-4 mt-1">
-  <!--begin::Menu wrapper-->
-  <div class="btn btn-icon btn-active-color-primary btn-color-gray-500 btn-active-light position-relative" (mouseenter)="getNotifications()"
-    data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-overflow="true" data-kt-menu-placement="top-start"
-    title="Notifications">
-    <i [inlineSVG]="'./assets/media/icons/duotune/communication/com004.svg'" class="svg-icon svg-icon-2 svg-icon-lg-1"></i>
+<div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-3">
+  <div
+    class="cursor-pointer symbol symbol-40px notification-symbol"
+    [ngClass]="{ 'has-unread': unreadedNotificationCount > 0, 'is-animating': isNotificationAnimating }"
+    (mouseenter)="loadNotifications()"
+    data-kt-menu-trigger="{default: 'click'}"
+    data-kt-menu-placement="bottom-end"
+    title="Notifications"
+  >
+    <span class="symbol-label position-relative notification-symbol-label">
+      <i
+        class="fa-bell notification-bell"
+        [ngClass]="unreadedNotificationCount > 0 ? 'fa-solid' : 'fa-regular'"
+      ></i>
 
-    <span *ngIf="unreadedNotificationCount > 0"
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger">{{unreadedNotificationCount}}</span>
+      <span
+        *ngIf="unreadedNotificationCount > 0"
+        class="notification-badge"
+      >
+        {{ unreadedNotificationCount > 99 ? '99+' : unreadedNotificationCount }}
+      </span>
+
+      <span
+        *ngIf="unreadedNotificationCount > 0"
+        class="notification-pulse"
+      ></span>
+    </span>
   </div>
-  <!--end::Menu wrapper-->
-  <app-notifications-inner [notifications]="notifications" [totalNotificationCount]="totalNotificationCount" [unreadedNotificationCount]=unreadedNotificationCount></app-notifications-inner>
+
+  <app-notifications-inner
+    [notifications]="notifications"
+    [totalNotificationCount]="totalNotificationCount"
+    [unreadedNotificationCount]="unreadedNotificationCount"
+  >
+  </app-notifications-inner>
 </div>

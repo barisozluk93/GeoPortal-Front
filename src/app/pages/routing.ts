@@ -27,6 +27,11 @@ const Routing: Routes = [
       import('../modules/user-management/user-management.module').then((m) => m.UserManagementModule),
   },
   {
+    path: 'basketmanagement',
+    loadChildren: () =>
+      import('../modules/basket-management/basket-management.module').then((m) => m.BasketManagementModule),
+  },
+  {
     path: 'ordermanagement',
     canActivate: [AuthGuard],
     loadChildren: () =>

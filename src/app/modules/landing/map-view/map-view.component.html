@@ -1,9 +1,8 @@
 <section class="gp-page position-relative">
   <div class="map-wrapper position-relative">
-    <div class="top-search top-search-card p-2 rounded-4">
+    <div class="top-search top-search-card p-2 rounded-2">
       <div class="top-search-header">
         <div class="top-search-kicker">{{ 'MAP_KICKER' | translate }}</div>
-        <div class="top-search-copy">{{ 'MAP_COPY' | translate }}</div>
       </div>
 
       <div class="d-grid top-search-grid gap-2">
@@ -21,7 +20,7 @@
       </div>
     </div>
 
-    <div class="search-results gp-floating-card rounded-4 overflow-hidden" *ngIf="searchResults().length">
+    <div class="search-results gp-floating-card rounded-2 overflow-hidden" *ngIf="searchResults().length">
       <div class="search-results-title">{{ 'SEARCH_RESULTS' | translate }}</div>
 
       <button class="result-btn" *ngFor="let item of searchResults()" (click)="flyToResult(item)">
@@ -47,91 +46,67 @@
       </div>
 
       <div class="layer-panel-body" *ngIf="layerManagerOpen()">
-        <div class="layer-row gp-theme-card">
-          <div class="layer-row-left">
-            <label class="layer-check">
-              <input
-                type="checkbox"
-                [ngModel]="standardVisible()"
-                (ngModelChange)="standardVisible.set($event); onLayerVisibilityChange()"
-              />
-              <span>{{ 'OSM_STANDARD' | translate }}</span>
-            </label>
-          </div>
-
-          <div class="layer-row-right">
-            <div class="opacity-mini">
-              <input
-                type="range"
-                min="0"
-                max="100"
-                [ngModel]="standardOpacity()"
-                (ngModelChange)="standardOpacity.set(+$event); onOpacityChange()"
-              />
-              <span>{{ standardOpacity() }}%</span>
-            </div>
-          </div>
+        <div *ngIf="loadingLayers()" class="layer-toolbar-meta">
+          <div class="small text-white-50">{{ 'LOADING' | translate }}</div>
         </div>
 
-        <div class="layer-row gp-theme-card">
-          <div class="layer-row-left">
-            <label class="layer-check">
-              <input
-                type="checkbox"
-                [ngModel]="hotVisible()"
-                (ngModelChange)="hotVisible.set($event); onLayerVisibilityChange()"
-              />
-              <span>{{ 'OSM_HOT' | translate }}</span>
-            </label>
-          </div>
-
-          <div class="layer-row-right">
-            <div class="opacity-mini">
-              <input
-                type="range"
-                min="0"
-                max="100"
-                [ngModel]="hotOpacity()"
-                (ngModelChange)="hotOpacity.set(+$event); onOpacityChange()"
-              />
-              <span>{{ hotOpacity() }}%</span>
-            </div>
-          </div>
+        <div *ngIf="layerLoadError()" class="layer-toolbar-meta">
+          <div class="small text-danger">{{ layerLoadError() }}</div>
         </div>
 
-        <div class="layer-row layer-row-upload gp-theme-card">
-          <div class="layer-row-upload-top">
-            <button class="upload-chip" type="button" (click)="triggerFileUpload()">
-              {{ 'UPLOAD_FILE' | translate }}
+        <ng-container *ngFor="let group of layerGroups(); trackBy: trackByGroup">
+          <div class="group-card gp-theme-card">
+            <button class="group-card-header" type="button" (click)="toggleGroup(group)">
+              <div class="group-card-header-left">
+                <div class="group-card-title">{{ group.name }}</div>
+                <div class="group-card-subtitle">{{ group.layers.length }} {{ 'LAYER' | translate }}{{group.layers.length > 1 && ("LANG" | translate) === 'en' ? 's' : '' }}</div>
+              </div>
+
+              <div class="group-card-header-right">
+                <span class="group-toggle-indicator">
+                  {{ group.expanded ? '−' : '+' }}
+                </span>
+              </div>
             </button>
-          </div>
 
-          <div class="layer-row-upload-main">
-            <div class="layer-row-left">
-              <label class="layer-check">
-                <input
-                  type="checkbox"
-                  [ngModel]="overlayVisible()"
-                  (ngModelChange)="overlayVisible.set($event); onLayerVisibilityChange()"
-                />
-                <span>{{ 'AOI_UPLOADS' | translate }}</span>
-              </label>
-            </div>
+            <div class="group-card-body" *ngIf="group.expanded">
+              <div class="group-card-layers">
+                <div class="layer-item-card" *ngFor="let layer of group.layers; trackBy: trackByLayer">
+                  <div class="layer-single-row">
+                    <label class="layer-check">
+                      <input
+                        type="checkbox"
+                        [ngModel]="layer.visible"
+                        (ngModelChange)="onLayerVisibilityChange(layer, $event)"
+                      />
+                      <span class="layer-name">{{ layer.name }}</span>
+                    </label>
 
-            <div class="layer-row-right">
-              <div class="opacity-mini">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  [ngModel]="overlayOpacity()"
-                  (ngModelChange)="overlayOpacity.set(+$event); onOpacityChange()"
-                />
-                <span>{{ overlayOpacity() }}%</span>
+                    <div class="opacity-mini">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        [ngModel]="layer.opacity"
+                        (ngModelChange)="onOpacityChange(layer, $event)"
+                      />
+                      <span>{{ layer.opacity }}%</span>
+                    </div>
+
+                    <button
+                      *ngIf="!layer.isBaseMap"
+                      class="upload-chip"
+                      type="button"
+                      (click)="onBuyLayer(layer)"
+                    >
+                      {{ 'BUY' | translate }}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </ng-container>
 
         <div class="layer-toolbar-meta">
           <div class="small text-white-50">
@@ -153,7 +128,7 @@
       </div>
     </aside>
 
-    <div class="map-actions gp-floating-card rounded-4 p-2">
+    <div class="map-actions gp-floating-card rounded-2 p-2">
       <button class="icon-btn" (click)="zoomIn()" [title]="'ZOOM_IN' | translate">+</button>
       <button class="icon-btn" (click)="zoomOut()" [title]="'ZOOM_OUT' | translate">−</button>
       <button class="icon-btn" (click)="resetView()" [title]="'RESET' | translate">⟳</button>
@@ -165,12 +140,22 @@
       >
         ⬠
       </button>
+      <button
+        class="icon-btn"
+        (click)="triggerFileUpload()"
+        [title]="'UPLOAD_FILE' | translate"
+      >
+        ⤴
+      </button>
     </div>
 
-    <div class="map-status gp-floating-card rounded-4 px-3 py-3">
+    <div class="map-status gp-floating-card rounded-2 px-3 py-3">
       <div class="map-status-title">{{ 'MAP_STATUS' | translate }}</div>
       <div><strong>{{ 'ZOOM' | translate }}:</strong> {{ currentZoom() }}</div>
       <div><strong>{{ 'COORDINATE' | translate }}:</strong> {{ currentCoords() || '-' }}</div>
+      <div *ngIf="uploadedFileName()">
+        <strong>{{ 'FILE_LOADED' | translate }}:</strong> {{ uploadedFileName() }}
+      </div>
     </div>
 
     <div #mapEl class="map-element"></div>

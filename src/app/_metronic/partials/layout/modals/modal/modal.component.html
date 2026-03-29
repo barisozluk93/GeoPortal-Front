@@ -1,5 +1,11 @@
+<style>
+  .modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+</style>
 <ng-template #modal>
-  <div class="modal-content">
+  <div class="modal-content modal-dialog-scrollable">
     <div class="modal-header">
       <!--begin::Modal title-->
       <h2>{{ modalConfig.modalTitle }}</h2>

@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { ResultModel } from "src/app/models/result.model";
 import { AuthService } from "src/app/modules/auth";
-import { BasketModel } from "src/app/modules/shopping/models/basket.model";
+import { BasketModel } from "src/app/modules/basket-management/models/basket.model";
 import { environment } from "src/environments/environment";
 
 const API_ORDER_URL = `${environment.apiUrl}/Basket`;

@@ -11,14 +11,12 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import Feature from 'ol/Feature';
-import Map from 'ol/Map';
+import OlMap from 'ol/Map';
 import View from 'ol/View';
 import Geometry from 'ol/geom/Geometry';
-import Point from 'ol/geom/Point';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import { fromLonLat, toLonLat } from 'ol/proj';
-import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import XYZ from 'ol/source/XYZ';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
@@ -28,10 +26,29 @@ import Snap from 'ol/interaction/Snap';
 import GeoJSON from 'ol/format/GeoJSON';
 import KML from 'ol/format/KML';
 import shp from 'shpjs';
+
 import { TranslationService } from 'src/app/services/translation.service';
 import { MapSearchService } from 'src/app/services/map-search.service';
+import { MapService } from './map-view.service';
+import { LayerModel } from './models/layer.model';
+import { LayerGroupModel } from './models/layerGroup.model';
 
-type SearchResult = { display_name: string; lat: string; lon: string; geojson?: any };
+type SearchResult = {
+  display_name: string;
+  lat: string;
+  lon: string;
+  geojson?: any;
+};
+
+type UiLayerModel = LayerModel & {
+  visible: boolean;
+  opacity: number;
+};
+
+type UiLayerGroupModel = LayerGroupModel & {
+  expanded: boolean;
+  layers: UiLayerModel[];
+};
 
 @Component({
   selector: 'app-map-view',
@@ -44,8 +61,9 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
 
   readonly i18n = inject(TranslationService);
   readonly mapSearch = inject(MapSearchService);
+  readonly mapViewService = inject(MapService);
 
-  private map?: Map;
+  private map?: OlMap;
   private view?: View;
   private drawInteraction?: Draw;
   private modifyInteraction?: Modify;
@@ -79,33 +97,19 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
     }
   });
 
-  private readonly baseStandard = new TileLayer({
-    source: new OSM(),
-    visible: true,
-    opacity: 1
-  });
-
-  private readonly baseHot = new TileLayer({
-    source: new XYZ({
-      url: 'https://{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
-    }),
-    visible: false,
-    opacity: 1
-  });
-
-  readonly selectedBasemap = signal<'standard' | 'hot'>('standard');
   readonly searchText = signal('');
   readonly searchResults = signal<SearchResult[]>([]);
-  readonly currentCoords = signal(35.2433.toFixed(5) + ", " + 39.0.toFixed(5)); readonly currentZoom = signal(6);
+  readonly currentCoords = signal(`${35.2433.toFixed(5)}, ${39.0.toFixed(5)}`);
+  readonly currentZoom = signal(6);
   readonly layerManagerOpen = signal(true);
   readonly uploadedFileName = signal('');
-  readonly standardVisible = signal(true);
-  readonly hotVisible = signal(false);
-  readonly overlayVisible = signal(true);
-  readonly standardOpacity = signal(100);
-  readonly hotOpacity = signal(100);
-  readonly overlayOpacity = signal(100);
   readonly polygonMode = signal(false);
+
+  readonly layerGroups = signal<UiLayerGroupModel[]>([]);
+  readonly loadingLayers = signal(false);
+  readonly layerLoadError = signal('');
+
+  private readonly mapLayerRegistry = new globalThis.Map<number, TileLayer<XYZ>>();
 
   private readonly defaultCenter = fromLonLat([35.2433, 39.0]);
   private readonly defaultZoom = 6;
@@ -136,9 +140,9 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
       zoom: this.defaultZoom
     });
 
-    this.map = new Map({
+    this.map = new OlMap({
       target: this.mapEl.nativeElement,
-      layers: [this.baseStandard, this.baseHot, this.vectorLayer],
+      layers: [this.vectorLayer],
       view: this.view,
       controls: []
     });
@@ -164,6 +168,7 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
     this.map.addInteraction(this.snapInteraction);
 
     this.mapReady.set(true);
+    this.loadLayerGroups();
 
     setTimeout(() => {
       this.map?.updateSize();
@@ -183,26 +188,140 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
     this.layerManagerOpen.set(!this.layerManagerOpen());
   }
 
-  setBasemap(type: 'standard' | 'hot'): void {
-    this.selectedBasemap.set(type);
+  loadLayerGroups(): void {
+    this.loadingLayers.set(true);
+    this.layerLoadError.set('');
 
-    if (type === 'standard') {
-      this.standardVisible.set(true);
-      this.hotVisible.set(false);
-    } else {
-      this.standardVisible.set(false);
-      this.hotVisible.set(true);
+    this.mapViewService.allLayers().subscribe({
+      next: (response: any) => {
+        const groups = this.extractGroups(response)
+          .filter((group) => !group.isDeleted)
+          .map((group) => this.toUiGroup(group));
+
+        this.layerGroups.set(groups);
+        this.loadingLayers.set(false);
+
+        this.activateFirstBasemap();
+      },
+      error: (error: any) => {
+        console.error('Katman grupları alınamadı:', error);
+        this.layerLoadError.set('Katman grupları yüklenemedi.');
+        this.loadingLayers.set(false);
+      }
+    });
+  }
+
+  private extractGroups(response: any): LayerGroupModel[] {
+    if (Array.isArray(response)) return response;
+    if (Array.isArray(response?.data)) return response.data;
+    if (Array.isArray(response?.result)) return response.result;
+    if (Array.isArray(response?.items)) return response.items;
+    return [];
+  }
+
+  private toUiGroup(group: LayerGroupModel): UiLayerGroupModel {
+    return {
+      ...group,
+      expanded: true,
+      layers: (group.layers ?? [])
+        .filter((layer) => !layer.isDeleted)
+        .map((layer) => ({
+          ...layer,
+          visible: false,
+          opacity: 100
+        }))
+    };
+  }
+
+  private activateFirstBasemap(): void {
+    const groups = this.layerGroups();
+
+    for (const group of groups) {
+      const baseLayer = group.layers.find((x) => x.isBaseMap) as UiLayerModel | undefined;
+
+      if (baseLayer) {
+        this.closeOtherBaseMaps(baseLayer.id);
+        baseLayer.visible = true;
+        this.ensureLayerExists(baseLayer);
+        this.setLayerVisible(baseLayer, true);
+        this.setLayerOpacity(baseLayer, baseLayer.opacity);
+        this.layerGroups.set([...groups]);
+        return;
+      }
+    }
+  }
+
+  toggleGroup(group: UiLayerGroupModel): void {
+    group.expanded = !group.expanded;
+    this.layerGroups.set([...this.layerGroups()]);
+  }
+
+  onLayerVisibilityChange(layer: UiLayerModel, checked: boolean): void {
+    if (layer.isBaseMap && checked) {
+      this.closeOtherBaseMaps(layer.id);
     }
 
-    this.syncLayerState();
+    layer.visible = checked;
+
+    if (checked) {
+      this.ensureLayerExists(layer);
+    }
+
+    this.setLayerVisible(layer, checked);
+    this.layerGroups.set([...this.layerGroups()]);
   }
 
-  onLayerVisibilityChange(): void {
-    this.syncLayerState();
+  onOpacityChange(layer: UiLayerModel, value: number | string): void {
+    const opacity = Number(value);
+    layer.opacity = opacity;
+    this.setLayerOpacity(layer, opacity);
+    this.layerGroups.set([...this.layerGroups()]);
   }
 
-  onOpacityChange(): void {
-    this.syncLayerState();
+  onBuyLayer(layer: UiLayerModel): void {
+    console.log('Satın al:', layer);
+  }
+
+  private closeOtherBaseMaps(activeLayerId: number): void {
+    const groups = this.layerGroups();
+
+    for (const group of groups) {
+      for (const layer of group.layers) {
+        if (layer.isBaseMap && layer.id !== activeLayerId) {
+          layer.visible = false;
+          this.setLayerVisible(layer, false);
+        }
+      }
+    }
+  }
+
+  private ensureLayerExists(layer: UiLayerModel): void {
+    if (!this.map) return;
+    if (!layer.url) return;
+    if (this.mapLayerRegistry.has(layer.id)) return;
+
+    const olLayer = new TileLayer({
+      source: new XYZ({
+        url: layer.url
+      }),
+      visible: layer.visible,
+      opacity: layer.opacity / 100
+    });
+
+    this.map.getLayers().insertAt(0, olLayer);
+    this.mapLayerRegistry.set(layer.id, olLayer);
+  }
+
+  private setLayerVisible(layer: UiLayerModel, visible: boolean): void {
+    const olLayer = this.mapLayerRegistry.get(layer.id);
+    if (!olLayer) return;
+    olLayer.setVisible(visible);
+  }
+
+  private setLayerOpacity(layer: UiLayerModel, opacity: number): void {
+    const olLayer = this.mapLayerRegistry.get(layer.id);
+    if (!olLayer) return;
+    olLayer.setOpacity(opacity / 100);
   }
 
   zoomIn(): void {
@@ -220,7 +339,6 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
     this.stopPolygonDrawing();
     this.uploadedFileName.set('');
     this.searchResults.set([]);
-    this.searchText.set('');
 
     this.view?.animate({
       center: this.defaultCenter,
@@ -266,6 +384,13 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
 
     if (geojson) {
       try {
+        const geometryType = geojson?.type;
+
+        if (geometryType !== 'Polygon' && geometryType !== 'MultiPolygon') {
+          console.warn('Sadece polygon ve multipolygon desteklenir.');
+          return;
+        }
+
         const features = new GeoJSON().readFeatures(
           {
             type: 'Feature',
@@ -278,8 +403,10 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
           }
         ) as Feature<Geometry>[];
 
-        if (features.length > 0) {
-          this.vectorSource.addFeatures(features);
+        const polygonFeatures = this.validatePolygonFeatures(features);
+
+        if (polygonFeatures.length > 0) {
+          this.vectorSource.addFeatures(polygonFeatures);
           this.fitToOverlay();
           return;
         }
@@ -398,7 +525,7 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
 
     try {
       const url =
-        'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&polygon_geojson=1&q=' +
+        'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=10&polygon_geojson=1&q=' +
         encodeURIComponent(query);
 
       const response = await fetch(url, {
@@ -410,7 +537,13 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
       }
 
       const data = (await response.json()) as SearchResult[];
-      this.searchResults.set(data);
+
+      const polygonOnlyResults = (data ?? []).filter((item) => {
+        const geoType = item?.geojson?.type;
+        return geoType === 'Polygon' || geoType === 'MultiPolygon';
+      });
+
+      this.searchResults.set(polygonOnlyResults);
     } catch (error) {
       console.error('Search error:', error);
       this.searchResults.set([]);
@@ -418,18 +551,15 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
   }
 
   flyToResult(item: SearchResult): void {
+    const geoType = item?.geojson?.type;
+
+    if (geoType !== 'Polygon' && geoType !== 'MultiPolygon') {
+      console.warn('Seçilen sonuç polygon değil, işlem yapılmadı.');
+      return;
+    }
+
     this.focusTarget(Number(item.lat), Number(item.lon), item.geojson);
     this.searchResults.set([]);
-  }
-
-  private syncLayerState(): void {
-    this.baseStandard.setVisible(this.standardVisible());
-    this.baseHot.setVisible(this.hotVisible());
-    this.vectorLayer.setVisible(this.overlayVisible());
-
-    this.baseStandard.setOpacity(this.standardOpacity() / 100);
-    this.baseHot.setOpacity(this.hotOpacity() / 100);
-    this.vectorLayer.setOpacity(this.overlayOpacity() / 100);
   }
 
   private fitToOverlay(): void {
@@ -454,5 +584,13 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
       this.drawInteraction = undefined;
     }
     this.polygonMode.set(false);
+  }
+
+  trackByGroup(_: number, item: UiLayerGroupModel): number {
+    return item.id;
+  }
+
+  trackByLayer(_: number, item: UiLayerModel): number {
+    return item.id;
   }
 }

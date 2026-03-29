@@ -444,7 +444,7 @@ export const locale = {
         "OSM_HOT": "OSM HOT",
         "AOI_UPLOADS": "AOI / Yüklemeler",
         "UPLOAD_FILE": "Dosya Yükle",
-        "UPLOAD_HINT": "GeoJSON, JSON, KML veya ZIP yükleyerek haritaya ekleyebilirsin.",
+        "UPLOAD_HINT": "GeoJSON, JSON, KML veya ZIP Shape dosyaları yükleyerek haritaya ekleyebilirsin.",
         "FILE_LOADED": "Yüklenen dosya",
 
         "ZOOM_IN": "Yakınlaştır",
@@ -455,6 +455,11 @@ export const locale = {
         "MAP_STATUS": "Harita Durumu",
         "ZOOM": "Yakınlık",
         "COORDINATE": "Koordinat",
+        "BUY_DATA": "Veri Satın Al",
+        "LOADING": "Yükleniyor...",
+        "BUY": "Satın Al",
+        "LAYER": "Katman",
+
         // END (TR-EN-LANGUAGE-BRANCH)
     }
 };

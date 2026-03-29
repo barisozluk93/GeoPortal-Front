@@ -5,8 +5,8 @@ import { first } from 'rxjs/operators';
 import { UserModelAuth } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasketModel } from 'src/app/modules/shopping/models/basket.model';
 import { BasketManagementService } from 'src/app/modules/basket-management/basket-management.service';
+import { BasketModel } from 'src/app/modules/basket-management/models/basket.model';
 
 @Component({
   selector: 'app-login',

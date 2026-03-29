@@ -40,4 +40,8 @@ export class NotificationService {
     delete(id: number): Observable<ResultModel<NotificationModel>> {
         return this.http.delete<ResultModel<NotificationModel>>(`${API_NOTIFICATION_URL}/Delete/${id}`);
     }
+
+    getUnreadedCount(userId: number): Observable<ResultModel<number>> {
+        return this.http.get<ResultModel<number>>(`${API_NOTIFICATION_URL}/UnreadCount/${userId}`);
+    }
 }

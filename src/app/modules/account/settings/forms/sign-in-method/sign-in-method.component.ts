@@ -91,7 +91,6 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
         if (result.isSuccess) {
           this.alertService.createAlert("success", result.message);
           this.authService.logout();
-          document.location.reload();
         }
         else {
           this.alertService.createAlert("danger", result.message);
@@ -117,7 +116,6 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
           if (result.isSuccess) {
             this.alertService.createAlert("success", result.message);
             this.authService.logout();
-            document.location.reload();
           }
           else {
             this.alertService.createAlert("danger", result.message);
@@ -161,27 +159,15 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
       ],
       country: [
         "",
-        Validators.compose([
-          Validators.required,
-        ]),
       ],
       city: [
         "",
-        Validators.compose([
-          Validators.required,
-        ]),
       ],
       district: [
         "",
-        Validators.compose([
-          Validators.required,
-        ]),
       ],
       address: [
         "",
-        Validators.compose([
-          Validators.required,
-        ]),
       ],
       roles: [
         null

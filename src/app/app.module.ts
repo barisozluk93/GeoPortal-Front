@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { AuthService } from './modules/auth/services/auth.service';
 // #fake-start#
 import { Interceptor } from './http-interceptor/http-interceptor';
+import { ToastrModule } from 'ngx-toastr';
 // #fake-end#
 
 function appInitializer(authService: AuthService) {
@@ -27,6 +28,13 @@ function appInitializer(authService: AuthService) {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-center',
+      timeOut: 3000,
+      closeButton: true,
+      progressBar: true,
+      preventDuplicates: true
+    }),
     TranslateModule.forRoot(),
     HttpClientModule,
     ClipboardModule,

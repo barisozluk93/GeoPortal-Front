@@ -1,11 +1,13 @@
 export interface NotificationModel {
     id: number;
     userId: number;
-    message: string;
-    isReaded: boolean;
+    title: string;
+    isRead: boolean;
     isDeleted: boolean;
-    date: string;
-    time: string;
-    state: string;
-    link: string;
+    createdAt: string;
+    readAt: string;
+    body: string;
+    dataJson: string;
+    type: string;
+    targetUrl: string;
 }

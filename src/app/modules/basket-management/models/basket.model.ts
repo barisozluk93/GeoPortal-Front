@@ -1,4 +1,4 @@
-import { ProductModel } from "../../shopping/models/product.model";
+import { ProductModel } from "../../product-management/models/product.model";
 
 export class BasketModel {
     id: number;

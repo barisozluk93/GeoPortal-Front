@@ -1,13 +1,11 @@
 <section class="data-page">
 
-  <!-- HERO -->
   <div class="data-hero">
     <div class="data-hero-overlay"></div>
 
     <div class="container data-hero-content">
       <div class="data-hero-grid">
 
-        <!-- LEFT -->
         <div class="data-hero-left">
           <div class="gp-kicker">
             {{ 'KICKER' | translate }}
@@ -22,7 +20,6 @@
           </p>
         </div>
 
-        <!-- RIGHT -->
         <div class="data-hero-right">
           <div class="glass-panel">
 
@@ -43,8 +40,9 @@
               <button
                 class="btn btn-gp btn-gp-primary"
                 (click)="submitSearch()"
+                [disabled]="loading()"
               >
-                {{ 'SEARCH_BUTTON' | translate }}
+                {{ loading() ? ('LOADING' | translate) : ('SEARCH_BUTTON' | translate) }}
               </button>
             </div>
 
@@ -55,7 +53,6 @@
     </div>
   </div>
 
-  <!-- WHITE SECTION -->
   <div class="data-white-section">
     <div class="container">
 
@@ -90,13 +87,11 @@
     </div>
   </div>
 
-  <!-- DARK SECTION -->
   <div class="data-dark-section">
     <div class="container">
 
       <div class="data-showcase-grid">
 
-        <!-- LEFT -->
         <div class="data-showcase-main">
           <div class="data-mini-kicker">
             {{ 'USE_CASES' | translate }}
@@ -111,7 +106,6 @@
           </p>
         </div>
 
-        <!-- RIGHT -->
         <div class="data-showcase-side">
 
           <div class="data-side-card map-panel-card">

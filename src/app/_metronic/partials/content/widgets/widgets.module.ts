@@ -57,8 +57,6 @@ import { MixedWidget8Component } from './mixed/mixed-widget8/mixed-widget8.compo
 import { MixedWidget9Component } from './mixed/mixed-widget9/mixed-widget9.component';
 import { StatsWidget1Component } from './stats/stats-widget1/stats-widget1.component';
 import { StatsWidget2Component } from './stats/stats-widget2/stats-widget2.component';
-import { StatsWidget3Component } from './stats/stats-widget3/stats-widget3.component';
-import { StatsWidget4Component } from './stats/stats-widget4/stats-widget4.component';
 import { StatsWidget5Component } from './stats/stats-widget5/stats-widget5.component';
 import { StatsWidget6Component } from './stats/stats-widget6/stats-widget6.component';
 import { TablesWidget1Component } from './tables/tables-widget1/tables-widget1.component';
@@ -131,8 +129,6 @@ import { TablesWidget14Component } from './tables/tables-widget14/tables-widget1
     MixedWidget9Component,
     StatsWidget1Component,
     StatsWidget2Component,
-    StatsWidget3Component,
-    StatsWidget4Component,
     StatsWidget5Component,
     StatsWidget6Component,
     TablesWidget1Component,
@@ -211,8 +207,6 @@ import { TablesWidget14Component } from './tables/tables-widget14/tables-widget1
     MixedWidget9Component,
     StatsWidget1Component,
     StatsWidget2Component,
-    StatsWidget3Component,
-    StatsWidget4Component,
     StatsWidget5Component,
     StatsWidget6Component,
     TablesWidget1Component,

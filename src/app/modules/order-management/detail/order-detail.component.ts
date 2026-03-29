@@ -2,13 +2,13 @@ import { Component, OnDestroy, OnInit, LOCALE_ID, Inject, ViewChild } from '@ang
 import { ActivatedRoute } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { OrderStatusEnum } from 'src/app/enums/permission.enum';
-import { BasketModel } from '../../shopping/models/basket.model';
 import { OrderManagementService } from '../order-management.service';
 import { OrderModel } from '../models/order.model';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { CommentComponent } from './comment/comment.component';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
+import { BasketModel } from '../../basket-management/models/basket.model';
 
 @Component({
   selector: 'app-order-detail',

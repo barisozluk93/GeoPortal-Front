@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BasketService } from './basket.service';
 import { Router } from '@angular/router';
-import { BasketModel } from 'src/app/modules/shopping/models/basket.model';
 import { AuthService } from 'src/app/modules/auth';
+import { BasketModel } from 'src/app/modules/basket-management/models/basket.model';
 
 @Component({
   selector: 'app-basket',

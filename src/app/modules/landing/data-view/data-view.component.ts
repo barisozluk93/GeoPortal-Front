@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MapSearchService } from 'src/app/services/map-search.service';
 
@@ -17,21 +18,24 @@ type SearchResult = {
   styleUrl: './data-view.component.css'
 })
 export class DataViewComponent {
-  @Output() openMap = new EventEmitter<void>();
-
   readonly mapSearch = inject(MapSearchService);
+  readonly router = inject(Router);
+
   readonly searchQuery = signal('');
   readonly loading = signal(false);
 
   async submitSearch(): Promise<void> {
     const query = this.searchQuery().trim();
-    if (!query) return;
+
+    if (!query) {
+      return;
+    }
 
     this.loading.set(true);
 
     try {
       const url =
-        'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&polygon_geojson=1&q=' +
+        'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=10&polygon_geojson=1&q=' +
         encodeURIComponent(query);
 
       const response = await fetch(url, {
@@ -44,12 +48,17 @@ export class DataViewComponent {
 
       const data = (await response.json()) as SearchResult[];
 
-      if (!data.length) {
-        alert('Arama sonucu bulunamadı.');
+      const polygonOnlyResults = (data ?? []).filter((item) => {
+        const geoType = item?.geojson?.type;
+        return geoType === 'Polygon' || geoType === 'MultiPolygon';
+      });
+
+      if (!polygonOnlyResults.length) {
+        alert('Polygon tipinde arama sonucu bulunamadı.');
         return;
       }
 
-      const first = data[0];
+      const first = polygonOnlyResults[0];
 
       this.mapSearch.setTargetLocation(
         Number(first.lat),
@@ -58,7 +67,7 @@ export class DataViewComponent {
         first.geojson
       );
 
-      this.openMap.emit();
+      await this.router.navigate(['/landing/map']);
     } catch (error) {
       console.error('submitSearch error:', error);
       alert('Arama sırasında hata oluştu.');

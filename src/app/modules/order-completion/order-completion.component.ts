@@ -5,11 +5,11 @@ import { AuthService } from '../auth';
 import { OrderManagementService } from '../order-management/order-management.service';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { BasketModel } from '../shopping/models/basket.model';
 import { OrderModel } from '../order-management/models/order.model';
 import { UserManagementService } from '../user-management/user-management.service';
 import { UserAddressModel } from '../user-management/models/user-address.model';
 import { AddressEditSaveComponent } from '../account/addresses/forms/list/edit-save/edit-save.component';
+import { BasketModel } from '../basket-management/models/basket.model';
 
 export type RegistrationTabsType =
   | 'address'
@@ -75,7 +75,7 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
     }
   }
 
-  isSuccess(event: boolean) {
+  isSuccess(event: any) {
     this.loadDeliveryAddresses();
     this.loadInvoiceAddresses();
   }

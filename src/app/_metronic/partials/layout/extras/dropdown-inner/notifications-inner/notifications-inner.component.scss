@@ -1,0 +1,20 @@
+.notification-item{
+  background:white;
+  border-radius:8px;
+  transition:all .15s ease;
+  border:1px solid transparent;
+}
+
+.notification-item:hover{
+  background:#f8f9fa;
+  border-color:#e4e6ef;
+}
+
+.notification-unread{
+  border-left:4px solid var(--bs-primary);
+  background:#f9fafb;
+}
+
+.cursor-pointer{
+  cursor:pointer;
+}

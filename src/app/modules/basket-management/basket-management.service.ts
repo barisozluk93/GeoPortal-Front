@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ResultModel } from 'src/app/models/result.model';
-import { BasketModel } from '../shopping/models/basket.model';
+import { BasketModel } from './models/basket.model';
 
 
 const API_BASKET_URL = `${environment.apiUrl}/Basket`;

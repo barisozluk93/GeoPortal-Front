@@ -1,0 +1,95 @@
+.notification-symbol {
+  overflow: visible;
+}
+
+.notification-symbol-label {
+  background: linear-gradient(180deg, #f9fbfd 0%, #f1f5f9 100%);
+  border: 1px solid #e9eef5;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  overflow: visible !important;
+}
+
+.notification-symbol:hover .notification-symbol-label {
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.notification-bell {
+  font-size: 17px;
+  color: var(--bs-primary);
+  transition: all 0.25s ease;
+}
+
+.notification-symbol:hover .notification-bell {
+  color: #ffffff;
+  transform: scale(1.06);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -7px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff5f7a 0%, #f1416c 100%);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  box-shadow:
+    0 4px 10px rgba(241, 65, 108, 0.35),
+    0 0 0 2px #ffffff;
+  z-index: 3;
+}
+
+.notification-pulse {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(241, 65, 108, 0.28);
+  z-index: 1;
+  animation: notificationPulse 1.8s infinite;
+}
+
+.has-unread .notification-symbol-label {
+  border-color: rgba(241, 65, 108, 0.18);
+}
+
+.is-animating .notification-bell {
+  animation: notificationShake 0.7s ease;
+}
+
+@keyframes notificationPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes notificationShake {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(-14deg); }
+  30% { transform: rotate(10deg); }
+  45% { transform: rotate(-8deg); }
+  60% { transform: rotate(6deg); }
+  75% { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}

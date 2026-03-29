@@ -442,7 +442,7 @@ export const locale = {
     "OSM_HOT": "OSM HOT",
     "AOI_UPLOADS": "AOI / Uploads",
     "UPLOAD_FILE": "Upload File",
-    "UPLOAD_HINT": "Upload GeoJSON, JSON, KML or ZIP files to display them on the map.",
+    "UPLOAD_HINT": "Upload GeoJSON, JSON, KML or ZIP Shape files to display them on the map.",
     "FILE_LOADED": "Loaded file",
 
     "ZOOM_IN": "Zoom In",
@@ -452,7 +452,13 @@ export const locale = {
 
     "MAP_STATUS": "Map Status",
     "ZOOM": "Zoom",
-    "COORDINATE": "Coordinate"
+    "COORDINATE": "Coordinate",
+    "BUY_DATA": "Buy Data",
+    "LOADING": "Loading...",
+    "BUY": "Buy",
+    "LAYER": "Layer",
+
+
     // END (TR-EN-LANGUAGE-BRANCH)
   }
 };

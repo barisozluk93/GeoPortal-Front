@@ -200,7 +200,7 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
     this.deleteConfirmationComponent.openModal(deleteText, id);
   }
 
-  routeToShopping() {
-    this.router.navigate(['/shopping']);
+  routeToMap() {
+    this.router.navigate(['/landing/map']);
   }
 }
