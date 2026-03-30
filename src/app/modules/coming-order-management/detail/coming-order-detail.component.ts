@@ -19,7 +19,7 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
   @ViewChild('statusComponent') private statusComponent: StatusComponent;
   @ViewChild('invoiceComponent') private invoiceComponent: InvoiceComponent;
 
-  header: string = "SS";
+  header: string = "";
   orderProductId: number;
   orderProduct: OrderProductModel;
   orderProductTemp: OrderProductModel;
@@ -36,11 +36,11 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
   }
 
   getById() {
-    const keys = ['PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'SHIPPED', 'DELIVERED'];
+    const keys = ['PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'REJECTED', 'COMPLETED'];
     const translationRequest = keys.map(key => this.translate.get(key));
 
     forkJoin(translationRequest).subscribe((translations) => {
-      const [pendingApprovalText, approvedText, preparingText, shippedText, deliveredText] = translations;
+      const [pendingApprovalText, approvedText, preparingText, rejectedText, completedText] = translations;
       this.comingOrderManagementService.getById(this.orderProductId).subscribe(result => {
         if (result.isSuccess) {
   
@@ -56,19 +56,15 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
           else if (this.orderProduct.orderStatus == OrderStatusEnum['Hazırlanıyor']) {
             this.orderProduct.orderStatusStr = preparingText;
           }
-          else if (this.orderProduct.orderStatus == OrderStatusEnum['Kargolandı']) {
-            this.orderProduct.orderStatusStr = shippedText;
+          else if (this.orderProduct.orderStatus == OrderStatusEnum['Reddedildi']) {
+            this.orderProduct.orderStatusStr = rejectedText;
           }
-          else if (this.orderProduct.orderStatus == OrderStatusEnum['Teslim Edildi']) {
-            this.orderProduct.orderStatusStr = deliveredText;
+          else if (this.orderProduct.orderStatus == OrderStatusEnum['Tamamlandı']) {
+            this.orderProduct.orderStatusStr = completedText;
           }
   
           this.orderProduct.orderDate = formatDate(this.orderProduct.order?.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
           this.orderProduct.proccessDate = formatDate(this.orderProduct.proccessDate!, "dd/MM/yyyy HH:mm", this.locale);
-  
-          var product = this.orderProduct.product!;
-          product.fileResult.fileContents = "data:" + product.fileResult.contentType + ";base64," + product.fileResult.fileContents;
-          this.orderProduct.product = product;
         }
       })
     })

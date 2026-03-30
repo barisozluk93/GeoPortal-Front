@@ -83,11 +83,11 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.returnUrl = "/dashboard";
           }
           else{
-            this.returnUrl = "/landing/map";
+            this.returnUrl = "/landing/data";
           }
 
           const data = JSON.parse(localStorage.getItem('basket') as string) as BasketModel[];
-          if (data) {
+          if (data && data.length > 0) {
             data.forEach(item => {
               item.userId = user.id;
               item.product = undefined;

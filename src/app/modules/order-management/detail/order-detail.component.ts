@@ -50,11 +50,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   getById() {
-    const keys = ['ORDER_COMPLETED', 'ORDER_NOT_YET_COMPLETED','PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'SHIPPED', 'DELIVERED'];
+    const keys = ['ORDER_COMPLETED', 'ORDER_NOT_YET_COMPLETED','PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'REJECTED', 'COMPLETED'];
 
     const translationRequest = keys.map(key => this.translate.get(key));
     forkJoin(translationRequest).subscribe((translations)=>{
-      const [orderCompleted, orderNotYetCompleted,pendingApprovalText, approvedText, preparingText, shippedText, deliveredText] = translations;
+      const [orderCompleted, orderNotYetCompleted,pendingApprovalText, approvedText, preparingText, rejectedText, completedText] = translations;
 
       this.orderManagementService.getById(this.orderId).subscribe(result => {
         if (result.isSuccess) {
@@ -79,19 +79,16 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             else if (orderProduct.orderStatus == OrderStatusEnum['Hazırlanıyor']) {
               orderProduct.orderStatusStr = preparingText;
             }
-            else if (orderProduct.orderStatus == OrderStatusEnum['Kargolandı']) {
-              orderProduct.orderStatusStr = shippedText;
+            else if (orderProduct.orderStatus == OrderStatusEnum['Reddedildi']) {
+              orderProduct.orderStatusStr = rejectedText;
             }
-            else if (orderProduct.orderStatus == OrderStatusEnum['Teslim Edildi']) {
-              orderProduct.orderStatusStr = deliveredText;var today = new Date();
+            else if (orderProduct.orderStatus == OrderStatusEnum['Tamamlandı']) {
+              orderProduct.orderStatusStr = completedText;
+              var today = new Date();
               var controlDate = this.addDays(orderProduct.proccessDate!, 15);
   
               if(today.getTime() <= controlDate.getTime()) {
                 orderProduct.canEvaluate = true;
-  
-                if(orderProduct.product?.commentsCount! > 0) {
-                  orderProduct.canEvaluate = false;
-                }
               }
               else{
                 orderProduct.canEvaluate = false;
@@ -99,9 +96,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             }
   
             orderProduct.proccessDate = formatDate(orderProduct.proccessDate!, "dd/MM/yyyy HH:mm", this.locale);
-            var product = orderProduct.product!;
-            product.fileResult.fileContents = "data:" + product.fileResult.contentType + ";base64," + product.fileResult.fileContents;
-            orderProduct.product = product;
           })
         }
       })

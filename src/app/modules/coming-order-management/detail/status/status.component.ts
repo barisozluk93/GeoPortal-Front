@@ -73,46 +73,11 @@ export class StatusComponent implements OnInit {
                     Validators.required,
                 ]),
             ],
-            proccessDate: [
-                undefined,
-                Validators.compose([
-                    Validators.required,
-                ]),
-            ],
-            trackingNo: null,
-            trackingDate: [
-                undefined
-            ],
-            completionDate: [
-                undefined
-            ],
-            vendorId: undefined
         });
     }
 
     ngAfterViewInit(): void {
-        this.form.get('orderStatus')?.valueChanges.subscribe(value => {
-            if (value == 3) {
-                this.form.get('trackingNo')?.setValidators(Validators.compose([
-                    Validators.required,
-                ]));
 
-                this.form.get('trackingDate')?.setValidators(Validators.compose([
-                    Validators.required,
-                ]));
-            }
-            else if (value == 4) {
-                this.form.get('completionDate')?.setValidators(Validators.compose([
-                    Validators.required,
-                ]));
-
-                this.form.get('trackingNo')?.clearValidators();
-                this.form.get('trackingNo')?.updateValueAndValidity();
-
-                this.form.get('trackingDate')?.clearValidators();
-                this.form.get('trackingDate')?.updateValueAndValidity();
-            }
-        })
     }
 
     ngOnInit(): void {
@@ -142,16 +107,16 @@ export class StatusComponent implements OnInit {
         const statusTR: any[] = [
             { id: 0, name: "Onay Bekliyor", disabled: false },
             { id: 1, name: "Onaylandı", disabled: false },
-            { id: 2, name: "Hazırlanıyor", disabled: false },
-            { id: 3, name: "Kargolandı", disabled: false },
-            { id: 4, name: "Teslim Edildi", disabled: false }
+            { id: 2, name: "Reddedildi", disabled: false },
+            { id: 3, name: "Hazırlanıyor", disabled: false },
+            { id: 4, name: "Tamamlandı", disabled: false }
         ];
         const statusEN: any[] = [
             { id: 0, name: "Pending Approval", disabled: false },
             { id: 1, name: "Approved", disabled: false },
-            { id: 2, name: "Preparing", disabled: false },
-            { id: 3, name: "Shipped", disabled: false },
-            { id: 4, name: "Delivered", disabled: false }
+            { id: 2, name: "Rejected", disabled: false },
+            { id: 3, name: "Preparing", disabled: false },
+            { id: 4, name: "Completed", disabled: false }
         ];
 
         const keys = ['EDIT_STATUS', 'SUBMIT', 'CANCEL'];
@@ -169,8 +134,17 @@ export class StatusComponent implements OnInit {
         this.updateTranslationsAndColumns(statusTR, statusEN)
 
         this.orderProduct = orderProduct;
-        this.status = this.status.filter(f => f.id == this.orderProduct.orderStatus || f.id == (this.orderProduct.orderStatus!+1));
-        
+
+        if(this.orderProduct.orderStatus == 0){
+            this.status = this.status.filter(f => f.id == this.orderProduct.orderStatus || f.id == (this.orderProduct.orderStatus!+1) || f.id == (this.orderProduct.orderStatus!+2));
+        }
+        else if(this.orderProduct.orderStatus == 1){
+            this.status = this.status.filter(f => f.id == this.orderProduct.orderStatus || f.id == (this.orderProduct.orderStatus!+2));
+        }
+        else{
+            this.status = this.status.filter(f => f.id == this.orderProduct.orderStatus || f.id == (this.orderProduct.orderStatus!+1));
+        }
+
         this.modalConfig = {
             modalTitle: translations['EDIT_STATUS'],
             dismissButtonLabel: translations['SUBMIT'],
@@ -191,22 +165,6 @@ export class StatusComponent implements OnInit {
     submit() {
         if (this.form.valid) {
             let data = this.form.getRawValue() as OrderProductModel;
-
-            if (data.orderStatus == 3){
-                data.completionDate = undefined;
-                data.proccessDate = data.trackingDate;
-            }
-            else if (data.orderStatus == 4){
-                data.trackingDate = this.orderProduct.trackingDate;
-                data.proccessDate = data.completionDate;
-            }
-            else {
-                data.proccessDate = undefined;
-            }
-
-            data.proccessDate = data.proccessDate ? new Date(data.proccessDate!).toISOString() : data.proccessDate;
-            data.trackingDate = data.trackingDate ? new Date(data.trackingDate!).toISOString() : data.trackingDate;
-            data.completionDate = data.completionDate ? new Date(data.completionDate!).toISOString() : data.completionDate;
 
             this.comingOrderManagementService.updateStatus(data).subscribe(result => {
                 if (result.isSuccess) {

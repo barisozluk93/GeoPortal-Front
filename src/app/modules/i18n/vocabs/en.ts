@@ -230,7 +230,8 @@ export const locale = {
     VENDOR: "Vendor",
     PENDING_APPROVAL: 'Pending Approval',
     APPROVED: 'Approved',
-    PREPARING: 'Preparing',
+    REJECTED: 'Rejected',
+    COMPLETED: 'Completed',
     SHIPPED: 'Shipped',
     DELIVERED: 'Delivered',
     TYPE_A_COMMENT: 'Type a comment...',
@@ -367,7 +368,7 @@ export const locale = {
     "API_KICKER": "Satellite Data API Platform",
     "API_TITLE": "Integrate Satellite Imagery Into Your Applications with an API Key",
     "API_COPY": "Purchase a 1-month API key, send requests with a Bearer token, and programmatically access satellite imagery within your selected area. Easily use the results in your applications, services, and workflows.",
-    "START_CODING": "Start Coding",
+    "START_CODING": "Buy Now",
     "DOCUMENTATION": "Documentation",
     "ENDPOINTS": "Endpoints",
 

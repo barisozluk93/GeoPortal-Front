@@ -19,8 +19,8 @@ export class ComingOrderManagementService {
 
     // public methods
 
-    paging(pageNumber: number, pageSize: number, userId?: number, filterText?: string): Observable<ResultModel<PagingResult<OrderProductModel[]>>> {
-        return this.http.get<ResultModel<PagingResult<OrderProductModel[]>>>(`${API_ORDER_URL}/ComingPaginate/${userId}`, 
+    paging(pageNumber: number, pageSize: number, filterText?: string): Observable<ResultModel<PagingResult<OrderProductModel[]>>> {
+        return this.http.get<ResultModel<PagingResult<OrderProductModel[]>>>(`${API_ORDER_URL}/ComingPaginate`, 
             { params: new HttpParams().set("PageNumber", pageNumber).set("PageSize", pageSize).set("FilterText", filterText!==undefined ? filterText : '') });
     }
 

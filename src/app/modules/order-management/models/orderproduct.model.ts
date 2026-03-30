@@ -7,6 +7,7 @@ export class OrderProductModel {
   product?: ProductModel;
   orderId: number;
   order?: OrderModel;
+  productValue?: string;
   proccessDate?: string;
   orderStatus?: number;
   orderStatusStr?: string;

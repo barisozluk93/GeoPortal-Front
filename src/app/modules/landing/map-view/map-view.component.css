@@ -35,8 +35,8 @@
 
 .map-wrapper,
 .map-element {
-  min-height: calc(100vh - 88px);
-  height: calc(100vh - 88px);
+  min-height: calc(100vh - 80px);
+  height: calc(100vh - 80px);
 }
 
 .map-element {
@@ -178,6 +178,7 @@
   min-width: 320px;
   max-height: 280px;
   overflow-y: auto;
+  overflow-x: hidden;
   border-radius: 10px;
   border: 1px solid rgba(44, 99, 255, 0.18);
   background: var(--gp-theme-bg) !important;
@@ -216,13 +217,13 @@
 
 .layer-panel {
   position: absolute;
-  top: 22px;
-  left: 22px;
+  top: 20px;
+  left: 20px;
   z-index: 12;
-  width: fit-content;
+  width: 540px;
   max-width: calc(100vw - 120px);
-  min-width: 0;
-  max-height: calc(100vh - 140px);
+  min-width: 320px;
+  max-height: calc(100vh - 120px);
   border-radius: 10px;
   color: #ffffff;
   overflow: hidden;
@@ -235,6 +236,7 @@
 .layer-panel.collapsed {
   width: 68px;
   min-width: 68px;
+  overflow: hidden;
 }
 
 .layer-panel-header {
@@ -244,6 +246,10 @@
   gap: 12px;
   padding: 14px 14px 10px;
   border-bottom: 1px solid var(--gp-border);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--gp-theme-bg) !important;
 }
 
 .layer-panel-title-group {
@@ -292,23 +298,27 @@
 .layer-panel-body {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
+  gap: 12px;
   padding: 12px;
   max-height: calc(100vh - 210px);
   overflow-y: auto;
-  overflow-x: auto;
+  overflow-x: hidden;
   background: transparent;
+  min-width: 0;
+  width: 100%;
 }
 
 .group-card {
-  width: fit-content;
-  min-width: 100%;
-  margin-bottom: 14px;
+  width: 100%;
+  min-width: 0;
   border-radius: 18px;
   overflow: hidden;
   background: var(--gp-theme-bg) !important;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: var(--gp-shadow-sm);
+  display: flex;
+  flex-direction: column;
 }
 
 .group-card:hover {
@@ -327,6 +337,7 @@
   color: #ffffff;
   text-align: left;
   transition: background 0.2s ease;
+  flex-shrink: 0;
 }
 
 .group-card-header:hover {
@@ -368,18 +379,24 @@
 .group-card-body {
   padding: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 .group-card-layers {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: flex-start;
+  align-items: stretch;
+  min-width: 0;
+  width: 100%;
 }
 
 .layer-item-card {
-  width: fit-content;
-  min-width: 100%;
+  width: 100%;
+  min-width: 0;
   border-radius: 14px;
   padding: 10px 12px;
   background: rgba(255, 255, 255, 0.04);
@@ -392,11 +409,13 @@
 }
 
 .layer-single-row {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  width: max-content;
+  gap: 10px;
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .layer-check {
@@ -404,6 +423,7 @@
   align-items: center;
   gap: 6px;
   min-width: 0;
+  flex: 1 1 180px;
   color: #ffffff;
   font-size: 0.95rem;
   font-weight: 500;
@@ -420,7 +440,7 @@
 
 .layer-name {
   min-width: 0;
-  max-width: 420px;
+  max-width: 100%;
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -578,6 +598,37 @@
   outline: none !important;
 }
 
+.layer-panel::-webkit-scrollbar,
+.layer-panel-body::-webkit-scrollbar,
+.search-results::-webkit-scrollbar,
+.group-card-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.layer-panel::-webkit-scrollbar-track,
+.layer-panel-body::-webkit-scrollbar-track,
+.search-results::-webkit-scrollbar-track,
+.group-card-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.layer-panel::-webkit-scrollbar-thumb,
+.layer-panel-body::-webkit-scrollbar-thumb,
+.search-results::-webkit-scrollbar-thumb,
+.group-card-body::-webkit-scrollbar-thumb {
+  background: rgba(44, 99, 255, 0.32);
+  border-radius: 999px;
+}
+
+.layer-panel::-webkit-scrollbar-thumb:hover,
+.layer-panel-body::-webkit-scrollbar-thumb:hover,
+.search-results::-webkit-scrollbar-thumb:hover,
+.group-card-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(44, 99, 255, 0.5);
+}
+
 @media (max-width: 980px) {
   .top-search,
   .search-results {
@@ -586,11 +637,8 @@
   }
 
   .layer-panel {
+    width: min(460px, calc(100vw - 110px));
     max-width: calc(100vw - 110px);
-  }
-
-  .layer-name {
-    max-width: 300px;
   }
 }
 
@@ -627,10 +675,10 @@
     top: auto;
     bottom: 16px;
     left: 12px;
+    width: calc(100% - 24px);
     max-width: calc(100% - 24px);
-    width: fit-content;
     min-width: 0;
-    max-height: 46vh;
+    max-height: 50vh;
   }
 
   .layer-panel.collapsed {
@@ -639,11 +687,19 @@
   }
 
   .layer-panel-body {
-    max-height: calc(46vh - 70px);
+    max-height: calc(50vh - 78px);
   }
 
-  .layer-name {
-    max-width: 220px;
+  .group-card-body {
+    max-height: 180px;
+  }
+
+  .layer-check {
+    flex: 1 1 100%;
+  }
+
+  .opacity-mini {
+    flex: 1 1 auto;
   }
 
   .opacity-mini input[type='range'] {

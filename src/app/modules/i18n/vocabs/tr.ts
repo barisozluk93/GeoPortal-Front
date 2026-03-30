@@ -232,6 +232,8 @@ export const locale = {
         PENDING_APPROVAL: 'Onay Bekliyor',
         APPROVED: 'Onaylandı',
         PREPARING: 'Hazırlanıyor',
+        REJECTED: 'Reddedildi',
+        COMPLETED: 'Tamamlandı',
         SHIPPED: 'Kargolandı',
         DELIVERED: 'Teslim Edildi',
         TYPE_A_COMMENT: 'Bir yorum yazın...',
@@ -370,7 +372,7 @@ export const locale = {
         "API_KICKER": "Uydu Veri API Platformu",
         "API_TITLE": "API Key ile Uydu Görüntülerini Uygulamalarına Entegre Et",
         "API_COPY": "1 aylık API key satın al, Bearer token ile istek gönder ve seçtiğin alan içindeki uydu görüntülerine programatik olarak eriş. Sonuçları uygulamalarında, servislerinde ve iş akışlarında kolayca kullan.",
-        "START_CODING": "Kodlamaya Başla",
+        "START_CODING": "Hemen Satın Al",
         "DOCUMENTATION": "Dokümantasyon",
         "ENDPOINTS": "Uç Noktalar",
 

@@ -27,46 +27,8 @@
                                         <td>
                                             <div class="d-flex justify-content-start flex-column">
                                                 <a class="text-gray-900 fw-bolder text-hover-primary fs-6">
-                                                    <img [src]="item.product?.fileResult.fileContents"
-                                                        style="height: 8.75rem; width: auto;">
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex justify-content-start flex-column">
-                                                <a class="text-gray-900 fw-bolder text-hover-primary fs-6">
                                                     {{item.product?.name}}
                                                 </a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex justify-content-start flex-column">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <a (click)="deleteOne(item.productId)"
-                                                                class="btn btn-icon btn-bg-light btn-active-color-primary"
-                                                                style="border-radius: 0px;">
-                                                                <span
-                                                                    [inlineSVG]="'./assets/media/icons/duotune/arrows/arr090.svg'"
-                                                                    class="svg-icon svg-icon-3"></span>
-                                                            </a>
-                                                        </div>
-                                                        <input type="text" disabled="disabled"
-                                                            class="form-control bg-transparent"
-                                                            style="text-align:center; max-width: 60px;"
-                                                            value={{item.numberOf}}>
-                                                        <div (click)="addOne(item.productId)"
-                                                            class="input-group-append">
-                                                            <a class="btn btn-icon btn-bg-light btn-active-color-primary"
-                                                                style="border-radius: 0px;">
-                                                                <span
-                                                                    [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
-                                                                    class="svg-icon svg-icon-3"></span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </td>
                                         <td>

@@ -8,6 +8,5 @@ export class BasketModel {
     isDeleted: boolean;
     numberOf?: number;
     totalPrice?: number;
-    fileResult?: any;
   }
   

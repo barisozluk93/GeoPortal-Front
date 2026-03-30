@@ -23,10 +23,8 @@ export type RegistrationTabsType =
 export class OrderCompletionComponent implements OnInit, OnDestroy {
   @ViewChild('editSaveComponent') private editSaveComponent: AddressEditSaveComponent;
 
-  deliveryAddresses: UserAddressModel[] = [];
   invoiceAddresses: UserAddressModel[] = [];
-  selectedDeliveryAddressId: number;
-  selectedDeliveryAddress: UserAddressModel;
+  selectedInvoiceAddress: UserAddressModel;
   selectedInvoiceAddressId: number;
 
   activeTabId: RegistrationTabsType = "address";
@@ -53,8 +51,8 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
 
   confirmOrder() {
     
-    if(this.selectedDeliveryAddressId > 0 && this.selectedInvoiceAddressId > 0) {
-      let data: OrderModel = { id: 0, basketId: this.basketFromStorage[0].id, userId: this.currentUser.id, price: this.totalPrice, deliveryAddressId: this.selectedDeliveryAddressId, invoiceAddressId: this.selectedInvoiceAddressId};
+    if(this.selectedInvoiceAddressId > 0) {
+      let data: OrderModel = { id: 0, basketId: this.basketFromStorage[0].id, userId: this.currentUser.id, price: this.totalPrice, invoiceAddressId: this.selectedInvoiceAddressId};
 
       this.orderManagementService.save(data).subscribe(result => {
         if(result.isSuccess) {
@@ -62,7 +60,7 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
           this.alertService.createAlert("success", result.message);
 
           setTimeout(() => {
-            this.router.navigate(['/shopping']);
+            this.router.navigate(['/ordermanagement/' + result.data.id]);
           }, 2500);
         }
         else{
@@ -76,34 +74,9 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
   }
 
   isSuccess(event: any) {
-    this.loadDeliveryAddresses();
     this.loadInvoiceAddresses();
   }
 
-  loadDeliveryAddresses() {
-    this.userManagementService.userAddressList(this.currentUser.id).subscribe(result => {
-      if(result.isSuccess) {
-        let i = 0;
-        result.data.forEach(item => {
-          if(i == 0) {
-            item.selected = true;
-            this.selectedDeliveryAddressId = item.id;
-            this.selectedDeliveryAddress = item;
-          }
-          else{
-            item.selected = false;
-          }
-
-          i++;
-        })
-
-        this.deliveryAddresses = result.data;
-      }
-      else{
-        this.deliveryAddresses = [];
-      }
-    })
-  }
 
   loadInvoiceAddresses() {
     this.userManagementService.userAddressList(this.currentUser.id).subscribe(result => {
@@ -113,6 +86,7 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
           if(i == 0) {
             item.selected = true;
             this.selectedInvoiceAddressId = item.id;
+            this.selectedInvoiceAddress = item;
           }
           else{
             item.selected = false;
@@ -143,7 +117,6 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
       this.currentUserIsExist = false;
     }
 
-    this.loadDeliveryAddresses();
     this.loadInvoiceAddresses();
 
     this.basketService.basket$.subscribe(result => {
@@ -156,47 +129,24 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
 
         result.forEach(item => {
           this.numberOfItem += 1;
-          this.totalPrice += item.product?.sale! > 0 ? item.product?.discountedPrice! : item.product?.price!;
+          this.totalPrice += item.product?.price!;
           
           if(this.basket.length == 0) {
-            this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.sale! > 0 ? item.product?.discountedPrice : item.product?.price});
+            this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price});
           }
           else{
             let itemInBasket = this.basket.filter(f => f.productId == item.productId);
             if(itemInBasket.length > 0) {
               if(itemInBasket[0].numberOf) { itemInBasket[0].numberOf += 1; }
-              if(itemInBasket[0].totalPrice) { itemInBasket[0].totalPrice += item.product?.sale! > 0 ? item.product?.discountedPrice! : item.product?.price!; }
+              if(itemInBasket[0].totalPrice) { itemInBasket[0].totalPrice += item.product?.price!; }
             }
             else{
-              this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.sale! > 0 ? item.product?.discountedPrice : item.product?.price});
+              this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price});
             }
           }
         })
       }
     });
-  }
-
-  onCheckboxClicked() {
-    if(this.selectedDeliveryAddressId == this.selectedInvoiceAddressId) {
-      this.invoiceAddresses.forEach(item => {
-        if(item.id == this.selectedInvoiceAddressId) {
-          item.selected = false;
-        }
-      })
-
-      this.selectedInvoiceAddressId = 0;
-    }
-    else{
-      this.invoiceAddresses.forEach(item => {
-        item.selected = false;
-
-        if(item.id == this.selectedDeliveryAddressId) {
-          item.selected = true;
-        }
-      })
-
-      this.selectedInvoiceAddressId = this.selectedDeliveryAddressId;
-    }
   }
 
   openEditModal(id: number) {
@@ -207,26 +157,11 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
     this.editSaveComponent.openModal(this.currentUser.id, undefined);
   }
 
-  selectDeliveryAddress(id: number) {
-    this.deliveryAddresses.forEach(item => {
-      if(item.id == id) {
-        item.selected = true;
-        this.selectedDeliveryAddress = item;
-      }
-
-      if(item.id == this.selectedDeliveryAddressId) {
-        item.selected = false;
-      }
-    })
-
-    this.selectedDeliveryAddressId = id;
-
-  }
-
   selectInvoiceAddress(id: number) {
     this.invoiceAddresses.forEach(item => {
       if(item.id == id) {
         item.selected = true;
+        this.selectedInvoiceAddress = item;
       }
 
       if(item.id == this.selectedInvoiceAddressId) {

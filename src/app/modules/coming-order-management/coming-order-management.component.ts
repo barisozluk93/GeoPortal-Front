@@ -58,13 +58,13 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    const keys = ['PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'SHIPPED', 'DELIVERED'];
+    const keys = ['PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'REJECTED', 'COMPLETED'];
 
     const translationRequest = keys.map(key => this.translate.get(key));
 
     forkJoin(translationRequest).subscribe((translations) => {
-      const [pendingApprovalText, approvedText, preparingText, shippedText, deliveredText] = translations;
-      this.comingOrderManagementService.paging(this.paginationModel.pageNumber, this.paginationModel.pageSize, this.currentUser?.id, this.searchTerm)
+      const [pendingApprovalText, approvedText, preparingText, rejectedText, completedText] = translations;
+      this.comingOrderManagementService.paging(this.paginationModel.pageNumber, this.paginationModel.pageSize, this.searchTerm)
       .subscribe(result => {
         if (result.isSuccess) {
           result.data.items.forEach(item => {
@@ -79,11 +79,11 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
             else if (item.orderStatus == OrderStatusEnum['Hazırlanıyor']) {
               item.orderStatusStr = preparingText;
             }
-            else if (item.orderStatus == OrderStatusEnum['Kargolandı']) {
-              item.orderStatusStr = shippedText;
+            else if (item.orderStatus == OrderStatusEnum['Reddedildi']) {
+              item.orderStatusStr = rejectedText;
             }
-            else if (item.orderStatus == OrderStatusEnum['Teslim Edildi']) {
-              item.orderStatusStr = deliveredText;
+            else if (item.orderStatus == OrderStatusEnum['Tamamlandı']) {
+              item.orderStatusStr = completedText;
             }
 
             item.priceStr = item.product?.price.toFixed(2) + " ₺";

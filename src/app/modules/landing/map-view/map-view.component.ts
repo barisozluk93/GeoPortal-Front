@@ -32,6 +32,13 @@ import { MapSearchService } from 'src/app/services/map-search.service';
 import { MapService } from './map-view.service';
 import { LayerModel } from './models/layer.model';
 import { LayerGroupModel } from './models/layerGroup.model';
+import { BasketService } from 'src/app/_metronic/partials/layout/basket/basket.service';
+import { BasketManagementService } from '../../basket-management/basket-management.service';
+import { BasketModel } from '../../basket-management/models/basket.model';
+import { AuthService } from '../../auth';
+import { Alert } from 'bootstrap';
+import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
+import { ProductModel } from '../../product-management/models/product.model';
 
 type SearchResult = {
   display_name: string;
@@ -43,6 +50,7 @@ type SearchResult = {
 type UiLayerModel = LayerModel & {
   visible: boolean;
   opacity: number;
+  inBasket: boolean;
 };
 
 type UiLayerGroupModel = LayerGroupModel & {
@@ -62,6 +70,10 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
   readonly i18n = inject(TranslationService);
   readonly mapSearch = inject(MapSearchService);
   readonly mapViewService = inject(MapService);
+  readonly basketManagementService = inject(BasketManagementService);
+  readonly basketService = inject(BasketService);
+  readonly authService = inject(AuthService);
+  readonly alertService = inject(AlertService);
 
   private map?: OlMap;
   private view?: View;
@@ -134,7 +146,21 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  ngAfterViewInit(): void {
+  updateBasketState(): void {
+    this.basketService.basket$.subscribe(basket => {
+      const groups = this.layerGroups();
+
+      for (const group of groups) {
+        for (const layer of group.layers) {
+          layer.inBasket = basket.some(item => item.productId === layer.id);
+        }
+      }
+
+      this.layerGroups.set([...groups]);
+    });
+  }
+
+  ngAfterViewInit(): void {    
     this.view = new View({
       center: this.defaultCenter,
       zoom: this.defaultZoom
@@ -173,6 +199,8 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.map?.updateSize();
     }, 0);
+
+    this.updateBasketState();
   }
 
   ngOnDestroy(): void {
@@ -228,7 +256,8 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
         .map((layer) => ({
           ...layer,
           visible: false,
-          opacity: 100
+          opacity: 100,
+          inBasket: false
         }))
     };
   }
@@ -279,7 +308,39 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
   }
 
   onBuyLayer(layer: UiLayerModel): void {
-    console.log('Satın al:', layer);
+    var currentUser = this.authService.currentUserValue;
+
+    if (currentUser) {
+      let data: BasketModel = { id: 0, userId: currentUser.id, productId: layer.id, isDeleted: false, product: undefined, totalPrice: undefined, numberOf: undefined };
+
+      this.basketManagementService.save(data).subscribe(result => {
+        if (result.isSuccess) {
+          this.alertService.createAlert("success", result.message);
+          this.basketService.loadBasketFromDb();
+        }
+        else {
+          this.alertService.createAlert("danger", result.message);
+        }
+      })
+    }
+    else {
+      var product: ProductModel = { categoryId: 1, id: layer.id, name: layer.name, price: layer.price ?? 0, isDeleted: false, userId: 0 };
+      var basket = JSON.parse(localStorage.getItem("basket") as string) as BasketModel[];
+
+      if (basket) {
+        if (basket.length < 15) {
+          basket.push({ id: 0, userId: 0, product: product, productId: product.id, isDeleted: false, numberOf: 0, totalPrice: 0 });
+        }
+        else {
+          this.alertService.createAlert("warning", "Daha fazla ürün eklemek için lütfen giriş yapınız!");
+        }
+      }
+      else {
+        basket = [{ id: 0, userId: 0, product: product, productId: product.id, isDeleted: false, numberOf: 0, totalPrice: 0 }];
+      }
+
+      this.basketService.setBasket(basket);
+    }
   }
 
   private closeOtherBaseMaps(activeLayerId: number): void {
@@ -592,5 +653,11 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
 
   trackByLayer(_: number, item: UiLayerModel): number {
     return item.id;
+  }
+
+  showBuyButton(layer: UiLayerModel): boolean {
+    if (layer.price === undefined || layer.price === null) return false;
+    if (layer.price <= 0) return false;
+    return true;
   }
 }

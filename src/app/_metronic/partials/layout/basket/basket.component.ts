@@ -31,12 +31,7 @@ export class BasketComponent implements OnInit {
       if(this.basket) {
         let totalPrice = 0;
         this.basket.forEach(item => {
-          if(item.product?.sale! > 0) {
-            totalPrice += item.product?.discountedPrice!;
-          }
-          else{
-            totalPrice += item.product?.price!;
-          }
+          totalPrice += item.product?.price!;
         })
 
         this.total = totalPrice.toFixed(2);

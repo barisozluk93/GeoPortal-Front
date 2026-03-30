@@ -172,19 +172,19 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
 
         result.forEach(item => {
           this.numberOfItem += 1;
-          this.totalPrice += item.product?.sale! > 0 ? item.product?.discountedPrice! : item.product?.price!;
+          this.totalPrice += item.product?.price!;
           
           if(this.basket.length == 0) {
-            this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.sale! > 0 ? item.product?.discountedPrice : item.product?.price});
+            this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price});
           }
           else{
             let itemInBasket = this.basket.filter(f => f.productId == item.productId);
             if(itemInBasket.length > 0) {
               if(itemInBasket[0].numberOf) { itemInBasket[0].numberOf += 1; }
-              if(itemInBasket[0].totalPrice) { itemInBasket[0].totalPrice += item.product?.sale! > 0 ? item.product?.discountedPrice! : item.product?.price!; }
+              if(itemInBasket[0].totalPrice) { itemInBasket[0].totalPrice += item.product?.price!; }
             }
             else{
-              this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.sale! > 0 ? item.product?.discountedPrice : item.product?.price});
+              this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price});
             }
           }
         })

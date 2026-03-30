@@ -31,11 +31,6 @@ const API_ORDER_URL = `${environment.apiUrl}/Basket`;
         if(currentUser) {
             this.allBasket(currentUser.id).subscribe(result => { 
                 if(result.data) {
-                    result.data.forEach(item => {
-                        var product = item.product!;
-                        product.fileResult.fileContents = "data:" + product.fileResult.contentType + ";base64," + product.fileResult.fileContents;
-                        item.product = product;
-                    })
                     this._basket$.next(result.data)
                 }
                 else{

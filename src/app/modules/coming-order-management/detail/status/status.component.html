@@ -22,51 +22,6 @@
                           }"></ng-container>
                 </div>
             </div>
-            <div class="row mb-8" *ngIf="form.controls['orderStatus']?.value == 3">
-                <div class="col-xxl-6">
-                    <label class="form-label fs-6 fw-bolder text-gray-900">{{'TRACKING_NO' | translate}}</label>
-                    <input class="form-control bg-transparent" type="text" name="trackingNo" formControlName="trackingNo" autocomplete="off"
-                        [ngClass]="{
-                        'is-invalid': form.controls['trackingNo'].invalid,
-                        'is-valid': form.controls['trackingNo'].valid
-                      }" />
-                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                        validation: 'required',
-                        message: ('TRACKING_NO' | translate) + ' ' + ('IS_REQUIRED'| translate),
-                        control: form.controls['trackingNo']
-                      }"></ng-container>
-                </div>
-            </div>
-            <div class="row mb-8" *ngIf="form.controls['orderStatus']?.value == 3">
-                <div class="col-xxl-6">
-                    <label class="form-label fs-6 fw-bolder text-gray-900">{{'SHIPPING_DATE' | translate}}</label>
-                    <input class="form-control bg-transparent" type="datetime-local" name="trackingDate" formControlName="trackingDate" autocomplete="off"
-                        [ngClass]="{
-                        'is-invalid': form.controls['trackingDate'].invalid,
-                        'is-valid': form.controls['trackingDate'].valid
-                      }" />
-                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                        validation: 'required',
-                        message: ('SHIPPING_DATE' |translate) + ' ' +  ('IS_REQUIRED' | translate),
-                        control: form.controls['trackingDate']
-                      }"></ng-container>
-                </div>
-            </div>
-            <div class="row mb-8" *ngIf="form.controls['orderStatus']?.value == 4">
-                <div class="col-xxl-6">
-                    <label class="form-label fs-6 fw-bolder text-gray-900">{{'DELIVERY_DATE' | translate}}</label>
-                    <input class="form-control bg-transparent" type="datetime-local" name="completionDate" formControlName="completionDate" autocomplete="off"
-                        [ngClass]="{
-                        'is-invalid': form.controls['completionDate'].invalid,
-                        'is-valid': form.controls['completionDate'].valid
-                      }" />
-                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                        validation: 'required',
-                        message: ('DELIVERY_DATE' | translate) + ' ' + ('IS_REQUIRED' | translate),
-                        control: form.controls['completionDate']
-                      }"></ng-container>
-                </div>
-            </div>
         </form>
     </form>
 

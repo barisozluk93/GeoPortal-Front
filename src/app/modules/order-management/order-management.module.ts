@@ -13,6 +13,7 @@ import { OrderDetailComponent } from './detail/order-detail.component';
 import { InvoiceComponent } from './detail/invoice/invoice.component';
 import { CommentComponent } from './detail/comment/comment.component';
 import { DataTableModule } from '../common/datatable/datatable.module';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { DataTableModule } from '../common/datatable/datatable.module';
     ModalsModule,
     InlineSVGModule,
     NgbPaginationModule,
+    PdfViewerModule
   ]
 })
 export class OrderManagementModule {}

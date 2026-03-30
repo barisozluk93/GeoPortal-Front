@@ -59,7 +59,9 @@
             <button class="group-card-header" type="button" (click)="toggleGroup(group)">
               <div class="group-card-header-left">
                 <div class="group-card-title">{{ group.name }}</div>
-                <div class="group-card-subtitle">{{ group.layers.length }} {{ 'LAYER' | translate }}{{group.layers.length > 1 && ("LANG" | translate) === 'en' ? 's' : '' }}</div>
+                <div class="group-card-subtitle">
+                  {{ group.layers.length }} {{ 'LAYER' | translate }}{{group.layers.length > 1 && ("LANG" | translate) === 'en' ? 's' : '' }}
+                </div>
               </div>
 
               <div class="group-card-header-right">
@@ -94,7 +96,7 @@
                     </div>
 
                     <button
-                      *ngIf="!layer.isBaseMap"
+                      *ngIf="!layer.isBaseMap && !layer.inBasket"
                       class="upload-chip"
                       type="button"
                       (click)="onBuyLayer(layer)"

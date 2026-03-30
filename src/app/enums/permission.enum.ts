@@ -22,9 +22,9 @@ export enum PermissionEnum {
   export enum OrderStatusEnum {
     "Onay Bekliyor" = 0,
     "Onaylandı" = 1,
-    "Hazırlanıyor" = 2,
-    "Kargolandı" = 3,
-    "Teslim Edildi" = 4,
+    "Reddedildi" = 2,
+    "Hazırlanıyor" = 3,
+    "Tamamlandı" = 4,
     "Sipariş Tamamlandı" = 5,
     "Sipariş Tamamlanmadı" = 6
   }
