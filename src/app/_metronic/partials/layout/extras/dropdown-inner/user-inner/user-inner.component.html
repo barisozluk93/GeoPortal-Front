@@ -1,158 +1,148 @@
 <ng-container *ngIf="user">
-  <div class="menu-item px-3">
-    <div class="menu-content d-flex align-items-center px-3">
-      <div class="symbol symbol-50px me-5">
-        <img *ngIf="user?.fileId == undefined" src="./assets/media/avatars/blank.png" />
+  <div class="user-glass-header">
+    <div class="user-header-left">
+      <div class="user-header-avatar">
+        <img
+          *ngIf="user?.fileId == undefined"
+          src="./assets/media/avatars/blank.png"
+          alt="user-avatar"
+        />
 
-        <img *ngIf="user?.fileId != undefined" [src]="user?.fileResult?.fileContents" />
+        <img
+          *ngIf="user?.fileId != undefined"
+          [src]="user?.fileResult?.fileContents"
+          alt="user-avatar"
+        />
       </div>
 
-      <div class="d-flex flex-column">
-        <div class="fw-bolder d-flex align-items-center fs-5">
+      <div class="user-header-content">
+        <h3 class="user-header-title mb-0">
           {{ user.name }} {{ user.surname }}
-          <!-- <span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2"
-            >Pro</span
-          > -->
-        </div>
-        <a class="fw-bold text-muted text-hover-primary fs-7 cursor-pointer">
+        </h3>
+
+        <span class="user-header-subtitle">
           {{ user.email }}
-        </a>
+        </span>
       </div>
     </div>
   </div>
 
-  <!-- <div class="separator my-2"></div> -->
+  <div class="user-glass-body">
+    <div class="user-menu-list">
 
-  <!-- <div class="menu-item px-5">
-    <a routerLink="/crafted/pages/profile" class="menu-link px-5">
-      My Profile
-    </a>
-  </div>
+      <div class="user-row my-1">
+        <div routerLink="/profile/settings" class="user-glass-item px-4 py-3 cursor-pointer">
+          <div class="user-item-left">
+            <span class="user-item-icon">
+              <i class="fa-solid fa-user"></i>
+            </span>
 
-  <div class="menu-item px-5">
-    <a class="menu-link px-5 cursor-pointer" placement="top-start" ngbTooltip="Coming soon">
-      <span class="menu-text">My Projects</span>
-      <span class="menu-badge">
-        <span class="badge badge-light-danger badge-circle fw-bolder fs-7">3</span>
-      </span>
-    </a>
-  </div> -->
+            <span class="user-item-text">
+              {{ 'MY_PROFILE' | translate }}
+            </span>
+          </div>
 
-  <!-- <div
-    class="menu-item px-5"
-    data-kt-menu-trigger="hover"
-    data-kt-menu-placement="left-start"
-    data-kt-menu-flip="bottom"
-  >
-    <a class="menu-link px-5 cursor-pointer">
-      <span class="menu-title">My Subscription</span>
-      <span class="menu-arrow"></span>
-    </a>
-
-    <div class="menu-sub menu-sub-dropdown w-175px py-4">
-      <div class="menu-item px-3">
-        <a class="menu-link px-5 cursor-pointer" placement="top-start" ngbTooltip="Coming soon">Referrals</a>
-      </div>
-
-      <div class="menu-item px-3">
-        <a class="menu-link px-5 cursor-pointer" placement="top-start" ngbTooltip="Coming soon">Billing</a>
-      </div>
-
-      <div class="menu-item px-3">
-        <a class="menu-link px-5 cursor-pointer" placement="top-start" ngbTooltip="Coming soon">Payments</a>
-      </div>
-
-      <div class="menu-item px-3">
-        <a class="menu-link d-flex flex-stack px-5 cursor-pointer" placement="top-start" ngbTooltip="Coming soon">
-          Statements
-          <i
-            class="fas fa-exclamation-circle ms-2 fs-7"
-            data-bs-toggle="tooltip"
-            title="View your statements"
-          ></i>
-        </a>
-      </div>
-
-      <div class="separator my-2"></div>
-
-      <div class="menu-item px-3">
-        <div class="menu-content px-3">
-          <label
-            class="form-check form-switch form-check-custom form-check-solid"
-          >
-            <input 
-              class="form-check-input w-30px h-20px"
-              type="checkbox"
-              value="1"
-              defaultChecked="{true}"
-              name="notifications"
-            />
-            <span class="form-check-label text-muted fs-7">Notifications</span>
-          </label>
+          <span class="user-item-arrow">
+            <i class="fa-solid fa-chevron-right"></i>
+          </span>
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="menu-item px-5">
-    <a class="menu-link px-5 cursor-pointer" placement="top-start" ngbTooltip="Coming soon">My Statements</a>
-  </div> -->
+      <div class="user-row my-1" *ngIf="!isAdminPanel">
+        <div routerLink="/ordermanagement" class="user-glass-item px-4 py-3 cursor-pointer">
+          <div class="user-item-left">
+            <span class="user-item-icon">
+              <i class="fa-solid fa-box"></i>
+            </span>
 
-  <div class="separator my-2"></div>
+            <span class="user-item-text">
+              {{ 'MY_ORDERS' | translate }}
+            </span>
+          </div>
 
-  <div class="menu-item px-5 my-1">
-    <a routerLink="/profile/settings" class="menu-link px-5">
-      {{'MY_PROFILE' | translate}}
-    </a>
-  </div>
-
-  <div class="menu-item px-5 my-1" *ngIf="!isAdminPanel">
-    <a routerLink="/ordermanagement" class="menu-link px-5">
-      {{'MY_ORDERS' | translate}}
-    </a>
-  </div>
-
-  <div class="menu-item px-5" data-kt-menu-trigger="hover" data-kt-menu-placement="left-start"
-    data-kt-menu-flip="bottom">
-    <a class="menu-link px-5 cursor-pointer">
-      <span class="menu-title position-relative">
-        {{'LANGUAGE' | translate}}
-        <span
-          class="
-            fs-8
-            rounded
-            bg-light
-            px-3
-            py-2
-            position-absolute
-            translate-middle-y
-            top-50
-            end-0
-          "
-        >
-          {{ ( 'LANG' | translate ) === 'tr' ? language.nameTr : language.nameEn }}{{ " " }}
-          <img
-            class="w-15px h-15px rounded-1 ms-2"
-            [src]="language.flag"
-            alt="metronic"
-          />
-        </span>
-      </span>
-    </a>
-
-    <div class="menu-sub menu-sub-dropdown w-175px py-4">
-      <div *ngFor="let l of langs" class="menu-item px-3 cursor-pointer" (click)="selectLanguage(l.lang)">
-        <a class="menu-link d-flex px-5" [ngClass]="l.lang === language.lang ? 'active' : ''">
-          <span class="symbol symbol-20px me-4">
-            <img class="rounded-1" [src]="l.flag" alt="metronic" />
+          <span class="user-item-arrow">
+            <i class="fa-solid fa-chevron-right"></i>
           </span>
-          {{ ( 'LANG' | translate ) === 'tr' ? l.nameTr : l.nameEn }}
-        </a>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="menu-item px-5">
-    <a (click)="logout()" class="menu-link px-5 cursor-pointer"> {{'AUTH.GENERAL.SIGNOUT_BUTTON' | translate}} </a>
+      <div
+        class="user-row my-1"
+        data-kt-menu-trigger="hover"
+        data-kt-menu-placement="left-start"
+        data-kt-menu-flip="bottom"
+      >
+        <div class="user-glass-item px-4 py-3 cursor-pointer">
+          <div class="user-item-left">
+            <span class="user-item-icon">
+              <i class="fa-solid fa-language"></i>
+            </span>
+
+            <span class="user-item-text">
+              {{ 'LANGUAGE' | translate }}
+            </span>
+          </div>
+
+          <div class="user-language-badge">
+            <span class="user-language-name">
+              {{ ('LANG' | translate) === 'tr' ? language.nameTr : language.nameEn }}
+            </span>
+
+            <img
+              class="user-language-flag"
+              [src]="language.flag"
+              alt="language-flag"
+            />
+          </div>
+        </div>
+
+        <div class="menu-sub menu-sub-dropdown w-200px py-3 user-language-dropdown">
+          <div
+            *ngFor="let l of langs"
+            class="user-language-row px-3 cursor-pointer"
+            (click)="selectLanguage(l.lang)"
+          >
+            <div
+              class="user-language-option d-flex align-items-center justify-content-between px-4 py-3"
+              [ngClass]="l.lang === language.lang ? 'active' : ''"
+            >
+              <div class="d-flex align-items-center">
+                <span class="symbol symbol-20px me-3">
+                  <img class="rounded-1" [src]="l.flag" alt="language-flag" />
+                </span>
+
+                <span>
+                  {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
+                </span>
+              </div>
+
+              <i
+                *ngIf="l.lang === language.lang"
+                class="fa-solid fa-check user-language-check"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="user-row my-1">
+        <div (click)="logout()" class="user-glass-item user-logout-item px-4 py-3 cursor-pointer">
+          <div class="user-item-left">
+            <span class="user-item-icon">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </span>
+
+            <span class="user-item-text">
+              {{ 'AUTH.GENERAL.SIGNOUT_BUTTON' | translate }}
+            </span>
+          </div>
+
+          <span class="user-item-arrow">
+            <i class="fa-solid fa-chevron-right"></i>
+          </span>
+        </div>
+      </div>
+
+    </div>
   </div>
 </ng-container>

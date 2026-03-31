@@ -23,7 +23,7 @@
               {{ 'START_CODING' | translate }}
             </button>
 
-            <button class="btn btn-gp btn-gp-secondary">
+            <button class="btn btn-gp btn-gp-secondary" (click)="routeToDoc()">
               {{ 'DOCUMENTATION' | translate }}
             </button>
           </div>
@@ -34,8 +34,10 @@
             <div class="api-panel-title">{{ 'ENDPOINTS' | translate }}</div>
 
             <pre class="api-code-block mb-0">POST http://178.251.42.243/geoportalApi/map/getSatelliteDatas
-GET http://178.251.42.243/geoportalApi/map/getSatelliteDatas/status/&#123;jobId&#125;
-</pre>
+POST http://178.251.42.243/geoportalApi/map/startImageProcessing
+GET http://178.251.42.243/geoportalApi/map/getImageProcessingStatus/&#123;processId&#125;
+GET http://178.251.42.243/geoportalApi/map/getProcessedSatelliteImage/&#123;processId&#125;
+            </pre>
           </div>
         </div>
 

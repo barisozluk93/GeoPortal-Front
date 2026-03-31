@@ -7,7 +7,7 @@ import { OrderProductModel } from '../models/orderproduct.model';
 import { StatusComponent } from './status/status.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { TranslateService } from '@ngx-translate/core';
-import { forkJoin } from 'rxjs';
+import { forkJoin, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-coming-order-detail',
@@ -81,8 +81,15 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
     });
 
     this.updateHeader(); 
-    this.orderProductId = parseInt(this.route.snapshot.paramMap.get('id')!);
-    this.getById();
+    this.route.paramMap
+      .pipe()
+      .subscribe(params => {
+        const id = Number(params.get('id'));
+        if (id) {
+          this.orderProductId = id;
+          this.getById();
+        }
+      });
   }
 
   updateHeader(){

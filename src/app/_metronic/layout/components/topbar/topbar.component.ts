@@ -47,6 +47,10 @@ export class TopbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setLanguage(this.translate.currentLang);
 
+    this.notificationService.notifications$.subscribe(result => {
+      this.refreshNotificationData();
+    })
+
     this.translate.onLangChange
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
@@ -112,10 +116,22 @@ export class TopbarComponent implements OnInit, OnDestroy {
         this.unreadedNotificationCount++;
 
         this.triggerNotificationAnimation();
-        this.toastr.success(
-          notification.body || 'Yeni bildirim geldi',
-          this.translate.instant('NOTIFICATIONS')
-        );
+
+        if(notification.type == "NEW_ORDER") {
+          this.toastr.info("(" + notification.body + ")" + this.translate.instant('NEW_ORDER_MESSAGE'), this.translate.instant('NEW_ORDER'));    
+        }
+        else if(notification.type == "ORDER_APPROVED") {
+          this.toastr.info("(" + notification.body + ")" + this.translate.instant('ORDER_APPROVED_MESSAGE'), this.translate.instant('ORDER_APPROVED'));
+        }
+        else if(notification.type == "ORDER_REJECTED") {
+          this.toastr.info("(" + notification.body + ")" + this.translate.instant('ORDER_REJECTED_MESSAGE'), this.translate.instant('ORDER_REJECTED'));
+        }
+        else if(notification.type == "ORDER_COMPLETED") {
+          this.toastr.info("(" + notification.body + ")" + this.translate.instant('ORDER_COMPLETED_MESSAGE'), this.translate.instant('ORDER_COMPLETED'));
+        }
+        else if(notification.type == "ORDER_PREPARING") {
+          this.toastr.info("(" + notification.body + ")" + this.translate.instant('ORDER_PREPARING_MESSAGE'), this.translate.instant('ORDER_PREPARING'));
+        }
       });
 
     this.signalRService.unreadCount$

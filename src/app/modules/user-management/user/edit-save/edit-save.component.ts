@@ -175,6 +175,12 @@ export class UserEditSaveComponent {
     }
 
     submit() {
+
+        if(this.form.invalid) {
+            this.form.markAllAsTouched();
+            return false;
+        }
+
         if (this.form.valid) {
             var temp = this.form.getRawValue();
 

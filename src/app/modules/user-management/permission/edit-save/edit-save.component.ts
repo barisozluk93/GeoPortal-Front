@@ -96,6 +96,11 @@ export class PermissionEditSaveComponent implements OnInit {
     }
 
     submit() {
+        if(this.form.invalid) {
+            this.form.markAllAsTouched();
+            return false;
+        }
+
         if(this.form.valid) {
             var data = this.form.getRawValue() as PermissionModel;
 

@@ -72,7 +72,6 @@ export class ThemeModeService {
   }
 
   public init() {
-    console.log(this.mode.value)
     this.updateMode(this.mode.value);
     this.updateMenuMode(this.menuMode.value);
   }

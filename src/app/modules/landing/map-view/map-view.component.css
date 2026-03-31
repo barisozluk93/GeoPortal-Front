@@ -503,16 +503,16 @@
   font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.2s ease;
-  background: rgba(44, 99, 255, 0.18);
-  border: 1px solid rgba(44, 99, 255, 0.28);
-  box-shadow: 0 6px 18px rgba(44, 99, 255, 0.18);
+  background: linear-gradient(135deg, #1f66ff 0%, #4c8cff 100%);
+  border: 0;
+  box-shadow: 0 12px 28px rgba(31, 102, 255, 0.3);
   flex: 0 0 auto;
 }
 
 .upload-chip:hover {
-  background: rgba(44, 99, 255, 0.3);
-  border-color: rgba(44, 99, 255, 0.42);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #1f66ff 0%, #4c8cff 100%);
+  border: 0;
+  box-shadow: 0 12px 28px rgba(31, 102, 255, 0.3);
 }
 
 .layer-toolbar-meta {

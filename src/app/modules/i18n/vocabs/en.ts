@@ -367,7 +367,7 @@ export const locale = {
 
     "API_KICKER": "Satellite Data API Platform",
     "API_TITLE": "Integrate Satellite Imagery Into Your Applications with an API Key",
-    "API_COPY": "Purchase a 1-month API key, send requests with a Bearer token, and programmatically access satellite imagery within your selected area. Easily use the results in your applications, services, and workflows.",
+    "API_COPY": "Purchase a 1-month API key, send requests, and programmatically access satellite imagery within your selected area. Easily use the results in your applications, services, and workflows.",
     "START_CODING": "Buy Now",
     "DOCUMENTATION": "Documentation",
     "ENDPOINTS": "Endpoints",
@@ -456,9 +456,328 @@ export const locale = {
     "COORDINATE": "Coordinate",
     "BUY_DATA": "Buy Data",
     "LOADING": "Loading...",
-    "BUY": "Buy",
+    "BUY": "Add to Cart",
     "LAYER": "Layer",
 
+    "MARKETPLACE": {
+      "NAME": "Marketplace",
+      "FILTERS": {
+        "KICKER": "Filters",
+        "TITLE": "Product Search",
+        "SUBTITLE": "Narrow processed data packages by city, cloud rate, and price filters.",
+        "SEARCH_LABEL": "Search",
+        "SEARCH_PLACEHOLDER": "City, district, or provider",
+        "CITY_LABEL": "City",
+        "ALL_CITIES": "All",
+        "MAX_CLOUD_LABEL": "Maximum Cloud Rate",
+        "MAX_PRICE_LABEL": "Maximum Price",
+        "SORT_LABEL": "Sort"
+      },
+      "SORT": {
+        "NEWEST": "Newest",
+        "PRICE_ASC": "Price: Low to High",
+        "PRICE_DESC": "Price: High to Low",
+        "CLOUD_ASC": "Lowest Cloud Rate"
+      },
+      "BUNDLE": {
+        "TITLE": "Sold Data Package",
+        "ITEM_1": "Orthorectified image",
+        "ITEM_2": "Pansharpen processed output",
+        "ITEM_3": "Classified data layer",
+        "ITEM_4": "Ready-to-purchase package",
+        "SHORT_1": "Orthorectified",
+        "SHORT_2": "Pansharpen",
+        "SHORT_3": "Classified"
+      },
+      "ACTIONS": {
+        "CLEAR_FILTERS": "Clear Filters",
+        "REFRESH": "Refresh",
+        "DETAIL": "Detail",
+        "ADD_TO_CART": "Add to Cart",
+        "MAP_PREVIEW": "Map Preview"
+      },
+      "RESULTS": {
+        "TITLE": "Processed Satellite Images",
+        "FOUND": "results found"
+      },
+      "STATES": {
+        "LOADING": "Loading data...",
+        "DETAIL_LOADING": "Loading product detail...",
+        "EMPTY_TITLE": "No results found",
+        "EMPTY_TEXT": "Try broadening your search criteria."
+      },
+      "ERRORS": {
+        "LOAD_LIST": "An error occurred while loading marketplace data.",
+        "LOAD_DETAIL": "An error occurred while loading product detail."
+      },
+      "STATUS": {
+        "AVAILABLE": "Available",
+        "LIMITED": "Limited"
+      },
+      "CARD": {
+        "CLOUD": "cloud",
+        "AREA": "Area",
+        "CLOUD_RATE": "Cloud",
+        "RESOLUTION": "Resolution",
+        "CLASSES": "Classes",
+        "PRICE": "Price"
+      },
+      "DETAIL": {
+        "KICKER": "Product Detail",
+        "DESCRIPTION": "Description",
+        "TECHNICAL_INFO": "Technical Information",
+        "CITY": "City",
+        "DISTRICT": "District",
+        "DATE": "Date",
+        "PROVIDER": "Provider",
+        "RESOLUTION": "Resolution",
+        "CLOUD_RATE": "Cloud Rate",
+        "AREA": "Area",
+        "DATA_TYPE": "Data Type",
+        "DATA_TYPE_VALUE": "Processed Package",
+        "PACKAGE_CONTENT": "Package Content",
+        "CLASS_OUTPUTS": "Classification Outputs"
+      }
+    },
+
+    "CLICK_TO_SELECT": "Click to select",
+    "NO_ADDRESS_FOUND": "No saved address found.",
+
+    "ENTER_CARD_INFORMATION": "Enter your card information",
+    "CARD_PREVIEW": "Card Preview",
+    "SECURE_PAYMENT": "Secure Payment",
+
+    "CARD_HOLDER": "Card Holder",
+    "CARD_HOLDER_PLACEHOLDER": "Full Name",
+    "CARD_HOLDER_REQUIRED": "Card holder name is required.",
+    "CARD_HOLDER_MIN_LENGTH": "Card holder name must be at least 3 characters.",
+
+    "CARD_NUMBER": "Card Number",
+    "CARD_NUMBER_REQUIRED": "Card number is required.",
+    "CARD_NUMBER_INVALID": "Card number must be 16 digits.",
+
+    "EXPIRE_DATE": "Expiry Date",
+    "EXPIRE_MONTH": "Month",
+    "EXPIRE_YEAR": "Year",
+    "EXPIRE_MONTH_REQUIRED": "Expiry month is required.",
+    "EXPIRE_MONTH_INVALID": "Month must be between 01 and 12.",
+    "EXPIRE_YEAR_REQUIRED": "Expiry year is required.",
+    "EXPIRE_YEAR_INVALID": "Year must be 2 digits.",
+
+    "CVV": "CVV",
+    "CVV_REQUIRED": "CVV is required.",
+    "CVV_INVALID": "CVV must be 3 or 4 digits.",
+
+    "INSTALLMENT": "Installment",
+    "INSTALLMENT_LOWER": "installments",
+    "SINGLE_PAYMENT": "Single Payment",
+
+    "PAYMENT_AGREEMENT_CONFIRM": "I confirm my payment information and agree to complete the order.",
+    "PAYMENT_AGREEMENT_REQUIRED": "You must confirm the payment agreement to continue.",
+    "PAYMENT_FORM_INFO": "Your card information will be used during the secure payment step.",
+
+    "PLEASE_SELECT_INVOICE_ADDRESS": "Please select an invoice address.",
+    "PLEASE_FILL_PAYMENT_FORM": "Please fill in the payment form completely.",
+    "BASKET_IS_EMPTY": "Your basket is empty.",
+    "PAYMENT_KICKER": "Payment",
+    "PAYMENT_COPY": "You can securely complete your order by entering your card details.",
+    "PAYMENT_CONFIRMATION_TEXT": "I confirm that my payment information is correct.",
+    "VALIDATION_CARD_HOLDER_REQUIRED": "Card holder name is required.",
+    "VALIDATION_CARD_HOLDER_MIN": "Card holder name must be at least 3 characters.",
+    "VALIDATION_CARD_NUMBER_REQUIRED": "Card number is required.",
+    "VALIDATION_CARD_NUMBER_PATTERN": "Card number must be 16 digits.",
+    "VALIDATION_EXPIRE_MONTH_REQUIRED": "Month is required.",
+    "VALIDATION_EXPIRE_MONTH_PATTERN": "Month must be between 01 and 12.",
+    "VALIDATION_EXPIRE_YEAR_REQUIRED": "Year is required.",
+    "VALIDATION_EXPIRE_YEAR_PATTERN": "Year must be 2 digits.",
+    "VALIDATION_CVV_REQUIRED": "CVV is required.",
+    "VALIDATION_CVV_PATTERN": "CVV must be 3 or 4 digits.",
+    "VALIDATION_PAYMENT_AGREEMENT": "You must accept the confirmation to continue.",
+
+    "NAME_REQUIRED": "Name is required",
+    "SURNAME_REQUIRED": "Surname is required",
+    "USERNAME_REQUIRED": "Username is required",
+    "PHONE_REQUIRED": "Phone is required",
+    "INVALID_EMAIL": "Please enter a valid email",
+    "MIN_LENGTH": "Minimum length not satisfied",
+    "MAX_LENGTH": "Maximum length exceeded",
+    "ACCOUNT_SUMMARY": "Account Summary",
+    "EMAIL_REQUIRED": "Email is required",
+    "CURRENT_PASSWORD_REQUIRED": "Current password is required",
+    "NEW_PASSWORD_REQUIRED": "New password is required",
+    "CONFIRM_PASSWORD_REQUIRED": "Password confirmation is required",
+    "NEW_ORDER": "New Order",
+    "NEW_ORDER_MESSAGE": "You have a new order.",
+    "ORDER_COMPLETED_MESSAGE": "Your order has been completed.",
+    "ORDER_REJECTED": "Order Rejected",
+    "ORDER_REJECTED_MESSAGE": "Your order has been rejected.",
+    "ORDER_APPROVED": "Order Approved",
+    "ORDER_APPROVED_MESSAGE": "Your order has been approved.",
+    "ORDER_PREPARING": "Order Preparing",
+    "ORDER_PREPARING_MESSAGE": "Your order is being prepared.",
+
+    "API_DOC": {
+      "SIDEBAR": {
+        "KICKER": "API Documentation",
+        "TITLE": "GeoPortal API Key Usage",
+        "SUBTITLE": "This document explains how to use the authorized endpoints with the purchased API key."
+      },
+      "NAV": {
+        "OVERVIEW": "Overview",
+        "AUTHENTICATION": "Authentication",
+        "RESPONSE_FORMAT": "Response Format",
+        "SATELLITE_DATA": "Satellite Data Listing",
+        "START_PROCESSING": "Start Processing",
+        "PROCESS_STATUS": "Process Status",
+        "PROCESSED_RESULT": "Processed Image Result",
+        "PRODUCT_MODEL": "Product Model",
+        "ERROR_CODES": "Error Codes"
+      },
+      "HERO": {
+        "VERSION": "Version 1.0",
+        "TITLE": "GeoPortal API Documentation",
+        "DESCRIPTION": "This document is prepared for listing satellite data, starting the image processing workflow, tracking the processing status, and retrieving the processed result by using API-key authorized endpoints.",
+        "BASE_URL": "Base URL",
+        "AUTHENTICATION": "Authentication",
+        "AVAILABLE_ENDPOINTS": "Available Endpoints",
+        "SERVICE": "Service",
+        "SERVICE_VALUE": "Map Service"
+      },
+      "AUTH": {
+        "KICKER": "Authentication",
+        "TITLE": "API Key Usage",
+        "DESCRIPTION": "The",
+        "DESCRIPTION_CONTINUE": "header is required for all requests. The API key only works on authorized endpoints."
+      },
+      "RESPONSE": {
+        "KICKER": "Standard Response",
+        "TITLE": "General Response Format",
+        "DESCRIPTION": "All endpoints return responses in a similar format."
+      },
+      "MODEL": {
+        "KICKER": "Model",
+        "TITLE": "ProductModel",
+        "DESCRIPTION": "Satellite data returned from the first endpoint is listed in this model structure."
+      },
+      "ERRORS": {
+        "KICKER": "Errors",
+        "TITLE": "Error Codes",
+        "CODES": {
+          "200": "Successful request",
+          "400": "Invalid request body or missing parameter",
+          "401": "API key is missing",
+          "403": "The API key is not authorized for this endpoint",
+          "404": "Record or process not found",
+          "500": "Server-side error"
+        }
+      },
+      "COMMON": {
+        "ENDPOINT": "Endpoint",
+        "AUTHENTICATION": "Authentication",
+        "APIKEY_REQUIRED": "x-api-key header is required.",
+        "HEADERS": "Headers",
+        "REQUEST_BODY": "Request Body",
+        "RESPONSE_EXAMPLE": "Response Example",
+        "CURL_EXAMPLE": "cURL Example",
+        "NOTES": "Notes",
+        "YES": "Yes",
+        "NO": "No"
+      },
+      "TABLE": {
+        "KEY": "Key",
+        "VALUE": "Value",
+        "REQUIRED": "Required",
+        "STATUS_CODE": "Status Code",
+        "DESCRIPTION": "Description"
+      },
+      "ENDPOINTS": {
+        "SATELLITE_DATA": {
+          "TITLE": "Get Satellite Data",
+          "DESCRIPTION": "Lists the related satellite images based on the submitted polygon area. Returns a ProductModel list in the response.",
+          "NOTES": {
+            "0": "Polygon coordinates must be sent in longitude, latitude order.",
+            "1": "The polygon may be sent as a closed ring where the first and last points are the same.",
+            "2": "This endpoint can only be used with an authorized API key."
+          }
+        },
+        "START_PROCESSING": {
+          "TITLE": "Start Satellite Image Processing",
+          "DESCRIPTION": "Starts the image processing workflow for the selected satellite data. The operation does not return the final result immediately; it returns a processId.",
+          "NOTES": {
+            "0": "This endpoint starts an asynchronous job.",
+            "1": "The processing result is not returned immediately.",
+            "2": "In the next step, the process status should be queried using processId."
+          }
+        },
+        "PROCESS_STATUS": {
+          "TITLE": "Query Processing Status",
+          "DESCRIPTION": "Returns the current status of the started image processing job.",
+          "NOTES": {
+            "0": "Possible status values are: Queued, Processing, Completed, Failed.",
+            "1": "If the operation is not completed, the final image result is not returned by this endpoint.",
+            "2": "When the status is Completed, the 4th endpoint should be used."
+          }
+        },
+        "PROCESSED_RESULT": {
+          "TITLE": "Get Processed Satellite Image",
+          "DESCRIPTION": "After the image processing operation is completed, returns the processed satellite image information and output links using processId.",
+          "NOTES": {
+            "0": "This endpoint returns meaningful data only after the processing is completed.",
+            "1": "If the processing is not finished yet, the status may not be Completed.",
+            "2": "The result may include raster, preview, and classification outputs."
+          }
+        }
+      }
+    },
+    "DATA_PAGE": {
+      "KICKER": "Satellite Data",
+      "TITLE": "Find, select, and process satellite imagery",
+      "COPY": "List satellite images for your target area, filter the results, and select the most suitable data for your project. Process the selected imagery and turn it into ready-to-use outputs for analysis and operational use.",
+      "SEARCH_TITLE": "Search your area",
+      "SEARCH_PLACEHOLDER": "Enter city, district, or region name",
+      "SEARCH_BUTTON": "Start Search",
+      "LOADING": "Loading...",
+      "BENEFIT_1_TITLE": "Find satellite data quickly",
+      "BENEFIT_1_DESC": "List relevant satellite imagery in a short time by searching with polygon or region-based queries.",
+      "BENEFIT_2_TITLE": "Choose the right image",
+      "BENEFIT_2_DESC": "Compare imagery by date, resolution, and cloud coverage to identify the right dataset.",
+      "BENEFIT_3_TITLE": "Start the processing workflow",
+      "BENEFIT_3_DESC": "Run operations such as orthorectification, pansharpening, and classification for the selected satellite image.",
+      "BENEFIT_4_TITLE": "Get ready-to-use outputs",
+      "BENEFIT_4_DESC": "When processing is completed, receive the processed satellite image and related output files in a usable format.",
+      "USE_CASES": "Use Cases",
+      "SECTION2_TITLE": "Data, processing, and result in a single platform",
+      "SECTION2_COPY": "Our platform does more than listing satellite imagery. It also lets you process the selected data and retrieve the final outputs in the same workflow. This brings data discovery, selection, processing, and result delivery together in one experience.",
+      "USECASE_1_TITLE": "Mapping and visualization",
+      "USECASE_1_DESC": "Use selected satellite imagery as a base layer or up-to-date visual dataset in map-based projects.",
+      "USECASE_2_TITLE": "Analysis and evaluation",
+      "USECASE_2_DESC": "Processed imagery helps you examine target areas more clearly and perform project-based evaluations.",
+      "USECASE_3_TITLE": "Enterprise use and reporting",
+      "USECASE_3_DESC": "Processed satellite outputs can be directly used in internal planning, reporting, and presentation workflows."
+    },
+    "API_PAGE": {
+      "KICKER": "API Integration",
+      "TITLE": "Access and process satellite imagery with an API key",
+      "COPY": "With an API key, you can query satellite data by polygon, start image processing workflows, track the processing status, and retrieve completed results directly into your system.",
+      "BUY_API_KEY": "Buy API Key",
+      "DOCUMENTATION": "View Documentation",
+      "ENDPOINTS": "Authorized Endpoints",
+      "FEATURE_1_TITLE": "Query data by polygon",
+      "FEATURE_1_DESC": "Automatically query satellite imagery for a selected area and list matching products.",
+      "FEATURE_2_TITLE": "Start and track processing",
+      "FEATURE_2_DESC": "Start the image processing workflow for the selected imagery and track the process status with the processId.",
+      "FEATURE_3_TITLE": "Receive the result in your system",
+      "FEATURE_3_DESC": "Once processing is complete, retrieve the processed image, preview, and related output links directly.",
+      "DEVELOPER_FIRST": "Developer First",
+      "SECTION2_TITLE": "Complete API workflow in 4 steps",
+      "SECTION2_COPY": "First, list satellite imagery by polygon. Then start the processing workflow for the selected product. Check the status with the processId, and once the operation is complete, retrieve the processed result. This structure makes it easy to integrate satellite imagery workflows into your software systems.",
+      "USECASE_1_TITLE": "Backend automation",
+      "USECASE_1_DESC": "Manage satellite data querying and processing workflows automatically from your own services.",
+      "USECASE_2_TITLE": "GIS and mapping systems",
+      "USECASE_2_DESC": "Integrate processed imagery into your own map infrastructure, analysis screens, or enterprise applications.",
+      "USECASE_3_TITLE": "Enterprise data workflows",
+      "USECASE_3_DESC": "Use API-key-authorized endpoints to manage controlled and scalable data access."
+    }
 
     // END (TR-EN-LANGUAGE-BRANCH)
   }

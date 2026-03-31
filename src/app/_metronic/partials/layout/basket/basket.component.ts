@@ -6,7 +6,8 @@ import { BasketModel } from 'src/app/modules/basket-management/models/basket.mod
 
 @Component({
   selector: 'app-basket',
-  templateUrl: './basket.component.html'
+  templateUrl: './basket.component.html',
+  styleUrls: ['./basket.component.scss']
 })
 export class BasketComponent implements OnInit {
 

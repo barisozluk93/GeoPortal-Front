@@ -2,7 +2,7 @@
 <app-basket *ngIf="!isAdminPanel" class="d-flex align-items-center me-3"></app-basket>
 
 <div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3">
-  <button type="button" (click)="routeToLogin()" class="btn btn-light-primary">
+  <button type="button" (click)="routeToLogin()" class="primary-action">
     <ng-container>
       <span class="indicator-label">
         {{'LOG_IN' | translate}}
@@ -13,7 +13,7 @@
 
 <div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3" id="kt_header_user_menu_toggle">
   <!--begin::Menu wrapper-->
-  <div class="cursor-pointer symbol symbol-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+  <div class="cursor-pointer symbol symbol-40px" data-kt-menu-trigger="{default: 'hover'}"
     data-kt-menu-placement="bottom-end" title="{{'LANGUAGE' | translate}}">
     <img *ngIf="language" [src]="language.flag" />
   </div>
@@ -37,7 +37,7 @@
     class="cursor-pointer symbol symbol-40px notification-symbol"
     [ngClass]="{ 'has-unread': unreadedNotificationCount > 0, 'is-animating': isNotificationAnimating }"
     (mouseenter)="loadNotifications()"
-    data-kt-menu-trigger="{default: 'click'}"
+    data-kt-menu-trigger="{default: 'hover'}"
     data-kt-menu-placement="bottom-end"
     title="Notifications"
   >

@@ -201,6 +201,6 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
   }
 
   routeToMap() {
-    this.router.navigate(['/landing/map']);
+    this.router.navigate(['/landing/marketplace']);
   }
 }

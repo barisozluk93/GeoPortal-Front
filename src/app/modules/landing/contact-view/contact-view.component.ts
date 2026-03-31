@@ -37,8 +37,6 @@ export class ContactViewComponent {
 
     const payload = this.contactForm.value;
 
-    console.log('Contact form payload:', payload);
-
     // Burada servis çağrısı yapabilirsin
     // this.contactService.sendContactForm(payload).subscribe(...)
 

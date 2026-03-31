@@ -8,6 +8,7 @@ import { UserManagementService } from 'src/app/modules/user-management/user-mana
 @Component({
   selector: 'app-user-inner',
   templateUrl: './user-inner.component.html',
+  styleUrls: ['./user-inner.component.scss']
 })
 export class UserInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class')

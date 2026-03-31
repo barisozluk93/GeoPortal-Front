@@ -8,7 +8,7 @@ import { AuthHTTPService } from './auth-http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { ResultModel } from 'src/app/models/result.model';
-import { WebSocketService } from '../../common/web-socket.service';
+import { NotificationSignalrService } from '../../common/signalR.service';
 
 export type UserType = UserModelAuth | undefined;
 
@@ -37,7 +37,7 @@ export class AuthService implements OnDestroy {
   constructor(
     private authHttpService: AuthHTTPService,
     private router: Router,
-    private wsService: WebSocketService
+    private notificationSignalrService: NotificationSignalrService
   ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<UserType>(undefined);
@@ -70,11 +70,11 @@ export class AuthService implements OnDestroy {
   }
 
   logout() {
-    this.wsService.closeWebSocket();
+    this.notificationSignalrService.stopConnection();
     localStorage.removeItem("basket");
     localStorage.removeItem(this.authLocalStorageToken);
     this.currentUserSubject.next(undefined);
-    this.router.navigate(['/landing/data'], {
+    this.router.navigate(['/landing/marketplace'], {
       queryParams: {},
     });
   }

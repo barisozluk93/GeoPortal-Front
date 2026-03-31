@@ -1,171 +1,323 @@
-<div style="padding: 60px !important;">
-    <app-address-editsave #editSaveComponent (isSuccess)="isSuccess($event)"></app-address-editsave>
+<section class="checkout-page">
+  <div class="checkout-hero">
+    <div class="checkout-overlay"></div>
 
-    <div class="row">
-        <div class="col-xxl-9">
-            <div class="row">
-                <div class="card card-xxl-stretch mb-5 mb-xl-8">
-                    <div class="row">
-                        <div class="col-lg-6 px-0 py-0">
-                            <div (click)="setActiveTabId('address')"
-                                [ngClass]="activeTabId == 'address' ? 'selected-proccess-tab' : 'proccess-tab'">
-                                <div class="row mb-1 mx-0 my-0 px-5 py-5 fw-bolder fs-3">
-                                    {{'ADDRESS_INFOS' | translate}}
-                                </div>
+    <div class="checkout-container checkout-hero-content">
+      <app-address-editsave #editSaveComponent (isSuccess)="isSuccess($event)"></app-address-editsave>
 
-                                <div class="row mb-1 mx-0 my-0 px-5 fw-bolder text-gray-900"
-                                    *ngIf="selectedInvoiceAddress">
-                                    {{selectedInvoiceAddress.address}}
-                                </div>
-                                <div class="row mb-1 mx-0 my-0 px-5 fw-bolder text-gray-900"
-                                    *ngIf="selectedInvoiceAddress">
-                                    {{selectedInvoiceAddress.district}}/{{selectedInvoiceAddress.city}}
-                                </div>
-                                <div class="row mb-1 mx-0 my-0 px-5 fw-bolder text-gray-900"
-                                    *ngIf="selectedInvoiceAddress">
-                                    {{selectedInvoiceAddress.country}}
-                                </div>
-                            </div>
+      <div class="checkout-grid">
+        <div class="checkout-main">
 
-                        </div>
-                        <div class="col-lg-6 px-0 py-0">
-                            <div (click)="setActiveTabId('payment')"
-                                [ngClass]="activeTabId == 'payment' ? 'selected-proccess-tab' : 'proccess-tab'">
-                                <div class="row mb-5 mx-0 my-0 px-5 py-5 fw-bolder fs-3">
-                                    {{'PAYMENT_INFOS' | translate}}
-                                </div>
-                            </div>
-                        </div>
+          <div class="checkout-tabs">
+            <div class="checkout-tabs-row">
+              <div class="checkout-tab-col">
+                <div
+                  (click)="setActiveTabId('address')"
+                  [ngClass]="activeTabId == 'address' ? 'checkout-tab active' : 'checkout-tab'">
+
+                  <div class="checkout-tab-title">
+                    {{ 'ADDRESS_INFOS' | translate }}
+                  </div>
+
+                  <ng-container *ngIf="selectedInvoiceAddress">
+                    <div class="checkout-tab-text">
+                      {{ selectedInvoiceAddress.address }}
                     </div>
-                </div>
-            </div>
-            <div class="row" *ngIf="activeTabId == 'address'">
-
-                <div class="col-lg-12 px-0 py-0">
-                    <div class="card card-xxl-stretch mb-5 mb-xl-8">
-                        <div class="card-header border-0 pt-5">
-                            <h3 class="card-title align-items-start flex-column">
-                                <span class="card-label fw-bolder fs-3 mb-1">{{'INVOICE_ADDRESS' |
-                                    translate}}</span>
-                            </h3>
-                            <div class="card-toolbar" data-bs-toggle="tooltip" data-bs-placement="top"
-                                data-bs-trigger="hover">
-
-                                <a (click)="openSaveModal()" title="Click to Add" class="btn btn-sm btn-light-primary"
-                                    style="width: 100%;">
-                                    <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
-                                        class="svg-icon svg-icon-3"></span>
-                                    {{'MENU.NEW' | translate}}
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row gy-5 g-xl-8">
-                                <ng-container *ngFor="let item of invoiceAddresses">
-                                    <div class="col-xxl-6">
-                                        <div class="card card-xl-stretch mb-xl-1" title="Click to Select"
-                                            style="cursor: pointer;" [ngClass]="item.selected ? 'selected' : ''"
-                                            (click)="selectInvoiceAddress(item.id)">
-
-                                            <div class="card-header border-1 pt-0">
-                                                <div class="card-title m-0">
-                                                    <h3 class="fw-bolder m-0"> {{item.addressHeader}}
-                                                    </h3>
-                                                </div>
-                                                <div class="card-toolbar" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" data-bs-trigger="hover">
-                                                    <button (click)="openEditModal(item.id)" type="button"
-                                                        class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
-                                                        title="Edit">
-                                                        <span
-                                                            [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
-                                                            class="svg-icon svg-icon-2"></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row mb-2">
-                                                    <span class="fw-bold text-gray-800">{{item.name}}
-                                                        {{item.surname}}</span>
-                                                </div>
-                                                <div class="row mb-1">
-                                                    <span class="text-muted fw-bolder fs-7 ps-3">{{item.address}}</span>
-                                                </div>
-                                                <div class="row mb-1">
-                                                    <span
-                                                        class="text-muted fw-bolder fs-7 ps-3">{{item.district}}/{{item.city}}</span>
-                                                </div>
-                                                <div class="row mb-1">
-                                                    <span class="text-muted fw-bolder fs-7 ps-3">{{item.country}}</span>
-                                                </div>
-                                                <div class="row mb-1">
-                                                    <span class="fw-bolder fs-7 ps-3">{{item.phone}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
+                    <div class="checkout-tab-text">
+                      {{ selectedInvoiceAddress.district }}/{{ selectedInvoiceAddress.city }}
                     </div>
+                    <div class="checkout-tab-text">
+                      {{ selectedInvoiceAddress.country }}
+                    </div>
+                  </ng-container>
                 </div>
+              </div>
+
+              <div class="checkout-tab-col">
+                <div
+                  (click)="setActiveTabId('payment')"
+                  [ngClass]="activeTabId == 'payment' ? 'checkout-tab active' : 'checkout-tab'">
+
+                  <div class="checkout-tab-title">
+                    {{ 'PAYMENT_INFOS' | translate }}
+                  </div>
+
+                  <div class="checkout-tab-text">
+                    {{ 'PAYMENT_CONFIRMATION_TEXT' | translate }}
+                  </div>
+                </div>
+              </div>
             </div>
-        </div>
-        <div class="col-xxl-3">
-            <div class="card card-xxl-stretch mb-5 mb-xl-8">
-                <div class="card-header border-0 pt-5">
-                    <h3 class="card-title align-items-start flex-column">
-                        <span class="card-label fw-bolder fs-3 mb-1">{{'ORDER_SUMMARY' | translate}}</span>
-                    </h3>
-                </div>
-                <div class="card-body py-3">
-                    <table class="table">
-                        <tr>
-                            <td style="width: 150px;">
-                                <div class="d-flex justify-content-start flex-column">
-                                    <a class="text-gray-900 text-hover-primary fs-6">
-                                        {{'TOTAL_OF_THE_PRODUCTS' | translate}}
-                                    </a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex justify-content-start flex-column">
-                                    <a class="text-gray-900 fw-bolder text-hover-primary fs-6">
-                                        {{totalPrice.toFixed(2)}} ₺
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <div class="separator border-gray-200"></div>
-                            </td>
-                        </tr>
-                        <tr class="table-row-dashed">
-                            <td style="width: 150px;">
-                                <div class="d-flex justify-content-start flex-column">
-                                    <a class="text-gray-900 text-hover-primary fs-6">
-                                        {{'TOTAL' | translate}}
-                                    </a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex justify-content-start flex-column">
-                                    <a class="text-gray-900 fw-bolder text-hover-primary fs-6">
-                                        {{totalPrice.toFixed(2)}} ₺
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    <button type="button" (click)="confirmOrder()" class="btn btn-light-primary btn-lg"
-                        style="width: 100%;">
-                        <ng-container>
-                            <span class="indicator-label">{{'ORDER' | translate}}</span>
-                        </ng-container>
-                    </button>
-                </div>
+          </div>
+
+          <div class="checkout-panel" *ngIf="activeTabId == 'address'">
+            <div class="checkout-panel-header">
+              <h3 class="checkout-panel-title">
+                {{ 'INVOICE_ADDRESS' | translate }}
+              </h3>
+
+              <div class="checkout-panel-toolbar">
+                <a (click)="openSaveModal()" class="btn btn-sm btn-light-primary">
+                  <span
+                    [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
+                    class="svg-icon svg-icon-3"></span>
+                  {{ 'MENU.NEW' | translate }}
+                </a>
+              </div>
             </div>
+
+            <div class="checkout-panel-body">
+              <div class="row gy-5 g-xl-8">
+                <ng-container *ngFor="let item of invoiceAddresses">
+                  <div class="col-xxl-6">
+                    <div
+                      class="address-glass-card"
+                      [ngClass]="item.selected ? 'selected' : ''"
+                      (click)="selectInvoiceAddress(item.id)">
+
+                      <div class="address-glass-header">
+                        <div class="address-glass-title">
+                          {{ item.addressHeader }}
+                        </div>
+
+                        <div class="address-glass-toolbar">
+                          <button
+                            (click)="openEditModal(item.id); $event.stopPropagation()"
+                            type="button"
+                            class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
+                            title="Edit">
+                            <span
+                              [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
+                              class="svg-icon svg-icon-2"></span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="address-glass-body">
+                        <div class="address-line strong">
+                          {{ item.name }} {{ item.surname }}
+                        </div>
+                        <div class="address-line">
+                          {{ item.address }}
+                        </div>
+                        <div class="address-line">
+                          {{ item.district }}/{{ item.city }}
+                        </div>
+                        <div class="address-line">
+                          {{ item.country }}
+                        </div>
+                        <div class="address-line strong">
+                          {{ item.phone }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-panel" *ngIf="activeTabId == 'payment'">
+            <div class="checkout-panel-body">
+              <div class="payment-grid">
+
+                <div class="payment-preview-side">
+                  <div class="payment-preview-card">
+                    <div class="payment-card-chip"></div>
+
+                    <div class="payment-card-number">
+                      {{ cardNumberPreview }}
+                    </div>
+
+                    <div class="payment-card-footer">
+                      <div>
+                        <div class="payment-card-label">
+                          {{ 'CARD_HOLDER' | translate }}
+                        </div>
+                        <div class="payment-card-value">
+                          {{ cardHolderPreview }}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="payment-card-label">
+                          {{ 'EXPIRE_DATE' | translate }}
+                        </div>
+                        <div class="payment-card-value">
+                          {{ expirePreview }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="payment-form-side">
+                  <div class="payment-form-panel">
+                    <form [formGroup]="paymentForm" (ngSubmit)="confirmOrder()">
+                      <div class="row g-3">
+                        <div class="col-12">
+                          <input
+                            class="form-control gp-input"
+                            [ngClass]="{ 'invalid': (submitted || f['cardHolderName'].touched) && f['cardHolderName'].invalid }"
+                            type="text"
+                            formControlName="cardHolderName"
+                            [placeholder]="'CARD_HOLDER' | translate"
+                            (input)="onCardHolderInput($event)" />
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['cardHolderName'].touched) && f['cardHolderName'].errors?.['required']">
+                            {{ 'VALIDATION_CARD_HOLDER_REQUIRED' | translate }}
+                          </small>
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['cardHolderName'].touched) && f['cardHolderName'].errors?.['minlength']">
+                            {{ 'VALIDATION_CARD_HOLDER_MIN' | translate }}
+                          </small>
+                        </div>
+
+                        <div class="col-12">
+                          <input
+                            class="form-control gp-input"
+                            [ngClass]="{ 'invalid': (submitted || f['cardNumber'].touched) && f['cardNumber'].invalid }"
+                            type="text"
+                            [value]="cardNumberPreview"
+                            [placeholder]="'CARD_NUMBER' | translate"
+                            (input)="onCardNumberInput($event)"
+                            (blur)="f['cardNumber'].markAsTouched()" />
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['cardNumber'].touched) && f['cardNumber'].errors?.['required']">
+                            {{ 'VALIDATION_CARD_NUMBER_REQUIRED' | translate }}
+                          </small>
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['cardNumber'].touched) && f['cardNumber'].errors?.['pattern']">
+                            {{ 'VALIDATION_CARD_NUMBER_PATTERN' | translate }}
+                          </small>
+                        </div>
+
+                        <div class="col-md-4">
+                          <input
+                            class="form-control gp-input"
+                            [ngClass]="{ 'invalid': (submitted || f['expireMonth'].touched) && f['expireMonth'].invalid }"
+                            type="text"
+                            formControlName="expireMonth"
+                            placeholder="MM"
+                            (input)="onExpireMonthInput($event)" />
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['expireMonth'].touched) && f['expireMonth'].errors?.['required']">
+                            {{ 'VALIDATION_EXPIRE_MONTH_REQUIRED' | translate }}
+                          </small>
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['expireMonth'].touched) && f['expireMonth'].errors?.['pattern']">
+                            {{ 'VALIDATION_EXPIRE_MONTH_PATTERN' | translate }}
+                          </small>
+                        </div>
+
+                        <div class="col-md-4">
+                          <input
+                            class="form-control gp-input"
+                            [ngClass]="{ 'invalid': (submitted || f['expireYear'].touched) && f['expireYear'].invalid }"
+                            type="text"
+                            formControlName="expireYear"
+                            placeholder="YY"
+                            (input)="onExpireYearInput($event)" />
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['expireYear'].touched) && f['expireYear'].errors?.['required']">
+                            {{ 'VALIDATION_EXPIRE_YEAR_REQUIRED' | translate }}
+                          </small>
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['expireYear'].touched) && f['expireYear'].errors?.['pattern']">
+                            {{ 'VALIDATION_EXPIRE_YEAR_PATTERN' | translate }}
+                          </small>
+                        </div>
+
+                        <div class="col-md-4">
+                          <input
+                            class="form-control gp-input"
+                            [ngClass]="{ 'invalid': (submitted || f['cvv'].touched) && f['cvv'].invalid }"
+                            type="password"
+                            formControlName="cvv"
+                            [placeholder]="'CVV' | translate"
+                            (input)="onCvvInput($event)" />
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['cvv'].touched) && f['cvv'].errors?.['required']">
+                            {{ 'VALIDATION_CVV_REQUIRED' | translate }}
+                          </small>
+
+                          <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="(submitted || f['cvv'].touched) && f['cvv'].errors?.['pattern']">
+                            {{ 'VALIDATION_CVV_PATTERN' | translate }}
+                          </small>
+                        </div>
+
+                        <div class="col-12">
+                          <label class="payment-agreement">
+                            <input type="checkbox" formControlName="agreement" />
+                            <span>{{ 'PAYMENT_CONFIRMATION_TEXT' | translate }}</span>
+                          </label>
+
+                          <small
+                            class="text-danger d-block mt-2"
+                            *ngIf="(submitted || f['agreement'].touched) && f['agreement'].errors?.['required']">
+                            {{ 'VALIDATION_PAYMENT_AGREEMENT' | translate }}
+                          </small>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
         </div>
+
+        <div class="checkout-summary">
+          <div class="summary-panel">
+            <div class="checkout-panel-header">
+              <h3 class="checkout-panel-title">
+                {{ 'ORDER_SUMMARY' | translate }}
+              </h3>
+            </div>
+
+            <div class="checkout-panel-body summary-body">
+              <div class="summary-row">
+                <span>{{ 'TOTAL_OF_THE_PRODUCTS' | translate }}</span>
+                <span>{{ totalPrice | currency:'TRY':'symbol' }}</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-row total">
+                <span>{{ 'TOTAL' | translate }}</span>
+                <span>{{ totalPrice | currency:'TRY':'symbol' }}</span>
+              </div>
+
+              <button type="button" (click)="confirmOrder()" class="btn btn-gp btn-gp-primary w-100">
+                <span class="indicator-label">{{ 'ORDER' | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-</div>
+  </div>
+</section>

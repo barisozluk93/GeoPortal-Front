@@ -1,85 +1,56 @@
 :host {
-  height: 100%;
+  display: block;
+  min-height: 100vh;
 }
 
-.auth-wrapper {
-  width: 100%;
-  max-width: 550px;
-}
-
-.login-aside {
-  position: relative;
-  min-height: 320px;
-  overflow: hidden;
-}
-
-.login-aside::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(44, 99, 255, 0.15), transparent 70%);
-  pointer-events: none;
-}
-
-.login-aside-overlay {
-  position: relative;
-  z-index: 1;
-}
-
-.brand {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #fff;
-  padding: 0.85rem 1.1rem;
-  border-radius: 1rem;
-  backdrop-filter: blur(8px);
-}
-
-.brand-mark {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #2c63ff;
-  color: #fff;
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.brand small {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.auth-page-bg {
+.auth-page {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(circle at 15% 25%, rgba(44, 99, 255, 0.20) 0%, transparent 22%),
-    radial-gradient(circle at 85% 20%, rgba(88, 145, 255, 0.12) 0%, transparent 20%),
-    radial-gradient(circle at 70% 75%, rgba(44, 99, 255, 0.10) 0%, transparent 22%),
-    linear-gradient(145deg, #030712 0%, #07111f 35%, #081a30 100%);
+    radial-gradient(circle at top left, rgba(76, 140, 255, 0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 26%),
+    linear-gradient(180deg, #0b1120 0%, #0f172a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  box-sizing: border-box;
 }
 
-.auth-page-bg::before {
-  content: "";
+.auth-overlay {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to right, rgba(44, 99, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(44, 99, 255, 0.08) 1px, transparent 1px);
-  background-size: 60px 60px;
-  opacity: 0.35;
+    linear-gradient(135deg, rgba(255, 255, 255, 0.02), transparent 40%),
+    linear-gradient(315deg, rgba(255, 255, 255, 0.015), transparent 35%);
   pointer-events: none;
 }
 
-.auth-page-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at center, transparent 0%, rgba(2, 8, 23, 0.18) 55%, rgba(2, 8, 23, 0.62) 100%);
-  pointer-events: none;
+.auth-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+}
+
+.auth-panel {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  padding: 36px 30px;
+}
+
+@media (max-width: 576px) {
+  .auth-page {
+    padding: 20px 10px;
+  }
+
+  .auth-panel {
+    border-radius: 22px;
+    padding: 24px 18px;
+  }
 }

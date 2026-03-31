@@ -10,6 +10,7 @@ import { AddressEditSaveComponent } from './edit-save/edit-save.component';
 @Component({
   selector: 'app-address-list',
   templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
 })
 export class AddressListComponent implements OnInit, OnDestroy {
 
@@ -50,8 +51,6 @@ export class AddressListComponent implements OnInit, OnDestroy {
       else{
         this.addresses = [];
       }
-
-      console.log(this.addresses);
     })
   }
 

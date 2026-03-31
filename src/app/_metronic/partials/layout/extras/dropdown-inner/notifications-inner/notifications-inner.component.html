@@ -1,117 +1,100 @@
-<div
-  class="d-flex flex-column bgi-no-repeat rounded-top"
-  [style.background-image]="'url(./assets/images/data-bg.svg)'"
->
-  <div class="d-flex align-items-center justify-content-between px-9 mt-10 mb-6">
-    <div class="d-flex align-items-center">
-
-      <!-- HEADER BELL -->
-      <div class="symbol symbol-40px me-3">
-        <span class="symbol-label bg-white bg-opacity-25">
-          <i class="fa-solid fa-bell text-primary fs-4"></i>
-        </span>
-      </div>
-
-      <div class="d-flex flex-column">
-        <h3 class="text-white fw-bold mb-1">
-          {{ 'NOTIFICATIONS' | translate }}
-        </h3>
-
-        <span class="text-white opacity-75 fs-8">
-          {{ totalNotificationCount }} {{ 'NOTIFICATION' | translate }}
-        </span>
-      </div>
+<div class="notification-glass-header">
+  <div class="notification-header-left">
+    <div class="notification-header-icon">
+      <i class="fa-solid fa-bell"></i>
     </div>
 
-    <span
-      *ngIf="unreadedNotificationCount > 0"
-      class="badge badge-light-danger fw-bold fs-8 px-3 py-2"
-    >
-      {{ unreadedNotificationCount }} {{ 'UNREAD' | translate }}
-    </span>
+    <div class="notification-header-content">
+      <h3 class="notification-header-title mb-0">
+        {{ 'NOTIFICATIONS' | translate }}
+      </h3>
+
+      <span class="notification-header-subtitle">
+        {{ totalNotificationCount }} {{ 'NOTIFICATION' | translate }}
+      </span>
+    </div>
   </div>
+
+  <span
+    *ngIf="unreadedNotificationCount > 0"
+    class="notification-header-badge"
+  >
+    {{ unreadedNotificationCount }} {{ 'UNREAD' | translate }}
+  </span>
 </div>
 
-<div class="tab-content">
+<div class="tab-content notification-glass-body">
   <div
     class="tab-pane fade show active"
     id="kt_topbar_notifications_1"
     role="tabpanel"
   >
-
-    <!-- LIST -->
     <div
-      class="scroll-y mh-325px my-5 px-4"
+      class="scroll-y mh-325px my-4 px-3"
       *ngIf="notifications.length > 0"
     >
       <div
         *ngFor="let notification of notifications"
         (click)="goToPage(notification)"
-        class="notification-item d-flex align-items-start justify-content-between px-4 py-3 mb-2 cursor-pointer"
+        class="notification-item glass-notification-item d-flex align-items-start justify-content-between px-4 py-3 mb-3 cursor-pointer"
         [ngClass]="{'notification-unread': !notification.isRead}"
       >
         <div class="d-flex align-items-start flex-grow-1 me-3">
-
-          <!-- ITEM BELL -->
-          <div class="symbol symbol-40px me-3">
-            <span class="symbol-label bg-light">
-              <i class="fa-solid fa-bell text-primary fs-5"></i>
+          <div class="notification-item-icon me-3">
+            <span class="notification-item-icon-inner">
+              <i class="fa-solid fa-bell"></i>
             </span>
           </div>
 
-          <div class="d-flex flex-column flex-grow-1">
-
-            <div class="d-flex align-items-center justify-content-between mb-1">
+          <div class="d-flex flex-column flex-grow-1 notification-item-content">
+            <div class="d-flex align-items-center justify-content-between mb-1 gap-2">
               <span
-                class="fw-semibold fs-7"
-                [ngClass]="notification.isRead ? 'text-gray-700' : 'text-gray-900'"
+                class="notification-message"
+                [ngClass]="notification.isRead ? 'is-read' : 'is-unread'"
               >
                 {{ notification.body }}
               </span>
 
               <span
                 *ngIf="!notification.isRead"
-                class="bullet bullet-dot bg-primary ms-2"
+                class="notification-read-dot"
               ></span>
             </div>
 
-            <span class="text-gray-500 fs-8">
+            <span class="notification-date">
               {{ notification.createdAt | date:'dd.MM.yyyy HH:mm' }}
             </span>
-
           </div>
         </div>
 
         <button
           type="button"
-          class="btn btn-icon btn-sm btn-light-danger"
+          class="btn btn-icon btn-sm notification-delete-btn"
           (click)="$event.stopPropagation(); delete(notification.id)"
+          aria-label="Delete notification"
         >
-          <i class="fa-solid fa-trash text-danger"></i>
+          <i class="fa-solid fa-trash"></i>
         </button>
-
       </div>
     </div>
 
-    <!-- EMPTY STATE -->
     <div
-      class="scroll-y mh-325px my-5 px-8 d-flex flex-column align-items-center justify-content-center text-center"
+      class="scroll-y mh-325px my-4 px-5 d-flex flex-column align-items-center justify-content-center text-center notification-empty-state"
       *ngIf="notifications.length === 0"
     >
-      <div class="symbol symbol-70px mb-4">
-        <span class="symbol-label bg-light-primary">
-          <i class="fa-solid fa-bell text-primary fs-2"></i>
+      <div class="notification-empty-icon mb-4">
+        <span class="notification-empty-icon-inner">
+          <i class="fa-solid fa-bell"></i>
         </span>
       </div>
 
-      <div class="text-gray-800 fw-bold fs-6 mb-1">
+      <div class="notification-empty-title">
         {{ 'NO_DATA_AVAILABLE' | translate }}
       </div>
 
-      <div class="text-gray-500 fs-8">
+      <div class="notification-empty-subtitle">
         {{ 'NOTIFICATIONS' | translate }}
       </div>
     </div>
-
   </div>
 </div>

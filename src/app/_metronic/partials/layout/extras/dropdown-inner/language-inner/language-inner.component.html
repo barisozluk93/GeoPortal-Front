@@ -1,36 +1,59 @@
 <ng-container>
-  <div class="menu-item px-5" data-kt-menu-trigger="hover" data-kt-menu-placement="left-start"
-    data-kt-menu-flip="bottom">
-    <a class="menu-link px-5 cursor-pointer">
-      <span class="menu-link text-primary px-0 position-relative">
-        {{'LANGUAGE' | translate}}
-        <span class="
-            fs-8
-            menu-title
-            rounded
-            bg-light
-            px-3
-            py-2
-            position-absolute
-            translate-middle-y
-            top-50
-            end-0
-            text-primary
-          ">
-          {{ ( 'LANG' | translate ) === 'tr' ? language.nameTr : language.nameEn }}{{ " " }}
-          <img class="w-15px h-15px rounded-1 ms-2" [src]="language.flag" alt="metronic" />
+  <div
+    class="language-switcher"
+    data-kt-menu-trigger="hover"
+    data-kt-menu-placement="left-start"
+    data-kt-menu-flip="bottom"
+  >
+    <div class="language-switcher-trigger cursor-pointer">
+      <div class="language-switcher-left">
+        <span class="language-switcher-icon">
+          <i class="fa-solid fa-language"></i>
         </span>
-      </span>
-    </a>
 
-    <div class="menu-sub menu-sub-dropdown w-175px py-4">
-      <div *ngFor="let l of langs" class="menu-item px-3 cursor-pointer" (click)="selectLanguage(l.lang)">
-        <a class="menu-link d-flex px-5" [ngClass]="l.lang === language.lang ? 'active text-white' : 'text-primary'">
-          <span class="symbol symbol-20px me-4">
-            <img class="rounded-1" [src]="l.flag" alt="metronic" />
-          </span>
-          {{ ( 'LANG' | translate ) === 'tr' ? l.nameTr : l.nameEn }}
-        </a>
+        <span class="language-switcher-label">
+          {{ 'LANGUAGE' | translate }}
+        </span>
+      </div>
+
+      <div class="language-switcher-badge">
+        <span class="language-switcher-name">
+          {{ ('LANG' | translate) === 'tr' ? language.nameTr : language.nameEn }}
+        </span>
+
+        <img
+          class="language-switcher-flag"
+          [src]="language.flag"
+          alt="language-flag"
+        />
+      </div>
+    </div>
+
+    <div class="menu-sub menu-sub-dropdown w-200px py-3 language-switcher-dropdown">
+      <div
+        *ngFor="let l of langs"
+        class="language-option-row px-3 cursor-pointer"
+        (click)="selectLanguage(l.lang)"
+      >
+        <div
+          class="language-option"
+          [ngClass]="{ active: l.lang === language.lang }"
+        >
+          <div class="language-option-left">
+            <span class="symbol symbol-20px me-3">
+              <img class="rounded-1" [src]="l.flag" alt="language-flag" />
+            </span>
+
+            <span class="language-option-text">
+              {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
+            </span>
+          </div>
+
+          <i
+            *ngIf="l.lang === language.lang"
+            class="fa-solid fa-check language-option-check"
+          ></i>
+        </div>
       </div>
     </div>
   </div>

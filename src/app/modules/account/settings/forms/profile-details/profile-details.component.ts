@@ -9,6 +9,7 @@ import { UserManagementService } from 'src/app/modules/user-management/user-mana
 @Component({
   selector: 'app-profile-details',
   templateUrl: './profile-details.component.html',
+  styleUrls: ['./profile-details.component.scss']
 })
 export class ProfileDetailsComponent implements OnInit, OnDestroy, OnChanges {
   private unsubscribe: Subscription[] = [];
@@ -20,13 +21,13 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy, OnChanges {
   ) {
 
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.user) {
-      if(!this.form) {
+    if (changes.user) {
+      if (!this.form) {
         this.initForm();
       }
-      
+
       this.setUserForm();
     }
   }
@@ -83,7 +84,7 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   setUserForm() {
-    
+
     if (this.user) {
       this.form.patchValue(this.user);
 
@@ -98,88 +99,99 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy, OnChanges {
         this.form.get("organizations")?.setValue(null)
       }
     }
-}
+  }
 
-ngOnInit(): void {
-  this.initForm();
-}
+  ngOnInit(): void {
+    this.initForm();
+  }
 
-saveSettings() {
-  if (this.form.valid) {
-    var temp = this.form.getRawValue();
-    var data = this.form.getRawValue() as UserModel;
-
-    if (temp.roles || temp.roles > 0) {
-      data.roles = [temp.roles];
-    }
-    else {
-      data.roles = [];
+  saveSettings() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
 
-    if (temp.organizations || temp.organizations > 0) {
-      data.organizations = [temp.organizations];
-    }
-    else {
-      data.organizations = [];
-    }
+    if (this.form.valid) {
+      var temp = this.form.getRawValue();
+      var data = this.form.getRawValue() as UserModel;
 
-    this.userManagementService.userProfileEdit(data).subscribe(result => {
-      if (result.isSuccess) {
-        this.alertService.createAlert("success", result.message);
-        this.userManagementService.updateUser(data.id);
+      if (temp.roles || temp.roles > 0) {
+        data.roles = [temp.roles];
       }
       else {
-        this.alertService.createAlert("danger", result.message);
+        data.roles = [];
       }
-    })
-  }
-}
 
-ngOnDestroy() {
-  this.unsubscribe.forEach((sb) => sb.unsubscribe());
-}
-
-onFileChange(event: any) {
-
-  if (event.target.files.length > 0) {
-    let file: File = event.target.files[0];
-    var src = URL.createObjectURL(file);
-    var img = new Image;
-    img.src = src;
-
-    let width = 0;
-    let height = 0;
-
-    img.onload = () => {
-      width = img.naturalWidth;
-      height = img.naturalHeight;
-
-      if (width == 300 && height == 300) {
-        let formData = new FormData();
-        formData.append("file", file);
-
-        this.userManagementService.upload(formData).subscribe(result => {
-          if (result.isSuccess) {
-            this.userManagementService.userAvatarEdit(this.user.id, result.data.id).subscribe(result => {
-              if (result.isSuccess) {
-                this.alertService.createAlert("success", result.message);
-                this.userManagementService.updateUser(this.user.id);
-              }
-              else {
-                this.alertService.createAlert("danger", result.message);
-              }
-            })
-          }
-          else {
-            this.alertService.createAlert("danger", result.message);
-          }
-        })
+      if (temp.organizations || temp.organizations > 0) {
+        data.organizations = [temp.organizations];
       }
       else {
-        this.alertService.createAlert("warning", "Lütfen, 300x300 boyutlarında bir resim dosyası yükleyiniz!");
+        data.organizations = [];
       }
-    };
+
+      this.userManagementService.userProfileEdit(data).subscribe(result => {
+        if (result.isSuccess) {
+          this.alertService.createAlert("success", result.message);
+          this.userManagementService.updateUser(data.id);
+        }
+        else {
+          this.alertService.createAlert("danger", result.message);
+        }
+      })
+    }
   }
-}
+
+  ngOnDestroy() {
+    this.unsubscribe.forEach((sb) => sb.unsubscribe());
+  }
+
+  onFileChange(event: any) {
+
+    if (event.target.files.length > 0) {
+      let file: File = event.target.files[0];
+      var src = URL.createObjectURL(file);
+      var img = new Image;
+      img.src = src;
+
+      let width = 0;
+      let height = 0;
+
+      img.onload = () => {
+        width = img.naturalWidth;
+        height = img.naturalHeight;
+
+        if (width == 300 && height == 300) {
+          let formData = new FormData();
+          formData.append("file", file);
+
+          this.userManagementService.upload(formData).subscribe(result => {
+            if (result.isSuccess) {
+              this.userManagementService.userAvatarEdit(this.user.id, result.data.id).subscribe(result => {
+                if (result.isSuccess) {
+                  this.alertService.createAlert("success", result.message);
+                  this.userManagementService.updateUser(this.user.id);
+                }
+                else {
+                  this.alertService.createAlert("danger", result.message);
+                }
+              })
+            }
+            else {
+              this.alertService.createAlert("danger", result.message);
+            }
+          })
+        }
+        else {
+          this.alertService.createAlert("warning", "Lütfen, 300x300 boyutlarında bir resim dosyası yükleyiniz!");
+        }
+      };
+    }
+  }
+
+  // class içine ekle
+  isInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
 
 }

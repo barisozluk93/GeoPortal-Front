@@ -35,15 +35,20 @@ export class NotificationSignalrService {
   private registerEvents() {
 
     this.hubConnection.on("notificationReceived", (notification) => {
-      console.log("Yeni bildirim:", notification);
       this.notificationSource.next(notification);
     });
 
     this.hubConnection.on("unreadCountChanged", (count) => {
-      console.log("Unread count:", count);
       this.unreadCountSource.next(count);
     });
 
   }
 
+  stopConnection() {
+    if (this.hubConnection) {
+      this.hubConnection.stop()
+        .then(() => console.log("SignalR disconnected"))
+        .catch(err => console.log(err));
+    }
+  }
 }

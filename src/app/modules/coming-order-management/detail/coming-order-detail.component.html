@@ -1,86 +1,124 @@
-<div style="padding: 60px !important;">
-<app-orderstatus-edit #statusComponent (isSuccess)="isSuccess($event)">
-</app-orderstatus-edit>
+<div class="order-detail-page">
 
+    <app-orderstatus-edit #statusComponent (isSuccess)="isSuccess($event)">
+    </app-orderstatus-edit>
 
-<app-orderinvoice-edit #invoiceComponent (isSuccess)="isSuccess($event)">
-</app-orderinvoice-edit>
+    <app-orderinvoice-edit #invoiceComponent (isSuccess)="isSuccess($event)">
+    </app-orderinvoice-edit>
 
-<div class="row">
-    <div class="col-xxl-12">
-        <div class="card card-xxl-stretch mb-5 mb-xl-8">
-            <div class="card-header border-0 pt-5">
-                <h3 class="card-title align-items-start flex-column">
-                    <span class="card-label fw-bolder fs-3 mb-1">{{header}}</span>
-                </h3>
-            </div>
-            <div class="card-body py-3">
-                <div class="row mb-8" *ngIf="orderProduct">
-                    <div class="col-xxl-4" style="text-align: center">
-                        <span class="text-muted fw-bold fs-7">{{'ORDER_NUMBER' | translate}}</span>
-                        <br />
-                        <span class="fw-bolder text-gray-800 ps-3">{{orderProduct.order?.orderNo}}</span>
+    <div class="order-detail-container" *ngIf="orderProduct">
+
+        <!-- HEADER -->
+        <div class="glass-card order-header-card">
+
+            <div class="glass-card order-header-card">
+
+                <div class="order-header-grid">
+
+                    <div class="order-header-item">
+                        <span class="label">{{ 'ORDER_NUMBER' | translate }}</span>
+                        <span class="value">{{ orderProduct.order?.orderNo }}</span>
                     </div>
-                    <div class="col-xxl-4" style="text-align: center">
-                        <span class="text-muted fw-bold fs-7">{{'STATUS' | translate}}
-                            <span *ngIf="orderProduct.orderStatus != 0" class="text-muted fw-bold fs-7">
-                               /  {{'PROCESS_DATE' | translate}}
+
+                    <div class="order-header-item">
+                        <span class="label">{{ 'STATUS' | translate }}</span>
+
+                        <div class="status-wrapper">
+                            <span class="status-dot" [ngClass]="orderProduct.orderStatus == 4 ? 'success' : 'danger'">
                             </span>
+
+                            <span class="value">
+                                {{ orderProduct.orderStatusStr }}
+                            </span>
+                        </div>
+
+                        <span *ngIf="orderProduct.orderStatus != 0" class="process-date-inline">
+                            {{ 'PROCESS_DATE' | translate }}: {{ orderProduct.proccessDate }}
                         </span>
-                        <br />
-                        <span class="fw-bolder text-gray-800 ps-3">{{orderProduct.orderStatusStr}}</span>
-                        <br />
-                        <span *ngIf="orderProduct.orderStatus != 0"
-                            class="text-primary fw-bolder fs-7">{{orderProduct.proccessDate}}</span>
-                            <br />
                     </div>
-                    <div class="col-xxl-4" style="text-align: center">
-                        <span class="text-muted fw-bold fs-7">{{'ORDER_DATE' | translate}}  /  {{'AMOUNT_TL' | translate}}</span>
-                        <br />
-                        <span class="fw-bolder text-gray-800 ps-3">{{orderProduct.orderDate}}</span>
-                        <br />
-                        <span class="fw-bolder fs-5 text-primary ps-3">{{orderProduct.product?.price?.toFixed(2)}}
-                            ₺</span>
+
+                    <div class="order-header-item">
+                        <span class="label">{{ 'ORDER_DATE' | translate }}</span>
+                        <span class="value">{{ orderProduct.orderDate }}</span>
+
+                        <span class="price">
+                            {{ orderProduct.product?.price?.toFixed(2) }} ₺
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- 🔥 ADDRESS ARTIK AYNI CARD İÇİNDE -->
+                <div class="order-address-inline">
+
+                    <span class="label">
+                        {{ 'INVOICE_ADDRESS' | translate }}
+                    </span>
+
+                    <span class="value">
+                        {{ orderProduct.order?.invoiceAddress?.address }}
+                    </span>
+
+                    <span class="value">
+                        {{ orderProduct.order?.invoiceAddress?.district }}/{{ orderProduct.order?.deliveryAddress?.city
+                        }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PRODUCT -->
+        <div class="glass-card order-product-card">
+
+            <div class="order-product-grid">
+
+                <!-- LEFT -->
+                <div class="order-product-left">
+                    <div class="product-name">
+                        {{ orderProduct.product?.name }}
+                    </div>
+
+                    <div class="product-price">
+                        {{ orderProduct.product?.price?.toFixed(2) }} ₺
                     </div>
                 </div>
-                <div class="row mb-8" *ngIf="orderProduct">
-                    
-                    <div class="col-xxl-12" style="text-align: center">
-                        <span class="text-muted fw-bold fs-7">{{'INVOICE_ADDRESS' | translate}}</span>
-                        <br />
-                        <span class="fw-bolder text-gray-800 ps-3">{{orderProduct.order?.invoiceAddress?.address}}</span>
-                        <br />
-                        <span class="fw-bolder text-gray-800 ps-3">{{orderProduct.order?.invoiceAddress?.district}}/{{orderProduct.order?.deliveryAddress?.city}}</span>
-                    </div>
-                </div>
-                <div class="row mb-8" *ngIf="orderProduct">
-                    <div class="col-xxl-12">
-                        <div class="card card-xxl-stretch mb-5 mb-xl-8">
-                            <div class="card-body py-3">
-                                <div class="row">
-                                    <div class="col-xxl-8 mt-9" style="text-align: center;">
-                                        <span class="fw-bolder text-gray-900 fs-6 ps-3">
-                                            {{orderProduct.product?.name}}
-                                        </span>
-                                        <br />
-                                        <span
-                                            class="fw-bolder fs-4 text-primary ps-3">{{orderProduct.product?.price?.toFixed(2)}}
-                                            ₺</span>
-                                        <br />
-                                    </div>
-                                    <div class="col-xxl-4 mt-8" style="text-align: center;">
-                                        <button *ngIf="orderProduct.orderStatus != 2 && orderProduct.orderStatus != 4" type="button" (click)="openEditModal()"
-                                            class="btn btn-light-primary mt-2">{{'UPDATE_STATUS' | translate}}</button>
-                                        <button *ngIf="orderProduct.orderStatus == 4" type="button" (click)="openInvoiceModal()"
-                                            class="btn btn-light-primary mt-2">{{'UPLOAD_INVOICE' | translate}}</button>
-                                    </div>
-                                </div>
+
+                <!-- RIGHT -->
+                <div class="order-product-right">
+
+                    <div class="status-card">
+
+                        <div class="status-card-header">
+                            <span>{{ orderProduct.orderStatusStr }}</span>
+
+                            <div *ngIf="orderProduct.orderStatus != 0" class="process-date">
+                                <span>{{ 'PROCESS_DATE' | translate }}</span>
+                                <strong>{{ orderProduct.proccessDate }}</strong>
                             </div>
                         </div>
+
+                        <div class="status-card-body">
+                            <button *ngIf="orderProduct.orderStatus != 2 && orderProduct.orderStatus != 4" type="button"
+                                (click)="openEditModal()" class="btn-primary w-100">
+                                {{ 'UPDATE_STATUS' | translate }}
+                            </button>
+
+                            <button *ngIf="orderProduct.orderStatus == 4" type="button" (click)="openInvoiceModal()"
+                                class="btn-primary w-100">
+                                {{ 'UPLOAD_INVOICE' | translate }}
+                            </button>
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
-</div>
 </div>

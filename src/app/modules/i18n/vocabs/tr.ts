@@ -371,7 +371,7 @@ export const locale = {
 
         "API_KICKER": "Uydu Veri API Platformu",
         "API_TITLE": "API Key ile Uydu Görüntülerini Uygulamalarına Entegre Et",
-        "API_COPY": "1 aylık API key satın al, Bearer token ile istek gönder ve seçtiğin alan içindeki uydu görüntülerine programatik olarak eriş. Sonuçları uygulamalarında, servislerinde ve iş akışlarında kolayca kullan.",
+        "API_COPY": "1 aylık API key satın al, istek gönder ve seçtiğin alan içindeki uydu görüntülerine programatik olarak eriş. Sonuçları uygulamalarında, servislerinde ve iş akışlarında kolayca kullan.",
         "START_CODING": "Hemen Satın Al",
         "DOCUMENTATION": "Dokümantasyon",
         "ENDPOINTS": "Uç Noktalar",
@@ -459,9 +459,327 @@ export const locale = {
         "COORDINATE": "Koordinat",
         "BUY_DATA": "Veri Satın Al",
         "LOADING": "Yükleniyor...",
-        "BUY": "Satın Al",
+        "BUY": "Sepete Ekle",
         "LAYER": "Katman",
 
+        "MARKETPLACE": {
+            "FILTERS": {
+                "KICKER": "Filtreler",
+                "TITLE": "Ürün Arama",
+                "SUBTITLE": "Şehir, bulut oranı ve fiyat filtreleri ile hazır veri paketlerini daraltın.",
+                "SEARCH_LABEL": "Ara",
+                "SEARCH_PLACEHOLDER": "Şehir, ilçe veya sağlayıcı",
+                "CITY_LABEL": "Şehir",
+                "ALL_CITIES": "Tümü",
+                "MAX_CLOUD_LABEL": "Maksimum Bulut Oranı",
+                "MAX_PRICE_LABEL": "Maksimum Fiyat",
+                "SORT_LABEL": "Sıralama"
+            },
+            "SORT": {
+                "NEWEST": "En Yeni",
+                "PRICE_ASC": "Fiyat Artan",
+                "PRICE_DESC": "Fiyat Azalan",
+                "CLOUD_ASC": "Bulut Oranı En Düşük"
+            },
+            "BUNDLE": {
+                "TITLE": "Satılan Veri Paketi",
+                "ITEM_1": "Ortorektifiye edilmiş görüntü",
+                "ITEM_2": "Pansharpen uygulanmış çıktı",
+                "ITEM_3": "Sınıflandırılmış veri katmanı",
+                "ITEM_4": "Hazır satın alma paketi",
+                "SHORT_1": "Ortorektifiye",
+                "SHORT_2": "Pansharpen",
+                "SHORT_3": "Sınıflandırılmış"
+            },
+            "ACTIONS": {
+                "CLEAR_FILTERS": "Filtreleri Temizle",
+                "REFRESH": "Yenile",
+                "DETAIL": "Detay",
+                "ADD_TO_CART": "Sepete Ekle",
+                "MAP_PREVIEW": "Harita Önizlemesi"
+            },
+            "RESULTS": {
+                "TITLE": "Hazır Uydu Görüntüleri",
+                "FOUND": "adet sonuç bulundu"
+            },
+            "STATES": {
+                "LOADING": "Veriler yükleniyor...",
+                "DETAIL_LOADING": "Ürün detayı yükleniyor...",
+                "EMPTY_TITLE": "Sonuç bulunamadı",
+                "EMPTY_TEXT": "Arama kriterlerinizi genişleterek tekrar deneyin."
+            },
+            "ERRORS": {
+                "LOAD_LIST": "Marketplace verileri alınırken bir hata oluştu.",
+                "LOAD_DETAIL": "Ürün detayı alınırken bir hata oluştu."
+            },
+            "STATUS": {
+                "AVAILABLE": "Hazır",
+                "LIMITED": "Sınırlı"
+            },
+            "CARD": {
+                "CLOUD": "bulut",
+                "AREA": "Alan",
+                "CLOUD_RATE": "Bulut",
+                "RESOLUTION": "Çözünürlük",
+                "CLASSES": "Sınıflar",
+                "PRICE": "Fiyat"
+            },
+            "DETAIL": {
+                "KICKER": "Ürün Detayı",
+                "DESCRIPTION": "Açıklama",
+                "TECHNICAL_INFO": "Teknik Bilgiler",
+                "CITY": "Şehir",
+                "DISTRICT": "İlçe",
+                "DATE": "Tarih",
+                "PROVIDER": "Sağlayıcı",
+                "RESOLUTION": "Çözünürlük",
+                "CLOUD_RATE": "Bulut Oranı",
+                "AREA": "Alan",
+                "DATA_TYPE": "Veri Tipi",
+                "DATA_TYPE_VALUE": "İşlenmiş Paket",
+                "PACKAGE_CONTENT": "Paket İçeriği",
+                "CLASS_OUTPUTS": "Sınıflandırma Çıktıları",
+            },
+            "NAME": "Market"
+        },
+
+        "CLICK_TO_SELECT": "Seçmek için tıklayın",
+        "NO_ADDRESS_FOUND": "Kayıtlı adres bulunamadı.",
+
+        "ENTER_CARD_INFORMATION": "Kart bilgilerinizi giriniz",
+        "CARD_PREVIEW": "Kart Önizleme",
+        "SECURE_PAYMENT": "Güvenli Ödeme",
+
+        "CARD_HOLDER": "Kart Sahibi",
+        "CARD_HOLDER_PLACEHOLDER": "Ad Soyad",
+        "CARD_HOLDER_REQUIRED": "Kart sahibi adı zorunludur.",
+        "CARD_HOLDER_MIN_LENGTH": "Kart sahibi adı en az 3 karakter olmalıdır.",
+
+        "CARD_NUMBER": "Kart Numarası",
+        "CARD_NUMBER_REQUIRED": "Kart numarası zorunludur.",
+        "CARD_NUMBER_INVALID": "Kart numarası 16 haneli olmalıdır.",
+
+        "EXPIRE_DATE": "Son Kullanma",
+        "EXPIRE_MONTH": "Ay",
+        "EXPIRE_YEAR": "Yıl",
+        "EXPIRE_MONTH_REQUIRED": "Son kullanma ayı zorunludur.",
+        "EXPIRE_MONTH_INVALID": "Ay bilgisi 01 ile 12 arasında olmalıdır.",
+        "EXPIRE_YEAR_REQUIRED": "Son kullanma yılı zorunludur.",
+        "EXPIRE_YEAR_INVALID": "Yıl bilgisi 2 haneli olmalıdır.",
+
+        "CVV": "CVV",
+        "CVV_REQUIRED": "CVV zorunludur.",
+        "CVV_INVALID": "CVV 3 veya 4 haneli olmalıdır.",
+
+        "INSTALLMENT": "Taksit",
+        "INSTALLMENT_LOWER": "taksit",
+        "SINGLE_PAYMENT": "Tek Çekim",
+
+        "PAYMENT_AGREEMENT_CONFIRM": "Ödeme bilgilerimi onaylıyorum ve siparişi tamamlamayı kabul ediyorum.",
+        "PAYMENT_AGREEMENT_REQUIRED": "Devam etmek için ödeme onayını vermelisiniz.",
+        "PAYMENT_FORM_INFO": "Kart bilgileriniz güvenli ödeme adımında kullanılacaktır.",
+
+        "PLEASE_SELECT_INVOICE_ADDRESS": "Lütfen fatura adresi seçiniz.",
+        "PLEASE_FILL_PAYMENT_FORM": "Lütfen ödeme formunu eksiksiz doldurunuz.",
+        "BASKET_IS_EMPTY": "Sepetiniz boş.",
+        "PAYMENT_KICKER": "Ödeme",
+        "PAYMENT_COPY": "Kart bilgilerinizi girerek siparişinizi güvenle tamamlayabilirsiniz.",
+        "PAYMENT_CONFIRMATION_TEXT": "Ödeme bilgilerimin doğru olduğunu onaylıyorum.",
+        "VALIDATION_CARD_HOLDER_REQUIRED": "Kart sahibi adı zorunludur.",
+        "VALIDATION_CARD_HOLDER_MIN": "Kart sahibi adı en az 3 karakter olmalıdır.",
+        "VALIDATION_CARD_NUMBER_REQUIRED": "Kart numarası zorunludur.",
+        "VALIDATION_CARD_NUMBER_PATTERN": "Kart numarası 16 haneli olmalıdır.",
+        "VALIDATION_EXPIRE_MONTH_REQUIRED": "Ay bilgisi zorunludur.",
+        "VALIDATION_EXPIRE_MONTH_PATTERN": "Ay değeri 01 ile 12 arasında olmalıdır.",
+        "VALIDATION_EXPIRE_YEAR_REQUIRED": "Yıl bilgisi zorunludur.",
+        "VALIDATION_EXPIRE_YEAR_PATTERN": "Yıl bilgisi 2 haneli olmalıdır.",
+        "VALIDATION_CVV_REQUIRED": "CVV zorunludur.",
+        "VALIDATION_CVV_PATTERN": "CVV 3 veya 4 haneli olmalıdır.",
+        "VALIDATION_PAYMENT_AGREEMENT": "Devam etmek için onay vermelisiniz.",
+        "NAME_REQUIRED": "Ad alanı zorunludur",
+        "SURNAME_REQUIRED": "Soyad alanı zorunludur",
+        "USERNAME_REQUIRED": "Kullanıcı adı zorunludur",
+        "PHONE_REQUIRED": "Telefon alanı zorunludur",
+        "INVALID_EMAIL": "Geçerli bir email giriniz",
+        "MIN_LENGTH": "Minimum karakter sayısı sağlanmadı",
+        "MAX_LENGTH": "Maksimum karakter sayısı aşıldı",
+        "ACCOUNT_SUMMARY": "Hesap Özeti",
+        "EMAIL_REQUIRED": "Email zorunludur",
+        "CURRENT_PASSWORD_REQUIRED": "Mevcut şifre zorunludur",
+        "NEW_PASSWORD_REQUIRED": "Yeni şifre zorunludur",
+        "CONFIRM_PASSWORD_REQUIRED": "Şifre tekrarı zorunludur",
+        "NEW_ORDER": "Yeni Sipariş",
+        "NEW_ORDER_MESSAGE": "Yeni bir siparişiniz bulunmaktadır.",
+        "ORDER_COMPLETED_MESSAGE": "Siparişiniz tamamlandı.",
+        "ORDER_REJECTED": "Sipariş Reddi",
+        "ORDER_REJECTED_MESSAGE": "Siparişiniz reddedildi.",
+        "ORDER_APPROVED": "Sipariş Onayı",
+        "ORDER_APPROVED_MESSAGE": "Siparişiniz onaylandı.",
+        "ORDER_PREPARING": "Sipariş Hazırlanıyor",
+        "ORDER_PREPARING_MESSAGE": "siparişiniz hazırlanıyor.",
+
+        "API_DOC": {
+            "SIDEBAR": {
+                "KICKER": "API Dokümantasyonu",
+                "TITLE": "GeoPortal API Key Kullanımı",
+                "SUBTITLE": "Bu doküman, satın alınan API key ile yetkili uçların nasıl kullanılacağını açıklar."
+            },
+            "NAV": {
+                "OVERVIEW": "Genel Bakış",
+                "AUTHENTICATION": "Authentication",
+                "RESPONSE_FORMAT": "Response Format",
+                "SATELLITE_DATA": "Uydu Verisi Listeleme",
+                "START_PROCESSING": "İşleme Başlatma",
+                "PROCESS_STATUS": "İşlem Durumu",
+                "PROCESSED_RESULT": "İşlenmiş Görüntü Sonucu",
+                "PRODUCT_MODEL": "Product Model",
+                "ERROR_CODES": "Hata Kodları"
+            },
+            "HERO": {
+                "VERSION": "Versiyon 1.0",
+                "TITLE": "GeoPortal API Dokümantasyonu",
+                "DESCRIPTION": "Bu doküman, API key ile yetkilendirilmiş uçları kullanarak uydu verilerinin listelenmesi, görüntü işleme sürecinin başlatılması, işlem durumunun takip edilmesi ve işlenmiş görüntü sonucunun alınması için hazırlanmıştır.",
+                "BASE_URL": "Base URL",
+                "AUTHENTICATION": "Kimlik Doğrulama",
+                "AVAILABLE_ENDPOINTS": "Kullanılabilir Uç Sayısı",
+                "SERVICE": "Servis",
+                "SERVICE_VALUE": "Map Servisi"
+            },
+            "AUTH": {
+                "KICKER": "Authentication",
+                "TITLE": "API Key Kullanımı",
+                "DESCRIPTION": "Tüm isteklerde",
+                "DESCRIPTION_CONTINUE": "header değeri zorunludur. API key sadece yetkili uçlarda çalışır."
+            },
+            "RESPONSE": {
+                "KICKER": "Standart Response",
+                "TITLE": "Genel Response Formatı",
+                "DESCRIPTION": "Tüm uçlar benzer bir response modeli ile cevap verir."
+            },
+            "MODEL": {
+                "KICKER": "Model",
+                "TITLE": "ProductModel",
+                "DESCRIPTION": "İlk uçtan dönen uydu verileri bu model yapısında listelenir."
+            },
+            "ERRORS": {
+                "KICKER": "Hatalar",
+                "TITLE": "Hata Kodları",
+                "CODES": {
+                    "200": "Başarılı istek",
+                    "400": "Geçersiz request body veya eksik parametre",
+                    "401": "API key eksik",
+                    "403": "Bu endpoint için API key yetkisi yok",
+                    "404": "Kayıt veya işlem bulunamadı",
+                    "500": "Sunucu tarafı hata"
+                }
+            },
+            "COMMON": {
+                "ENDPOINT": "Endpoint",
+                "AUTHENTICATION": "Kimlik Doğrulama",
+                "APIKEY_REQUIRED": "x-api-key header zorunludur.",
+                "HEADERS": "Header'lar",
+                "REQUEST_BODY": "Request Body",
+                "RESPONSE_EXAMPLE": "Response Örneği",
+                "CURL_EXAMPLE": "cURL Örneği",
+                "NOTES": "Notlar",
+                "YES": "Evet",
+                "NO": "Hayır"
+            },
+            "TABLE": {
+                "KEY": "Key",
+                "VALUE": "Value",
+                "REQUIRED": "Zorunlu",
+                "STATUS_CODE": "Status Code",
+                "DESCRIPTION": "Açıklama"
+            },
+            "ENDPOINTS": {
+                "SATELLITE_DATA": {
+                    "TITLE": "Uydu Verilerini Getir",
+                    "DESCRIPTION": "Gönderilen polygon alanına göre ilgili uydu görüntülerini listeler. Response olarak ProductModel listesini döner.",
+                    "NOTES": {
+                        "0": "Polygon koordinatları longitude, latitude sırasıyla gönderilmelidir.",
+                        "1": "Polygon kapalı halka olacak şekilde ilk ve son nokta aynı olabilir.",
+                        "2": "Bu uç sadece yetkili API key ile kullanılabilir."
+                    }
+                },
+                "START_PROCESSING": {
+                    "TITLE": "Uydu Görüntüsü İşlemeyi Başlat",
+                    "DESCRIPTION": "Seçilen uydu verisi için image processing sürecini başlatır. İşlem anlık dönmez, bir processId döner.",
+                    "NOTES": {
+                        "0": "Bu uç asenkron iş başlatır.",
+                        "1": "İşlem sonucu anında dönmez.",
+                        "2": "Sonraki adımda processId ile işlem durumu sorgulanmalıdır."
+                    }
+                },
+                "PROCESS_STATUS": {
+                    "TITLE": "İşleme Durumunu Sorgula",
+                    "DESCRIPTION": "Başlatılan image processing işleminin güncel durumunu döner.",
+                    "NOTES": {
+                        "0": "Olası status değerleri: Queued, Processing, Completed, Failed.",
+                        "1": "İşlem tamamlanmadıysa sonuç görüntüsü bu uçtan dönmez.",
+                        "2": "İşlem Completed olduğunda 4. uç kullanılmalıdır."
+                    }
+                },
+                "PROCESSED_RESULT": {
+                    "TITLE": "İşlenmiş Uydu Görüntüsünü Al",
+                    "DESCRIPTION": "Image processing işlemi tamamlandıktan sonra processId kullanılarak işlenmiş uydu görüntüsü bilgilerini ve çıktı linklerini döner.",
+                    "NOTES": {
+                        "0": "Bu uç yalnızca işlem tamamlandıktan sonra anlamlı sonuç döner.",
+                        "1": "İşlem henüz bitmediyse status Completed olmayabilir.",
+                        "2": "İşlem sonucunda raster, preview ve classification çıktıları dönebilir."
+                    }
+                }
+            }
+        },
+        "DATA_PAGE": {
+            "KICKER": "Uydu Verisi",
+            "TITLE": "Uydu görüntülerini bulun, seçin ve işleyin",
+            "COPY": "Belirlediğiniz alan için uydu görüntülerini listeleyin, filtreleyin ve ihtiyacınıza en uygun veriyi seçin. Seçtiğiniz görüntüyü işleyerek analiz ve kullanım için hazır çıktılara dönüştürün.",
+            "SEARCH_TITLE": "Alanınızı arayın",
+            "SEARCH_PLACEHOLDER": "İl, ilçe veya bölge adı girin",
+            "SEARCH_BUTTON": "Aramaya Başla",
+            "LOADING": "Yükleniyor...",
+            "BENEFIT_1_TITLE": "Uydu verisini hızlıca bulun",
+            "BENEFIT_1_DESC": "Polygon veya bölge bazlı arama ile ihtiyacınıza uygun uydu görüntülerini kısa sürede listeleyin.",
+            "BENEFIT_2_TITLE": "En uygun görüntüyü seçin",
+            "BENEFIT_2_DESC": "Tarih, çözünürlük ve bulut oranı gibi kriterlerle görüntüleri karşılaştırarak doğru veriyi belirleyin.",
+            "BENEFIT_3_TITLE": "İşleme sürecini başlatın",
+            "BENEFIT_3_DESC": "Seçtiğiniz uydu görüntüsü için ortorektifikasyon, pansharpen ve sınıflandırma gibi işlemleri başlatın.",
+            "BENEFIT_4_TITLE": "Hazır çıktıyı alın",
+            "BENEFIT_4_DESC": "İşlem tamamlandığında işlenmiş uydu görüntüsünü ve ilgili çıktı dosyalarını kullanıma hazır şekilde alın.",
+            "USE_CASES": "Kullanım Alanları",
+            "SECTION2_TITLE": "Tek platformda veri, işleme ve sonuç",
+            "SECTION2_COPY": "Platformumuz, yalnızca uydu görüntüsü listelemekle kalmaz; seçilen verinin işlenmesini ve sonuçların hazır şekilde alınmasını da tek akışta sunar. Böylece veri arama, seçim, işleme ve çıktı alma adımları tek bir deneyimde birleşir.",
+            "USECASE_1_TITLE": "Haritalama ve görselleştirme",
+            "USECASE_1_DESC": "Seçilen uydu görüntülerini harita tabanlı projelerde temel katman veya güncel görsel veri olarak kullanabilirsiniz.",
+            "USECASE_2_TITLE": "Analiz ve değerlendirme",
+            "USECASE_2_DESC": "İşlenmiş görüntüler sayesinde belirli alanları daha net inceleyebilir ve proje bazlı değerlendirmeler yapabilirsiniz.",
+            "USECASE_3_TITLE": "Kurumsal kullanım ve raporlama",
+            "USECASE_3_DESC": "İşlenmiş uydu çıktıları kurum içi planlama, raporlama ve sunum süreçlerinde doğrudan kullanılabilir."
+        },
+        "API_PAGE": {
+            "KICKER": "API Entegrasyonu",
+            "TITLE": "Uydu görüntülerine API key ile erişin ve işleyin",
+            "COPY": "API key ile polygon bazlı uydu verisi sorgulayabilir, görüntü işleme sürecini başlatabilir, işlem durumunu takip edebilir ve tamamlanan sonucu doğrudan sisteminize alabilirsiniz.",
+            "BUY_API_KEY": "API Key Satın Al",
+            "DOCUMENTATION": "Dokümantasyonu İncele",
+            "ENDPOINTS": "Yetkili Uçlar",
+            "FEATURE_1_TITLE": "Polygon ile veri sorgulama",
+            "FEATURE_1_DESC": "Belirlediğiniz alan için uydu görüntülerini otomatik olarak sorgulayın ve uygun ürünleri listeleyin.",
+            "FEATURE_2_TITLE": "İşleme başlatma ve takip",
+            "FEATURE_2_DESC": "Seçilen görüntü için image processing sürecini başlatın ve processId ile işlem durumunu takip edin.",
+            "FEATURE_3_TITLE": "Sonucu sisteminize alın",
+            "FEATURE_3_DESC": "İşlem tamamlandığında işlenmiş uydu görüntüsünü, önizlemeyi ve ek çıktı bağlantılarını doğrudan alın.",
+            "DEVELOPER_FIRST": "Geliştirici Odaklı",
+            "SECTION2_TITLE": "4 adımda tam API akışı",
+            "SECTION2_COPY": "Önce polygon ile uydu verilerini listeleyin. Ardından seçilen ürün için işleme sürecini başlatın. ProcessId ile durumu sorgulayın ve işlem tamamlandığında işlenmiş sonucu alın. Bu yapı, uydu görüntüsü kullanımını yazılım sistemlerinize kolayca entegre etmenizi sağlar.",
+            "USECASE_1_TITLE": "Backend otomasyonu",
+            "USECASE_1_DESC": "Uydu verisi sorgulama ve işleme akışını kendi servislerinizden otomatik olarak yönetin.",
+            "USECASE_2_TITLE": "GIS ve harita sistemleri",
+            "USECASE_2_DESC": "İşlenmiş görüntüleri kendi harita altyapınıza, analiz ekranlarınıza veya kurumsal uygulamalarınıza entegre edin.",
+            "USECASE_3_TITLE": "Kurumsal veri akışları",
+            "USECASE_3_DESC": "API key ile yetkili uçları kullanarak veri erişimini kontrollü ve ölçeklenebilir şekilde yönetin."
+        }
         // END (TR-EN-LANGUAGE-BRANCH)
     }
 };

@@ -1,3 +1,147 @@
 :host {
   height: 100%;
 }
+:host {
+  height: 100%;
+}
+
+/* PAGE */
+.order-page {
+  min-height: 100vh;
+  background: #0f172a;
+  padding: 40px 0;
+}
+
+/* SEARCH */
+.order-search {
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto 30px auto;
+}
+
+.search-form {
+  width: 100%;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  background: rgba(8, 19, 36, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 8px;
+  backdrop-filter: blur(14px);
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #fff;
+  padding: 12px 16px;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.search-box button {
+  border: none;
+  border-radius: 14px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #1f66ff 0%, #4c8cff 100%);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-box button:hover {
+  transform: translateY(-1px);
+}
+
+/* TABLE WRAPPER */
+.order-table-wrapper {
+  width: min(1400px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+/* GLASS CARD */
+.glass-card {
+  background: rgba(8, 19, 36, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 24px !important;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  color: #fff;
+}
+
+/* TABLE TEXT FIX */
+.glass-card table {
+  color: #fff !important;
+}
+
+.glass-card .text-gray-900 {
+  color: #fff !important;
+}
+
+/* CARD */
+.order-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* HEADER */
+.order-card-header {
+  padding: 24px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  h3 {
+    margin: 0;
+    font-weight: 800;
+    color: #fff;
+  }
+}
+
+/* BODY */
+.order-card-body {
+  padding: 10px 20px 20px 20px;
+}
+
+/* DATATABLE FIX */
+.order-card-body table {
+  margin-bottom: 0;
+}
+
+.order-card-body th,
+.order-card-body td {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ROW HOVER */
+.order-card-body tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .order-search {
+    width: calc(100% - 20px);
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-box button {
+    width: 100%;
+  }
+
+  .order-card-header {
+    padding: 20px 20px 0;
+  }
+
+  .order-card-body {
+    padding: 20px;
+  }
+}

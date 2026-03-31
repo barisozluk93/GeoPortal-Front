@@ -36,7 +36,6 @@ import { BasketService } from 'src/app/_metronic/partials/layout/basket/basket.s
 import { BasketManagementService } from '../../basket-management/basket-management.service';
 import { BasketModel } from '../../basket-management/models/basket.model';
 import { AuthService } from '../../auth';
-import { Alert } from 'bootstrap';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 import { ProductModel } from '../../product-management/models/product.model';
 

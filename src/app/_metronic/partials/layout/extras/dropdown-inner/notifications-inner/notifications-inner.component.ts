@@ -1,15 +1,16 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnChanges, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationModel } from 'src/app/models/notification.model';
 import { AuthService } from 'src/app/modules/auth';
 import { NotificationService } from './notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-notifications-inner',
   templateUrl: './notifications-inner.component.html',
   styleUrls: ['./notifications-inner.component.scss']
 })
-export class NotificationsInnerComponent implements OnInit {
+export class NotificationsInnerComponent implements OnInit, OnChanges {
   @HostBinding('class')
   class = 'menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px';
 
@@ -23,10 +24,38 @@ export class NotificationsInnerComponent implements OnInit {
   constructor(
     private notificationService: NotificationService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
+
+  ngOnChanges(changes: any): void {
+        if (changes.notifications) {
+          if(changes.notifications.currentValue) {
+            changes.notifications.currentValue.forEach((notification: NotificationModel) => {
+              if(notification.type == "NEW_ORDER") {
+                notification.body = "( " + notification.body + " ) " + this.translate.instant('NEW_ORDER_MESSAGE');    
+              }
+              else if(notification.type == "ORDER_APPROVED") {
+                notification.body = "( " + notification.body + " ) " + this.translate.instant('ORDER_APPROVED_MESSAGE');    
+              }
+              else if(notification.type == "ORDER_REJECTED") {
+                notification.body = "( " + notification.body + " ) " + this.translate.instant('ORDER_REJECTED_MESSAGE');    
+              }
+              else if(notification.type == "ORDER_COMPLETED") {
+                notification.body = "( " + notification.body + " ) " + this.translate.instant('ORDER_COMPLETED_MESSAGE');    
+              }
+              else if(notification.type == "ORDER_PREPARING") {
+                notification.body = "( " + notification.body + " ) " + this.translate.instant('ORDER_PREPARING_MESSAGE');    
+              }   
+            });
+          }
+        }
+        
+  }
 
   delete(notificationId: number): void {
     const notification = this.notifications.find(f => f.id === notificationId);
@@ -61,9 +90,14 @@ export class NotificationsInnerComponent implements OnInit {
       return;
     }
 
-    const navigateUrl = notification.targetUrl
-      ? `/memories/${notification.targetUrl}`
-      : '/memories';
+    const currentUser = this.authService.currentUserValue;
+    let screen = "ordermanagement";
+    if (currentUser?.roles?.includes('1')) {
+      screen = "incomingordermanagement";
+    }
+
+
+    const navigateUrl = `/${screen}/${notification.targetUrl}`
 
     if (!notification.isRead) {
       this.notificationService.read(notification.id).subscribe({
@@ -73,7 +107,7 @@ export class NotificationsInnerComponent implements OnInit {
           if (this.unreadedNotificationCount > 0) {
             this.unreadedNotificationCount--;
           }
-
+          
           this.router.navigate([navigateUrl]);
         },
         error: (error) => {

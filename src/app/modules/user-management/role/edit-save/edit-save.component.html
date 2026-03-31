@@ -1,49 +1,47 @@
 <app-modal #modal [modalConfig]="modalConfig">
-    <form class="form w-100" [formGroup]="form" novalidate="novalidate">
+  <form class="form modern-form" [formGroup]="form" novalidate>
+    <div class="form-grid">
+      <!-- NAME -->
+      <div class="form-group">
+        <label>{{ 'NAME' | translate }}</label>
+        <input
+          type="text"
+          formControlName="name"
+          autocomplete="off"
+          [class.invalid]="form.controls['name'].invalid && (form.controls['name'].dirty || form.controls['name'].touched)"
+        />
 
-        <div class="fv-row mb-8">
-            <label class="form-label fs-6 fw-bolder text-gray-900">{{'NAME' | translate}}</label>
-            <input class="form-control bg-transparent" type="text" name="name" formControlName="name" autocomplete="off"
-                [ngClass]="{
-                'is-invalid': form.controls['name'].invalid,
-                'is-valid': form.controls['name'].valid
-              }" />
-            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                validation: 'required',
-                message: 'REQUIRED_NAME' | translate,
-                control: form.controls['name']
-              }"></ng-container>
-        </div>
+        <span
+          class="error"
+          *ngIf="form.controls['name'].hasError('required') && (form.controls['name'].dirty || form.controls['name'].touched)"
+        >
+          {{ 'REQUIRED_NAME' | translate }}
+        </span>
+      </div>
 
-        <div class="fv-row mb-8">
-            <label class="form-label fs-6 fw-bolder text-gray-900">{{'PERMISSIONS' | translate}}</label>
-            <select multiple name="permissions" formControlName="permissions" autocomplete="off"
-              class="form-select form-select-solid form-select-lg fw-bold"
-              [ngClass]="{
-                'is-invalid': form.controls['permissions'].invalid,
-                'is-valid': form.controls['permissions'].valid
-              }"
-            >
-                <ng-container *ngFor="let item of permissionList">
-                    <option [ngValue]="item.id">{{item.name}}</option>
-                </ng-container>
-            </select>
+      <!-- PERMISSIONS -->
+      <div class="form-group form-group-full">
+        <label>{{ 'PERMISSIONS' | translate }}</label>
 
-            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                validation: 'required',
-                message: ('PERMISSIONS' | translate) + ' ' + ('IS_REQUIRED' |translate),
-                control: form.controls['permissions']
-              }"></ng-container>
-        </div>
-    </form>
+        <select
+          multiple
+          formControlName="permissions"
+          autocomplete="off"
+          class="multi-select"
+          [class.invalid]="form.controls['permissions'].invalid && (form.controls['permissions'].dirty || form.controls['permissions'].touched)"
+        >
+          <ng-container *ngFor="let item of permissionList">
+            <option [ngValue]="item.id">{{ item.name }}</option>
+          </ng-container>
+        </select>
 
-    <ng-template #formError let-control="control" let-message="message" let-validation="validation">
-        <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-            <div class="fv-plugins-message-container">
-                <span role="alert">
-                    {{ message }}
-                </span>
-            </div>
-        </ng-container>
-    </ng-template>
+        <span
+          class="error"
+          *ngIf="form.controls['permissions'].hasError('required') && (form.controls['permissions'].dirty || form.controls['permissions'].touched)"
+        >
+          {{ ('PERMISSIONS' | translate) + ' ' + ('IS_REQUIRED' | translate) }}
+        </span>
+      </div>
+    </div>
+  </form>
 </app-modal>

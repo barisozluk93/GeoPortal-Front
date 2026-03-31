@@ -104,6 +104,11 @@ export class RoleEditSaveComponent {
     }
 
     submit() {
+        if(this.form.invalid) {
+            this.form.markAllAsTouched();
+            return false;
+        }
+
         if(this.form.valid) {
             var data = this.form.getRawValue() as RoleModel;
 

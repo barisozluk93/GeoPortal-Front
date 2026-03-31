@@ -5,6 +5,7 @@ import { TranslationService } from '../../../../../../modules/i18n';
 @Component({
   selector: 'app-language-inner',
   templateUrl: './language-inner.component.html',
+  styleUrls: ['./language-inner.component.scss']
 })
 export class LanguageInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class')

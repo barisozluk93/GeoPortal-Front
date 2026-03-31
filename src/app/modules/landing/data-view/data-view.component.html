@@ -1,30 +1,27 @@
 <section class="data-page">
-
   <div class="data-hero">
     <div class="data-hero-overlay"></div>
 
     <div class="container data-hero-content">
       <div class="data-hero-grid">
-
         <div class="data-hero-left">
           <div class="gp-kicker">
-            {{ 'KICKER' | translate }}
+            {{ 'DATA_PAGE.KICKER' | translate }}
           </div>
 
           <h1 class="gp-title">
-            {{ 'TITLE' | translate }}
+            {{ 'DATA_PAGE.TITLE' | translate }}
           </h1>
 
           <p class="gp-copy">
-            {{ 'COPY' | translate }}
+            {{ 'DATA_PAGE.COPY' | translate }}
           </p>
         </div>
 
         <div class="data-hero-right">
           <div class="glass-panel">
-
             <div class="data-search-title">
-              {{ 'SEARCH_TITLE' | translate }}
+              {{ 'DATA_PAGE.SEARCH_TITLE' | translate }}
             </div>
 
             <div class="data-search-row">
@@ -33,7 +30,7 @@
                 type="text"
                 [ngModel]="searchQuery()"
                 (ngModelChange)="searchQuery.set($event)"
-                [placeholder]="'SEARCH_PLACEHOLDER' | translate"
+                [placeholder]="'DATA_PAGE.SEARCH_PLACEHOLDER' | translate"
                 (keyup.enter)="submitSearch()"
               />
 
@@ -42,92 +39,79 @@
                 (click)="submitSearch()"
                 [disabled]="loading()"
               >
-                {{ loading() ? ('LOADING' | translate) : ('SEARCH_BUTTON' | translate) }}
+                {{ loading() ? ('DATA_PAGE.LOADING' | translate) : ('DATA_PAGE.SEARCH_BUTTON' | translate) }}
               </button>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
   <div class="data-white-section">
     <div class="container">
-
       <div class="data-card-grid">
-
         <article class="data-info-card map-panel-card">
           <div class="data-card-icon">◈</div>
-          <h3>{{ 'BENEFIT_1_TITLE' | translate }}</h3>
-          <p>{{ 'BENEFIT_1_DESC' | translate }}</p>
+          <h3>{{ 'DATA_PAGE.BENEFIT_1_TITLE' | translate }}</h3>
+          <p>{{ 'DATA_PAGE.BENEFIT_1_DESC' | translate }}</p>
         </article>
 
         <article class="data-info-card map-panel-card">
           <div class="data-card-icon">◎</div>
-          <h3>{{ 'BENEFIT_2_TITLE' | translate }}</h3>
-          <p>{{ 'BENEFIT_2_DESC' | translate }}</p>
+          <h3>{{ 'DATA_PAGE.BENEFIT_2_TITLE' | translate }}</h3>
+          <p>{{ 'DATA_PAGE.BENEFIT_2_DESC' | translate }}</p>
         </article>
 
         <article class="data-info-card map-panel-card">
           <div class="data-card-icon">⬢</div>
-          <h3>{{ 'BENEFIT_3_TITLE' | translate }}</h3>
-          <p>{{ 'BENEFIT_3_DESC' | translate }}</p>
+          <h3>{{ 'DATA_PAGE.BENEFIT_3_TITLE' | translate }}</h3>
+          <p>{{ 'DATA_PAGE.BENEFIT_3_DESC' | translate }}</p>
         </article>
 
         <article class="data-info-card map-panel-card">
           <div class="data-card-icon">✦</div>
-          <h3>{{ 'BENEFIT_4_TITLE' | translate }}</h3>
-          <p>{{ 'BENEFIT_4_DESC' | translate }}</p>
+          <h3>{{ 'DATA_PAGE.BENEFIT_4_TITLE' | translate }}</h3>
+          <p>{{ 'DATA_PAGE.BENEFIT_4_DESC' | translate }}</p>
         </article>
-
       </div>
-
     </div>
   </div>
 
   <div class="data-dark-section">
     <div class="container">
-
       <div class="data-showcase-grid">
-
         <div class="data-showcase-main">
           <div class="data-mini-kicker">
-            {{ 'USE_CASES' | translate }}
+            {{ 'DATA_PAGE.USE_CASES' | translate }}
           </div>
 
           <h2>
-            {{ 'SECTION2_TITLE' | translate }}
+            {{ 'DATA_PAGE.SECTION2_TITLE' | translate }}
           </h2>
 
           <p>
-            {{ 'SECTION2_COPY' | translate }}
+            {{ 'DATA_PAGE.SECTION2_COPY' | translate }}
           </p>
         </div>
 
         <div class="data-showcase-side">
-
           <div class="data-side-card map-panel-card">
-            <strong>{{ 'USECASE_1_TITLE' | translate }}</strong>
-            <span>{{ 'USECASE_1_DESC' | translate }}</span>
+            <strong>{{ 'DATA_PAGE.USECASE_1_TITLE' | translate }}</strong>
+            <span>{{ 'DATA_PAGE.USECASE_1_DESC' | translate }}</span>
           </div>
 
           <div class="data-side-card map-panel-card">
-            <strong>{{ 'USECASE_2_TITLE' | translate }}</strong>
-            <span>{{ 'USECASE_2_DESC' | translate }}</span>
+            <strong>{{ 'DATA_PAGE.USECASE_2_TITLE' | translate }}</strong>
+            <span>{{ 'DATA_PAGE.USECASE_2_DESC' | translate }}</span>
           </div>
 
           <div class="data-side-card map-panel-card">
-            <strong>{{ 'USECASE_3_TITLE' | translate }}</strong>
-            <span>{{ 'USECASE_3_DESC' | translate }}</span>
+            <strong>{{ 'DATA_PAGE.USECASE_3_TITLE' | translate }}</strong>
+            <span>{{ 'DATA_PAGE.USECASE_3_DESC' | translate }}</span>
           </div>
-
         </div>
-
       </div>
-
     </div>
   </div>
-
 </section>

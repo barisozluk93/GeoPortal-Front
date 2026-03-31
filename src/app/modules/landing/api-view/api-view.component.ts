@@ -8,6 +8,7 @@ import { AuthService } from '../../auth';
 import { BasketManagementService } from '../../basket-management/basket-management.service';
 import { BasketModel } from '../../basket-management/models/basket.model';
 import { ProductModel } from '../../product-management/models/product.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-api-view',
@@ -21,13 +22,15 @@ export class ApiViewComponent {
   readonly authService = inject(AuthService);
   readonly alertService = inject(AlertService);
   readonly i18n = inject(TranslationService);
+  readonly router = inject(Router)
 
   t(key: any): string { return this.i18n.t(key); }
 
-  onBuyNow() {
-    // Implement the logic to redirect to the purchase page or open a modal
-    console.log('Buy Now button clicked');
+  routeToDoc() {
+    this.router.navigate(['/landing/documentation']);
+  }
 
+  onBuyNow() {
     var currentUser = this.authService.currentUserValue;
 
     if (currentUser) {

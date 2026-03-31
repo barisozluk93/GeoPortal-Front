@@ -10,8 +10,9 @@ import { LayoutService } from './core/layout.service';
 import { LayoutInitService } from './core/layout-init.service';
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
-import { WebSocketService } from 'src/app/modules/common/web-socket.service';
 import { AuthService } from 'src/app/modules/auth';
+import { environment } from 'src/environments/environment.prod';
+import { NotificationSignalrService } from 'src/app/modules/common/signalR.service';
 
 @Component({
   selector: 'app-layout',
@@ -56,7 +57,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     private initService: LayoutInitService,
     private layout: LayoutService,
     private router: Router,
-    private wsService: WebSocketService,
+    private notificationService: NotificationSignalrService,
     private authService: AuthService
   ) {
     this.initService.init();
@@ -94,6 +95,15 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.headerHTMLAttributes = this.layout.getHTMLAttributes('headerMenu');
     this.footerCSSClasses = this.layout.getStringCSSClasses('footer')
 
+    if(this.authService.currentUserValue) {
+      const authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
+      const lsValue = localStorage.getItem(authLocalStorageToken);
+      const authData = JSON.parse(lsValue!);
+
+      if(authData?.accessToken){
+        this.notificationService.startConnection(authData?.accessToken);
+      }
+    }
     // window.addEventListener("resize", this.onresize(this));
   }
 
@@ -115,15 +125,6 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   routingChanges() {
-    let currentUser = this.authService.currentUserValue;
-
-    if((!this.wsService.socket || this.wsService.socket.closed) && currentUser) {
-      this.wsService.openWebSocket(currentUser.id);
-    }
-    else{
-      this.wsService.closeWebSocket();
-    }
-
     const routerSubscription = this.router.events.subscribe((event) => {
 
       this.setMobility(window.innerWidth);

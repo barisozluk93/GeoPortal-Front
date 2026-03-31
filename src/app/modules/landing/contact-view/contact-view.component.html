@@ -20,8 +20,9 @@
                     type="text"
                     formControlName="fullName"
                     [placeholder]="'FULL_NAME' | translate"
+                    [class.invalid]="f['fullName'].invalid && (f['fullName'].touched || isSubmitted)"
                   />
-                  <small class="text-danger" *ngIf="f['fullName'].touched && f['fullName'].invalid">
+                  <small class="text-danger" *ngIf="f['fullName'].invalid && (f['fullName'].touched || isSubmitted)">
                     {{ 'VALIDATION_FULL_NAME' | translate }}
                   </small>
                 </div>
@@ -41,8 +42,9 @@
                     type="email"
                     formControlName="businessEmail"
                     [placeholder]="'BUSINESS_EMAIL' | translate"
+                    [class.invalid]="f['businessEmail'].invalid && (f['businessEmail'].touched || isSubmitted)"
                   />
-                  <small class="text-danger" *ngIf="f['businessEmail'].touched && f['businessEmail'].invalid">
+                  <small class="text-danger" *ngIf="f['businessEmail'].invalid && (f['businessEmail'].touched || isSubmitted)">
                     {{ 'VALIDATION_EMAIL' | translate }}
                   </small>
                 </div>
@@ -53,8 +55,9 @@
                     type="text"
                     formControlName="subject"
                     [placeholder]="'SUBJECT' | translate"
+                    [class.invalid]="f['subject'].invalid && (f['subject'].touched || isSubmitted)"
                   />
-                  <small class="text-danger" *ngIf="f['subject'].touched && f['subject'].invalid">
+                  <small class="text-danger" *ngIf="f['subject'].invalid && (f['subject'].touched || isSubmitted)">
                     {{ 'VALIDATION_SUBJECT' | translate }}
                   </small>
                 </div>
@@ -65,8 +68,9 @@
                     rows="6"
                     formControlName="message"
                     [placeholder]="'MESSAGE' | translate"
+                    [class.invalid]="f['message'].invalid && (f['message'].touched || isSubmitted)"
                   ></textarea>
-                  <small class="text-danger" *ngIf="f['message'].touched && f['message'].invalid">
+                  <small class="text-danger" *ngIf="f['message'].invalid && (f['message'].touched || isSubmitted)">
                     {{ 'VALIDATION_MESSAGE' | translate }}
                   </small>
                 </div>

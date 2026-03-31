@@ -10,6 +10,7 @@ import { UserManagementService } from 'src/app/modules/user-management/user-mana
 @Component({
   selector: 'app-sign-in-method',
   templateUrl: './sign-in-method.component.html',
+  styleUrls: ['./sign-in-method.component.scss']
 })
 export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
   showChangeEmailForm: boolean = false;
@@ -69,6 +70,12 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   saveEmail() {
+
+    if (this.changeEmailForm.invalid) {
+      this.changeEmailForm.markAllAsTouched();
+      return;
+    }
+
     if (this.changeEmailForm.valid) {
       var temp = this.changeEmailForm.getRawValue();
       var data = this.changeEmailForm.getRawValue() as UserModel;
@@ -105,6 +112,11 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   savePassword() {
+    if (this.changePasswordForm.invalid) {
+      this.changePasswordForm.markAllAsTouched();
+      return;
+    }
+
     if (this.changePasswordForm.valid) {
       let data = this.changePasswordForm.getRawValue();
 

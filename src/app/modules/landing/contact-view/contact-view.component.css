@@ -148,6 +148,7 @@
   color: #ffffff;
   box-shadow: none;
   font-size: 0.98rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 textarea.gp-input {
@@ -178,6 +179,23 @@ textarea.gp-input {
   background: rgba(7, 16, 30, 0.75);
   border-color: rgba(120, 175, 255, 0.95);
   box-shadow: 0 0 0 4px rgba(90, 150, 255, 0.12);
+  color: #ffffff;
+}
+
+/* INVALID */
+.gp-input.invalid,
+.form-control.gp-input.invalid {
+  border-color: #ff4d4f !important;
+  background: rgba(7, 16, 30, 0.62) !important;
+  color: #ffffff;
+}
+
+/* INVALID + FOCUS */
+.gp-input.invalid:focus,
+.form-control.gp-input.invalid:focus {
+  border-color: #ff4d4f !important;
+  background: rgba(7, 16, 30, 0.75) !important;
+  box-shadow: 0 0 0 4px rgba(255, 77, 79, 0.12);
   color: #ffffff;
 }
 
@@ -283,4 +301,20 @@ textarea.gp-input {
     min-height: 48px;
     font-size: 0.95rem;
   }
+}
+
+/* INVALID */
+.gp-input.invalid,
+.form-control.gp-input.invalid {
+  border-color: #ff4d4f !important;
+  background: rgba(255, 77, 79, 0.08) !important; /* login ile aynı */
+  color: #ffffff;
+}
+
+/* INVALID + FOCUS (login’de yok ama ekleyelim) */
+.gp-input.invalid:focus,
+.form-control.gp-input.invalid:focus {
+  border-color: #ff4d4f !important;
+  background: rgba(255, 77, 79, 0.12) !important;
+  box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.15);
 }

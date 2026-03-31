@@ -1,244 +1,116 @@
-<div class="text-center mb-5 flex-grow-1 flex-lg-grow-0">
-  <a routerLink="/landing/data">
-    <button class="brand d-inline-flex align-items-center gap-3">
-      <span class="brand-mark">G</span>
-      <span class="text-start">
-        <strong class="d-block">{{ 'brandTitle' | translate }}</strong>
-        <small>{{ 'brandSubtitle' | translate }}</small>
-      </span>
-    </button>
-  </a>
-  <h1 class="text-white fw-bolder mb-3 mt-5">
-    {{ 'SIGN_UP' | translate }}
-  </h1>
-</div>
+<form
+  class="login-form"
+  [formGroup]="registrationForm"
+  novalidate
+  (ngSubmit)="submit()"
+>
 
-<!--begin::Heading-->
+  <!-- HEADER (LOGIN İLE AYNI) -->
+  <div class="login-header">
+    <a routerLink="/landing/marketplace" class="brand-link">
+      <div class="brand">
+        <span class="brand-mark">G</span>
+        <span class="brand-text">
+          <strong>{{ 'brandTitle' | translate }}</strong>
+          <small>{{ 'brandSubtitle' | translate }}</small>
+        </span>
+      </div>
+    </a>
 
-<form class="form w-100" novalidate="novalidate" id="kt_login_signup_form" [formGroup]="registrationForm"
-  (ngSubmit)="submit()">
-  <!-- begin::Alert error-->
+    <h1>{{ 'SIGN_UP' | translate }}</h1>
+  </div>
+
+  <!-- ERROR -->
   <ng-container *ngIf="errorState === errorStates.HasError">
-    <div class="mb-lg-15 alert alert-danger">
-      <div class="alert-text font-weight-bold">
-        {{'REGISTRATION_DETAILS_INCORRECT' | translate}}
+    <div class="modern-alert">
+      <div class="modern-alert-text">
+        {{ 'REGISTRATION_DETAILS_INCORRECT' | translate }}
       </div>
     </div>
   </ng-container>
-  <!-- end::Alert error-->
 
+  <!-- SUCCESS -->
   <ng-container *ngIf="errorState === errorStates.NoError">
-    <div class="mb-10 bg-light-success p-8 rounded">
-      <!--begin::Body-->
-      <div class="text-success">{{'REGISTRATION_SUCCESSFULLY_COMPLETED' | translate}}</div>
-      <!--end::Body-->
+    <div class="modern-alert success">
+      <div class="modern-alert-text">
+        {{ 'REGISTRATION_SUCCESSFULLY_COMPLETED' | translate }}
+      </div>
     </div>
   </ng-container>
 
-  <!--begin::Form group-->
-
-  <div class="row mb-5">
-    <div class="col-lg-6">
-      <label class="form-label fs-6 fw-bolder text-white">{{'NAME' | translate}}</label>
-      <input class="form-control bg-transparent" type="text" name="name" formControlName="name" autocomplete="off"
-        [ngClass]="{
-          'is-invalid': registrationForm.controls['name'].invalid,
-          'is-valid': registrationForm.controls['name'].valid
-        }" />
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-          validation: 'required',
-          message: 'REQUIRED_NAME' | translate,
-          control: registrationForm.controls['name']
-        }"></ng-container>
+  <!-- NAME + SURNAME -->
+  <div class="form-grid">
+    <div class="form-group">
+      <label>{{ 'NAME' | translate }}</label>
+      <input class="modern-input" type="text" formControlName="name"
+        [class.invalid]="registrationForm.controls['name'].invalid && (registrationForm.controls['name'].touched || registrationForm.controls['name'].dirty)" />
     </div>
-    <div class="col-lg-6">
-      <label class="form-label fs-6 fw-bolder text-white">{{'SURNAME' | translate}}</label>
-      <input class="form-control bg-transparent" type="text" name="surname" formControlName="surname" autocomplete="off"
-        [ngClass]="{
-        'is-invalid': registrationForm.controls['surname'].invalid,
-        'is-valid': registrationForm.controls['surname'].valid
-      }" />
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'required',
-        message: 'REQUIRED_SURNAME' | translate,
-        control: registrationForm.controls['surname']
-      }"></ng-container>
+
+    <div class="form-group">
+      <label>{{ 'SURNAME' | translate }}</label>
+      <input class="modern-input" type="text" formControlName="surname"
+        [class.invalid]="registrationForm.controls['surname'].invalid && (registrationForm.controls['surname'].touched || registrationForm.controls['surname'].dirty)" />
     </div>
   </div>
-  <!--end::Form group-->
 
-  <!--begin::Form group-->
-  <div class="row mb-5">
-    <div class="col-lg-6">
-      <label class="form-label fw-bolder text-white fs-6">{{'EMAIL' | translate}}</label>
-      <input class="form-control bg-transparent" type="email" placeholder="{{'EMAIL' | translate}}" name="email"
-        formControlName="email" autocomplete="off" [ngClass]="{
-        'is-invalid': registrationForm.controls['email'].invalid,
-        'is-valid': registrationForm.controls['email'].valid
-      }" />
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'required',
-        message: ('EMAIL' | translate) + ' ' + ('IS_REQUIRED' | translate),
-        control: registrationForm.controls['email']
-      }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'email',
-        message: ('EMAIL_IS_INVALID' | translate),
-        control: registrationForm.controls['email']
-      }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'minlength',
-        message: ('EMAIL_SHOULD_HAVE_AT_LEAST_3_SYMBOLS' | translate),
-        control: registrationForm.controls['email']
-      }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'maxLength',
-        message: ('EMAIL_SHOULD_HAVE_MAXIMUM_360_SYMBOLS' | translate),
-        control: registrationForm.controls['email']
-      }"></ng-container>
+  <!-- EMAIL + USERNAME -->
+  <div class="form-grid">
+    <div class="form-group">
+      <label>{{ 'EMAIL' | translate }}</label>
+      <input class="modern-input" type="email" formControlName="email"
+        [class.invalid]="registrationForm.controls['email'].invalid && (registrationForm.controls['email'].touched || registrationForm.controls['email'].dirty)" />
     </div>
-    <div class="col-lg-6">
-      <label class="form-label fs-6 fw-bolder text-white">{{'USERNAME' | translate}}</label>
-      <input class="form-control bg-transparent" type="text" name="username" formControlName="username"
-        autocomplete="off" [ngClass]="{
-        'is-invalid': registrationForm.controls['username'].invalid,
-        'is-valid': registrationForm.controls['username'].valid
-      }" />
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'required',
-        message: 'REQUIRED_USERNAME' | translate,
-        control: registrationForm.controls['username']
-      }"></ng-container>
+
+    <div class="form-group">
+      <label>{{ 'USERNAME' | translate }}</label>
+      <input class="modern-input" type="text" formControlName="username"
+        [class.invalid]="registrationForm.controls['username'].invalid && (registrationForm.controls['username'].touched || registrationForm.controls['username'].dirty)" />
     </div>
   </div>
-  <!--end::Form group-->
 
-  <!--begin::Form group-->
-  <div class="row mb-5">
-    <div class="col-lg-6">
-      <label class="form-label fw-bolder text-white fs-6">{{'PASSWORD' | translate}}</label>
-      <input class="form-control bg-transparent" type="password" placeholder="{{'PASSWORD' | translate}}"
-        name="password" formControlName="password" autocomplete="off" [ngClass]="{
-        'is-invalid': registrationForm.controls['password'].invalid,
-        'is-valid': registrationForm.controls['password'].valid
-      }" />
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'required',
-        message: 'PASSWORD_REQUIRED' | translate,
-        control: registrationForm.controls['password']
-      }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'minlength',
-        message: ('PASSWORD_SHOULD_HAVE_AT_LEAST_3_SYMBOLS' | translate),
-        control: registrationForm.controls['password']
-      }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'maxLength',
-        message: ('PASSWORD_SHOULD_HAVE_MAXIMUM_100_SYMBOLS' | translate),
-        control: registrationForm.controls['password']
-      }"></ng-container>
+  <!-- PASSWORD -->
+  <div class="form-grid">
+    <div class="form-group">
+      <label>{{ 'PASSWORD' | translate }}</label>
+      <input class="modern-input" type="password" formControlName="password"
+        [class.invalid]="registrationForm.controls['password'].invalid && (registrationForm.controls['password'].touched || registrationForm.controls['password'].dirty)" />
     </div>
-    <div class="col-lg-6">
-      <label class="form-label fw-bolder text-white fs-6">{{'CONFIRM_PASSWORD' | translate}}</label>
-      <input class="form-control bg-transparent" type="password" placeholder="{{'CONFIRM_PASSWORD' | translate}}"
-        name="cPassword" autocomplete="off" formControlName="cPassword" [ngClass]="{
-        'is-invalid': registrationForm.controls['cPassword'].invalid,
-        'is-valid': registrationForm.controls['cPassword'].valid
-      }" />
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'required',
-        message: ('CONFIRM_PASSWORD' | translate) + ' ' + ('IS_REQUIRED' | translate),
-        control: registrationForm.controls['cPassword']
-      }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'minlength',
-        message: ('CONFIRM_PASSWORD_SHOULD_HAVE_AT_LEAST_3_SYMBOLS' | translate),
-        control: registrationForm.controls['cPassword']
-      }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'maxLength',
-        message: ('CONFIRM_PASSWORD_SHOULD_HAVE_MAXIMUM_100_SYMBOLS' | translate),
-        control: registrationForm.controls['cPassword']
-      }"></ng-container>
-      <ng-container *ngIf="
-        registrationForm.controls['cPassword'].errors &&
-        registrationForm.controls['cPassword'].errors.ConfirmPassword
-      ">
-        <div class="fv-plugins-message-container">
-          <div class="fv-help-block">
-            {{'NOMATCH_PASSWORD' | translate}}
-          </div>
-        </div>
-      </ng-container>
+
+    <div class="form-group">
+      <label>{{ 'CONFIRM_PASSWORD' | translate }}</label>
+      <input class="modern-input" type="password" formControlName="cPassword"
+        [class.invalid]="registrationForm.controls['cPassword'].invalid && (registrationForm.controls['cPassword'].touched || registrationForm.controls['cPassword'].dirty)" />
     </div>
   </div>
-  <!--end::Form group-->
 
-  <div class="fv-row mb-5">
-    <label class="form-label fs-6 fw-bolder text-white">{{'PHONE' | translate}}</label>
-    <input class="form-control bg-transparent" type="tel" name="phone" formControlName="phone" autocomplete="off"
-      [ngClass]="{
-        'is-invalid': registrationForm.controls['phone'].invalid,
-        'is-valid': registrationForm.controls['phone'].valid
-      }" />
-    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-        validation: 'required',
-        message: 'REQUIRED_PHONE' | translate,
-        control: registrationForm.controls['phone']
-      }"></ng-container>
+  <!-- PHONE -->
+  <div class="form-group">
+    <label>{{ 'PHONE' | translate }}</label>
+    <input class="modern-input" type="tel" formControlName="phone"
+      [class.invalid]="registrationForm.controls['phone'].invalid && (registrationForm.controls['phone'].touched || registrationForm.controls['phone'].dirty)" />
   </div>
-  <!--end::Form group-->
 
-  <!--begin::Form group-->
-  <!-- <div class="fv-row mb-8">
-    <label class="form-check form-check-inline">
-      <input id="kt_login_toc_agree" type="checkbox" formControlName="agree" name="agree" class="form-check-input" />
-      <span for="kt_login_toc_agree" class="form-check-label fw-semibold text-gray-700 fs-base ms-1">
-        I Accept the&nbsp;<a href="https://keenthemes.com/metronic/?page=faq" target="_blank"
-          class="ms-1 link-primary">Terms</a>.
-      </span>
-    </label>
-  </div> -->
-  <!--end::Form group-->
-
-  <!--begin::Form group-->
-  <div class="d-grid mb-10">
-    <button type="submit" id="kt_sign_up_submit" [disabled]="
-        registrationForm.invalid
-      " class="btn btn-primary">
+  <!-- SUBMIT -->
+  <div class="login-actions">
+    <button type="submit" class="primary-btn" [disabled]="registrationForm.invalid">
       <ng-container *ngIf="(isLoading$ | async) === false">
-        <span class="indicator-label">{{'SUBMIT' | translate}}</span>
+        <span>{{ 'SUBMIT' | translate }}</span>
       </ng-container>
+
       <ng-container *ngIf="isLoading$ | async">
-        <span class="indicator-progress" [style.display]="'block'">
-          {{'PLEASE_WAIT' | translate}}
-          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+        <span class="btn-loading">
+          {{ 'PLEASE_WAIT' | translate }}
         </span>
       </ng-container>
     </button>
   </div>
-  <!--end::Form group-->
+
+  <!-- FOOTER -->
+  <div class="login-footer">
+    <span>{{ 'ALREADY_HAVE_AN_ACCOUNT' | translate }}</span>
+    <a routerLink="/auth/login" class="text-link">
+      {{ 'AUTH.LOGIN.BUTTON' | translate }}
+    </a>
+  </div>
+
 </form>
-
-<ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-    <div class="fv-plugins-message-container">
-      <div class="fv-help-block">
-        <span role="alert">
-          {{ message }}
-        </span>
-      </div>
-    </div>
-  </ng-container>
-</ng-template>
-
-<!--begin::Sign up-->
-<div class="text-gray-500 text-center fw-semibold fs-6">
-  {{'ALREADY_HAVE_AN_ACCOUNT' | translate}}
-
-  <a routerLink="/auth/login" class="link-primary fw-semibold">
-    {{'AUTH.LOGIN.BUTTON' | translate}}
-
-  </a>
-</div>
-<!--end::Sign up-->

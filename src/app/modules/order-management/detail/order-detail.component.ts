@@ -113,8 +113,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     });
 
     this.updateHeader(); 
-    this.orderId = parseInt(this.route.snapshot.paramMap.get('id')!);
-    this.getById();
+    this.route.paramMap
+      .pipe()
+      .subscribe(params => {
+        const id = Number(params.get('id'));
+        if (id) {
+          this.orderId = id;
+          this.getById();
+        }
+      });
   }
 
   private updateHeader(): void {
@@ -131,5 +138,16 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   openCommentModal(orderProductId: number) {
     var productId = this.order.orderProducts?.filter(f => f.id == orderProductId)[0].productId;
     this.commentComponent.openModal(productId!);
+  }
+
+  copyToClipboard(value: string | undefined | null): void {
+    if (!value) return;
+
+    navigator.clipboard.writeText(value).then(() => {
+      // istersen toast:
+      // this.toastr.success('Kopyalandı');
+    }).catch(err => {
+      console.error('Copy failed', err);
+    });
   }
 }

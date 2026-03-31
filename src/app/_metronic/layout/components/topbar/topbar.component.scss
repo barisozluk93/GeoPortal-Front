@@ -1,31 +1,39 @@
+/* topbar.component.scss */
+
 .notification-symbol {
   overflow: visible;
 }
 
 .notification-symbol-label {
-  background: linear-gradient(180deg, #f9fbfd 0%, #f1f5f9 100%);
-  border: 1px solid #e9eef5;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(44, 99, 255, 0.2);
   border-radius: 12px;
-  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
   overflow: visible !important;
 }
 
 .notification-symbol:hover .notification-symbol-label {
-  background: var(--bs-primary);
-  border-color: var(--bs-primary);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   transform: translateY(-1px);
+  border-color: rgba(44, 99, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(44, 99, 255, 0.18);
 }
 
 .notification-bell {
   font-size: 17px;
-  color: var(--bs-primary);
-  transition: all 0.25s ease;
+  color: #ffffff;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .notification-symbol:hover .notification-bell {
-  color: #ffffff;
   transform: scale(1.06);
 }
 
@@ -37,15 +45,15 @@
   height: 20px;
   padding: 0 6px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ff5f7a 0%, #f1416c 100%);
+  background: #2c63ff;
   color: #ffffff;
   font-size: 10px;
   font-weight: 700;
   line-height: 20px;
   text-align: center;
   box-shadow:
-    0 4px 10px rgba(241, 65, 108, 0.35),
-    0 0 0 2px #ffffff;
+    0 4px 10px rgba(44, 99, 255, 0.28),
+    0 0 0 2px rgba(10, 18, 32, 0.9);
   z-index: 3;
 }
 
@@ -56,13 +64,16 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: rgba(241, 65, 108, 0.28);
+  background: rgba(44, 99, 255, 0.22);
   z-index: 1;
   animation: notificationPulse 1.8s infinite;
 }
 
 .has-unread .notification-symbol-label {
-  border-color: rgba(241, 65, 108, 0.18);
+  border-color: rgba(44, 99, 255, 0.35);
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.06),
+    0 0 0 1px rgba(44, 99, 255, 0.08) inset;
 }
 
 .is-animating .notification-bell {
@@ -92,4 +103,32 @@
   60% { transform: rotate(6deg); }
   75% { transform: rotate(-3deg); }
   100% { transform: rotate(0deg); }
+}
+
+.primary-action {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.primary-action {
+  color: #fff;
+  border: 0;
+  background: linear-gradient(135deg, #1f66ff 0%, #4c8cff 100%);
+  box-shadow: 0 12px 28px rgba(31, 102, 255, 0.3);
+}
+
+.primary-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(31, 102, 255, 0.38);
+}
+
+.primary-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

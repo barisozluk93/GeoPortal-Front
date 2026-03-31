@@ -5,16 +5,16 @@
     <span class="card-label fw-bolder fs-3 mb-1">{{header}}</span>
   </h3>
   <div class="card-toolbar" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-trigger="hover">
-    <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary me-4"
-      data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end" title="Filter">
-      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen024.svg'" class="svg-icon svg-icon-2"></span>
-    </button>
-    <!-- <app-dropdown-menu1></app-dropdown-menu1> -->
-    <a *ngIf="hasNewRecordPermission" (click)="openSaveModal()" title="Click to Add"
-      class="btn btn-sm btn-light-primary">
-      <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
-      {{'MENU.NEW' | translate}}
-    </a>
+        <a *ngIf="hasNewRecordPermission"
+   (click)="openSaveModal()"
+   title="Click to Add"
+   class="btn btn-gp btn-gp-primary btn-sm">
+
+  <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
+        class="svg-icon svg-icon-3"></span>
+
+  {{'MENU.NEW' | translate}}
+</a>
   </div>
 </div>
 <!-- end::Header -->
