@@ -18,8 +18,8 @@ import { LanguageInnerComponent } from './dropdown-inner/language-inner/language
     QuickLinksInnerComponent,
     SearchResultInnerComponent,
     UserInnerComponent,
-    LanguageInnerComponent,
     LayoutScrollTopComponent,
+    LanguageInnerComponent
   ],
   imports: [CommonModule, FormsModule, InlineSVGModule, RouterModule, TranslationModule, NgbTooltipModule],
   exports: [
@@ -27,8 +27,8 @@ import { LanguageInnerComponent } from './dropdown-inner/language-inner/language
     QuickLinksInnerComponent,
     SearchResultInnerComponent,
     UserInnerComponent,
-    LanguageInnerComponent,
     LayoutScrollTopComponent,
+    LanguageInnerComponent
   ],
 })
 export class ExtrasModule {

@@ -1,7 +1,8 @@
 <ng-container *ngIf="user">
-  <div class="user-glass-header">
-    <div class="user-header-left">
-      <div class="user-header-avatar">
+  <!-- USER HEADER -->
+  <div class="px-5 py-4">
+    <div class="d-flex align-items-center rounded-3 p-3" style="background-color: rgba(var(--bs-primary-rgb), 0.12);">
+      <div class="symbol symbol-45px me-4 flex-shrink-0">
         <img
           *ngIf="user?.fileId == undefined"
           src="./assets/media/avatars/blank.png"
@@ -15,134 +16,111 @@
         />
       </div>
 
-      <div class="user-header-content">
-        <h3 class="user-header-title mb-0">
+      <div class="d-flex flex-column min-w-0">
+        <div class="fw-bold fs-6 text-gray-900 text-truncate">
           {{ user.name }} {{ user.surname }}
-        </h3>
+        </div>
 
-        <span class="user-header-subtitle">
+        <div class="text-muted fs-7 text-truncate">
           {{ user.email }}
-        </span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="user-glass-body">
-    <div class="user-menu-list">
+  <div class="separator mx-5 my-2"></div>
 
-      <div class="user-row my-1">
-        <div routerLink="/profile/settings" class="user-glass-item px-4 py-3 cursor-pointer">
-          <div class="user-item-left">
-            <span class="user-item-icon">
-              <i class="fa-solid fa-user"></i>
-            </span>
+  <!-- PROFILE -->
+  <div class="menu-item px-3">
+    <a routerLink="/profile/settings" class="menu-link px-3 rounded-3">
+      <span class="menu-icon">
+        <i class="fa-solid fa-user fs-5"></i>
+      </span>
+      <span class="menu-title">
+        {{ 'MY_PROFILE' | translate }}
+      </span>
+    </a>
+  </div>
 
-            <span class="user-item-text">
-              {{ 'MY_PROFILE' | translate }}
-            </span>
-          </div>
+  <!-- ORDERS -->
+  <div class="menu-item px-3" *ngIf="!isAdmin">
+    <a routerLink="/ordermanagement" class="menu-link px-3 rounded-3">
+      <span class="menu-icon">
+        <i class="fa-solid fa-box fs-5"></i>
+      </span>
+      <span class="menu-title">
+        {{ 'MY_ORDERS' | translate }}
+      </span>
+    </a>
+  </div>
 
-          <span class="user-item-arrow">
-            <i class="fa-solid fa-chevron-right"></i>
-          </span>
-        </div>
-      </div>
+  <!-- LANGUAGE -->
+  <div
+    class="menu-item px-3"
+    data-kt-menu-trigger="hover"
+    data-kt-menu-placement="left-start"
+    data-kt-menu-flip="bottom"
+  >
+    <a class="menu-link px-3 rounded-3 cursor-pointer">
+      <span class="menu-icon">
+        <i class="fa-solid fa-language fs-5"></i>
+      </span>
 
-      <div class="user-row my-1" *ngIf="!isAdminPanel">
-        <div routerLink="/ordermanagement" class="user-glass-item px-4 py-3 cursor-pointer">
-          <div class="user-item-left">
-            <span class="user-item-icon">
-              <i class="fa-solid fa-box"></i>
-            </span>
+      <span class="menu-title">
+        {{ 'LANGUAGE' | translate }}
+      </span>
 
-            <span class="user-item-text">
-              {{ 'MY_ORDERS' | translate }}
-            </span>
-          </div>
+      <span class="ms-auto d-flex align-items-center me-2">
+        <img
+          class="w-20px h-20px rounded-1 me-2"
+          [src]="language.flag"
+          alt="language-flag"
+        />
+        <span class="fs-7 text-gray-700">
+          {{ ('LANG' | translate) === 'tr' ? language.nameTr : language.nameEn }}
+        </span>
+      </span>
+    </a>
 
-          <span class="user-item-arrow">
-            <i class="fa-solid fa-chevron-right"></i>
-          </span>
-        </div>
-      </div>
-
+    <div
+      class="menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-2 w-200px border border-gray-200 bg-body shadow-sm"
+    >
       <div
-        class="user-row my-1"
-        data-kt-menu-trigger="hover"
-        data-kt-menu-placement="left-start"
-        data-kt-menu-flip="bottom"
+        *ngFor="let l of langs"
+        class="menu-item px-3"
+        (click)="selectLanguage(l.lang)"
       >
-        <div class="user-glass-item px-4 py-3 cursor-pointer">
-          <div class="user-item-left">
-            <span class="user-item-icon">
-              <i class="fa-solid fa-language"></i>
-            </span>
-
-            <span class="user-item-text">
-              {{ 'LANGUAGE' | translate }}
-            </span>
-          </div>
-
-          <div class="user-language-badge">
-            <span class="user-language-name">
-              {{ ('LANG' | translate) === 'tr' ? language.nameTr : language.nameEn }}
-            </span>
-
-            <img
-              class="user-language-flag"
-              [src]="language.flag"
-              alt="language-flag"
-            />
-          </div>
-        </div>
-
-        <div class="menu-sub menu-sub-dropdown w-200px py-3 user-language-dropdown">
-          <div
-            *ngFor="let l of langs"
-            class="user-language-row px-3 cursor-pointer"
-            (click)="selectLanguage(l.lang)"
-          >
-            <div
-              class="user-language-option d-flex align-items-center justify-content-between px-4 py-3"
-              [ngClass]="l.lang === language.lang ? 'active' : ''"
-            >
-              <div class="d-flex align-items-center">
-                <span class="symbol symbol-20px me-3">
-                  <img class="rounded-1" [src]="l.flag" alt="language-flag" />
-                </span>
-
-                <span>
-                  {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
-                </span>
-              </div>
-
-              <i
-                *ngIf="l.lang === language.lang"
-                class="fa-solid fa-check user-language-check"
-              ></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="user-row my-1">
-        <div (click)="logout()" class="user-glass-item user-logout-item px-4 py-3 cursor-pointer">
-          <div class="user-item-left">
-            <span class="user-item-icon">
-              <i class="fa-solid fa-right-from-bracket"></i>
-            </span>
-
-            <span class="user-item-text">
-              {{ 'AUTH.GENERAL.SIGNOUT_BUTTON' | translate }}
-            </span>
-          </div>
-
-          <span class="user-item-arrow">
-            <i class="fa-solid fa-chevron-right"></i>
+        <a
+          class="menu-link px-3 rounded-3 d-flex align-items-center"
+          [ngClass]="{ active: l.lang === language.lang }"
+        >
+          <span class="symbol symbol-20px me-3">
+            <img class="rounded-1" [src]="l.flag" alt="language-flag" />
           </span>
-        </div>
-      </div>
 
+          <span class="menu-title">
+            {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
+          </span>
+
+          <span class="ms-auto" *ngIf="l.lang === language.lang">
+            <i class="fa-solid fa-check text-primary"></i>
+          </span>
+        </a>
+      </div>
     </div>
+  </div>
+
+  <div class="separator mx-5 my-2"></div>
+
+  <!-- LOGOUT -->
+  <div class="menu-item px-3">
+    <a (click)="logout()" class="menu-link px-3 rounded-3 cursor-pointer text-danger">
+      <span class="menu-icon">
+        <i class="fa-solid fa-right-from-bracket fs-5 text-danger"></i>
+      </span>
+      <span class="menu-title">
+        {{ 'AUTH.GENERAL.SIGNOUT_BUTTON' | translate }}
+      </span>
+    </a>
   </div>
 </ng-container>

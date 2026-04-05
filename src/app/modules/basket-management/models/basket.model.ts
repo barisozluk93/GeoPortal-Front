@@ -1,4 +1,4 @@
-import { ProductModel } from "../../product-management/models/product.model";
+import { ProductModel } from "../../landing/marketplace/models/product.model";
 
 export class BasketModel {
     id: number;
@@ -8,5 +8,6 @@ export class BasketModel {
     isDeleted: boolean;
     numberOf?: number;
     totalPrice?: number;
+    fileResult?: any;
   }
   

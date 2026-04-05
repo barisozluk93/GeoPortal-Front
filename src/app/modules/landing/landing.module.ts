@@ -2,25 +2,27 @@ import { NgModule } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { LandingRoutingModule } from './landing-routing.module';
 import { LandingComponent } from './landing.component';
-import { MapViewComponent } from './map-view/map-view.component';
-import { DataViewComponent } from './data-view/data-view.component';
-import { ApiViewComponent } from './api-view/api-view.component';
-import { ContactViewComponent } from './contact-view/contact-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { MarketplaceViewComponent } from './marketplace-view/marketplace-view.component';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { DocumentationViewComponent } from './documentation-view/documentation-view.component';
+import { InlineSVGModule } from 'ng-inline-svg-2';
+import { CustomSelectModule } from '../common/select/custom-select.module.module';
+import { MarketplaceComponent } from './marketplace/marketplace.component';
+import { DataComponent } from './data/data.component';
+import { ApiComponent } from './api/api.component';
+import { ContactComponent } from './contact/contact.component';
+import { DocumentationComponent } from './documentation/documentation.component';
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
     LandingComponent,
-    MapViewComponent,
-    DataViewComponent,
-    ApiViewComponent,
-    ContactViewComponent,
-    MarketplaceViewComponent,
-    DocumentationViewComponent
+    MarketplaceComponent,
+    DataComponent,
+    ApiComponent,
+    ContactComponent,
+    DocumentationComponent,
+    MapComponent
   ],
   imports: [
     CommonModule, 
@@ -30,7 +32,12 @@ import { DocumentationViewComponent } from './documentation-view/documentation-v
     ReactiveFormsModule,
     CurrencyPipe,
     DatePipe,
-    NgbPaginationModule
+    NgbPaginationModule,
+    InlineSVGModule,
+    CustomSelectModule
   ],
+  // exports: [
+  //   MapViewComponent
+  // ]
 })
 export class LandingModule {}

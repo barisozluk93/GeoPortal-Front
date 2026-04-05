@@ -1,0 +1,43 @@
+<div
+  #trigger
+  class="custom-select-container"
+  [ngClass]="[
+    sizeClass,
+    invalid ? 'is-invalid' : '',
+    disabled ? 'disabled' : '',
+    isOpen ? 'open' : ''
+  ]"
+  (click)="toggle($event)"
+>
+  <div class="selected-text">
+    <ng-container *ngIf="multiple; else singleTemplate">
+      <ng-container *ngIf="selectedItems.length > 0; else multiPlaceholder">
+        <span class="selected-value">
+          {{ selectedItemsText }}
+        </span>
+      </ng-container>
+
+      <ng-template #multiPlaceholder>
+        <span class="placeholder-text">
+          {{ placeholder }}
+        </span>
+      </ng-template>
+    </ng-container>
+
+    <ng-template #singleTemplate>
+      <span *ngIf="selectedItem; else singlePlaceholder" class="selected-value">
+        {{ selectedItem[bindLabel] }}
+      </span>
+
+      <ng-template #singlePlaceholder>
+        <span class="placeholder-text">
+          {{ placeholder }}
+        </span>
+      </ng-template>
+    </ng-template>
+  </div>
+
+  <div class="arrow">
+    <span [class.rotate]="isOpen">▼</span>
+  </div>
+</div>

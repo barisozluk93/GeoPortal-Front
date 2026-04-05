@@ -14,6 +14,10 @@ import { RoleEditSaveComponent } from './role/edit-save/edit-save.component';
 import { UserEditSaveComponent } from './user/edit-save/edit-save.component';
 import { ConfirmationModule } from '../confirmation/confirmation.module';
 import { DataTableModule } from '../common/datatable/datatable.module';
+import { CustomModalComponent } from '../common/custom-modal/custom-modal.component';
+import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
+import { CustomSelectModule } from '../common/select/custom-select.module.module';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -23,7 +27,7 @@ import { DataTableModule } from '../common/datatable/datatable.module';
     RoleComponent,
     RoleEditSaveComponent,
     UserComponent,
-    UserEditSaveComponent,
+    UserEditSaveComponent
   ],
   imports: [
     DataTableModule,
@@ -34,7 +38,13 @@ import { DataTableModule } from '../common/datatable/datatable.module';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ModalsModule
+    CustomModalModule,
+    CustomSelectModule,
+    NgxMaskDirective,
+    NgxMaskPipe
+  ],
+  providers: [
+    provideNgxMask()
   ],
 })
 export class UserManagementModule {}

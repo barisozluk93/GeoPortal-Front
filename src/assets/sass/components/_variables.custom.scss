@@ -4,24 +4,16 @@
 // are not accessible in this file but you can override any global variable as shown below:
 //
 
-// Border Radiues
-$border-radius-sm:                                           .3rem;
-$border-radius:                                              .65rem;
-$border-radius-lg:                                           .85rem;
-$border-radius-xl:                                           1.25rem;
 
-// Marketplace / Brand palette
-$primary:                                                    #2c63ff;
-$primary-active:                                             #1f66ff;
-$primary-light:                                              #172331;
-$primary-clarity:                                            rgba(44, 99, 255, 0.12);
-$primary-inverse:                                            #ffffff;
+// Bootstrap contextual colors
+// Primary colors
+$success:                        #1B84FF;
+$success-active:                 #056EE9;
+$success-light:                  #E9F3FF;
+$success-clarity:                rgba(#1B84FF, 0.2);
 
-// Supporting accent tones
-$success:                                                    #16A34A;
-$info:                                                       #4C8CFF;
-$warning:                                                    #F59E0B;
-$danger:                                                     #FF6B6B;
-
-// Marketplace dark surface
-$body-bg-dark:                                               #07111f;
+// Brand primary colors
+$primary:                        #2C63FF;
+$primary-active:                 #1F66FF;
+$primary-light:                  #DCE7FF;
+$primary-clarity:                rgba(#2C63FF, 0.22);

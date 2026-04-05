@@ -9,6 +9,7 @@ import { ComingOrderManagementService } from './coming-order-management.service'
 import { OrderProductModel } from './models/orderproduct.model';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-coming-order-management',
@@ -23,9 +24,8 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
   hasDeletePermission: boolean = false;
   hasNewRecordPermission: boolean = false;
   hasShowPermission: boolean = true;
-  searchTerm: string = '';
-  lastSearchTerm: string = '';
 
+  filterModel: Record<string, any> = {};
   tableName: string = "Aldığım Siparişler";
   columnList: ColumnModel[] = []
 
@@ -35,7 +35,7 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
     { name: "Tutar", index: "priceStr", visibility: true },
     { name: "Sipariş Tarihi", index: "orderDate", visibility: true },
     { name: "Durum", index: "orderStatusStr", visibility: true },
-    {name: "İşlemler", index: null, visibility: true}
+    { name: "İşlemler", index: null, visibility: true }
   ]
 
   columnListEN: ColumnModel[] = [
@@ -53,8 +53,8 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
   totalCount: number;
   paginationModel: PaginationModel;
 
-  constructor(private authService: AuthService, private router: Router, private comingOrderManagementService: ComingOrderManagementService, 
-    private translate: TranslateService ,@Inject(LOCALE_ID) public locale: string) {
+  constructor(private authService: AuthService, private router: Router, private comingOrderManagementService: ComingOrderManagementService,
+    private translate: TranslateService, @Inject(LOCALE_ID) public locale: string) {
   }
 
   loadData() {
@@ -64,41 +64,44 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
 
     forkJoin(translationRequest).subscribe((translations) => {
       const [pendingApprovalText, approvedText, preparingText, rejectedText, completedText] = translations;
-      this.comingOrderManagementService.paging(this.paginationModel.pageNumber, this.paginationModel.pageSize, this.searchTerm)
-      .subscribe(result => {
-        if (result.isSuccess) {
-          result.data.items.forEach(item => {
-            item.orderDate = formatDate(item.order?.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
 
-            if (item.orderStatus == OrderStatusEnum['Onay Bekliyor']) {
-              item.orderStatusStr = pendingApprovalText;
-            }
-            else if (item.orderStatus == OrderStatusEnum['Onaylandı']) {
-              item.orderStatusStr = approvedText;
-            }
-            else if (item.orderStatus == OrderStatusEnum['Hazırlanıyor']) {
-              item.orderStatusStr = preparingText;
-            }
-            else if (item.orderStatus == OrderStatusEnum['Reddedildi']) {
-              item.orderStatusStr = rejectedText;
-            }
-            else if (item.orderStatus == OrderStatusEnum['Tamamlandı']) {
-              item.orderStatusStr = completedText;
-            }
+      const filterParams = this.buildFilterQueryParams(this.filterModel);
 
-            item.priceStr = item.product?.price.toFixed(2) + " ₺";
-            item.orderNo = item.order?.orderNo!;
-          })
-          this.dataSource = result.data.items;
-          this.totalCount = result.data.totalCount;
-        }
-        else {
-          this.dataSource = [];
-          this.totalCount = 0;
-        }
-      })
+      this.comingOrderManagementService.paging(this.paginationModel.pageNumber, this.paginationModel.pageSize, filterParams)
+        .subscribe(result => {
+          if (result.isSuccess) {
+            result.data.items.forEach(item => {
+              item.orderDate = formatDate(item.order?.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
+
+              if (item.orderStatus == OrderStatusEnum['Onay Bekliyor']) {
+                item.orderStatusStr = pendingApprovalText;
+              }
+              else if (item.orderStatus == OrderStatusEnum['Onaylandı']) {
+                item.orderStatusStr = approvedText;
+              }
+              else if (item.orderStatus == OrderStatusEnum['Hazırlanıyor']) {
+                item.orderStatusStr = preparingText;
+              }
+              else if (item.orderStatus == OrderStatusEnum['Reddedildi']) {
+                item.orderStatusStr = rejectedText;
+              }
+              else if (item.orderStatus == OrderStatusEnum['Tamamlandı']) {
+                item.orderStatusStr = completedText;
+              }
+
+              item.priceStr = item.product?.price.toFixed(2) + " ₺";
+              item.orderNo = item.order?.orderNo!;
+            })
+            this.dataSource = result.data.items;
+            this.totalCount = result.data.totalCount;
+          }
+          else {
+            this.dataSource = [];
+            this.totalCount = 0;
+          }
+        })
     })
-    
+
   }
 
   ngOnDestroy(): void {
@@ -145,7 +148,7 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
 
     this.translate.onLangChange.subscribe(() => {
       this.translate.get('LANG').subscribe((translation: string) => {
-        if(translation === 'tr') {
+        if (translation === 'tr') {
           this.columnList = this.columnListTR
         } else {
           this.columnList = this.columnListEN
@@ -154,7 +157,7 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
     });
 
     this.translate.get('LANG').subscribe((translation: string) => {
-      if(translation === 'tr') {
+      if (translation === 'tr') {
         this.columnList = this.columnListTR
       } else {
         this.columnList = this.columnListEN
@@ -162,12 +165,21 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSearch() {
-    if (this.searchTerm === this.lastSearchTerm) {
-      return;
-    }
-    
-    this.lastSearchTerm = this.searchTerm;
+  onFilterModelChange(filter: Record<string, any>) {
+    this.filterModel = filter ?? {};
+    this.paginationModel.pageNumber = 1;
     this.loadData();
+  }
+
+  buildFilterQueryParams(filterModel: Record<string, any>): HttpParams {
+    let params = new HttpParams();
+
+    Object.entries(filterModel || {}).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return params;
   }
 }

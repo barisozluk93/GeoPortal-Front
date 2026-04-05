@@ -9,8 +9,8 @@ import { TranslationService } from '../../../../../../modules/i18n';
 })
 export class LanguageInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class')
-  class = `menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px`;
-  @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
+@HostBinding('class')
+class = `menu menu-sub menu-sub-dropdown menu-column menu-rounded border border-gray-200 bg-body shadow-sm py-2 fs-6 w-200px`;  @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
 
   language: LanguageFlag;
   langs = languages;

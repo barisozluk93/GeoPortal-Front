@@ -1,136 +1,162 @@
 <form
   class="login-form"
   [formGroup]="loginForm"
-  novalidate
+  novalidate="novalidate"
   id="kt_login_signin_form"
   (ngSubmit)="submit()"
 >
-  <div class="login-header">
-    <a routerLink="/landing/marketplace" class="brand-link">
-      <div class="brand">
-        <span class="brand-mark">G</span>
-        <span class="brand-text">
-          <strong>{{ 'brandTitle' | translate }}</strong>
-          <small>{{ 'brandSubtitle' | translate }}</small>
-        </span>
+  <div class="login-card">
+    <div class="login-card__header">
+      <div class="login-brand" (click)="onBrandClick()" style="cursor: pointer;">
+        <div class="login-brand__icon bg-primary text-white">
+          G
+        </div>
+
+        <div class="login-brand__content text-center">
+          <span class="login-brand__title">{{ 'BRANDTITLE' | translate }}</span>
+          <span class="login-brand__subtitle">{{ 'BRANDSUBTITLE' | translate }}</span>
+        </div>
       </div>
-    </a>
 
-    <h1>{{ 'LOG_IN' | translate }}</h1>
-  </div>
-
-  <ng-container *ngIf="hasError">
-    <div class="modern-alert">
-      <div class="modern-alert-text">
-        The login details are incorrect
+      <div class="login-card__heading">
+        <h1 class="login-card__title">
+          {{ 'AUTH.LOGIN.TITLE' | translate }}
+        </h1>
       </div>
     </div>
-  </ng-container>
 
-  <div class="form-group">
-    <label>Email</label>
-    <input
-      class="modern-input"
-      type="email"
-      name="email"
-      formControlName="email"
-      autocomplete="off"
-      [class.invalid]="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)"
-    />
+    <ng-container *ngIf="hasError">
+      <div class="alert alert-danger d-flex align-items-center mb-8 py-4 px-4 rounded-4">
+        <i class="ki-outline ki-information-5 fs-3 me-3"></i>
+        <div>{{ 'ERR_LOGIN' | translate }}</div>
+      </div>
+    </ng-container>
 
-    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-      validation: 'required',
-      message: 'Email is required',
-      control: loginForm.controls['email']
-    }"></ng-container>
+    <div class="fv-row mb-7">
+      <label class="form-label fw-semibold text-gray-800 fs-6 mb-2">
+        {{ 'EMAIL' | translate }}
+      </label>
 
-    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-      validation: 'email',
-      message: 'Email is invalid',
-      control: loginForm.controls['email']
-    }"></ng-container>
-
-    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-      validation: 'minLength',
-      message: 'Email should have at least 3 symbols',
-      control: loginForm.controls['email']
-    }"></ng-container>
-
-    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-      validation: 'maxLength',
-      message: 'Email should have maximum 360 symbols',
-      control: loginForm.controls['email']
-    }"></ng-container>
-  </div>
-
-  <div class="form-group">
-    <label>Password</label>
-    <input
-      class="modern-input"
-      type="password"
-      name="password"
-      autocomplete="off"
-      formControlName="password"
-      [class.invalid]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)"
-    />
-
-    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-      validation: 'required',
-      message: 'Password is required',
-      control: loginForm.controls['password']
-    }"></ng-container>
-
-    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-      validation: 'minlength',
-      message: 'Password should have at least 3 symbols',
-      control: loginForm.controls['password']
-    }"></ng-container>
-
-    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-      validation: 'maxLength',
-      message: 'Password should have maximum 100 symbols',
-      control: loginForm.controls['password']
-    }"></ng-container>
-  </div>
-
-  <div class="login-links">
-    <a routerLink="/auth/forgot-password" class="text-link">
-      Forgot Password ?
-    </a>
-  </div>
-
-  <div class="login-actions">
-    <button
-      type="submit"
-      id="kt_sign_in_submit"
-      class="primary-btn"
-      [disabled]="loginForm.invalid"
-    >
-      <ng-container *ngIf="isLoading$ | async; else continueTpl">
-        <span class="btn-loading">
-          Please wait...
-          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+      <div
+        class="input-group input-group-lg login-input-group"
+        [ngClass]="{
+          'is-invalid': loginForm.controls['email'].invalid &&
+                        (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)
+        }"
+      >
+        <span class="input-group-text">
+          <i class="ki-outline ki-sms fs-4"></i>
         </span>
-      </ng-container>
 
-      <ng-template #continueTpl>
-        <span>Continue</span>
-      </ng-template>
-    </button>
-  </div>
+        <input
+          type="email"
+          class="form-control form-control-lg form-control-solid"
+          formControlName="email"
+          autocomplete="off"
+          placeholder="example@email.com"
+        />
+      </div>
 
-  <div class="login-footer">
-    <span>Not a Member yet?</span>
-    <a routerLink="/auth/registration" class="text-link">
-      Sign up
-    </a>
+      <ng-container
+        [ngTemplateOutlet]="formError"
+        [ngTemplateOutletContext]="{
+          validation: 'required',
+          message: ('AUTH.VALIDATION.EMAIL_REQUIRED' | translate),
+          control: loginForm.controls['email']
+        }"
+      ></ng-container>
+
+      <ng-container
+        [ngTemplateOutlet]="formError"
+        [ngTemplateOutletContext]="{
+          validation: 'email',
+          message: ('AUTH.VALIDATION.EMAIL_INVALID' | translate),
+          control: loginForm.controls['email']
+        }"
+      ></ng-container>
+    </div>
+
+    <div class="fv-row mb-4">
+      <div class="d-flex flex-stack mb-2">
+        <label class="form-label fw-semibold text-gray-800 fs-6 mb-0">
+          {{ 'PASSWORD' | translate }}
+        </label>
+
+        <a routerLink="/auth/forgot-password" class="login-link fs-7 fw-bold">
+          {{ 'FORGOT_PASSWORD' | translate }}
+        </a>
+      </div>
+
+      <div
+        class="input-group input-group-lg login-input-group"
+        [ngClass]="{
+          'is-invalid': loginForm.controls['password'].invalid &&
+                        (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)
+        }"
+      >
+        <span class="input-group-text">
+          <i class="ki-outline ki-lock-2 fs-4"></i>
+        </span>
+
+        <input
+          type="password"
+          class="form-control form-control-lg form-control-solid"
+          formControlName="password"
+          autocomplete="off"
+          placeholder="••••••••"
+        />
+      </div>
+
+      <ng-container
+        [ngTemplateOutlet]="formError"
+        [ngTemplateOutletContext]="{
+          validation: 'required',
+          message: ('AUTH.VALIDATION.PASSWORD_REQUIRED' | translate),
+          control: loginForm.controls['password']
+        }"
+      ></ng-container>
+    </div>
+
+    <div class="d-grid mb-8 mt-8">
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg login-submit"
+        [disabled]="loginForm.invalid"
+      >
+        <ng-container *ngIf="isLoading$ | async; else submitLabel">
+          <span class="indicator-progress d-inline-flex align-items-center justify-content-center">
+            {{ 'PLEASEWAIT' | translate }}
+            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+          </span>
+        </ng-container>
+
+        <ng-template #submitLabel>
+          <span class="indicator-label">
+            {{ 'LOGIN_CONTINUE' | translate }}
+          </span>
+        </ng-template>
+      </button>
+    </div>
+
+    <div class="separator separator-content my-8">
+      <span class="w-125px text-gray-500 fw-semibold fs-7">
+        {{ 'AUTH.LOGIN.OR' | translate }}
+      </span>
+    </div>
+
+    <div class="text-center text-gray-600 fs-6">
+      {{ 'NOTMEMBERYET' | translate }}
+      <a routerLink="/auth/registration" class="login-link fw-bold ms-1">
+        {{ 'SIGNUP' | translate }}
+      </a>
+    </div>
   </div>
 </form>
 
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
   <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-    <div class="field-error">
-      <span role="alert">{{ message }}</span>
+    <div class="invalid-feedback d-block">
+      {{ message }}
     </div>
   </ng-container>
 </ng-template>

@@ -11,16 +11,15 @@ import { OrderManagementComponent } from './order-management.component';
 import { OrderManagementRoutingModule } from './order-management-routing.module';
 import { OrderDetailComponent } from './detail/order-detail.component';
 import { InvoiceComponent } from './detail/invoice/invoice.component';
-import { CommentComponent } from './detail/comment/comment.component';
-import { DataTableModule } from '../common/datatable/datatable.module';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { DataTableModule } from '../common/datatable/datatable.module';
+import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
 
 @NgModule({
   declarations: [
     OrderManagementComponent,
     OrderDetailComponent,
     InvoiceComponent,
-    CommentComponent
   ],
   imports: [
     DataTableModule,
@@ -31,7 +30,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ModalsModule,
+    CustomModalModule,
     InlineSVGModule,
     NgbPaginationModule,
     PdfViewerModule

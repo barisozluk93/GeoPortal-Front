@@ -1,0 +1,145 @@
+<section class="api-page">
+  <!-- HERO SECTION -->
+  <section class="api-hero">
+  <div class="api-hero-overlay"></div>
+
+  <div class="container api-hero-content">
+    <div class="api-hero-grid">
+
+      <!-- LEFT -->
+      <div class="api-hero-left">
+        <div class="api-kicker mb-6">
+          <i class="bi bi-code-slash"></i>
+          {{ 'API_PAGE.KICKER' | translate }}
+        </div>
+
+        <h1 class="api-title">
+          {{ 'API_PAGE.TITLE' | translate }}
+        </h1>
+
+        <p class="api-copy">
+          {{ 'API_PAGE.COPY' | translate }}
+        </p>
+
+        <div class="api-hero-actions mt-10">
+          <button
+            class="btn btn-primary me-2"
+            (click)="onBuyNow()">
+            {{ 'API_PAGE.BUY_API_KEY' | translate }}
+          </button>
+
+          <button
+            class="btn btn-secondary"
+            (click)="routeToDoc()">
+            {{ 'API_PAGE.DOCUMENTATION' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="api-hero-right">
+        <div class="api-glass-panel">
+          <div class="api-panel-title">
+            {{ 'API_PAGE.ENDPOINTS' | translate }}
+          </div>
+
+          <pre class="api-code-block mb-0">POST {{baseUrl}}/geoportalApi/map/getSatelliteDatas
+POST {{baseUrl}}/geoportalApi/map/startImageProcessing
+GET  {{baseUrl}}/geoportalApi/map/getImageProcessingStatus/&#123;processId&#125;
+GET  {{baseUrl}}/geoportalApi/map/getProcessedSatelliteImage/&#123;processId&#125;</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+  <!-- SECTION 2 -->
+  <section class="api-white-section">
+    <div class="container">
+      <div class="row g-7">
+        <div class="col-12 col-md-6 col-xl-4" *ngFor="let i of [1,2,3]">
+          <div class="card h-100 shadow-sm api-info-card">
+            <div class="card-body p-8">
+
+              <div class="api-card-icon mb-6">
+                <i
+                  class="bi fs-2"
+                  [ngClass]="{
+                    'bi-cpu': i === 1,
+                    'bi-diagram-3': i === 2,
+                    'bi-lightning-charge': i === 3
+                  }">
+                </i>
+              </div>
+
+              <h3 class="api-card-title">
+                {{ ('API_PAGE.FEATURE_' + i + '_TITLE') | translate }}
+              </h3>
+
+              <p class="api-card-text">
+                {{ ('API_PAGE.FEATURE_' + i + '_DESC') | translate }}
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="api-dark-section">
+    <div class="container">
+
+      <div class="data-showcase-shell">
+
+        <div class="row align-items-center g-8">
+          <div class="col-12 col-xl-6">
+
+            <div class="api-showcase-main">
+              <div class="api-mini-kicker">
+                {{ 'API_PAGE.DEVELOPER_FIRST' | translate }}
+              </div>
+
+              <h2 class="data-showcase-title">
+                {{ 'API_PAGE.SECTION2_TITLE' | translate }}
+              </h2>
+
+              <p class="data-showcase-copy">
+                {{ 'API_PAGE.SECTION2_COPY' | translate }}
+              </p>
+            </div>
+
+          </div>
+
+          <div class="col-12 col-xl-6">
+            <div class="row g-6">
+
+              <div class="col-12" *ngFor="let i of [1,2,3]">
+                <div class="card data-mini-card">
+                  <div class="card-body p-8">
+
+                    <h4 class="data-mini-card-title">
+                      {{ ('API_PAGE.USECASE_' + i + '_TITLE') | translate }}
+                    </h4>
+
+                    <p class="data-mini-card-text mb-0">
+                      {{ ('API_PAGE.USECASE_' + i + '_DESC') | translate }}
+                    </p>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</section>

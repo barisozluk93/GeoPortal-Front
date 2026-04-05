@@ -12,6 +12,11 @@ enum ErrorStates {
   HasError,
   NoError,
 }
+
+export type RegistrationTabsType =
+  | 'bireysel'
+  | 'kurumsal';
+
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -23,6 +28,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   errorStates = ErrorStates;
   isLoading$: Observable<boolean>;
 
+  activeTabId: RegistrationTabsType = "bireysel";
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
 
@@ -91,6 +97,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
           "",
           Validators.compose([
             Validators.required,
+            Validators.pattern(/^\(\d{3}\)\s\d{3}\s\d{2}\s\d{2}$/)
           ]),
         ],
         username: [
@@ -99,11 +106,25 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             Validators.required,
           ]),
         ],
+        isProducer: [
+          false,
+          Validators.compose([
+            Validators.required,
+          ]),
+        ]
       },
       {
         validator: ConfirmPasswordValidator.MatchPassword,
       }
     );
+  }
+
+  setActiveTabId(tabId: RegistrationTabsType) {
+    this.activeTabId = tabId;
+
+    if(this.activeTabId == 'kurumsal') {
+      this.initForm();
+    }
   }
 
   submit() {
@@ -126,5 +147,9 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
+  }
+
+  onBrandClick() {
+    this.router.navigate(['/landing/marketplace'])
   }
 }

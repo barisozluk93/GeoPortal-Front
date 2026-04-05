@@ -1,0 +1,64 @@
+<app-custom-modal
+  [isOpen]="isModalOpen"
+  [title]="modalTitle"
+  [subtitle]="'LAYERGROUP_FORM.TITLE' | translate"
+  [width]="'600px'"
+  (closed)="closeModal()"
+  (submitted)="submit()"
+  variant="center"
+  [showFooter]="true"
+>
+  <form class="form w-100" [formGroup]="form" novalidate>
+
+    <!-- NAME -->
+    <div class="fv-row mb-8">
+      <label class="form-label fs-6 fw-bolder text-gray-900">
+        {{ 'LAYERGROUP_FORM.NAME' | translate }}
+      </label>
+
+      <input
+        type="text"
+        formControlName="name"
+        autocomplete="off"
+        class="form-control form-control-lg form-control-solid"
+        [placeholder]="'LAYERGROUP_FORM.NAME' | translate"
+        [ngClass]="{
+          'is-invalid': isInvalid('name')
+        }"
+      />
+
+      <div class="invalid-feedback d-block" *ngIf="isInvalid('name')">
+        {{ 'LAYERGROUP_FORM.REQUIRED_NAME' | translate }}
+      </div>
+    </div>
+
+    <!-- ORDER NO -->
+    <div class="fv-row mb-8">
+      <label class="form-label fs-6 fw-bolder text-gray-900">
+        {{ 'LAYERGROUP_FORM.ORDER_NO' | translate }}
+      </label>
+
+      <input
+        type="number"
+        formControlName="orderNo"
+        min="1"
+        class="form-control form-control-lg form-control-solid"
+        [placeholder]="'LAYERGROUP_FORM.ORDER_NO' | translate"
+        [ngClass]="{
+          'is-invalid': isInvalid('orderNo')
+        }"
+      />
+
+      <ng-container *ngIf="isInvalid('orderNo')">
+        <div class="invalid-feedback d-block" *ngIf="f['orderNo'].errors?.['required']">
+          {{ 'LAYERGROUP_FORM.REQUIRED_ORDER' | translate }}
+        </div>
+
+        <div class="invalid-feedback d-block" *ngIf="f['orderNo'].errors?.['min']">
+          {{ 'LAYERGROUP_FORM.MIN_ORDER' | translate }}
+        </div>
+      </ng-container>
+    </div>
+
+  </form>
+</app-custom-modal>

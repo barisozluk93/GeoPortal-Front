@@ -1,9 +1,82 @@
 <div class="auth-page">
-  <div class="auth-overlay"></div>
+  <div class="auth-page__bg"></div>
 
-  <div class="auth-container">
-    <div class="auth-panel">
-      <router-outlet></router-outlet>
+  <div class="auth-page__content">
+    <div class="auth-shell shadow-sm">
+      <div class="auth-shell__aside d-none d-lg-flex">
+        <div class="auth-aside">
+          <div class="auth-aside__header">
+            <span class="auth-aside__badge">
+              {{ 'AUTH.ASIDE.EYEBROW' | translate }}
+            </span>
+
+            <h1 class="auth-aside__title">
+              {{ 'AUTH.ASIDE.TITLE_1' | translate }}
+              <span>{{ 'AUTH.ASIDE.TITLE_2' | translate }}</span>
+            </h1>
+
+            <p class="auth-aside__desc">
+              {{ 'AUTH.ASIDE.DESCRIPTION' | translate }}
+            </p>
+          </div>
+
+          <div class="auth-aside__visual">
+            <div class="auth-visual-card">
+              <div class="auth-visual-card__top">
+                <span class="dot bg-success"></span>
+                <span class="dot bg-warning"></span>
+                <span class="dot bg-primary"></span>
+              </div>
+
+              <div class="auth-visual-card__body">
+                <div class="auth-line auth-line--lg"></div>
+                <div class="auth-line auth-line--md"></div>
+
+                <div class="auth-stat-list">
+                  <div class="auth-stat-item">
+                    <div class="auth-stat-item__icon bg-light-primary">
+                      <i class="ki-outline ki-chart-simple text-primary fs-2"></i>
+                    </div>
+                    <div class="auth-stat-item__content">
+                      <div class="auth-line auth-line--sm"></div>
+                      <div class="auth-line auth-line--xs"></div>
+                    </div>
+                  </div>
+
+                  <div class="auth-stat-item">
+                    <div class="auth-stat-item__icon bg-light-success">
+                      <i class="ki-outline ki-shield-tick text-success fs-2"></i>
+                    </div>
+                    <div class="auth-stat-item__content">
+                      <div class="auth-line auth-line--sm"></div>
+                      <div class="auth-line auth-line--xs"></div>
+                    </div>
+                  </div>
+
+                  <div class="auth-stat-item">
+                    <div class="auth-stat-item__icon bg-light-warning">
+                      <i class="ki-outline ki-abstract-26 text-warning fs-2"></i>
+                    </div>
+                    <div class="auth-stat-item__content">
+                      <div class="auth-line auth-line--sm"></div>
+                      <div class="auth-line auth-line--xs"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="auth-floating auth-floating--one"></div>
+            <div class="auth-floating auth-floating--two"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-shell__body">
+        <div class="auth-shell__form">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
     </div>
   </div>
 </div>

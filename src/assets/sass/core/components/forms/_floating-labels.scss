@@ -4,17 +4,25 @@
 
 .form-floating {
     .form-control.form-control-solid {
+  border-radius: 10px;
         &::placeholder {
             color: transparent;    
-        }
+        
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
     }
 
     &.form-control-solid-bg label,
     > :disabled ~ label,
     > :focus ~ label {
+  border-radius: 10px;
         &::after {
             background-color: transparent !important;
-        }
+        
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
     }
 }
      

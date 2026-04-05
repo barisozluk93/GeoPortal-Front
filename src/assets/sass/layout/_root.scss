@@ -14,21 +14,20 @@
     --#{$prefix}header-desktop-fixed-bg-color: #{get($header-config, desktop, fixed, bg-color)};
     --#{$prefix}header-desktop-fixed-box-shadow: #{get($header-config, desktop, fixed, box-shadow)};
 
-    --#{$prefix}header-desktop-fixed-bg-color: #{get($header-config, tablet-and-mobile, fixed, bg-color)};
-    --#{$prefix}header-desktop-fixed-box-shadow: #{get($header-config, tablet-and-mobile, fixed, box-shadow)};
+    --#{$prefix}header-tablet-and-mobile-fixed-bg-color: #{get($header-config, tablet-and-mobile, fixed, bg-color)};
+    --#{$prefix}header-tablet-and-mobile-fixed-box-shadow: #{get($header-config, tablet-and-mobile, fixed, box-shadow)};
+
+     // Footer
+    --#{$prefix}footer-desktop-fixed-bg-color: #{get($footer-config, desktop, fixed, bg-color)};
+    --#{$prefix}footer-desktop-fixed-box-shadow: #{get($footer-config, desktop, fixed, box-shadow)};
+
+    --#{$prefix}footer-tablet-and-mobile-fixed-bg-color: #{get($footer-config, tablet-and-mobile, fixed, bg-color)};
+    --#{$prefix}footer-tablet-and-mobile-fixed-box-shadow: #{get($footer-config, tablet-and-mobile, fixed, box-shadow)};
 
     // Aside
     --#{$prefix}aside-bg-color: #{get($aside-config, bg-color)};
-
-    // Sidebar
-    --#{$prefix}sidebar-bg-color: #{get($sidebar-config, bg-color)};
-    --#{$prefix}sidebar-tabs-link-bg-color-default: #{get($sidebar-config, tabs, link-bg-color, default)};
-    --#{$prefix}sidebar-tabs-link-bg-color-active: #{get($sidebar-config, tabs, link-bg-color, active)};
-    --#{$prefix}sidebar-tabs-link-icon-color-default: #{get($sidebar-config, tabs, link-icon-color, default)};
-    --#{$prefix}sidebar-tabs-link-icon-color-active: #{get($sidebar-config, tabs, link-icon-color, active)};
-    --#{$prefix}sidebar-dashed-border-color: #{get($sidebar-config, dashed-border-color)};
-    --#{$prefix}sidebar-muted-color: #{get($sidebar-config, muted-color)};
-    --#{$prefix}sidebar-muted-bg-color: #{get($sidebar-config, muted-bg-color)};
+    --#{$prefix}aside-border: #{get($aside-config, border)};
+    --#{$prefix}aside-box-shadow: #{get($aside-config, box-shadow)};
 }
 
 // Dark mode
@@ -43,19 +42,18 @@
     --#{$prefix}header-desktop-fixed-bg-color: #{get($header-config, desktop, fixed, bg-color-dark)};
     --#{$prefix}header-desktop-fixed-box-shadow: #{get($header-config, desktop, fixed, box-shadow-dark)};
 
-    --#{$prefix}header-desktop-fixed-bg-color: #{get($header-config, tablet-and-mobile, fixed, bg-color-dark)};
-    --#{$prefix}header-desktop-fixed-box-shadow: #{get($header-config, tablet-and-mobile, fixed, box-shadow-dark)};
+    --#{$prefix}header-tablet-and-mobile-fixed-bg-color: #{get($header-config, tablet-and-mobile, fixed, bg-color-dark)};
+    --#{$prefix}header-tablet-and-mobile-fixed-box-shadow: #{get($header-config, tablet-and-mobile, fixed, box-shadow-dark)};
+
+    // Footer
+    --#{$prefix}footer-desktop-fixed-bg-color: #{get($footer-config, desktop, fixed, bg-color-dark)};
+    --#{$prefix}footer-desktop-fixed-box-shadow: #{get($footer-config, desktop, fixed, box-shadow-dark)};
+
+    --#{$prefix}footer-tablet-and-mobile-fixed-bg-color: #{get($footer-config, tablet-and-mobile, fixed, bg-color-dark)};
+    --#{$prefix}footer-tablet-and-mobile-fixed-box-shadow: #{get($footer-config, tablet-and-mobile, fixed, box-shadow-dark)};
 
     // Aside
     --#{$prefix}aside-bg-color: #{get($aside-config, bg-color-dark)};
-
-    // Sidebar
-    --#{$prefix}sidebar-bg-color: #{get($sidebar-config, bg-color-dark)};
-    --#{$prefix}sidebar-tabs-link-bg-color-default: #{get($sidebar-config, tabs, link-bg-color, default-dark)};
-    --#{$prefix}sidebar-tabs-link-bg-color-active: #{get($sidebar-config, tabs, link-bg-color, active-dark)};
-    --#{$prefix}sidebar-tabs-link-icon-color-default: #{get($sidebar-config, tabs, link-icon-color, default-dark)};
-    --#{$prefix}sidebar-tabs-link-icon-color-active: #{get($sidebar-config, tabs, link-icon-color, active-dark)};
-    --#{$prefix}sidebar-dashed-border-color: #{get($sidebar-config, dashed-border-color-dark)};
-    --#{$prefix}sidebar-muted-color: #{get($sidebar-config, muted-color-dark)};
-    --#{$prefix}sidebar-muted-bg-color: #{get($sidebar-config, muted-bg-color-dark)};
+    --#{$prefix}aside-border: #{get($aside-config, border-dark)};
+    --#{$prefix}aside-box-shadow: #{get($aside-config, box-shadow-dark)};
 }

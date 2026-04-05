@@ -13,26 +13,30 @@ import { TranslateService } from "@ngx-translate/core";
     styleUrls: ['./edit-save.component.scss'],
 })
 export class PermissionEditSaveComponent implements OnInit {
-
-    @ViewChild('modal') private modalComponent: ModalComponent;
+    isModalOpen: boolean = false;
     @Output() isSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    modalConfig: ModalConfig;
+    modalTitle: string;
     form: FormGroup;
 
     constructor(
-        private fb: FormBuilder, 
+        private fb: FormBuilder,
         private userManagementService: UserManagementService,
         private alertService: AlertService,
         private translate: TranslateService
-    ) {}
+    ) { }
 
-    disableSubmitButton() : boolean {
+    disableSubmitButton(): boolean {
         return this.form.valid;
     }
 
     get f() {
         return this.form.controls;
+    }
+
+    isInvalid(controlName: string): boolean {
+        const control = this.form.get(controlName);
+        return !!(control && control.invalid && (control.dirty || control.touched));
     }
 
     initForm() {
@@ -73,61 +77,54 @@ export class PermissionEditSaveComponent implements OnInit {
             })
         })
 
-        this.modalConfig = {
-            modalTitle: permissionId == null ? translations['NEW_RECORD'] : translations['EDIT'],
-            dismissButtonLabel: translations['SUBMIT'],
-            onDismiss: this.submit.bind(this),
-            shouldDismiss: this.disableSubmitButton.bind(this),
-            closeButtonLabel: translations['CANCEL']
-        };
+        this.modalTitle = permissionId == null ? translations['NEW_RECORD'] : translations['EDIT'];
 
         if (permissionId) {
             this.userManagementService.getPermissionById(permissionId).subscribe(result => {
-                if(result.isSuccess) {
+                if (result.isSuccess) {
                     this.form.patchValue(result.data);
-                    this.modalComponent.open();
+                    this.isModalOpen = true;
                 }
             })
         }
-        else{
-            this.form.reset({id : 0, name: "", code: "", isDeleted: false, isSystemData: false});
-            this.modalComponent.open();
+        else {
+            this.form.reset({ id: 0, name: "", code: "", isDeleted: false, isSystemData: false });
+            this.isModalOpen = true;
         }
     }
 
     submit() {
-        if(this.form.invalid) {
-            this.form.markAllAsTouched();
-            return false;
-        }
-
-        if(this.form.valid) {
+        if (this.form.valid) {
             var data = this.form.getRawValue() as PermissionModel;
 
-            if(data.id == 0) {
+            if (data.id == 0) {
                 this.userManagementService.permissionSave(data).subscribe(result => {
-                    if(result.isSuccess) {
-                        this.alertService.createAlert("success", result.message);
+                    if (result.isSuccess) {
+                        this.closeModal();
+                        this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
                         this.isSuccess.emit(true);
                     }
-                    else{
-                        this.alertService.createAlert("danger", result.message);
+                    else {
+                        this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
                     }
                 })
             }
-            else{
+            else {
                 this.userManagementService.permissionEdit(data).subscribe(result => {
-                    if(result.isSuccess) {
-                        this.alertService.createAlert("success", result.message);
+                    if (result.isSuccess) {
+                        this.closeModal();
+                        this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
                         this.isSuccess.emit(true);
                     }
-                    else{
-                        this.alertService.createAlert("danger", result.message);
+                    else {
+                        this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
                     }
                 })
             }
         }
+    }
 
-        return true;
+    closeModal() {
+        this.isModalOpen = false;
     }
 }

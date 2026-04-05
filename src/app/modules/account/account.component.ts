@@ -1,55 +1,77 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { AuthService, UserType } from '../auth';
 import { UserManagementService } from '../user-management/user-management.service';
 import { UserModel } from '../user-management/models/user.model';
+import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponent implements OnInit, OnDestroy {
-  user: UserType | null = null;
-  userData: UserModel | null = null;
+export class AccountComponent implements OnInit {
 
-  private destroy$ = new Subject<void>();
+  user: UserType;
+  userData: UserModel;
 
-  constructor(
-    private auth: AuthService,
-    private userManagementService: UserManagementService
-  ) {}
+  constructor(private auth: AuthService,
+    private userManagementService: UserManagementService,
+    private alertService: AlertService,
+    private translate: TranslateService) { }
 
   ngOnInit(): void {
-    this.auth.currentUserSubject
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((result) => {
-        this.user = result;
+    this.auth.currentUserSubject.subscribe(result => {
+      this.user = result;
 
-        if (this.user?.id) {
-          this.userManagementService.updateUser(this.user.id);
+      this.userManagementService.updateUser(this.user?.id!);
+
+      this.userManagementService.user$.subscribe(result => {
+        this.userData = result!;
+      });
+    });
+  }
+
+  onFileChange(event: any) {
+
+    if (event.target.files.length > 0) {
+      let file: File = event.target.files[0];
+      var src = URL.createObjectURL(file);
+      var img = new Image;
+      img.src = src;
+
+      let width = 0;
+      let height = 0;
+
+      img.onload = () => {
+        width = img.naturalWidth;
+        height = img.naturalHeight;
+
+        if (width == 300 && height == 300) {
+          let formData = new FormData();
+          formData.append("file", file);
+
+          this.userManagementService.upload(formData).subscribe(result => {
+            if (result.isSuccess) {
+              this.userManagementService.userAvatarEdit(this.user?.id!, result.data.id).subscribe(result => {
+                if (result.isSuccess) {
+                  this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
+                  this.userManagementService.updateUser(this.user?.id!);
+                }
+                else {
+                  this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
+                }
+              })
+            }
+            else {
+              this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
+            }
+          })
         }
-      });
-
-    this.userManagementService.user$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((result) => {
-        this.userData = result ?? null;
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  get fullName(): string {
-    const name = this.userData?.name ?? '';
-    const surname = this.userData?.surname ?? '';
-    return `${name} ${surname}`.trim();
-  }
-
-  get profileImage(): string {
-    return this.userData?.fileResult?.fileContents || './assets/media/avatars/blank.png';
+        else {
+          this.alertService.createAlert("warning", this.translate.instant('MESSAGES.AVATAR_SIZE'));
+        }
+      };
+    }
   }
 }

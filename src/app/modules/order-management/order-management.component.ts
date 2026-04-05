@@ -9,6 +9,7 @@ import { formatDate } from '@angular/common';
 import { OrderStatusEnum } from 'src/app/enums/permission.enum';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-order-management',
@@ -24,8 +25,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   hasNewRecordPermission: boolean = false;
   hasShowPermission: boolean = true;
 
-  searchTerm: string = '';
-  lastSearchTerm: string = '';
+  filterModel: Record<string, any> = {};
 
   tableName: string = "";
   columnList: ColumnModel[] = []
@@ -35,7 +35,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
     { name: "Tutar", index: "priceStr", visibility: true },
     { name: "Sipariş Tarihi", index: "orderDate", visibility: true },
     { name: "Durum", index: "orderStatusStr", visibility: true },
-    {name: "İşlemler", index: null, visibility: true}
+    { name: "İşlemler", index: null, visibility: true }
   ]
   columnListEN: ColumnModel[] = [
     { name: "Id", index: "id", visibility: false },
@@ -52,41 +52,43 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   totalCount: number;
   paginationModel: PaginationModel;
 
-  constructor(private authService: AuthService, private router: Router, private orderManagementService: OrderManagementService, 
-   private translate: TranslateService ,@Inject(LOCALE_ID) public locale: string) {}
+  constructor(private authService: AuthService, private router: Router, private orderManagementService: OrderManagementService,
+    private translate: TranslateService, @Inject(LOCALE_ID) public locale: string) { }
 
   loadData() {
     const keys = ["ORDER_COMPLETED", "ORDER_NOT_YET_COMPLETED"];
     const translationRequest = keys.map(key => this.translate.get(key));
 
     forkJoin(translationRequest).subscribe((translations) => {
-      const[orderCompleted,orderNotYetCompleted] = translations;
-      this.orderManagementService.paging(this.paginationModel.pageNumber, this.paginationModel.pageSize, this.currentUser?.id, this.searchTerm)
-      .subscribe(result => {
-        if (result.isSuccess) {
-          result.data.items.forEach(item => {
-            item.orderDate = formatDate(item.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
+      const [orderCompleted, orderNotYetCompleted] = translations;
 
-            if (item.orderStatus == OrderStatusEnum['Sipariş Tamamlandı']) {
-              item.orderStatusStr = orderCompleted;
-            }
-            else if (item.orderStatus == OrderStatusEnum['Sipariş Tamamlanmadı']) {
-              item.orderStatusStr = orderNotYetCompleted;
-            }
+      const filterParams = this.buildFilterQueryParams(this.filterModel);
+      this.orderManagementService.paging(this.paginationModel.pageNumber, this.paginationModel.pageSize, this.currentUser?.id, filterParams)
+        .subscribe(result => {
+          if (result.isSuccess) {
+            result.data.items.forEach(item => {
+              item.orderDate = formatDate(item.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
 
-            item.priceStr = item.price.toFixed(2) + " ₺";
-          })
-          this.dataSource = result.data.items;
-          this.totalCount = result.data.totalCount;
-        }
-        else {
-          this.dataSource = [];
-          this.totalCount = 0;
-        }
-      })
+              if (item.orderStatus == OrderStatusEnum['Sipariş Tamamlandı']) {
+                item.orderStatusStr = orderCompleted;
+              }
+              else if (item.orderStatus == OrderStatusEnum['Sipariş Tamamlanmadı']) {
+                item.orderStatusStr = orderNotYetCompleted;
+              }
+
+              item.priceStr = item.price.toFixed(2) + " ₺";
+            })
+            this.dataSource = result.data.items;
+            this.totalCount = result.data.totalCount;
+          }
+          else {
+            this.dataSource = [];
+            this.totalCount = 0;
+          }
+        })
     })
-    
-    
+
+
   }
 
   ngOnDestroy(): void {
@@ -109,7 +111,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
     });
 
     this.updateTranslationsAndColumns();
-    this.loadData();    
+    this.loadData();
   }
 
   updateTranslationsAndColumns() {
@@ -126,7 +128,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
 
     this.translate.onLangChange.subscribe(() => {
       this.translate.get('LANG').subscribe((translation: string) => {
-        if(translation === 'tr') {
+        if (translation === 'tr') {
           this.columnList = this.columnListTR
         } else {
           this.columnList = this.columnListEN
@@ -135,7 +137,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
     });
 
     this.translate.get('LANG').subscribe((translation: string) => {
-      if(translation === 'tr') {
+      if (translation === 'tr') {
         this.columnList = this.columnListTR
       } else {
         this.columnList = this.columnListEN
@@ -152,12 +154,21 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
     this.router.navigate(['ordermanagement/' + event])
   }
 
-  onSearch() {
-    if (this.searchTerm === this.lastSearchTerm) {
-      return;
-    }
-    
-    this.lastSearchTerm = this.searchTerm;
+  onFilterModelChange(filter: Record<string, any>) {
+    this.filterModel = filter ?? {};
+    this.paginationModel.pageNumber = 1;
     this.loadData();
+  }
+
+  buildFilterQueryParams(filterModel: Record<string, any>): HttpParams {
+    let params = new HttpParams();
+
+    Object.entries(filterModel || {}).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return params;
   }
 }

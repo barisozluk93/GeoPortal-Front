@@ -1,5 +1,5 @@
 
-<app-basket *ngIf="!isAdminPanel" class="d-flex align-items-center me-3"></app-basket>
+<app-basket *ngIf="!isAdmin" class="d-flex align-items-center me-3"></app-basket>
 
 <div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3">
   <button type="button" (click)="routeToLogin()" class="primary-action">
@@ -29,7 +29,7 @@
     <img *ngIf="user?.fileId != undefined" [src]="user?.fileResult?.fileContents" alt="image" />
   </div>
   <!--end::Menu wrapper-->
-  <app-user-inner [isAdminPanel]="isAdminPanel"></app-user-inner>
+  <app-user-inner [isAdmin]="isAdmin"></app-user-inner>
 </div>
 
 <div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-3">

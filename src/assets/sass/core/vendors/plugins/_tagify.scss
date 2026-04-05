@@ -105,7 +105,10 @@ $tagify-input-padding-y-lg: $input-padding-y-lg - $tagify-tag-padding-y-lg;
         display: flex;
         align-items: center;    
         gap: 0.25rem;
-    }
+    
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
 
     &.form-control-sm {
         border-radius: $btn-border-radius-sm;
@@ -115,11 +118,14 @@ $tagify-input-padding-y-lg: $input-padding-y-lg - $tagify-tag-padding-y-lg;
 
         .tagify__tag {
             padding: $tagify-tag-padding-y-sm $tagify-tag-padding-x-sm;
-            border-radius: $btn-border-radius-sm;
+            border-radius: 10px;
 
             .tagify__tag-text {
                 font-size: $input-btn-font-size-sm;
-            }
+            
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
         }
     }
 
@@ -131,11 +137,14 @@ $tagify-input-padding-y-lg: $input-padding-y-lg - $tagify-tag-padding-y-lg;
 
         .tagify__tag {
             padding: $tagify-tag-padding-y $tagify-tag-padding-x;
-            border-radius: $btn-border-radius;
+            border-radius: 10px;
 
             .tagify__tag-text {
                 font-size: $input-btn-font-size;
-            }
+            
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
         }
     }
 
@@ -147,11 +156,14 @@ $tagify-input-padding-y-lg: $input-padding-y-lg - $tagify-tag-padding-y-lg;
 
         .tagify__tag {
             padding: $tagify-tag-padding-y-lg $tagify-tag-padding-x-lg;
-            border-radius: $btn-border-radius-lg;
+            border-radius: 10px;
 
             .tagify__tag-text {
                 font-size: $input-btn-font-size-lg;
-            }
+            
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
         }
     }   
 }
@@ -181,7 +193,7 @@ $tagify-input-padding-y-lg: $input-padding-y-lg - $tagify-tag-padding-y-lg;
         background-color: var(--#{$prefix}body-bg);
         border: 0 !important;
         outline: none !important;
-        box-shadow: none;
+        
     }
 
     .tagify__dropdown__item {
@@ -189,7 +201,7 @@ $tagify-input-padding-y-lg: $input-padding-y-lg - $tagify-tag-padding-y-lg;
         border-radius: 0;
         padding: 0.75rem 1.5rem;
         margin: 0;
-        box-shadow: none;
+        
         font-weight: $font-weight-semibold;
 
         &:hover,

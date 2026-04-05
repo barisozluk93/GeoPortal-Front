@@ -36,6 +36,10 @@ export class ResetPasswordComponent implements OnInit {
     this.userId = parseInt(this.route.snapshot.paramMap.get('id')!);
   }
 
+  onBrandClick() {
+    this.router.navigate(['/landing/marketplace'])
+  }
+
   // convenience getter for easy access to form fields
   get f() {
     return this.resetPasswordForm.controls;

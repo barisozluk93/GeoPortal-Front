@@ -7,7 +7,9 @@ export const environment = {
   appVersion: 'v8.2.3',
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
-  apiUrl: 'api',
+  appUrl: 'http://178.251.42.243:8080',
+  apiUrl: 'http://178.251.42.243:8080/geoPortalApi',
+  signalRUrl: 'http://178.251.42.243:8080/NotificationHubForGeoPortal',
   appThemeName: 'Metronic',
   appPurchaseUrl: 'https://1.envato.market/EA4JP',
   appHTMLIntegration:
@@ -61,8 +63,8 @@ export const environment = {
       thumbnail: './assets/media/demos/demo6.png',
     },
 
-    saip: {
-      title: 'SAIP',
+    geoportal: {
+      title: 'GeoPortal',
       description: 'CRM Dashboard',
       published: true,
       thumbnail: './assets/media/demos/demo7.png',

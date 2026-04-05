@@ -11,6 +11,7 @@ import { AuthComponent } from './auth.component';
 import { TranslationModule } from '../i18n/translation.module';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,12 @@ import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbNavModule
+    NgbNavModule,
+    NgxMaskDirective,
+    NgxMaskPipe
+  ],
+  providers: [
+    provideNgxMask()
   ],
 })
-export class AuthModule {}
+export class AuthModule { }

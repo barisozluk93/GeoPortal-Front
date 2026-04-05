@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AlertService } from './alert.service';
 
 @Component({
@@ -7,42 +8,82 @@ import { AlertService } from './alert.service';
   styleUrls: ['./alert.component.scss'],
 })
 export class AlertComponent implements OnInit, OnDestroy {
-
   show: boolean = false;
-  type: string = "";
-  message: string = "";
+  type: string = '';
+  message: string = '';
+  messageIsTranslateKey: boolean = false;
+  messageTranslateParams: any = {};
+  private sub?: Subscription;
+  private timeoutRef?: any;
 
-  constructor(private alertService: AlertService) { }
+  constructor(private alertService: AlertService) {}
 
   ngOnInit(): void {
-    this.alertService.alert$?.subscribe(data => {
-      if(data) {
-        this.alert(data.type, data.message);
+    this.sub = this.alertService.alert$?.subscribe((data) => {
+      if (data) {
+        this.alert(
+          data.type,
+          data.message,
+          data.messageIsTranslateKey,
+          data.messageTranslateParams
+        );
       }
-    })
+    });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
 
+    if (this.timeoutRef) {
+      clearTimeout(this.timeoutRef);
+    }
   }
 
-  alert(type: string, message: string) {
+  get alertTitleKey(): string {
+    switch (this.type) {
+      case 'success':
+        return 'ALERT.SUCCESS';
+      case 'danger':
+      case 'error':
+        return 'ALERT.ERROR';
+      case 'warning':
+        return 'ALERT.WARNING';
+      case 'info':
+        return 'ALERT.INFO';
+      default:
+        return 'ALERT.NOTIFICATION';
+    }
+  }
+
+  alert(
+    type: string,
+    message: string,
+    messageIsTranslateKey: boolean = false,
+    messageTranslateParams: any = {}
+  ) {
+    console.log("girdim");
+    
+    if (this.timeoutRef) {
+      clearTimeout(this.timeoutRef);
+    }
+
     this.show = true;
     this.type = type;
     this.message = message;
+    this.messageIsTranslateKey = messageIsTranslateKey;
+    this.messageTranslateParams = messageTranslateParams || {};
 
-    setTimeout(() => {
-      this.show = false;
-      this.type = "";
-      this.message = "";
-      this.alertService.clearAlert();
+    this.timeoutRef = setTimeout(() => {
+      this.close();
     }, 3000);
   }
 
   close() {
     this.show = false;
-    this.type = "";
-    this.message = "";
+    this.type = '';
+    this.message = '';
+    this.messageIsTranslateKey = false;
+    this.messageTranslateParams = {};
     this.alertService.clearAlert();
   }
 }

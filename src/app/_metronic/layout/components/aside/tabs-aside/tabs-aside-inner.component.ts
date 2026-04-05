@@ -15,6 +15,7 @@ import {
   templateUrl: './tabs-aside-inner.component.html',
 })
 export class TabsAsideInnerComponent implements OnDestroy {
+  @Input() isAdmin: boolean;
   @Input() activeTab: Tab = tabs[0];
   appDocsUrl: string = environment.appPreviewDocsUrl;
   @ViewChild('ktTabsAsideScroll', { static: true })

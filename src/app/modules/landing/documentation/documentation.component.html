@@ -1,0 +1,325 @@
+<div class="container-fluid documentation-page py-10">
+  <div class="row g-7">
+    <div class="col-12 col-xl-3">
+      <div class="card card-flush shadow-sm documentation-sidebar sticky-top">
+        <div class="card-header pt-7">
+          <div class="card-title d-flex flex-column">
+            <span class="text-primary fw-bold fs-7 text-uppercase ls-1">
+              {{ 'API_DOC.SIDEBAR.KICKER' | translate }}
+            </span>
+            <h3 class="fw-bolder text-gray-900 mb-2 mt-2">
+              {{ 'API_DOC.SIDEBAR.TITLE' | translate }}
+            </h3>
+            <div class="text-gray-600 fw-semibold fs-7">
+              {{ 'API_DOC.SIDEBAR.SUBTITLE' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body pt-2">
+          <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6">
+            <div class="menu-item" *ngFor="let item of navItems">
+              <button
+                type="button"
+                class="menu-link w-100 border-0 bg-transparent text-start"
+                (click)="scrollTo(item.id)"
+              >
+                <span class="menu-title">{{ item.labelKey | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-9">
+      <div class="d-flex flex-column gap-7">
+        <div class="card shadow-sm" id="overview">
+          <div class="card-body p-8">
+            <div class="text-primary fw-bold fs-7 text-uppercase mb-2">
+              {{ 'API_DOC.HERO.VERSION' | translate }}
+            </div>
+
+            <h1 class="text-gray-900 fw-bolder mb-4 documentation-title">
+              {{ 'API_DOC.HERO.TITLE' | translate }}
+            </h1>
+
+            <p class="text-gray-700 fs-6 fw-semibold lh-lg mb-8 documentation-lead">
+              {{ 'API_DOC.HERO.DESCRIPTION' | translate }}
+            </p>
+
+            <div class="row g-5">
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="border border-gray-300 rounded p-5 h-100">
+                  <div class="text-gray-600 fs-8 fw-bold mb-2">
+                    {{ 'API_DOC.HERO.BASE_URL' | translate }}
+                  </div>
+                  <div class="text-gray-900 fw-bolder fs-7 text-break">
+                    {{ baseUrl }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="border border-gray-300 rounded p-5 h-100">
+                  <div class="text-gray-600 fs-8 fw-bold mb-2">
+                    {{ 'API_DOC.HERO.AUTHENTICATION' | translate }}
+                  </div>
+                  <div class="text-gray-900 fw-bolder fs-7">x-api-key</div>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="border border-gray-300 rounded p-5 h-100">
+                  <div class="text-gray-600 fs-8 fw-bold mb-2">
+                    {{ 'API_DOC.HERO.AVAILABLE_ENDPOINTS' | translate }}
+                  </div>
+                  <div class="text-gray-900 fw-bolder fs-7">4</div>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="border border-gray-300 rounded p-5 h-100">
+                  <div class="text-gray-600 fs-8 fw-bold mb-2">
+                    {{ 'API_DOC.HERO.SERVICE' | translate }}
+                  </div>
+                  <div class="text-gray-900 fw-bolder fs-7">
+                    {{ 'API_DOC.HERO.SERVICE_VALUE' | translate }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm" id="authentication">
+          <div class="card-body p-8">
+            <div class="mb-7">
+              <div class="text-primary fw-bold fs-7 text-uppercase mb-2">
+                {{ 'API_DOC.AUTH.KICKER' | translate }}
+              </div>
+              <h2 class="text-gray-900 fw-bolder mb-3">
+                {{ 'API_DOC.AUTH.TITLE' | translate }}
+              </h2>
+              <p class="text-gray-700 fs-6 fw-semibold lh-lg mb-0">
+                {{ 'API_DOC.AUTH.DESCRIPTION' | translate }}
+                <code>x-api-key</code>
+                {{ 'API_DOC.AUTH.DESCRIPTION_CONTINUE' | translate }}
+              </p>
+            </div>
+
+            <div class="documentation-code">
+              <pre><code>x-api-key: YOUR_API_KEY</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm" id="response-format">
+          <div class="card-body p-8">
+            <div class="mb-7">
+              <div class="text-primary fw-bold fs-7 text-uppercase mb-2">
+                {{ 'API_DOC.RESPONSE.KICKER' | translate }}
+              </div>
+              <h2 class="text-gray-900 fw-bolder mb-3">
+                {{ 'API_DOC.RESPONSE.TITLE' | translate }}
+              </h2>
+              <p class="text-gray-700 fs-6 fw-semibold lh-lg mb-0">
+                {{ 'API_DOC.RESPONSE.DESCRIPTION' | translate }}
+              </p>
+            </div>
+
+            <div class="documentation-code">
+              <pre><code>&#123;
+  "isSuccess": true,
+  "message": "Operation successful.",
+  "data": &#123;&#125;
+&#125;</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm" *ngFor="let endpoint of endpoints" [id]="endpoint.id">
+          <div class="card-body p-8">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-4 mb-6">
+              <div>
+                <div class="text-primary fw-bold fs-7 text-uppercase mb-2">
+                  {{ 'API_DOC.COMMON.ENDPOINT' | translate }}
+                </div>
+                <h2 class="text-gray-900 fw-bolder mb-0">
+                  {{ endpoint.titleKey | translate }}
+                </h2>
+              </div>
+
+              <div [class]="getMethodClass(endpoint.method)">
+                {{ endpoint.method }}
+              </div>
+            </div>
+
+            <div class="alert alert-light-primary border border-primary border-dashed mb-6">
+              <div class="fw-bold text-gray-800 text-break font-monospace">
+                {{ baseUrl }}{{ endpoint.path }}
+              </div>
+            </div>
+
+            <p class="text-gray-700 fs-6 fw-semibold lh-lg mb-6">
+              {{ endpoint.descriptionKey | translate }}
+            </p>
+
+            <div class="row g-5 mb-8">
+              <div class="col-md-6">
+                <div class="border border-gray-300 rounded p-5 h-100 bg-light-info">
+                  <div class="text-gray-600 fs-8 fw-bold mb-2">
+                    {{ 'API_DOC.COMMON.AUTHENTICATION' | translate }}
+                  </div>
+                  <div class="text-gray-900 fw-bolder fs-7">
+                    {{ endpoint.authKey | translate }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-8">
+              <h3 class="text-gray-900 fw-bolder fs-4 mb-4">
+                {{ 'API_DOC.COMMON.HEADERS' | translate }}
+              </h3>
+
+              <div class="table-responsive">
+                <table class="table table-row-bordered table-striped gy-5 gs-7">
+                  <thead>
+                    <tr class="fw-bold fs-7 text-uppercase text-gray-800">
+                      <th>{{ 'API_DOC.TABLE.KEY' | translate }}</th>
+                      <th>{{ 'API_DOC.TABLE.VALUE' | translate }}</th>
+                      <th>{{ 'API_DOC.TABLE.REQUIRED' | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let header of endpoint.requestHeaders">
+                      <td class="fw-semibold text-gray-100">{{ header.key }}</td>
+                      <td class="text-gray-100">{{ header.value }}</td>
+                      <td>
+                        <span
+                          class="badge"
+                          [ngClass]="header.required ? 'badge-light-success' : 'badge-light-secondary'"
+                        >
+                          {{ (header.required ? 'API_DOC.COMMON.YES' : 'API_DOC.COMMON.NO') | translate }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="mb-8" *ngIf="endpoint.requestBody">
+              <h3 class="text-gray-900 fw-bolder fs-4 mb-4">
+                {{ 'API_DOC.COMMON.REQUEST_BODY' | translate }}
+              </h3>
+              <div class="documentation-code">
+                <pre><code>{{ endpoint.requestBody }}</code></pre>
+              </div>
+            </div>
+
+            <div class="mb-8">
+              <h3 class="text-gray-900 fw-bolder fs-4 mb-4">
+                {{ 'API_DOC.COMMON.RESPONSE_EXAMPLE' | translate }}
+              </h3>
+              <div class="documentation-code">
+                <pre><code>{{ endpoint.responseBody }}</code></pre>
+              </div>
+            </div>
+
+            <div class="mb-8" *ngIf="endpoint.curlExample">
+              <h3 class="text-gray-900 fw-bolder fs-4 mb-4">
+                {{ 'API_DOC.COMMON.CURL_EXAMPLE' | translate }}
+              </h3>
+              <div class="documentation-code">
+                <pre><code>{{ endpoint.curlExample }}</code></pre>
+              </div>
+            </div>
+
+            <div *ngIf="endpoint.notesKeys?.length">
+              <h3 class="text-gray-900 fw-bolder fs-4 mb-4">
+                {{ 'API_DOC.COMMON.NOTES' | translate }}
+              </h3>
+              <ul class="documentation-notes ps-6 mb-0">
+                <li class="text-gray-700 fw-semibold lh-lg mb-2" *ngFor="let noteKey of endpoint.notesKeys">
+                  {{ noteKey | translate }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm" id="product-model">
+          <div class="card-body p-8">
+            <div class="mb-7">
+              <div class="text-primary fw-bold fs-7 text-uppercase mb-2">
+                {{ 'API_DOC.MODEL.KICKER' | translate }}
+              </div>
+              <h2 class="text-gray-900 fw-bolder mb-3">
+                {{ 'API_DOC.MODEL.TITLE' | translate }}
+              </h2>
+              <p class="text-gray-700 fs-6 fw-semibold lh-lg mb-0">
+                {{ 'API_DOC.MODEL.DESCRIPTION' | translate }}
+              </p>
+            </div>
+
+            <div class="documentation-code">
+              <pre><code>{{ productModelExample }}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm" id="error-codes">
+          <div class="card-body p-8">
+            <div class="mb-7">
+              <div class="text-primary fw-bold fs-7 text-uppercase mb-2">
+                {{ 'API_DOC.ERRORS.KICKER' | translate }}
+              </div>
+              <h2 class="text-gray-900 fw-bolder mb-0">
+                {{ 'API_DOC.ERRORS.TITLE' | translate }}
+              </h2>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-row-bordered table-striped gy-5 gs-7">
+                <thead>
+                  <tr class="fw-bold fs-7 text-uppercase text-gray-800">
+                    <th>{{ 'API_DOC.TABLE.STATUS_CODE' | translate }}</th>
+                    <th>{{ 'API_DOC.TABLE.DESCRIPTION' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="fw-semibold text-gray-100">200</td>
+                    <td class="text-gray-100">{{ 'API_DOC.ERRORS.CODES.200' | translate }}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-gray-100">400</td>
+                    <td class="text-gray-100">{{ 'API_DOC.ERRORS.CODES.400' | translate }}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-gray-100">401</td>
+                    <td class="text-gray-100">{{ 'API_DOC.ERRORS.CODES.401' | translate }}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-gray-100">403</td>
+                    <td class="text-gray-100">{{ 'API_DOC.ERRORS.CODES.403' | translate }}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-gray-100">404</td>
+                    <td class="text-gray-100">{{ 'API_DOC.ERRORS.CODES.404' | translate }}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-gray-100">500</td>
+                    <td class="text-gray-100">{{ 'API_DOC.ERRORS.CODES.500' | translate }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

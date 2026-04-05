@@ -11,8 +11,6 @@ import { LayoutInitService } from './core/layout-init.service';
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/modules/auth';
-import { environment } from 'src/environments/environment.prod';
-import { NotificationSignalrService } from 'src/app/modules/common/signalR.service';
 
 @Component({
   selector: 'app-layout',
@@ -50,6 +48,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('ktHeader', { static: true }) ktHeader: ElementRef;
 
   isMobile: boolean = true;
+  isAdmin: boolean = false;
 
   private unsubscribe: Subscription[] = [];
 
@@ -57,7 +56,6 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     private initService: LayoutInitService,
     private layout: LayoutService,
     private router: Router,
-    private notificationService: NotificationSignalrService,
     private authService: AuthService
   ) {
     this.initService.init();
@@ -65,13 +63,13 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setMobility(width: number) {
-    if(width >= 992) {
+    if (width >= 992) {
       this.asideDisplay = false;
       this.isMobile = false;
 
       this.asideCSSClasses = "";
     }
-    else{
+    else {
       this.asideDisplay = true;
       this.isMobile = true;
 
@@ -80,9 +78,8 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     let resizeObservable$ = fromEvent(window, 'resize')
-    let resizeSubscription$ = resizeObservable$.subscribe( evt => {
+    let resizeSubscription$ = resizeObservable$.subscribe(evt => {
       this.setMobility((evt.target as typeof window).innerWidth);
     })
 
@@ -95,15 +92,6 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.headerHTMLAttributes = this.layout.getHTMLAttributes('headerMenu');
     this.footerCSSClasses = this.layout.getStringCSSClasses('footer')
 
-    if(this.authService.currentUserValue) {
-      const authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
-      const lsValue = localStorage.getItem(authLocalStorageToken);
-      const authData = JSON.parse(lsValue!);
-
-      if(authData?.accessToken){
-        this.notificationService.startConnection(authData?.accessToken);
-      }
-    }
     // window.addEventListener("resize", this.onresize(this));
   }
 
@@ -128,6 +116,15 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     const routerSubscription = this.router.events.subscribe((event) => {
 
       this.setMobility(window.innerWidth);
+
+      let currentUser = this.authService.currentUserValue;
+
+      if (currentUser?.roles.includes("1")) {
+        this.isAdmin = true;
+      }
+      else {
+        this.isAdmin = false;
+      }
     });
 
     this.unsubscribe.push(routerSubscription);

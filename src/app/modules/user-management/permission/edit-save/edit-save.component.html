@@ -1,35 +1,86 @@
-<app-modal #modal [modalConfig]="modalConfig">
-  <form class="form modern-form" [formGroup]="form" novalidate>
+<app-custom-modal
+  [isOpen]="isModalOpen"
+  [title]="modalTitle"
+  [subtitle]="'PERMISSION_FORM.TITLE' | translate"
+  [width]="'760px'"
+  (closed)="isModalOpen = false"
+  (submitted)="submit()"
+  variant="center"
+  [showFooter]="true"
+>
+  <form class="form w-100" [formGroup]="form" novalidate>
 
-    <div class="form-grid">
+    <!-- NAME -->
+    <div class="fv-row mb-8">
+      <label class="form-label fs-6 fw-bolder text-gray-900">
+        {{ 'PERMISSION_FORM.NAME' | translate }}
+      </label>
 
-      <!-- NAME -->
-      <div class="form-group">
-        <label>{{ 'NAME' | translate }}</label>
-        <input
-          type="text"
-          formControlName="name"
-          [class.invalid]="f['name'].invalid && (f['name'].touched || f['name'].dirty)"
-        />
-        <span class="error"
-              *ngIf="f['name'].hasError('required') && (f['name'].touched || f['name'].dirty)">
-          {{ 'REQUIRED_NAME' | translate }}
-        </span>
-      </div>
+      <input
+        class="form-control form-control-lg form-control-solid"
+        type="text"
+        formControlName="name"
+        autocomplete="off"
+        [placeholder]="'PERMISSION_FORM.NAME' | translate"
+        [ngClass]="{
+          'is-invalid': isInvalid('name')
+        }"
+      />
 
-      <!-- CODE -->
-      <div class="form-group">
-        <label>{{ 'CODE' | translate }}</label>
-        <input
-          type="text"
-          formControlName="code"
-          [class.invalid]="f['code'].invalid && (f['code'].touched || f['code'].dirty)"
-        />
-        <span class="error"
-              *ngIf="f['code'].hasError('required') && (f['code'].touched || f['code'].dirty)">
-          {{ 'REQUIRED_CODE' | translate }}
-        </span>
-      </div>
+      <ng-container *ngIf="isInvalid('name')">
+        <div class="invalid-feedback d-block" *ngIf="f['name'].errors?.['required']">
+          {{ 'PERMISSION_FORM.REQUIRED_NAME' | translate }}
+        </div>
+
+        <div class="invalid-feedback d-block" *ngIf="f['name'].errors?.['minlength']">
+          {{ 'PERMISSION_FORM.FORM.MIN_LENGTH' | translate:{
+            min: f['name'].errors?.['minlength']?.requiredLength
+          } }}
+        </div>
+
+        <div class="invalid-feedback d-block" *ngIf="f['name'].errors?.['maxlength']">
+          {{ 'PERMISSION_FORM.FORM.MAX_LENGTH' | translate:{
+            max: f['name'].errors?.['maxlength']?.requiredLength
+          } }}
+        </div>
+      </ng-container>
     </div>
+
+    <!-- CODE -->
+    <div class="fv-row mb-8">
+      <label class="form-label fs-6 fw-bolder text-gray-900">
+        {{ 'PERMISSION_FORM.CODE' | translate }}
+      </label>
+
+      <input
+        class="form-control form-control-lg form-control-solid"
+        type="text"
+        formControlName="code"
+        autocomplete="off"
+        [placeholder]="'PERMISSION_FORM.CODE' | translate"
+        [ngClass]="{
+          'is-invalid': isInvalid('code')
+        }"
+      />
+
+      <ng-container *ngIf="isInvalid('code')">
+        <div class="invalid-feedback d-block" *ngIf="f['code'].errors?.['required']">
+          {{ 'PERMISSION_FORM.REQUIRED_CODE' | translate }}
+        </div>
+
+        <div class="invalid-feedback d-block" *ngIf="f['code'].errors?.['minlength']">
+          {{ 'PERMISSION_FORM.FORM.MIN_LENGTH' | translate:{
+            min: f['code'].errors?.['minlength']?.requiredLength
+          } }}
+        </div>
+
+        <div class="invalid-feedback d-block" *ngIf="f['code'].errors?.['maxlength']">
+          {{ 'PERMISSION_FORM.FORM.MAX_LENGTH' | translate:{
+            max: f['code'].errors?.['maxlength']?.requiredLength
+          } }}
+        </div>
+      </ng-container>
+    </div>
+
   </form>
-</app-modal>
+</app-custom-modal>

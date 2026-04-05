@@ -49,9 +49,18 @@ export class UserManagementService {
     }
 
     // public methods
-    permissionPaging(pageNumber: number, pageSize: number, filterText?: string): Observable<ResultModel<PagingResult<PermissionModel[]>>> {
-        return this.http.get<ResultModel<PagingResult<PermissionModel[]>>>(`${API_USER_PERMISSION_URL}/Paginate`,
-            { params: new HttpParams().set("PageNumber", pageNumber).set("PageSize", pageSize).set("FilterText", filterText !== undefined ? filterText : '') });
+    permissionPaging(pageNumber: number, pageSize: number, filterParams?: HttpParams
+    ): Observable<ResultModel<PagingResult<PermissionModel[]>>> {
+
+        let params = filterParams ?? new HttpParams();
+        params = params
+            .set("PageNumber", pageNumber)
+            .set("PageSize", pageSize);
+
+        return this.http.get<ResultModel<PagingResult<PermissionModel[]>>>(
+            `${API_USER_PERMISSION_URL}/Paginate`,
+            { params }
+        );
     }
 
     allPermissions(): Observable<ResultModel<PermissionModel[]>> {
@@ -74,9 +83,21 @@ export class UserManagementService {
         return this.http.delete<ResultModel<PermissionModel[]>>(`${API_USER_PERMISSION_URL}/Delete/${id}`);
     }
 
-    rolePaging(pageNumber: number, pageSize: number, filterText?: string): Observable<ResultModel<PagingResult<RoleModel[]>>> {
-        return this.http.get<ResultModel<PagingResult<RoleModel[]>>>(`${API_USER_ROLE_URL}/Paginate`,
-            { params: new HttpParams().set("PageNumber", pageNumber).set("PageSize", pageSize).set("FilterText", filterText !== undefined ? filterText : '') });
+    rolePaging(
+        pageNumber: number,
+        pageSize: number,
+        filterParams?: HttpParams
+    ): Observable<ResultModel<PagingResult<RoleModel[]>>> {
+
+        let params = filterParams ?? new HttpParams();
+        params = params
+            .set("PageNumber", pageNumber)
+            .set("PageSize", pageSize);
+
+        return this.http.get<ResultModel<PagingResult<RoleModel[]>>>(
+            `${API_USER_ROLE_URL}/Paginate`,
+            { params }
+        );
     }
 
     allRoles(): Observable<ResultModel<RoleModel[]>> {
@@ -99,9 +120,16 @@ export class UserManagementService {
         return this.http.delete<ResultModel<RoleModel[]>>(`${API_USER_ROLE_URL}/Delete/${id}`);
     }
 
-    userPaging(pageNumber: number, pageSize: number, filterText?: string): Observable<ResultModel<PagingResult<UserModel[]>>> {
+    userPaging(pageNumber: number, pageSize: number, filterParams?: HttpParams
+    ): Observable<ResultModel<PagingResult<UserModel[]>>> {
+
+        let params = filterParams ?? new HttpParams();
+        params = params
+            .set("PageNumber", pageNumber)
+            .set("PageSize", pageSize);
+            
         return this.http.get<ResultModel<PagingResult<UserModel[]>>>(`${API_USER_URL}/Paginate`,
-            { params: new HttpParams().set("PageNumber", pageNumber).set("PageSize", pageSize).set("FilterText", filterText !== undefined ? filterText : '') });
+            { params });
     }
 
     allUsers(): Observable<ResultModel<UserModel[]>> {

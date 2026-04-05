@@ -4,51 +4,11 @@
 <app-confirmation #confirmationComponent (dismissButtonClick)="delete($event)">
 </app-confirmation>
 
-<div class="order-page">
 
-  <div class="order-search">
-    <form (ngSubmit)="onSearch()" class="search-form">
-      <div class="search-box">
-        <input
-          type="search"
-          [(ngModel)]="searchTerm"
-          name="searchTerm"
-          [placeholder]="'SEARCH_BAR' | translate"
-        />
-
-        <button type="submit">
-          {{ 'SEARCH_BAR' | translate }}
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <div class="order-table-wrapper">
-    <div class="glass-card order-card">
-
-      <div class="order-card-header">
-        <h3>{{ tableName }}</h3>
-      </div>
-
-      <div class="order-card-body">
-        <app-datatable
-          [header]="''"
-          [paginationModel]="paginationModel"
-          [dataSource]="dataSource"
-          [totalCount]="totalCount"
-          [columnList]="columnList"
-          (paginationModelChange)="paginationModelChange($event)"
-          (newButtonClick)="openSaveModal($event)"
-          (editButtonClick)="openEditModal($event)"
-          (deleteButtonClick)="openDeleteModal($event)"
-          [hasEditPermission]="hasEditPermission"
-          [hasDeletePermission]="hasDeletePermission"
-          [hasNewRecordPermission]="hasNewRecordPermission"
-        >
-        </app-datatable>
-      </div>
-
-    </div>
-  </div>
-
-</div>
+<!-- TABLE -->
+<app-datatable [header]="tableName" [paginationModel]="paginationModel" [dataSource]="dataSource"
+  [totalCount]="totalCount" [columnList]="columnList" (paginationModelChange)="paginationModelChange($event)"
+  (newButtonClick)="openSaveModal($event)" (filterModelChange)="onFilterModelChange($event)"
+  (deleteButtonClick)="openDeleteModal($event)" (editButtonClick)="openEditModal($event)"
+  class="card card-xxl-stretch border-0 mb-5 mb-xl-8" [hasEditPermission]="hasEditPermission"
+  [hasDeletePermission]="hasDeletePermission" [hasNewRecordPermission]="hasNewRecordPermission"></app-datatable>

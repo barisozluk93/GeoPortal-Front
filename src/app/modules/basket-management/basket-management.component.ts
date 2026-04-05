@@ -30,9 +30,9 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
   totalPrice: number = 0;
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private basketService: BasketService,
-    private basketManagementService: BasketManagementService, 
+    private basketManagementService: BasketManagementService,
     private orderManagementService: OrderManagementService,
     private alertService: AlertService,
     private router: Router,
@@ -40,36 +40,36 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
   }
 
   addOne(productId: number | undefined) {
-    if(this.currentUserIsExist) {
-      let data: BasketModel = {id: 0, userId: this.currentUser.id, productId: productId, isDeleted: false, product: undefined, totalPrice: undefined, numberOf: undefined};
+    if (this.currentUserIsExist) {
+      let data: BasketModel = { id: 0, userId: this.currentUser.id, productId: productId, isDeleted: false, product: undefined, totalPrice: undefined, numberOf: undefined };
       this.basketManagementService.save(data).subscribe(result => {
-        if(result.isSuccess) {
-          this.alertService.createAlert("success", result.message);
+        if (result.isSuccess) {
+          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
           this.basketService.loadBasketFromDb();
         }
-        else{
-            this.alertService.createAlert("danger", result.message);
+        else {
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       })
     }
-    else{
-      if(this.basketFromStorage.length < 15) {
+    else {
+      if (this.basketFromStorage.length < 15) {
         let itemToAdd = this.basketFromStorage.filter(f => f.productId == productId)[0];
         this.basketFromStorage.push(itemToAdd);
         this.basketService.setBasket(this.basketFromStorage);
       }
-      else{
-        this.alertService.createAlert("warning", "Daha fazla ürün eklemek için lütfen giriş yapınız!");
+      else {
+        this.alertService.createAlert("warning", this.translate.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS'));
       }
     }
   }
 
 
   confirmBasket() {
-    if(!this.currentUserIsExist) {
+    if (!this.currentUserIsExist) {
       this.router.navigate(['/auth/login']);
     }
-    else{
+    else {
       this.router.navigate(['/ordercompletion']);
 
       // let data: OrderModel = { id: 0, basketId: this.basketFromStorage[0].id, userId: this.currentUser.id, price: this.totalPrice};
@@ -82,30 +82,29 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
       //     // this.notificationService.updateNotifications(this.currentUser.id);
       //   }
       //   else{
-      //       this.alertService.createAlert("danger", result.message);
-      //   }
+// this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));      //   }
       // })
     }
   }
 
   delete(event: number) {
-    if(this.currentUserIsExist) {
+    if (this.currentUserIsExist) {
       var id = this.basketFromStorage.filter(f => f.productId == event)[0].id;
 
       this.basketManagementService.deleteAll(id, event).subscribe(result => {
-        if(result.isSuccess) {
+        if (result.isSuccess) {
           this.basketService.loadBasketFromDb();
-          this.alertService.createAlert("success", result.message);
+          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
         }
-        else{
-            this.alertService.createAlert("danger", result.message);
+        else {
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       })
     }
-    else{
+    else {
       let temp: BasketModel[] = [];
       this.basketFromStorage.forEach(item => {
-        if(item.productId != event) {
+        if (item.productId != event) {
           temp.push(item);
         }
       })
@@ -114,26 +113,26 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteOne(productId: number |undefined) {
-    if(this.currentUserIsExist) {
+  deleteOne(productId: number | undefined) {
+    if (this.currentUserIsExist) {
       var id = this.basketFromStorage.filter(f => f.productId == productId)[0].id;
 
       this.basketManagementService.delete(id, productId!).subscribe(result => {
-        if(result.isSuccess) {
+        if (result.isSuccess) {
           this.basketService.loadBasketFromDb();
-          this.alertService.createAlert("success", result.message);
+          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
         }
-        else{
-            this.alertService.createAlert("danger", result.message);
+        else {
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       })
     }
-    else{
+    else {
       let i: number = 0;
       let index: number = -1;
       this.basketFromStorage.forEach(item => {
-        if(item.productId == productId) {
-          if(index == -1) {
+        if (item.productId == productId) {
+          if (index == -1) {
             index = i;
           }
         }
@@ -141,7 +140,7 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
         i++;
       });
 
-      if(index > -1) {
+      if (index > -1) {
         this.basketFromStorage.splice(index, 1);
         this.basketService.setBasket(this.basketFromStorage);
       }
@@ -158,12 +157,12 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
       this.currentUser = currentUser;
       this.basketService.loadBasketFromDb();
     }
-    else{
+    else {
       this.currentUserIsExist = false;
     }
 
     this.basketService.basket$.subscribe(result => {
-      if(result) {
+      if (result) {
         this.numberOfItem = 0;
         this.totalPrice = 0;
         this.basket = [];
@@ -173,18 +172,18 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
         result.forEach(item => {
           this.numberOfItem += 1;
           this.totalPrice += item.product?.price!;
-          
-          if(this.basket.length == 0) {
-            this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price});
+
+          if (this.basket.length == 0) {
+            this.basket.push({ id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price });
           }
-          else{
+          else {
             let itemInBasket = this.basket.filter(f => f.productId == item.productId);
-            if(itemInBasket.length > 0) {
-              if(itemInBasket[0].numberOf) { itemInBasket[0].numberOf += 1; }
-              if(itemInBasket[0].totalPrice) { itemInBasket[0].totalPrice += item.product?.price!; }
+            if (itemInBasket.length > 0) {
+              if (itemInBasket[0].numberOf) { itemInBasket[0].numberOf += 1; }
+              if (itemInBasket[0].totalPrice) { itemInBasket[0].totalPrice += item.product?.price!; }
             }
-            else{
-              this.basket.push({id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price});
+            else {
+              this.basket.push({ id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price });
             }
           }
         })
@@ -194,13 +193,13 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
 
   openDeleteModal(id: number | undefined) {
     var deleteText = "";
-    this.translate.get('DELETE').subscribe((translation)=> {
+    this.translate.get('DELETE').subscribe((translation) => {
       deleteText = translation
     })
     this.deleteConfirmationComponent.openModal(deleteText, id);
   }
 
-  routeToMap() {
+  routeToShopping() {
     this.router.navigate(['/landing/marketplace']);
   }
 }

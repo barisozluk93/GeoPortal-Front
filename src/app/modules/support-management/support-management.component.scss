@@ -1,0 +1,233 @@
+:host {
+  display: block;
+  padding: 60px 60px;
+  min-height: calc(100vh - 65px);
+}
+
+.support-management-page {
+  .sticky-summary {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+.support-summary-card {
+  border: 0;
+  border-radius: 1.25rem;
+  background: var(--bs-body-bg);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.05);
+
+  &__eyebrow {
+    color: var(--bs-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    color: var(--bs-gray-900);
+    font-size: 1.35rem;
+    font-weight: 800;
+  }
+
+  &__subtitle {
+    color: var(--bs-gray-600);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+
+.support-summary-panel {
+   background-color: var(--bs-light);
+  border: 1px solid var(--bs-gray-200);
+  border-radius: 1rem;
+  padding: 1.4rem;
+}
+
+.support-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.2rem;
+
+  &__label {
+    color: var(--bs-gray-700);
+    font-weight: 600;
+  }
+
+  &__value {
+    color: var(--bs-gray-900);
+    font-weight: 800;
+  }
+}
+
+.support-summary-row + .support-summary-row {
+  border-top: 1px dashed var(--bs-gray-200);
+}
+
+.support-summary-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.25rem;
+
+  &__label {
+    color: var(--bs-gray-600);
+    font-weight: 600;
+  }
+
+  &__value {
+    color: var(--bs-primary);
+    font-weight: 800;
+  }
+}
+
+.support-detail {
+  &__header {
+    border-radius: 1rem;
+  }
+}
+
+.support-info-box {
+  padding: 1rem 1.1rem;
+  border-radius: 0.9rem;
+   background-color: var(--bs-light);
+  border: 1px solid var(--bs-gray-200);
+  height: 100%;
+
+  &__label {
+    font-size: 0.8rem;
+    color: var(--bs-gray-600);
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__value {
+    color: var(--bs-gray-900);
+    font-size: 1rem;
+    font-weight: 700;
+    word-break: break-word;
+  }
+}
+
+.support-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &--admin {
+      align-items: flex-end;
+
+      .support-thread__bubble {
+        background: rgba(var(--bs-primary-rgb), 0.08);
+        border: 1px solid rgba(var(--bs-primary-rgb), 0.14);
+      }
+    }
+
+    &--customer {
+      align-items: flex-start;
+
+      .support-thread__bubble {
+        background-color: var(--bs-light);
+        border: 1px solid var(--bs-gray-200);
+      }
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    font-size: 0.8rem;
+    color: var(--bs-gray-600);
+    font-weight: 600;
+  }
+
+  &__sender {
+    color: var(--bs-gray-900);
+    font-weight: 800;
+  }
+
+  &__bubble {
+    width: min(100%, 850px);
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+  }
+
+  &__email {
+    color: var(--bs-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  &__body {
+    color: var(--bs-gray-800);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+@media (max-width: 1399.98px) {
+  .support-management-page {
+    .sticky-summary {
+      position: static;
+      top: auto;
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+  .support-summary-card {
+    border-radius: 1rem;
+
+    &__title {
+      font-size: 1.2rem;
+    }
+  }
+
+  .support-summary-panel {
+    padding: 1.1rem;
+  }
+
+  .support-info-box {
+    padding: 0.9rem 1rem;
+  }
+
+  .support-thread {
+    &__bubble {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .support-summary-row,
+  .support-summary-total {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .support-thread {
+    &__meta {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    &__bubble {
+      padding: 0.9rem 1rem;
+    }
+  }
+}

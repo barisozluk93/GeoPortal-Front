@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { first } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 enum ErrorStates {
   NotSubmitted,
@@ -23,7 +24,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.isLoading$ = this.authService.isLoading$;
   }
 
@@ -59,5 +60,9 @@ export class ForgotPasswordComponent implements OnInit {
         this.errorState = result ? ErrorStates.NoError : ErrorStates.HasError;
       });
     this.unsubscribe.push(forgotPasswordSubscr);
+  }
+
+  onBrandClick() {
+    this.router.navigate(['/landing/marketplace'])
   }
 }

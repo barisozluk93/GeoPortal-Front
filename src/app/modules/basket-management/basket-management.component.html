@@ -1,87 +1,206 @@
-<div class="basket-page">
-  <app-confirmation #deleteConfirmationComponent (dismissButtonClick)="delete($event)">
-  </app-confirmation>
+<app-confirmation
+  #deleteConfirmationComponent
+  (dismissButtonClick)="delete($event)"
+></app-confirmation>
 
-  <div class="basket-container">
-    <div class="basket-grid">
-
-      <div class="basket-main">
-        <div class="glass-card basket-card">
-          <div class="basket-header">
-            <h3>
+<div class="row g-7 basket-management-page">
+  <div class="col-12 col-xxl-8">
+    <div class="card basket-card shadow-sm h-100">
+      <div class="card-header border-0 pt-8 pb-0">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 w-100">
+          <div>
+            <h2 class="basket-page-title mb-1">
               {{ 'MY_BASKET' | translate }}
-              <span class="basket-count">({{ basket.length }} {{ 'PRODUCT' | translate }})</span>
-            </h3>
+            </h2>
+            <div class="basket-page-subtitle">
+              {{ basket.length }} {{ 'PRODUCT' | translate }}
+            </div>
           </div>
 
-          <div class="basket-body">
+          <div *ngIf="basket.length > 0" class="basket-page-badge">
+            <i class="ki-duotone ki-basket fs-4 me-2">
+              <span class="path1"></span>
+              <span class="path2"></span>
+              <span class="path3"></span>
+              <span class="path4"></span>
+            </i>
+            <span>{{ totalPrice.toFixed(2) }} ₺</span>
+          </div>
+        </div>
+      </div>
 
-            <div *ngIf="!currentUserIsExist" class="basket-alert">
+      <div class="card-body pt-6 pb-8">
+        <div
+          *ngIf="!currentUserIsExist"
+          class="basket-login-alert alert alert-warning d-flex align-items-start p-5 mb-8"
+        >
+          <i class="ki-duotone ki-information-4 fs-2hx text-warning me-4 mt-1">
+            <span class="path1"></span>
+            <span class="path2"></span>
+            <span class="path3"></span>
+          </i>
+
+          <div class="d-flex flex-column">
+            <span class="fw-semibold text-gray-800">
               {{ 'TO_COMPLETE_YOUR_SHOPPING_FASTER' | translate }}
-              <a href="/auth/login">{{ 'AUTH.LOGIN.BUTTON' | translate }}</a>
-            </div>
+              <a routerLink="/auth/login" class="fw-bold ms-1">
+                {{ 'AUTH.LOGIN.TITLE' | translate }}
+              </a>
+            </span>
+          </div>
+        </div>
 
-            <div *ngIf="basket.length == 0" class="basket-empty">
-              <h3>{{ 'YOUR_BASKET_EMPTY' | translate }}</h3>
+        <ng-container *ngIf="basket.length > 0; else emptyBasket">
+          <div class="basket-items d-flex flex-column gap-4">
+            <div
+              class="basket-item"
+              *ngFor="let item of basket; let i = index"
+            >
+              <div class="basket-item__inner">
+                <div class="row align-items-center gy-5">
+                  <div class="col-12 col-lg-7">
+                    <div class="d-flex align-items-start gap-4">
+                      <div class="basket-item__icon">
+                        <i class="ki-duotone ki-element-11 fs-2 text-primary">
+                          <span class="path1"></span>
+                          <span class="path2"></span>
+                          <span class="path3"></span>
+                          <span class="path4"></span>
+                        </i>
+                      </div>
 
-              <button (click)="routeToMap()" class="btn-primary">
-                {{ 'BUY_DATA' | translate }}
-              </button>
-            </div>
+                      <div class="d-flex flex-column min-w-0">
+                        <span class="basket-item__label">
+                          {{ 'PRODUCT' | translate }}
+                        </span>
 
-            <div *ngIf="basket.length > 0" class="basket-list">
-              <div *ngFor="let item of basket" class="basket-item">
-                <div class="basket-item-info">
-                  <div class="basket-item-title">
-                    {{ item.product?.name }}
+                        <a class="basket-item__title text-truncate">
+                          {{ item.product?.name }}
+                        </a>
+
+                        <div class="basket-item__meta">
+                          <span class="basket-item__meta-dot"></span>
+                          <span>{{ 'IN_BASKET' | translate }}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="basket-item-price">
-                    {{ item.totalPrice?.toFixed(2) }} ₺
+                  <div class="col-9 col-lg-4">
+                    <div class="basket-price-box">
+                      <span class="basket-price-box__label">
+                        {{ 'TOTAL' | translate }}
+                      </span>
+                      <span class="basket-price-box__value">
+                        {{ item.totalPrice?.toFixed(2) }} ₺
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-3 col-lg-1 text-end">
+                    <button
+                      type="button"
+                      (click)="openDeleteModal(item.productId)"
+                      class="btn btn-icon basket-delete-btn"
+                    >
+                      <i class="ki-duotone ki-trash fs-2">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                        <span class="path3"></span>
+                        <span class="path4"></span>
+                        <span class="path5"></span>
+                      </i>
+                    </button>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
 
-                <div class="basket-item-actions">
-                  <button (click)="openDeleteModal(item.productId)" class="delete-btn">
-                    <span
-                      [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
-                      class="svg-icon svg-icon-2">
-                    </span>
-                  </button>
+        <ng-template #emptyBasket>
+          <div class="basket-empty">
+            <div class="basket-empty__content">
+              <div class="basket-empty__icon">
+                <i class="ki-duotone ki-basket fs-1 text-primary">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                  <span class="path3"></span>
+                  <span class="path4"></span>
+                </i>
+              </div>
+
+              <div class="basket-empty__text">
+                <h3 class="mb-2 text-gray-900">
+                  {{ 'YOUR_BASKET_EMPTY' | translate }}
+                </h3>
+                <div class="text-gray-600 fs-6">
+                  {{ 'CONTINUE_SHOPPING' | translate }}
                 </div>
               </div>
             </div>
 
-          </div>
-        </div>
-      </div>
-
-      <div class="basket-summary">
-        <div class="glass-card summary-card">
-          <div class="basket-header">
-            <h3>{{ 'ORDER_SUMMARY' | translate }}</h3>
-          </div>
-
-          <div class="basket-body summary-body">
-            <div class="summary-row">
-              <span>{{ 'TOTAL_OF_THE_PRODUCTS' | translate }}</span>
-              <span>{{ totalPrice | currency:'TRY':'symbol' }}</span>
-            </div>
-
-            <div class="summary-divider"></div>
-
-            <div class="summary-row total">
-              <span>{{ 'TOTAL' | translate }}</span>
-              <span>{{ totalPrice | currency:'TRY':'symbol' }}</span>
-            </div>
-
-            <button (click)="confirmBasket()" class="btn-primary w-100 mt-4">
-              {{ 'CONFIRM_BASKET' | translate }}
+            <button
+              type="button"
+              (click)="routeToShopping()"
+              class="btn btn-primary btn-lg"
+            >
+              {{ 'CONTINUE_SHOPPING' | translate }}
             </button>
           </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-xxl-4">
+    <div class="card basket-summary-card shadow-sm sticky-summary">
+      <div class="card-header border-0 pt-8 pb-0">
+        <div class="d-flex flex-column">
+          <div class="basket-summary-card__eyebrow">
+            {{ 'ORDER_SUMMARY' | translate }}
+          </div>
+          <h3 class="basket-summary-card__title mb-1">
+            {{ 'TOTAL' | translate }}
+          </h3>
+          <span class="basket-summary-card__subtitle">
+            {{ numberOfItem }} {{ 'PRODUCT' | translate }}
+          </span>
         </div>
       </div>
 
+      <div class="card-body pt-6 pb-8">
+        <div class="basket-summary-panel">
+          <div class="basket-summary-row">
+            <span class="basket-summary-row__label">
+              {{ 'TOTAL_OF_THE_PRODUCTS' | translate }}
+            </span>
+            <span class="basket-summary-row__value">
+              {{ totalPrice.toFixed(2) }} ₺
+            </span>
+          </div>
+
+          <div class="separator separator-dashed my-4"></div>
+
+          <div class="basket-summary-total">
+            <span class="basket-summary-total__label">
+              {{ 'TOTAL' | translate }}
+            </span>
+            <span class="basket-summary-total__value">
+              {{ totalPrice.toFixed(2) }} ₺
+            </span>
+          </div>
+
+          <button
+            type="button"
+            (click)="confirmBasket()"
+            class="btn btn-primary btn-lg w-100 mt-7 basket-summary-btn"
+            [disabled]="basket.length === 0"
+          >
+            {{ 'CONFIRM_BASKET' | translate }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

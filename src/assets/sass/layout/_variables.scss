@@ -7,20 +7,21 @@ $root-font-size:                                    13px; // Root font size for 
 $root-font-size-lg:                             	13px; // Root font size for tablet mode
 $root-font-size-md:                             	12px; // Root font size for mobile mode 
 
-// Page bg
-$page-bg: 											$gray-100 !default;
-$page-bg-dark:										#0a1424 !default;
+// Page background Color
+$page-bg: 											$white;
+$page-bg-dark:										$coal-400;
 
 // App blank bg color
 $app-blank-bg-color: 								$white;
-$app-blank-bg-color-dark: 							#0a1424;
+$app-blank-bg-color-dark: 							$coal-400;
+
 
 // Content Spacing
 $content-spacing: (
-	desktop: 50px, // Padding for desktop mode
-	tablet-and-mobile: 20px // Padding for tablet and mobile modes
+	desktop: 30px, // Padding for desktop mode
+	tablet-and-mobile: 15px // Padding for tablet and mobile modes
 ) !default;
-	
+
 
 // Header
 $header-config: (
@@ -28,7 +29,7 @@ $header-config: (
 	desktop: (
 		// Default Mode
 		default: (
-			height: 80px
+			height: 100px
 		),
 
 		// Fixed Mode
@@ -36,7 +37,7 @@ $header-config: (
 			height: 65px,
 			z-index: 97,
 			bg-color: $body-bg,
-			bg-color-dark: #0a1424,
+			bg-color-dark: $body-bg-dark,
 			box-shadow: 0px 10px 30px 0px rgba(82,63,105,0.08),
 			box-shadow-dark: none
 		)
@@ -61,41 +62,52 @@ $header-config: (
 	)
 ) !default;
 
+// Footer
+$footer-config: (
+	// Desktop Mode
+	desktop: (
+		// Fixed Mode
+		fixed: (
+			height: 70px,
+			z-index: 97,
+			bg-color: $body-bg,
+			bg-color-dark: $body-bg-dark,
+			box-shadow: 0px 10px 30px 0px rgba(82,63,105,0.08),
+			box-shadow-dark: none
+		)
+	),
+
+	// Tablet & Mobile Modes
+	tablet-and-mobile: (
+		// Fixed Mode
+		fixed: (
+			z-index: 97,
+			height: 60px,
+			bg-color: $body-bg,
+			bg-color-dark: $body-bg-dark,
+			box-shadow: 0px 10px 30px 0px rgba(82,63,105,0.08),
+			box-shadow-dark: none
+		)
+	)
+) !default;
+
 
 // Aside
 $aside-config: (
-	z-index: 100, // Aside's z-index property
-	menu-indention: 0.75rem,
-	bg-color: $gray-200,
-	bg-color-dark: #0f1b2d,
-	width: 300px, // Aside width for desktop mode
-	border-radius: 2rem
-) !default;
-
-// Sidebar
-$sidebar-config: (
-	z-index: 101,
-	width: 400px,	
-	bg-color: #192440,
-	bg-color-dark: #1e1e2d,
-	tabs: (
-		link-bg-color: (
-			default: #0e172e,
-			default-dark: darken(#1e1e2d, 4%),
-			active: #07122d,
-			active-dark: darken(#1e1e2d, 6%)
-		),
-		link-icon-color: (
-			default: #5e6278,
-			default-dark: #5e6278,
-			active: $white,
-			active-dark: $white
-		),
+	bg-color: $body-bg,
+	bg-color-dark: $coal-400,
+	width: (
+		desktop: 425px, 
+		tablet-and-mobile: 300px
 	),
-	dashed-border-color: #3e4a69,
-	dashed-border-color-dark: $gray-200-dark,
-	muted-color: #546182,
-	muted-color-dark: $text-muted-dark,
-	muted-bg-color: #0e172e,
-	muted-bg-color-dark: darken(#1e1e2d, 2%)
+	primary-width: (
+		desktop: 100px, 
+		tablet-and-mobile: 70px
+	),
+	z-index: 98, // Aside's z-index property
+	transition-speed: 0.3s, // transition speed
+	box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.03),
+	box-shadow-dark: none,
+	border: 1px solid $gray-200,
+	border-dark: 1px solid $coal-100
 ) !default;

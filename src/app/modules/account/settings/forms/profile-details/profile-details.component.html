@@ -1,108 +1,92 @@
-<div class="glass-card profile-card" *ngIf="user">
-  <div class="profile-header">
-    <h3>{{ 'PROFILE_DETAILS' | translate }}</h3>
+<div *ngIf="user">
+  <div class="mb-8">
+    <h3 class="fw-bold fs-3 mb-1">{{ 'PROFILE_DETAILS' | translate }}</h3>
+    <div class="text-gray-500 fs-6">{{ 'UPDATE_PERSONAL_INFORMATION' | translate }}</div>
   </div>
 
-  <form [formGroup]="form" class="profile-form">
-    <div class="profile-body">
-      <!-- AVATAR -->
-      <div class="profile-row avatar-row">
-        <div class="profile-label">Avatar</div>
+  <form [formGroup]="form" novalidate class="form">
 
-        <div class="profile-avatar-section">
-          <div class="profile-avatar">
-            <img *ngIf="user.fileId" [src]="user?.fileResult?.fileContents" />
-            <img *ngIf="!user.fileId" src="./assets/media/avatars/blank.png" />
-          </div>
+    <div class="row g-6">
 
-          <input
-            type="file"
-            hidden
-            accept="image/*"
-            (change)="onFileChange($event)"
-            #fileUpload
-          />
+      <!-- NAME -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">{{ 'FIRST_NAME' | translate }}</label>
 
-          <button type="button" class="btn-secondary" (click)="fileUpload.click()">
-            {{ user.fileId ? ('CHANGE' | translate) : ('UPLOAD' | translate) }}
-          </button>
+        <input type="text" class="form-control form-control-solid" formControlName="name" [ngClass]="{
+            'is-invalid': form.controls['name'].invalid && (form.controls['name'].dirty || form.controls['name'].touched)
+          }" />
+
+        <div class="invalid-feedback d-block"
+          *ngIf="form.controls['name'].errors?.required && (form.controls['name'].dirty || form.controls['name'].touched)">
+          {{ 'FIRST_NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
         </div>
       </div>
 
-      <!-- NAME -->
-      <div class="profile-row">
-        <div class="profile-label">{{ 'FULL_NAME' | translate }}</div>
+      <!-- SURNAME -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">{{ 'LAST_NAME' | translate }}</label>
 
-        <div class="profile-fields two">
-          <div class="field">
-            <input
-              type="text"
-              formControlName="name"
-              placeholder="{{ 'FIRST_NAME' | translate }}"
-              [class.invalid]="isInvalid('name')"
-            />
-            <span class="error" *ngIf="isInvalid('name')">
-              {{ 'NAME_REQUIRED' | translate }}
-            </span>
-          </div>
+        <input type="text" class="form-control form-control-solid" formControlName="surname" [ngClass]="{
+            'is-invalid': form.controls['surname'].invalid && (form.controls['surname'].dirty || form.controls['surname'].touched)
+          }" />
 
-          <div class="field">
-            <input
-              type="text"
-              formControlName="surname"
-              placeholder="{{ 'LAST_NAME' | translate }}"
-              [class.invalid]="isInvalid('surname')"
-            />
-            <span class="error" *ngIf="isInvalid('surname')">
-              {{ 'SURNAME_REQUIRED' | translate }}
-            </span>
-          </div>
+        <div class="invalid-feedback d-block"
+          *ngIf="form.controls['surname'].errors?.required && (form.controls['surname'].dirty || form.controls['surname'].touched)">
+          {{ 'LAST_NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
         </div>
       </div>
 
       <!-- USERNAME -->
-      <div class="profile-row">
-        <div class="profile-label">{{ 'USERNAME' | translate }}</div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">{{ 'USERNAME' | translate }}</label>
 
-        <div class="profile-fields">
-          <div class="field">
-            <input
-              type="text"
-              placeholder="{{ 'USERNAME' | translate }}"
-              formControlName="username"
-              [class.invalid]="isInvalid('username')"
-            />
-            <span class="error" *ngIf="isInvalid('username')">
-              {{ 'USERNAME_REQUIRED' | translate }}
-            </span>
-          </div>
+        <input type="text" class="form-control form-control-solid" formControlName="username" [ngClass]="{
+            'is-invalid': form.controls['username'].invalid && (form.controls['username'].dirty || form.controls['username'].touched)
+          }" />
+
+        <div class="invalid-feedback d-block"
+          *ngIf="form.controls['username'].errors?.required && (form.controls['username'].dirty || form.controls['username'].touched)">
+          {{ 'USERNAME' | translate }} {{ 'IS_REQUIRED' | translate }}
         </div>
       </div>
 
       <!-- PHONE -->
-      <div class="profile-row">
-        <div class="profile-label">{{ 'CONTRACT_PHONE' | translate }}</div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">
+          {{ 'CONTRACT_PHONE' | translate }}
+        </label>
 
-        <div class="profile-fields">
-          <div class="field">
-            <input
-              type="tel"
-              placeholder="{{ 'PHONE' | translate }}"
-              formControlName="phone"
-              [class.invalid]="isInvalid('phone')"
-            />
-            <span class="error" *ngIf="isInvalid('phone')">
-              {{ 'PHONE_REQUIRED' | translate }}
-            </span>
-          </div>
+        <input type="tel" class="form-control form-control-solid" formControlName="phone" mask="(000) 000 00 00"
+          [showMaskTyped]="true" [dropSpecialCharacters]="false" [ngClass]="{
+      'is-invalid':
+        form.controls['phone'].invalid &&
+        (form.controls['phone'].dirty || form.controls['phone'].touched)
+    }" />
+
+        <!-- REQUIRED -->
+        <div class="invalid-feedback d-block" *ngIf="
+      form.controls['phone'].errors?.['required'] &&
+      (form.controls['phone'].dirty || form.controls['phone'].touched)
+    ">
+          {{ 'CONTRACT_PHONE' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
+
+        <!-- MASK / PATTERN -->
+        <div class="invalid-feedback d-block" *ngIf="
+      form.controls['phone'].errors?.['pattern'] &&
+      (form.controls['phone'].dirty || form.controls['phone'].touched)
+    ">
+          {{ 'INVALID_PHONE' | translate }}
         </div>
       </div>
+
     </div>
 
-    <div class="profile-footer">
-      <button type="button" class="btn-primary" (click)="saveSettings()">
+    <div class="d-flex justify-content-end mt-8">
+      <button type="button" class="btn btn-primary" (click)="saveSettings()">
         {{ 'SAVE_CHANGES' | translate }}
       </button>
     </div>
+
   </form>
 </div>

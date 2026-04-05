@@ -275,3 +275,11 @@
 		);
 	}
 }
+
+// Primary button visual override
+.btn.btn-primary {
+  background: linear-gradient(135deg, #1f66ff 0%, #4c8cff 100%);
+  
+
+  box-shadow: 0 12px 28px rgba(31, 102, 255, 0.3) !important;
+}

@@ -8,7 +8,7 @@
       [ngClass]="{'active show': activeTab.link === 'projects'}">
     </app-projects-tab> -->
 
-    <app-menu-tab class="tab-pane fade" id="kt_aside_nav_tab_menu" role="tabpanel"
+    <app-menu-tab [isAdmin]="isAdmin" class="tab-pane fade" id="kt_aside_nav_tab_menu" role="tabpanel"
       [ngClass]="{'active show': activeTab.link === 'menu'}"></app-menu-tab>
 
     <!-- <app-subscriptions-tab class="tab-pane fade" id="kt_aside_nav_tab_subscription" role="tabpanel"

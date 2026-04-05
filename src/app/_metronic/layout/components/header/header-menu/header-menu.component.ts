@@ -1,260 +1,375 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { MenuModel } from 'src/app/models/menu.model';
 import { AuthService } from 'src/app/modules/auth';
 
-const menuList = [
+type HeaderMenuModel = MenuModel & {
+  open?: boolean;
+  childMenus?: HeaderMenuModel[];
+};
+
+const menuList: HeaderMenuModel[] = [
   {
-    "id": 1,
-    "name": "Dashboard",
-    "nameEn": "Dashboard",
-    "url": "/dashboard",
-    "icon": undefined,
-    "permissionId": 17,
-    "isDeleted": false,
-    "isSystemData": true,
-    "parentId": undefined,
-    "parent": undefined,
-    "childMenus": [],
-    "isForbid": undefined,
+    id: 1,
+    name: 'Dashboard',
+    nameEn: 'Dashboard',
+    url: '/dashboard',
+    icon: undefined,
+    permissionId: 41,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: undefined,
+    open: false,
   },
   {
-    "id": 2,
-    "name": "Kullanıcı Yönetimi",
-    "nameEn": "User Management",
-    "url": undefined,
-    "icon": undefined,
-    "permissionId": undefined,
-    "isDeleted": false,
-    "isSystemData": true,
-    "parentId": undefined,
-    "parent": undefined,
-    "isForbid": undefined,
-    "childMenus": [
+    id: 2,
+    name: 'Kullanıcı Yönetimi',
+    nameEn: 'User Management',
+    url: undefined,
+    icon: undefined,
+    permissionId: undefined,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    isForbid: undefined,
+    open: false,
+    childMenus: [
       {
-        "id": 3,
-        "name": "Yetkiler",
-        "nameEn": "Permissions",
-        "url": "/usermanagement/permissions",
-        "icon": undefined,
-        "permissionId": 1,
-        "isDeleted": false,
-        "isSystemData": true,
-        "parentId": 2,
-        "parent": undefined,
-        "childMenus": [],
-        "isForbid": undefined,
+        id: 3,
+        name: 'Yetkiler',
+        nameEn: 'Permissions',
+        url: '/usermanagement/permissions',
+        icon: undefined,
+        permissionId: 1,
+        isDeleted: false,
+        isSystemData: true,
+        parentId: 2,
+        parent: undefined,
+        childMenus: [],
+        isForbid: undefined,
+        open: false,
       },
       {
-        "id": 4,
-        "name": "Roller",
-        "nameEn": "Roles",
-        "url": "/usermanagement/roles",
-        "icon": undefined,
-        "permissionId": 5,
-        "isDeleted": false,
-        "isSystemData": true,
-        "parentId": 2,
-        "parent": undefined,
-        "childMenus": [],
-        "isForbid": undefined,
+        id: 4,
+        name: 'Roller',
+        nameEn: 'Roles',
+        url: '/usermanagement/roles',
+        icon: undefined,
+        permissionId: 7,
+        isDeleted: false,
+        isSystemData: true,
+        parentId: 2,
+        parent: undefined,
+        childMenus: [],
+        isForbid: undefined,
+        open: false,
       },
       {
-        "id": 5,
-        "name": "Kullanıcılar",
-        "nameEn": "Users",
-        "url": "/usermanagement/users",
-        "icon": undefined,
-        "permissionId": 13,
-        "isDeleted": false,
-        "isSystemData": true,
-        "parentId": 2,
-        "parent": undefined,
-        "childMenus": [],
-        "isForbid": undefined,
+        id: 5,
+        name: 'Kullanıcılar',
+        nameEn: 'Users',
+        url: '/usermanagement/users',
+        icon: undefined,
+        permissionId: 13,
+        isDeleted: false,
+        isSystemData: true,
+        parentId: 2,
+        parent: undefined,
+        childMenus: [],
+        isForbid: undefined,
+        open: false,
       }
     ]
   },
   {
-    "id": 6,
-    "name": "Gelen Sipariş Yönetimi",
-    "nameEn": "Incoming Order Management",
-    "url": "/incomingordermanagement",
-    "icon": undefined,
-    "permissionId": 20,
-    "isDeleted": false,
-    "isSystemData": true,
-    "parentId": undefined,
-    "parent": undefined,
-    "childMenus": [],
-    "isForbid": undefined,
+    id: 6,
+    name: 'Gelen Sipariş Yönetimi',
+    nameEn: 'Incoming Order Management',
+    url: '/incomingordermanagement',
+    icon: undefined,
+    permissionId: 32,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: undefined,
+    open: false,
   },
   {
-    "id": 11,
-    "name": "Market",
-    "nameEn": "Marketplace",
-    "url": "/landing/marketplace",
-    "icon": undefined,
-    "isDeleted": false,
-    "isSystemData": true,
-    "parentId": undefined,
-    "parent": undefined,
-    "childMenus": [],
-    "isForbid": false,
+    id: 11,
+    name: 'Market',
+    nameEn: 'Marketplace',
+    url: '/landing/marketplace',
+    icon: undefined,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: false,
+    open: false,
   },
   {
-    "id": 8,
-    "name": "Veri",
-    "nameEn": "Data",
-    "url": "/landing/data",
-    "icon": undefined,
-    "isDeleted": false,
-    "isSystemData": true,
-    "parentId": undefined,
-    "parent": undefined,
-    "childMenus": [],
-    "isForbid": false,
+    id: 8,
+    name: 'Veri',
+    nameEn: 'Data',
+    url: '/landing/data',
+    icon: undefined,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: false,
+    open: false,
   },
   {
-    "id": 9,
-    "name": "API",
-    "nameEn": "API",
-    "url": "/landing/api",
-    "icon": undefined,
-    "isDeleted": false,
-    "isSystemData": true,
-    "parentId": undefined,
-    "parent": undefined,
-    "childMenus": [],
-    "isForbid": false,
+    id: 9,
+    name: 'API',
+    nameEn: 'API',
+    url: '/landing/api',
+    icon: undefined,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: false,
+    open: false,
   },
   {
-    "id": 7,
-    "name": "Harita",
-    "nameEn": "Map",
-    "url": "/landing/map",
-    "icon": undefined,
-    "isDeleted": false,
-    "isSystemData": true,
-    "parentId": undefined,
-    "parent": undefined,
-    "childMenus": [],
-    "isForbid": false,
+    id: 7,
+    name: 'Harita',
+    nameEn: 'Map',
+    url: '/landing/map',
+    icon: undefined,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: false,
+    open: false,
   },
   {
-    "id": 10,
-    "name": "İletişim",
-    "nameEn": "Contact",
-    "url": "/landing/contact",
-    "icon": undefined,
-    "isDeleted": false,
-    "isSystemData": true,
-    "parentId": undefined,
-    "parent": undefined,
-    "childMenus": [],
-    "isForbid": false,
+    id: 10,
+    name: 'İletişim',
+    nameEn: 'Contact',
+    url: '/landing/contact',
+    icon: undefined,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: false,
+    open: false,
   },
-]
-
+  {
+    id: 12,
+    name: 'Harita Yönetimi',
+    nameEn: 'Map Management',
+    url: undefined,
+    icon: undefined,
+    permissionId: undefined,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    isForbid: undefined,
+    open: false,
+    childMenus: [
+      {
+        id: 13,
+        name: 'Katman Grupları',
+        nameEn: 'Layer Groups',
+        url: '/mapmanagement/layergroups',
+        icon: undefined,
+        permissionId: 49,
+        isDeleted: false,
+        isSystemData: true,
+        parentId: 12,
+        parent: undefined,
+        childMenus: [],
+        isForbid: undefined,
+        open: false,
+      },
+      {
+        id: 14,
+        name: 'Katmanlar',
+        nameEn: 'Layers',
+        url: '/mapmanagement/layers',
+        icon: undefined,
+        permissionId: 44,
+        isDeleted: false,
+        isSystemData: true,
+        parentId: 12,
+        parent: undefined,
+        childMenus: [],
+        isForbid: undefined,
+        open: false,
+      }
+    ]
+  },
+  {
+    id: 15,
+    name: 'Destek Yönetimi',
+    nameEn: 'Support Management',
+    url: '/supportmanagement',
+    icon: undefined,
+    permissionId: 56,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: false,
+    open: false,
+  },
+];
 
 @Component({
   selector: 'app-header-menu',
   templateUrl: './header-menu.component.html',
   styleUrls: ['./header-menu.component.scss'],
 })
-export class HeaderMenuComponent implements OnInit {
-
-  menuList: MenuModel[] = menuList;
+export class HeaderMenuComponent implements OnInit, OnDestroy {
+  menuList: HeaderMenuModel[] = [];
   permissionList: number[] | undefined;
 
-  constructor(private router: Router, private authService: AuthService) { }
+  isAdmin: boolean;
 
-  ngOnInit(): void {
-      this.authService.currentUserSubject.asObservable().subscribe(result => {
+  private userSub?: Subscription;
+  private documentClickHandler = () => {
+    this.closeAll();
+  };
+
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  constrolMenuVisibility() {
+    this.userSub = this.authService.currentUserSubject
+      .asObservable()
+      .subscribe(result => {
+        this.menuList = this.cloneMenuList(menuList);
+
         if (result?.permissions) {
-          this.permissionList = (JSON.parse(result?.permissions) as number[]);
+          this.permissionList = JSON.parse(result.permissions) as number[];
 
           this.menuList.forEach(menu => {
             if (menu.permissionId) {
-              if (this.permissionList?.includes(menu.permissionId)) {
-                menu.isForbid = false;
-              }
-              else {
-                menu.isForbid = true;
-              }
-            }
-            else {
-              if(menu.childMenus?.length! > 0) {
-                menu.childMenus?.forEach(childMenu => {
-                  if(childMenu.permissionId) {
-                    if (this.permissionList?.includes(childMenu.permissionId!)) {
-                      childMenu.isForbid = false;
-                      menu.isForbid = false;
-                    }
-                    else {
-                      childMenu.isForbid = true;
-                    }
+              menu.isForbid = !this.permissionList?.includes(menu.permissionId);
+            } else if (menu.childMenus?.length) {
+              let hasVisibleChild = false;
 
-                    if(!childMenu.isForbid) {
-                      menu.isForbid = false;
-                    }
-                    else {
-                      menu.isForbid = true;
-                    }
-                  }
-                  else{
-                    if(result.roles.includes("1")) {
-                      menu.isForbid = true;
-                      childMenu.isForbid = true;
-                    }
-                    else{
-                      menu.isForbid = false;
-                      childMenu.isForbid = false;
-                    }
-                  }
-                })
-              }
-              else{
-                if(result.roles.includes("1")) {
-                  menu.isForbid = true;
+              menu.childMenus.forEach(childMenu => {
+                if (childMenu.permissionId) {
+                  childMenu.isForbid = !this.permissionList?.includes(childMenu.permissionId);
+                } else {
+                  childMenu.isForbid = !!this.isAdmin;
                 }
-                else{
-                  menu.isForbid = false;
+
+                if (!childMenu.isForbid) {
+                  hasVisibleChild = true;
                 }
-              }
+              });
+
+              menu.isForbid = !hasVisibleChild;
+            } else {
+              menu.isForbid = !!this.isAdmin;
             }
           });
-          
-        }
-        else{
+        } else {
           this.menuList.forEach(menu => {
             if (menu.permissionId) {
               menu.isForbid = true;
-            }
-            else{
-              if(menu.childMenus?.length! > 0) {
-                menu.childMenus?.forEach(childMenu => {
-                  if (childMenu.permissionId) {
-                    menu.isForbid = true;
-                    childMenu.isForbid = true;
-                  }
-                  else{
-                    menu.isForbid = false;
-                    childMenu.isForbid = false;
-                  }
-                });
-              }
-              else{
-                menu.isForbid = false;
-              }
+            } else if (menu.childMenus?.length) {
+              let hasVisibleChild = false;
+
+              menu.childMenus.forEach(childMenu => {
+                if (childMenu.permissionId) {
+                  childMenu.isForbid = true;
+                } else {
+                  childMenu.isForbid = false;
+                  hasVisibleChild = true;
+                }
+              });
+
+              menu.isForbid = !hasVisibleChild;
+            } else {
+              menu.isForbid = false;
             }
           });
         }
-      })
+      });
   }
 
-  calculateMenuItemCssClass(url: string): string {
-    return checkIsActive(this.router.url, url) ? 'active' : '';
+  ngOnInit(): void {
+    if(this.authService.currentUserValue) {
+      this.isAdmin = this.authService.currentUserValue.roles.includes("1");
+    }
+    else{
+      this.isAdmin = false;
+    }
+
+    this.menuList = this.cloneMenuList(menuList);
+    document.addEventListener('click', this.documentClickHandler);
+    
+    this.constrolMenuVisibility();
+  }
+
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this.documentClickHandler);
+    this.userSub?.unsubscribe();
+  }
+
+  toggleMenu(index: number, event: Event): void {
+    event.stopPropagation();
+
+    this.menuList = this.menuList.map((menu, i) => ({
+      ...menu,
+      open: i === index ? !menu.open : false
+    }));
+  }
+
+  closeAll(): void {
+    this.menuList = this.menuList.map(menu => ({
+      ...menu,
+      open: false
+    }));
+  }
+
+  isMenuActive(menu: HeaderMenuModel): boolean {
+    return checkIsActive(this.router.url, menu.url);
+  }
+
+  isChildActive(menu: HeaderMenuModel): boolean {
+    return checkIsActive(this.router.url, menu.url);
+  }
+
+  hasActiveChild(menu: HeaderMenuModel): boolean {
+    return !!menu.childMenus?.some(child => checkIsActive(this.router.url, child.url));
+  }
+
+  private cloneMenuList(source: HeaderMenuModel[]): HeaderMenuModel[] {
+    return source.map(menu => ({
+      ...menu,
+      open: false,
+      childMenus: menu.childMenus
+        ? menu.childMenus.map(child => ({
+            ...child,
+            open: false
+          }))
+        : []
+    }));
   }
 }
 
@@ -262,8 +377,9 @@ const getCurrentUrl = (pathname: string): string => {
   return pathname.split(/[?#]/)[0];
 };
 
-const checkIsActive = (pathname: string, url: string) => {
+const checkIsActive = (pathname: string, url?: string): boolean => {
   const current = getCurrentUrl(pathname);
+
   if (!current || !url) {
     return false;
   }
@@ -272,9 +388,5 @@ const checkIsActive = (pathname: string, url: string) => {
     return true;
   }
 
-  if (current.indexOf(url) > -1) {
-    return true;
-  }
-
-  return false;
+  return current.startsWith(url);
 };

@@ -11,7 +11,7 @@
 
 	// Reset focus shadow
 	&:not(.btn-shadow):not(.shadow):not(.shadow-sm):not(.shadow-lg):not(.shadow-xs) {
-		box-shadow: none;
+		
 	}
 
 	// Remove border
@@ -76,7 +76,7 @@
 .btn-reset {
 	background-color: transparent;
 	border: 0;
-	box-shadow: none;
+	
 	user-select: none;
 	outline: none;
 }

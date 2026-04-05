@@ -39,10 +39,13 @@ $select2-input-padding-y-lg: $input-padding-y-lg - $select2-tag-padding-y-lg * 2
 .select2-container--bootstrap5 {
 	// Selection 
 	.select2-selection {
-		box-shadow: none;
+		
 		height: auto;
 		outline: none !important;
-	}
+	
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
 
 	// Selection focus & open states
 	&.select2-container--focus:not(.select2-container--disabled),
@@ -84,7 +87,7 @@ $select2-input-padding-y-lg: $input-padding-y-lg - $select2-tag-padding-y-lg * 2
 			font-family: inherit !important;
 			background-color: transparent;
 			border: 0;
-			box-shadow: none;
+			
 			outline: none;
 			line-height: 1;
 			margin: 0;

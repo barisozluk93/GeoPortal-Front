@@ -1,47 +1,63 @@
-<app-modal #modal [modalConfig]="modalConfig">
-  <form class="form modern-form" [formGroup]="form" novalidate>
-    <div class="form-grid">
-      <!-- NAME -->
-      <div class="form-group">
-        <label>{{ 'NAME' | translate }}</label>
-        <input
-          type="text"
-          formControlName="name"
-          autocomplete="off"
-          [class.invalid]="form.controls['name'].invalid && (form.controls['name'].dirty || form.controls['name'].touched)"
-        />
+<app-custom-modal
+  [isOpen]="isModalOpen"
+  [title]="modalTitle"
+  [subtitle]="'ROLE_FORM.TITLE' | translate"
+  [width]="'760px'"
+  (closed)="closeModal()"
+  (submitted)="submit()"
+  variant="center"
+  [showFooter]="true"
+>
+  <form class="form w-100" [formGroup]="form" novalidate>
 
-        <span
-          class="error"
-          *ngIf="form.controls['name'].hasError('required') && (form.controls['name'].dirty || form.controls['name'].touched)"
-        >
-          {{ 'REQUIRED_NAME' | translate }}
-        </span>
-      </div>
+    <!-- NAME -->
+    <div class="fv-row mb-8">
+      <label class="form-label fs-6 fw-bolder text-gray-900">
+        {{ 'ROLE_FORM.NAME' | translate }}
+      </label>
 
-      <!-- PERMISSIONS -->
-      <div class="form-group form-group-full">
-        <label>{{ 'PERMISSIONS' | translate }}</label>
+      <input
+        type="text"
+        formControlName="name"
+        autocomplete="off"
+        class="form-control form-control-lg form-control-solid"
+        [placeholder]="'ROLE_FORM.NAME' | translate"
+        [ngClass]="{
+          'is-invalid': isInvalid('name')
+        }"
+      />
 
-        <select
-          multiple
-          formControlName="permissions"
-          autocomplete="off"
-          class="multi-select"
-          [class.invalid]="form.controls['permissions'].invalid && (form.controls['permissions'].dirty || form.controls['permissions'].touched)"
-        >
-          <ng-container *ngFor="let item of permissionList">
-            <option [ngValue]="item.id">{{ item.name }}</option>
-          </ng-container>
-        </select>
-
-        <span
-          class="error"
-          *ngIf="form.controls['permissions'].hasError('required') && (form.controls['permissions'].dirty || form.controls['permissions'].touched)"
-        >
-          {{ ('PERMISSIONS' | translate) + ' ' + ('IS_REQUIRED' | translate) }}
-        </span>
-      </div>
+      <ng-container *ngIf="isInvalid('name')">
+        <div class="invalid-feedback d-block" *ngIf="f['name'].errors?.['required']">
+          {{ 'ROLE_FORM.REQUIRED_NAME' | translate }}
+        </div>
+      </ng-container>
     </div>
+
+    <!-- PERMISSIONS -->
+    <div class="fv-row mb-8">
+      <label class="form-label fs-6 fw-bolder text-gray-900">
+        {{ 'ROLE_FORM.PERMISSIONS' | translate }}
+      </label>
+
+      <app-custom-select
+        formControlName="permissions"
+        [items]="permissionList"
+        bindLabel="name"
+        bindValue="id"
+        [multiple]="true"
+        [clearable]="true"
+        [placeholder]="'ROLE_FORM.PERMISSIONS' | translate"
+        [invalid]="isInvalid('permissions')"
+      >
+      </app-custom-select>
+
+      <ng-container *ngIf="isInvalid('permissions')">
+        <div class="invalid-feedback d-block" *ngIf="f['permissions'].errors?.['required']">
+          {{ ('ROLE_FORM.PERMISSIONS' | translate) + ' ' + ('IS_REQUIRED' | translate) }}
+        </div>
+      </ng-container>
+    </div>
+
   </form>
-</app-modal>
+</app-custom-modal>

@@ -1,100 +1,99 @@
-<div class="notification-glass-header">
-  <div class="notification-header-left">
-    <div class="notification-header-icon">
-      <i class="fa-solid fa-bell"></i>
+<div class="notification-menu">
+  <!-- Header -->
+  <div class="notification-menu__header">
+    <div class="notification-menu__header-left">
+      <div class="notification-menu__icon">
+        <i class="fa-solid fa-bell"></i>
+      </div>
+
+      <div class="notification-menu__title-wrap">
+        <div class="notification-menu__title">
+          {{ 'NOTIFICATIONS' | translate }}
+        </div>
+
+        <div class="notification-menu__subtitle">
+          {{ totalNotificationCount }} {{ 'NOTIFICATION' | translate }}
+        </div>
+      </div>
     </div>
 
-    <div class="notification-header-content">
-      <h3 class="notification-header-title mb-0">
-        {{ 'NOTIFICATIONS' | translate }}
-      </h3>
-
-      <span class="notification-header-subtitle">
-        {{ totalNotificationCount }} {{ 'NOTIFICATION' | translate }}
-      </span>
+    <div
+      *ngIf="unreadedNotificationCount > 0"
+      class="notification-menu__unread-badge"
+    >
+      {{ unreadedNotificationCount }} {{ 'UNREAD' | translate }}
     </div>
   </div>
 
-  <span
-    *ngIf="unreadedNotificationCount > 0"
-    class="notification-header-badge"
-  >
-    {{ unreadedNotificationCount }} {{ 'UNREAD' | translate }}
-  </span>
-</div>
-
-<div class="tab-content notification-glass-body">
-  <div
-    class="tab-pane fade show active"
-    id="kt_topbar_notifications_1"
-    role="tabpanel"
-  >
-    <div
-      class="scroll-y mh-325px my-4 px-3"
-      *ngIf="notifications.length > 0"
-    >
-      <div
-        *ngFor="let notification of notifications"
-        (click)="goToPage(notification)"
-        class="notification-item glass-notification-item d-flex align-items-start justify-content-between px-4 py-3 mb-3 cursor-pointer"
-        [ngClass]="{'notification-unread': !notification.isRead}"
-      >
-        <div class="d-flex align-items-start flex-grow-1 me-3">
-          <div class="notification-item-icon me-3">
-            <span class="notification-item-icon-inner">
-              <i class="fa-solid fa-bell"></i>
-            </span>
-          </div>
-
-          <div class="d-flex flex-column flex-grow-1 notification-item-content">
-            <div class="d-flex align-items-center justify-content-between mb-1 gap-2">
-              <span
-                class="notification-message"
-                [ngClass]="notification.isRead ? 'is-read' : 'is-unread'"
-              >
-                {{ notification.body }}
-              </span>
-
-              <span
-                *ngIf="!notification.isRead"
-                class="notification-read-dot"
-              ></span>
+  <!-- Body -->
+  <div class="notification-menu__body">
+    <ng-container *ngIf="notifications.length > 0; else emptyState">
+      <div class="scroll-y mh-375px px-4 py-4">
+        <div
+          *ngFor="let notification of notifications"
+          class="notification-card"
+          [ngClass]="{ 'notification-card--unread': !notification.isRead }"
+          (click)="goToPage(notification)"
+        >
+          <div class="notification-card__left">
+            <div class="notification-card__icon-wrap">
+              <div class="notification-card__icon">
+                <i class="fa-solid fa-bell"></i>
+              </div>
             </div>
 
-            <span class="notification-date">
-              {{ notification.createdAt | date:'dd.MM.yyyy HH:mm' }}
-            </span>
+            <div class="notification-card__content">
+              <div class="notification-card__top">
+                <div
+                  class="notification-card__message"
+                  [ngClass]="{
+                    'notification-card__message--read': notification.isRead,
+                    'notification-card__message--unread': !notification.isRead
+                  }"
+                >
+                  {{ notification.body }}
+                </div>
+
+                <span
+                  *ngIf="!notification.isRead"
+                  class="notification-card__dot"
+                ></span>
+              </div>
+
+              <div class="notification-card__bottom">
+                <span class="notification-card__date">
+                  {{ notification.createdAt | date:'dd.MM.yyyy HH:mm' }}
+                </span>
+              </div>
+            </div>
           </div>
+
+          <button
+            type="button"
+            class="notification-card__delete-btn"
+            (click)="$event.stopPropagation(); delete(notification.id)"
+            aria-label="Delete notification"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <div class="notification-empty">
+        <div class="notification-empty__icon">
+          <i class="fa-regular fa-bell"></i>
         </div>
 
-        <button
-          type="button"
-          class="btn btn-icon btn-sm notification-delete-btn"
-          (click)="$event.stopPropagation(); delete(notification.id)"
-          aria-label="Delete notification"
-        >
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </div>
-    </div>
+        <div class="notification-empty__title">
+          {{ 'NO_DATA_AVAILABLE' | translate }}
+        </div>
 
-    <div
-      class="scroll-y mh-325px my-4 px-5 d-flex flex-column align-items-center justify-content-center text-center notification-empty-state"
-      *ngIf="notifications.length === 0"
-    >
-      <div class="notification-empty-icon mb-4">
-        <span class="notification-empty-icon-inner">
-          <i class="fa-solid fa-bell"></i>
-        </span>
+        <div class="notification-empty__subtitle">
+          {{ 'NOTIFICATIONS' | translate }}
+        </div>
       </div>
-
-      <div class="notification-empty-title">
-        {{ 'NO_DATA_AVAILABLE' | translate }}
-      </div>
-
-      <div class="notification-empty-subtitle">
-        {{ 'NOTIFICATIONS' | translate }}
-      </div>
-    </div>
+    </ng-template>
   </div>
 </div>

@@ -12,8 +12,10 @@ import { ComingOrderManagementComponent } from './coming-order-management.compon
 import { ComingOrderDetailComponent } from './detail/coming-order-detail.component';
 import { StatusComponent } from './detail/status/status.component';
 import { InvoiceComponent } from './detail/invoice/invoice.component';
-import { DataTableModule } from '../common/datatable/datatable.module';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { DataTableModule } from '../common/datatable/datatable.module';
+import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
+import { CustomSelectModule } from '../common/select/custom-select.module.module';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     ModalsModule,
     InlineSVGModule,
     NgbPaginationModule,
-    PdfViewerModule
+    PdfViewerModule,
+    CustomModalModule,
+    CustomSelectModule
   ]
 })
-export class ComingOrderManagementModule {}
+export class ComingOrderManagementModule { }

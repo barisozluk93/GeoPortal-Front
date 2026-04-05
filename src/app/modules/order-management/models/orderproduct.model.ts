@@ -1,4 +1,4 @@
-import { ProductModel } from "../../product-management/models/product.model";
+import { ProductModel } from "../../landing/marketplace/models/product.model";
 import { OrderModel } from "./order.model";
 
 export class OrderProductModel {
@@ -7,7 +7,6 @@ export class OrderProductModel {
   product?: ProductModel;
   orderId: number;
   order?: OrderModel;
-  productValue?: string;
   proccessDate?: string;
   orderStatus?: number;
   orderStatusStr?: string;

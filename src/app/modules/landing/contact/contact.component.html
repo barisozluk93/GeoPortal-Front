@@ -1,0 +1,119 @@
+<section class="contact-page">
+  <!-- HERO SECTION -->
+  <section class="contact-hero">
+    <div class="contact-hero-overlay"></div>
+
+    <div class="container contact-hero-content">
+      <div class="contact-hero-grid">
+        <div class="contact-hero-left">
+          <div class="contact-kicker mb-6">
+            <i class="bi bi-chat-dots"></i>
+            {{ 'CONTACT_PAGE.KICKER' | translate }}
+          </div>
+
+          <h1 class="contact-hero-title">
+            {{ 'CONTACT_PAGE.TITLE' | translate }}
+          </h1>
+
+          <p class="contact-hero-subtitle">
+            {{ 'CONTACT_PAGE.COPY' | translate }}
+          </p>
+        </div>
+
+        <div class="contact-hero-right">
+          <div class="card shadow-lg contact-form-card">
+            <div class="card-body p-8 p-lg-10">
+              <div class="contact-form-title mb-6">
+                {{ 'CONTACT_PAGE.FORM_TITLE' | translate }}
+              </div>
+
+              <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+                <div class="row g-5">
+                  <div class="col-md-6">
+                    <input
+                      type="text"
+                      class="form-control form-control-lg form-control-solid contact-form-input"
+                      formControlName="fullName"
+                      [placeholder]="'CONTACT_PAGE.FULL_NAME' | translate"
+                      [class.is-invalid]="f['fullName'].invalid && (f['fullName'].touched || isSubmitted)"
+                    />
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="f['fullName'].invalid && (f['fullName'].touched || isSubmitted)"
+                    >
+                      {{ 'CONTACT_PAGE.VALIDATION_FULL_NAME' | translate }}
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <input
+                      type="text"
+                      class="form-control form-control-lg form-control-solid contact-form-input"
+                      formControlName="organization"
+                      [placeholder]="'CONTACT_PAGE.ORGANIZATION' | translate"
+                    />
+                  </div>
+
+                  <div class="col-12">
+                    <input
+                      type="email"
+                      class="form-control form-control-lg form-control-solid contact-form-input"
+                      formControlName="businessEmail"
+                      [placeholder]="'CONTACT_PAGE.BUSINESS_EMAIL' | translate"
+                      [class.is-invalid]="f['businessEmail'].invalid && (f['businessEmail'].touched || isSubmitted)"
+                    />
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="f['businessEmail'].invalid && (f['businessEmail'].touched || isSubmitted)"
+                    >
+                      {{ 'CONTACT_PAGE.VALIDATION_EMAIL' | translate }}
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <input
+                      type="text"
+                      class="form-control form-control-lg form-control-solid contact-form-input"
+                      formControlName="subject"
+                      [placeholder]="'CONTACT_PAGE.SUBJECT' | translate"
+                      [class.is-invalid]="f['subject'].invalid && (f['subject'].touched || isSubmitted)"
+                    />
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="f['subject'].invalid && (f['subject'].touched || isSubmitted)"
+                    >
+                      {{ 'CONTACT_PAGE.VALIDATION_SUBJECT' | translate }}
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <textarea
+                      rows="6"
+                      class="form-control form-control-lg form-control-solid contact-form-input contact-form-textarea"
+                      formControlName="message"
+                      [placeholder]="'CONTACT_PAGE.MESSAGE' | translate"
+                      [class.is-invalid]="f['message'].invalid && (f['message'].touched || isSubmitted)"
+                    ></textarea>
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="f['message'].invalid && (f['message'].touched || isSubmitted)"
+                    >
+                      {{ 'CONTACT_PAGE.VALIDATION_MESSAGE' | translate }}
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary contact-submit-btn w-100">
+                      {{ 'CONTACT_PAGE.SEND' | translate }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>

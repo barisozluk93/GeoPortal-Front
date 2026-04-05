@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, first, Subscription } from 'rxjs';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 import { ResultModel } from 'src/app/models/result.model';
@@ -10,7 +11,6 @@ import { UserManagementService } from 'src/app/modules/user-management/user-mana
 @Component({
   selector: 'app-sign-in-method',
   templateUrl: './sign-in-method.component.html',
-  styleUrls: ['./sign-in-method.component.scss']
 })
 export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
   showChangeEmailForm: boolean = false;
@@ -22,42 +22,43 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService, 
+    private authService: AuthService,
     private userManagementService: UserManagementService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translate: TranslateService
   ) {
   }
 
   setForm() {
-    if(this.user) {
-        this.changeEmailForm.patchValue(this.user);
+    if (this.user) {
+      this.changeEmailForm.patchValue(this.user);
 
-        this.changeEmailForm.get("password")?.setValue("***");
-        this.changeEmailForm.get("cPassword")?.setValue("***");
-        this.changeEmailForm.get("roles")?.setValue(this.user.roles[0])
+      this.changeEmailForm.get("password")?.setValue("•••");
+      this.changeEmailForm.get("cPassword")?.setValue("•••");
+      this.changeEmailForm.get("roles")?.setValue(this.user.roles[0])
 
-        if (this.user.organizations.length > 0) {
-          this.changeEmailForm.get("organizations")?.setValue(this.user.organizations[0])
-        }
-        else {
-          this.changeEmailForm.get("organizations")?.setValue(null)
-        }
+      if (this.user.organizations.length > 0) {
+        this.changeEmailForm.get("organizations")?.setValue(this.user.organizations[0])
       }
+      else {
+        this.changeEmailForm.get("organizations")?.setValue(null)
+      }
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.user) {
-      if(!this.changeEmailForm) {
+    if (changes.user) {
+      if (!this.changeEmailForm) {
         this.initChangeEmailForm();
       }
 
-      if(!this.changePasswordForm) {
+      if (!this.changePasswordForm) {
         this.initChangePasswordForm();
       }
       this.setForm();
     }
   }
-  
+
   ngOnInit(): void {
     this.initChangeEmailForm();
     this.initChangePasswordForm();
@@ -70,12 +71,6 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   saveEmail() {
-
-    if (this.changeEmailForm.invalid) {
-      this.changeEmailForm.markAllAsTouched();
-      return;
-    }
-
     if (this.changeEmailForm.valid) {
       var temp = this.changeEmailForm.getRawValue();
       var data = this.changeEmailForm.getRawValue() as UserModel;
@@ -96,11 +91,12 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
 
       this.userManagementService.userProfileEdit(data).subscribe(result => {
         if (result.isSuccess) {
-          this.alertService.createAlert("success", result.message);
+          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
           this.authService.logout();
+          document.location.reload();
         }
         else {
-          this.alertService.createAlert("danger", result.message);
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       })
     }
@@ -112,11 +108,6 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   savePassword() {
-    if (this.changePasswordForm.invalid) {
-      this.changePasswordForm.markAllAsTouched();
-      return;
-    }
-
     if (this.changePasswordForm.valid) {
       let data = this.changePasswordForm.getRawValue();
 
@@ -126,11 +117,12 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
         .subscribe((result: ResultModel<boolean>) => {
 
           if (result.isSuccess) {
-            this.alertService.createAlert("success", result.message);
+            this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
             this.authService.logout();
+            document.location.reload();
           }
           else {
-            this.alertService.createAlert("danger", result.message);
+            this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
           }
         });
     }
@@ -171,15 +163,27 @@ export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
       ],
       country: [
         "",
+        Validators.compose([
+          Validators.required,
+        ]),
       ],
       city: [
         "",
+        Validators.compose([
+          Validators.required,
+        ]),
       ],
       district: [
         "",
+        Validators.compose([
+          Validators.required,
+        ]),
       ],
       address: [
         "",
+        Validators.compose([
+          Validators.required,
+        ]),
       ],
       roles: [
         null

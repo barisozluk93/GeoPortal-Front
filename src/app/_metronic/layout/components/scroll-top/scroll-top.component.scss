@@ -1,12 +1,123 @@
-.scroll-to-top {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    opacity: 0;
-    transition: all .2s ease-in-out;
+:host {
+  position: relative;
+  z-index: 1000;
 }
 
-.show-scrollTop {
+.scroll-top-wrapper {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 109;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(0.92);
+  transition:
+    opacity 0.28s ease,
+    visibility 0.28s ease,
+    transform 0.28s ease;
+
+  &.show-scrollTop {
     opacity: 1;
-    transition: all .2s ease-in-out;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.scroll-top-btn {
+  position: relative;
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 0;
+  outline: none;
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow:
+    0 0.5rem 1.5rem rgba(0, 0, 0, 0.14),
+    0 0.125rem 0.375rem rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 0.75rem 2rem rgba(0, 0, 0, 0.18),
+      0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+
+    .scroll-top-btn__bg {
+      transform: scale(1.04);
+      filter: brightness(1.03);
+    }
+
+    .scroll-top-btn__icon {
+      transform: translateY(-2px);
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+}
+
+.scroll-top-btn__bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--bs-primary) 0%,
+    color-mix(in srgb, var(--bs-primary) 78%, #ffffff 22%) 100%
+  );
+  transition:
+    transform 0.25s ease,
+    filter 0.25s ease;
+}
+
+.scroll-top-btn__icon {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bs-white);
+  font-size: 1rem;
+  transition: transform 0.25s ease;
+}
+
+@media (max-width: 991.98px) {
+  .scroll-top-wrapper {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .scroll-top-btn {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.9rem;
+  }
+
+  .scroll-top-btn__bg {
+    border-radius: 0.9rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .scroll-top-wrapper {
+    right: 0.875rem;
+    bottom: 0.875rem;
+  }
+
+  .scroll-top-btn {
+    width: 2.85rem;
+    height: 2.85rem;
+  }
 }

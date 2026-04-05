@@ -1,69 +1,36 @@
 //
-// Aside
+// Aside extended
 //
 
 // General mode(all devices)
 .aside {
 	display: flex;
-	flex-direction: column;
+	box-shadow: var(--#{$prefix}aside-box-shadow);
 	background-color: var(--#{$prefix}aside-bg-color);
-	padding: 0;
+	
+	// Aside primary panel
+	.aside-primary {
+		flex-shrink: 0;
 
-	// Aside menu
-	.aside-menu {
-		display: flex;
-		align-items: center;
-		width: 100%;
+		// Aside secondary enabled  mode
+		.aside-secondary-enabled & {
+			border-right: 1px solid transparent;
+		}
 
-		.menu {			
-			// Menu item
-			> .menu-item {
-				> .menu-link {
-					.menu-title {
-						font-size: 1.1rem;
-					}
-				}
-			
-				&.menu-accordion {
-					&.show,
-					&.showing {
-						> .menu-link {
-							> .menu-icon {
-								i,
-								.svg-icon {
-									@include menu-link-arrow-rotate(90deg, -90deg);
-								}						
-							}
-						}
-					}
+		// Aside secondary enabled and aside minimized modes disabled mode
+		.aside-secondary-enabled:not([data-kt-aside-minimize="on"]) & {
+			border-right: var(--#{$prefix}aside-border);
+		}
+	}
 
-					&.hiding {
-						> .menu-link {
-							> .menu-icon {
-								i,
-								.svg-icon {
-									@include menu-link-arrow-rotate(0, 0);
-								}						
-							}
-						}
-					}	
-				}			
-			}
-
-			// Link colors
-			.menu-item {
-				@include menu-link-default-state( $title-color: var(--#{$prefix}gray-700), $icon-color: var(--#{$prefix}gray-600), $bullet-color: var(--#{$prefix}gray-400), $arrow-color: var(--#{$prefix}gray-400), $bg-color: transparent );
-				@include menu-link-hover-state( $title-color: var(--#{$prefix}gray-900), $icon-color: null, $bullet-color: null, $arrow-color: null, $bg-color: transparent );
-				@include menu-link-here-state( $title-color: var(--#{$prefix}gray-900), $icon-color: null, $bullet-color: null, $arrow-color: null, $bg-color: transparent );
-				@include menu-link-show-state( $title-color: var(--#{$prefix}gray-900), $icon-color: var(--#{$prefix}gray-900), $bullet-color: var(--#{$prefix}gray-900), $arrow-color: null, $bg-color: transparent );
-				@include menu-link-active-state( $title-color: var(--#{$prefix}gray-900), $icon-color: var(--#{$prefix}gray-900), $bullet-color: var(--#{$prefix}gray-900), $arrow-color: null, $bg-color: transparent );
-
-				> .menu-link.active {
-					.menu-title {
-						font-weight: $font-weight-bold;
-					}
-				}
-			}
+	// Aside secondary panel
+	.aside-secondary {
+		overflow: hidden;
+		
+		// Workspace
+		.aside-workspace {
+			width: get($aside-config, width, desktop) - get($aside-config, primary-width, desktop);
+			flex-shrink: 0;
 		}
 	}
 }
@@ -71,43 +38,105 @@
 // Desktop mode
 @include media-breakpoint-up(lg) {
 	.aside {
-		position: fixed;
-		top: get($content-spacing, desktop);
-		bottom: get($content-spacing, desktop);
-		left: get($content-spacing, desktop);
-		z-index: get($aside-config, z-index);
-		overflow: hidden;
-		width: get($aside-config, width);
-		@include border-radius(get($aside-config, border-radius));
+		transition: width get($aside-config, transition-speed) ease;
+		border-right: var(--#{$prefix}aside-border);
 
-		.scroll-y,
-        .hover-scroll-overlay-y {        
-            @include scrollbar-color(var(--#{$prefix}gray-300), var(--#{$prefix}gray-400));
-        }
+		// Aside primary
+		.aside-primary {
+			width: get($aside-config, primary-width, desktop);
+		}
 
-		// Logo
-		.aside-logo {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
+		// Aside secondary panel
+		.aside-secondary {			
+			// Workspace
+			.aside-workspace {
+				width: get($aside-config, width, desktop) - get($aside-config, primary-width, desktop);
+				flex-shrink: 0;
+			}
+		}
+
+		// Fixed aside mode
+		.aside-fixed & {
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			z-index: get($aside-config, z-index);
+		}
+
+		// Static aside mode
+		.aside-static & {
+			position: relative;
+			z-index: 1;
+		}
+
+		// Aside secondary enabled
+		.aside-secondary-enabled & {
+			width: get($aside-config, width, desktop);
+		}
+
+		// Aside secondary disabled
+		.aside-secondary-disabled & {
+			width: get($aside-config, primary-width, desktop);
+
+			.aside-primary {
+				border-right: 0;
+			}
+		}
+
+		// Minimized aside mode
+		[data-kt-aside-minimize="on"] & {
+			width: get($aside-config, primary-width, desktop);
+			transition: width get($aside-config, transition-speed) ease;
 		}
 	}
+
+	[dir="rtl"] {
+        .aside-toggle {
+			i,
+            .svg-icon {
+                transform: rotateZ(180deg);
+            }
+
+            &.active .svg-icon {
+                transform: rotateZ(0deg) !important;
+            }
+        }
+    }
 }
 
 // Tablet & mobile modes
 @include media-breakpoint-down(lg) {
 	.aside {
 		display: none;
+		width: get($aside-config, width, tablet-and-mobile);
 
-		// Logo
-		.aside-logo {
-			display: none;
+		// Aside primary
+		.aside-primary {
+			width: get($aside-config, primary-width, tablet-and-mobile);
 		}
-	}
-}
 
-@include color-mode(dark) {
-	.aside {
-		border: 1px solid $coal-100;
+		// Aside secondary
+		.aside-secondary {			
+			// Workspace
+			.aside-workspace {
+				width: get($aside-config, width, tablet-and-mobile) - get($aside-config, primary-width, tablet-and-mobile);
+				flex-shrink: 0;
+			}
+		}
+
+		// Aside secondary enabled
+		.aside-secondary-enabled & {
+			width: get($aside-config, width, tablet-and-mobile);
+		}
+
+		// Aside secondary disabled
+		.aside-secondary-disabled & {
+			width: get($aside-config, primary-width, tablet-and-mobile);
+
+			.aside-primary {
+				border-right: 0;
+			}
+		}
 	}
 }

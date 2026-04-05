@@ -15,6 +15,7 @@ export class AsideComponent implements OnInit, OnDestroy {
   asideMenuSecondary: boolean = true;
   private unsubscribe: Subscription[] = [];
 
+  @Input() isAdmin: boolean;
   @Input() asideDisplay: boolean = false;
 
   constructor(

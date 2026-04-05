@@ -1,0 +1,14 @@
+<app-layergroup-editsave #editSaveComponent (isSuccess)="isSuccess($event)">
+</app-layergroup-editsave>
+
+<app-confirmation #confirmationComponent (dismissButtonClick)="delete($event)">
+</app-confirmation>
+
+<!-- TABLE -->
+<app-datatable class="card card-xxl-stretch border-0 mb-5 mb-xl-8" [header]="tableName"
+  [paginationModel]="paginationModel" [dataSource]="dataSource" [totalCount]="totalCount" [columnList]="columnList"
+  (paginationModelChange)="paginationModelChange($event)" (newButtonClick)="openSaveModal($event)"
+  (deleteButtonClick)="openDeleteModal($event)" (editButtonClick)="openEditModal($event)"
+  [hasEditPermission]="hasEditPermission" [hasDeletePermission]="hasDeletePermission"
+  [hasNewRecordPermission]="hasNewRecordPermission" (filterModelChange)="onFilterModelChange($event)">
+</app-datatable>

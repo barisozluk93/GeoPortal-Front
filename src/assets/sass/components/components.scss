@@ -5,3 +5,119 @@
 // Import Dependencies
 @import "stepper/multistep";
 @import "landing";
+
+// Brand theme overrides
+@include color-mode(light) {
+    body {
+        background: linear-gradient(180deg, #f7faff 0%, #edf3ff 100%) !important;
+    }
+
+    .card {
+        background-color: rgba(255, 255, 255, 0.96);
+        border-color: rgba(44, 99, 255, 0.12);
+    }
+}
+
+@include color-mode(dark) {
+    body {
+        background: radial-gradient(circle at top, rgba(39, 76, 164, 0.18) 0%, rgba(8, 12, 22, 0) 30%),
+            linear-gradient(180deg, #07111f 0%, #0a1424 100%) !important;
+        background-attachment: fixed;
+    }
+
+    .app-default,
+    .app-wrapper,
+    .app-main {
+        background: transparent !important;
+    }
+
+    .card {
+        background-color: rgba(10, 20, 36, 0.96);
+        border-color: rgba(44, 99, 255, 0.14);
+    }
+}
+
+.btn.btn-primary,
+.btn-primary {
+    background: linear-gradient(135deg, #1f66ff 0%, #4c8cff 100%);
+    border-color: #1f66ff;
+    box-shadow: 0 12px 28px rgba(31, 102, 255, 0.3) !important;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-primary:active,
+.btn.btn-primary.active,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background: linear-gradient(135deg, #1a5cf0 0%, #3f82ff 100%);
+    border-color: #1a5cf0;
+    box-shadow: 0 14px 32px rgba(31, 102, 255, 0.34);
+}
+
+/* 🔥 BURAYA EKLENDİ */
+.btn.btn-secondary,
+.btn-secondary {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* hover */
+.btn.btn-secondary:hover,
+.btn.btn-secondary:focus,
+.btn.btn-secondary:active,
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* disabled */
+.btn.btn-secondary:disabled,
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.form-control.form-control-solid,
+.form-select.form-select-solid,
+.input-group.input-group-solid .input-group-text,
+.form-control-solid-bg {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.06) !important;
+
+    border-color: var(--form-border-focus);
+    box-shadow: var(--form-shadow-focus);
+}
+
+.form-control.form-control-solid:focus,
+.form-select.form-select-solid:focus,
+.input-group.input-group-solid .form-control:focus,
+.input-group.input-group-solid .input-group-text {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(44, 99, 255, 0.22) !important;
+    box-shadow: 0 0 0 0.2rem rgba(44, 99, 255, 0.15) !important;
+
+    border-color: var(--form-border-focus);
+    box-shadow: var(--form-shadow-focus);
+}
+
+.text-danger,
+.invalid-feedback,
+.form-control.is-invalid,
+.was-validated .form-control:invalid,
+.was-validated .form-select:invalid,
+.form-select.is-invalid {
+    border-radius: 10px;
+    color: #ff6b6b;
+
+    border-color: var(--form-border-focus);
+    box-shadow: var(--form-shadow-focus);
+}

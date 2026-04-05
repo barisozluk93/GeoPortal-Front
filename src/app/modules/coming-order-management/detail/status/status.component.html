@@ -1,29 +1,22 @@
-<app-modal #modal [modalConfig]="modalConfig">
-    <form class="form modern-form" [formGroup]="form" novalidate>
+<app-custom-modal [isOpen]="isModalOpen" [title]="modalTitle" [subtitle]="'STATUS' | translate" [width]="'600px'"
+  (closed)="closeModal()" (submitted)="submit()" variant="center" [showFooter]="true">
+  <form class="form w-100" [formGroup]="form" novalidate>
 
-        <div class="form-grid">
-            <div class="form-group">
-                <label>{{ 'STATUS' | translate }}</label>
+    <div class="fv-row mb-8">
+      <label class="form-label fs-6 fw-bolder text-gray-900">
+        {{ 'STATUS' | translate }}
+      </label>
 
-                <div class="select-wrapper">
-                    <select formControlName="orderStatus"
-                        [class.invalid]="f['orderStatus'].invalid && (f['orderStatus'].touched || f['orderStatus'].dirty)">
-                        <option value="">{{ 'SELECT_A_STATUS' | translate }}</option>
-                        <ng-container *ngFor="let item of status">
-                            <option [value]="item.id">{{ item.name }}</option>
-                        </ng-container>
-                    </select>
+      <app-custom-select formControlName="orderStatus" [items]="status" bindLabel="name" bindValue="id"
+        [placeholder]="'SELECT_A_STATUS' | translate"
+        [invalid]="f['orderStatus'].invalid && (f['orderStatus'].touched || f['orderStatus'].dirty)">
+      </app-custom-select>
 
-                    <!-- custom arrow -->
-                    <span class="select-arrow"></span>
-                </div>
+      <div class="invalid-feedback d-block"
+        *ngIf="f['orderStatus'].hasError('required') && (f['orderStatus'].touched || f['orderStatus'].dirty)">
+        {{ 'STATUS' | translate }} {{ 'IS_REQUIRED' | translate }}
+      </div>
+    </div>
 
-                <span class="error"
-                    *ngIf="f['orderStatus'].hasError('required') && (f['orderStatus'].touched || f['orderStatus'].dirty)">
-                    {{ 'STATUS' | translate }} {{ 'IS_REQUIRED' | translate }}
-                </span>
-            </div>
-        </div>
-
-    </form>
-</app-modal>
+  </form>
+</app-custom-modal>

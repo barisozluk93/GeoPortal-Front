@@ -71,6 +71,7 @@ export class AuthService implements OnDestroy {
 
   logout() {
     this.notificationSignalrService.stopConnection();
+    this.notificationSignalrService.clearState();
     localStorage.removeItem("basket");
     localStorage.removeItem(this.authLocalStorageToken);
     this.currentUserSubject.next(undefined);

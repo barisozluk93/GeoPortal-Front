@@ -1,311 +1,220 @@
-<app-modal #modal [modalConfig]="modalConfig">
-  <form class="modern-form" [formGroup]="form" novalidate="novalidate">
-    <div class="form-grid">
-      <div class="form-group">
-        <label>
+<app-custom-modal
+  [isOpen]="isModalOpen"
+  [title]="modalTitle"
+  [subtitle]="'ADDRESS_FORM.TITLE' | translate"
+  [width]="'900px'"
+  (closed)="closeModal()"
+  (submitted)="submit()"
+  variant="center"
+  [showFooter]="true"
+>
+  <form class="form w-100" [formGroup]="form" novalidate>
+    <div class="row">
+
+      <!-- NAME -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'NAME' | translate }}
         </label>
         <input
-          type="text"
-          name="name"
+          class="form-control form-control-lg form-control-solid"
           formControlName="name"
-          autocomplete="off"
-          [ngClass]="{
-            'invalid': form.controls['name'].invalid && (form.controls['name'].dirty || form.controls['name'].touched),
-            'is-valid': form.controls['name'].valid && (form.controls['name'].dirty || form.controls['name'].touched)
-          }"
+          [placeholder]="'NAME' | translate"
+          [ngClass]="{ 'is-invalid': isInvalid('name') }"
         />
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('NAME' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['name']
-          }"
-        ></ng-container>
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('name')">
+          {{ 'NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>
+      <!-- SURNAME -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'SURNAME' | translate }}
         </label>
         <input
-          type="text"
-          name="surname"
+          class="form-control form-control-lg form-control-solid"
           formControlName="surname"
-          autocomplete="off"
-          [ngClass]="{
-            'invalid': form.controls['surname'].invalid && (form.controls['surname'].dirty || form.controls['surname'].touched),
-            'is-valid': form.controls['surname'].valid && (form.controls['surname'].dirty || form.controls['surname'].touched)
-          }"
+          [placeholder]="'SURNAME' | translate"
+          [ngClass]="{ 'is-invalid': isInvalid('surname') }"
         />
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('SURNAME' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['surname']
-          }"
-        ></ng-container>
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('surname')">
+          {{ 'SURNAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>
+      <!-- PHONE -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'PHONE' | translate }}
         </label>
         <input
-          type="text"
-          name="phone"
+          type="tel"
+          class="form-control form-control-lg form-control-solid"
           formControlName="phone"
-          autocomplete="off"
-          [ngClass]="{
-            'invalid': form.controls['phone'].invalid && (form.controls['phone'].dirty || form.controls['phone'].touched),
-            'is-valid': form.controls['phone'].valid && (form.controls['phone'].dirty || form.controls['phone'].touched)
-          }"
+          mask="(000) 000 00 00"
+          [showMaskTyped]="true"
+          [dropSpecialCharacters]="false"
+          placeholder="05xx xxx xx xx"
+          [ngClass]="{ 'is-invalid': isInvalid('phone') }"
         />
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('PHONE' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['phone']
-          }"
-        ></ng-container>
+
+        <div
+          class="invalid-feedback d-block"
+          *ngIf="f['phone'].errors?.['required'] && (f['phone'].dirty || f['phone'].touched)"
+        >
+          {{ 'PHONE' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
+
+        <div
+          class="invalid-feedback d-block"
+          *ngIf="f['phone'].errors?.['pattern'] && (f['phone'].dirty || f['phone'].touched)"
+        >
+          {{ 'INVALID_PHONE' | translate }}
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>
+      <!-- COUNTRY -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'COUNTRY' | translate }}
         </label>
         <input
-          type="text"
-          name="country"
+          class="form-control form-control-lg form-control-solid"
           formControlName="country"
-          autocomplete="off"
-          [ngClass]="{
-            'invalid': form.controls['country'].invalid && (form.controls['country'].dirty || form.controls['country'].touched),
-            'is-valid': form.controls['country'].valid && (form.controls['country'].dirty || form.controls['country'].touched)
-          }"
+          [placeholder]="'COUNTRY' | translate"
+          [ngClass]="{ 'is-invalid': isInvalid('country') }"
         />
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('COUNTRY' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['country']
-          }"
-        ></ng-container>
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('country')">
+          {{ 'COUNTRY' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>
+      <!-- CITY -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'CITY' | translate }}
         </label>
         <input
-          type="text"
-          name="city"
+          class="form-control form-control-lg form-control-solid"
           formControlName="city"
-          autocomplete="off"
-          [ngClass]="{
-            'invalid': form.controls['city'].invalid && (form.controls['city'].dirty || form.controls['city'].touched),
-            'is-valid': form.controls['city'].valid && (form.controls['city'].dirty || form.controls['city'].touched)
-          }"
+          [placeholder]="'CITY' | translate"
+          [ngClass]="{ 'is-invalid': isInvalid('city') }"
         />
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('CITY' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['city']
-          }"
-        ></ng-container>
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('city')">
+          {{ 'CITY' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>
+      <!-- DISTRICT -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'DISTRICT' | translate }}
         </label>
         <input
-          type="text"
-          name="district"
+          class="form-control form-control-lg form-control-solid"
           formControlName="district"
-          autocomplete="off"
-          [ngClass]="{
-            'invalid': form.controls['district'].invalid && (form.controls['district'].dirty || form.controls['district'].touched),
-            'is-valid': form.controls['district'].valid && (form.controls['district'].dirty || form.controls['district'].touched)
-          }"
+          [placeholder]="'DISTRICT' | translate"
+          [ngClass]="{ 'is-invalid': isInvalid('district') }"
         />
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('DISTRICT' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['district']
-          }"
-        ></ng-container>
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('district')">
+          {{ 'DISTRICT' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
       </div>
 
-      <div class="form-group form-group-full">
-        <label>
+      <!-- ADDRESS -->
+      <div class="col-12 fv-row mb-8">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'ADDRESS' | translate }}
         </label>
         <textarea
-          name="address"
+          class="form-control form-control-lg form-control-solid"
           formControlName="address"
-          autocomplete="off"
-          [ngClass]="{
-            'invalid': form.controls['address'].invalid && (form.controls['address'].dirty || form.controls['address'].touched),
-            'is-valid': form.controls['address'].valid && (form.controls['address'].dirty || form.controls['address'].touched)
-          }"
+          [placeholder]="'ADDRESS' | translate"
+          [ngClass]="{ 'is-invalid': isInvalid('address') }"
         ></textarea>
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('ADDRESS' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['address']
-          }"
-        ></ng-container>
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('address')">
+          {{ 'ADDRESS' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
       </div>
 
-      <div class="form-group form-group-full">
-        <label>
+      <!-- ADDRESS HEADER -->
+      <div class="col-12 fv-row mb-8 select-field">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'ADDRESS_HEADER' | translate }}
         </label>
         <input
-          type="text"
-          name="addressHeader"
+          class="form-control form-control-lg form-control-solid"
           formControlName="addressHeader"
-          autocomplete="off"
-          [ngClass]="{
-            'invalid': form.controls['addressHeader'].invalid && (form.controls['addressHeader'].dirty || form.controls['addressHeader'].touched),
-            'is-valid': form.controls['addressHeader'].valid && (form.controls['addressHeader'].dirty || form.controls['addressHeader'].touched)
-          }"
+          [placeholder]="'ADDRESS_HEADER' | translate"
+          [ngClass]="{ 'is-invalid': isInvalid('addressHeader') }"
         />
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('ADDRESS_HEADER' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['addressHeader']
-          }"
-        ></ng-container>
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('addressHeader')">
+          {{ 'ADDRESS_HEADER' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
       </div>
 
-      <div class="form-group form-group-full">
-        <label>
+      <!-- INVOICE TYPE -->
+      <div class="col-12 fv-row mb-8">
+        <label class="form-label fw-bolder text-gray-900">
           {{ 'INVOICE_TYPE' | translate }}
         </label>
 
-        <div class="select-wrapper">
-          <select
-            name="invoiceType"
-            formControlName="invoiceType"
-            autocomplete="off"
-            [ngClass]="{
-              'invalid': form.controls['invoiceType'].invalid && (form.controls['invoiceType'].dirty || form.controls['invoiceType'].touched),
-              'is-valid': form.controls['invoiceType'].valid && (form.controls['invoiceType'].dirty || form.controls['invoiceType'].touched)
-            }"
-          >
-            <option value="">{{ 'SELECT_INVOICE_TYPE' | translate }}</option>
-            <ng-container *ngFor="let item of invoiceTypes">
-              <option [value]="item.id">{{ item.name }}</option>
-            </ng-container>
-          </select>
-          <span class="select-arrow"></span>
-        </div>
+        <app-custom-select
+          formControlName="invoiceType"
+          [items]="invoiceTypes"
+          bindLabel="name"
+          bindValue="id"
+          [placeholder]="'SELECT_INVOICE_TYPE' | translate"
+          [invalid]="isInvalid('invoiceType')"
+        ></app-custom-select>
 
-        <ng-container
-          [ngTemplateOutlet]="formError"
-          [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: ('INVOICE_TYPE' | translate) + ' ' + ('IS_REQUIRED' | translate),
-            control: form.controls['invoiceType']
-          }"
-        ></ng-container>
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('invoiceType')">
+          {{ 'INVOICE_TYPE' | translate }} {{ 'IS_REQUIRED' | translate }}
+        </div>
       </div>
 
+      <!-- CORPORATE -->
       <ng-container *ngIf="form.controls['invoiceType'].value == 2">
-        <div class="form-group">
-          <label>
-            {{ 'TAX_NO' | translate }}
-          </label>
+
+        <div class="col-md-6 fv-row mb-8">
+          <label class="form-label">{{ 'TAX_NO' | translate }}</label>
           <input
-            type="text"
-            name="vkn"
+            class="form-control form-control-solid"
             formControlName="vkn"
-            autocomplete="off"
-            [ngClass]="{
-              'invalid': form.controls['vkn'].invalid && (form.controls['vkn'].dirty || form.controls['vkn'].touched),
-              'is-valid': form.controls['vkn'].valid && (form.controls['vkn'].dirty || form.controls['vkn'].touched)
-            }"
+            [ngClass]="{ 'is-invalid': isInvalid('vkn') }"
           />
-          <ng-container
-            [ngTemplateOutlet]="formError"
-            [ngTemplateOutletContext]="{
-              validation: 'required',
-              message: ('TAX_NO' | translate) + ' ' + ('IS_REQUIRED' | translate),
-              control: form.controls['vkn']
-            }"
-          ></ng-container>
+          <div class="invalid-feedback d-block" *ngIf="isInvalid('vkn')">
+            {{ 'TAX_NO' | translate }} {{ 'IS_REQUIRED' | translate }}
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>
-            {{ 'TAX_OFFICE' | translate }}
-          </label>
+        <div class="col-md-6 fv-row mb-8">
+          <label class="form-label">{{ 'TAX_OFFICE' | translate }}</label>
           <input
-            type="text"
-            name="vergiDairesi"
+            class="form-control form-control-solid"
             formControlName="vergiDairesi"
-            autocomplete="off"
-            [ngClass]="{
-              'invalid': form.controls['vergiDairesi'].invalid && (form.controls['vergiDairesi'].dirty || form.controls['vergiDairesi'].touched),
-              'is-valid': form.controls['vergiDairesi'].valid && (form.controls['vergiDairesi'].dirty || form.controls['vergiDairesi'].touched)
-            }"
+            [ngClass]="{ 'is-invalid': isInvalid('vergiDairesi') }"
           />
-          <ng-container
-            [ngTemplateOutlet]="formError"
-            [ngTemplateOutletContext]="{
-              validation: 'required',
-              message: ('TAX_OFFICE' | translate) + ' ' + ('IS_REQUIRED' | translate),
-              control: form.controls['vergiDairesi']
-            }"
-          ></ng-container>
+          <div class="invalid-feedback d-block" *ngIf="isInvalid('vergiDairesi')">
+            {{ 'TAX_OFFICE' | translate }} {{ 'IS_REQUIRED' | translate }}
+          </div>
         </div>
 
-        <div class="form-group form-group-full">
-          <label>
-            {{ 'FIRM_NAME' | translate }}
-          </label>
+        <div class="col-md-6 fv-row mb-8">
+          <label class="form-label">{{ 'FIRM_NAME' | translate }}</label>
           <input
-            type="text"
-            name="firmaAdi"
+            class="form-control form-control-solid"
             formControlName="firmaAdi"
-            autocomplete="off"
-            [ngClass]="{
-              'invalid': form.controls['firmaAdi'].invalid && (form.controls['firmaAdi'].dirty || form.controls['firmaAdi'].touched),
-              'is-valid': form.controls['firmaAdi'].valid && (form.controls['firmaAdi'].dirty || form.controls['firmaAdi'].touched)
-            }"
+            [ngClass]="{ 'is-invalid': isInvalid('firmaAdi') }"
           />
-          <ng-container
-            [ngTemplateOutlet]="formError"
-            [ngTemplateOutletContext]="{
-              validation: 'required',
-              message: ('FIRM_NAME' | translate) + ' ' + ('IS_REQUIRED' | translate),
-              control: form.controls['firmaAdi']
-            }"
-          ></ng-container>
+          <div class="invalid-feedback d-block" *ngIf="isInvalid('firmaAdi')">
+            {{ 'FIRM_NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+          </div>
         </div>
+
       </ng-container>
+
     </div>
   </form>
-
-  <ng-template #formError let-control="control" let-message="message" let-validation="validation">
-    <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-      <div class="error">
-        <span role="alert">{{ message }}</span>
-      </div>
-    </ng-container>
-  </ng-template>
-</app-modal>
+</app-custom-modal>

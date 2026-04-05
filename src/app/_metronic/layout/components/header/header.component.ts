@@ -1,11 +1,10 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
@@ -17,17 +16,25 @@ import { AuthService } from 'src/app/modules/auth';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   headerContainerCssClasses: string = '';
-  @ViewChild('ktPageTitle', { static: true }) ktPageTitle: ElementRef;
-  isAdminPanel: boolean;
-  isUserLoggedIn: boolean;
-  @Input() isMobile: boolean;
+  isScrolled: boolean = false;
+
+  @ViewChild('ktPageTitle', { static: true }) ktPageTitle!: ElementRef;
+
+  @Input() isAdmin: boolean = false;
+  @Input() isUserLoggedIn: boolean = false;
+  @Input() isMobile: boolean = false;
 
   private unsubscribe: Subscription[] = [];
 
-  constructor(private layout: LayoutService, private router: Router, private auth: AuthService) {
+  constructor(
+    private layout: LayoutService,
+    private router: Router,
+    private auth: AuthService
+  ) {
     this.routingChanges();
   }
 
@@ -35,35 +42,38 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.headerContainerCssClasses =
       this.layout.getStringCSSClasses('headerContainer');
 
-      this.auth.currentUserSubject.subscribe( result => {
-        if(result) {
-          this.isUserLoggedIn = true;
-
-          if(result.roles.includes('1')) {
-            this.isAdminPanel = true;
-          }
-          else{
-            this.isAdminPanel = false;
-          }
-        }
-        else{
-          this.isUserLoggedIn = false;
-          this.isAdminPanel = false;
-        }
-      })
+    this.checkScrolled();
   }
 
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.checkScrolled();
+  }
 
+  private checkScrolled(): void {
+    this.isScrolled = window.scrollY > 8;
+  }
 
-  routingChanges() {
+  routingChanges(): void {
     const routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
         MenuComponent.reinitialization();
       }
     });
+
     this.unsubscribe.push(routerSubscription);
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy(): void {
+    this.unsubscribe.forEach((sb) => sb.unsubscribe());
+  }
 
+  onBrandClick() {
+    if(this.isAdmin) {
+      this.router.navigate(['/dashboard']);
+    }
+    else {
+      this.router.navigate(['/landing/marketplace'])
+    }
+  }
 }

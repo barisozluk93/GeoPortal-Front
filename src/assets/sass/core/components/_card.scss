@@ -140,7 +140,7 @@
 
     // Dashed style
     &.card-dashed {
-        box-shadow: none;
+        
         border: $card-border-width dashed $card-border-dashed-color;
 
         > .card-header {
@@ -154,7 +154,7 @@
 
     // Bordered style
     &.card-bordered {
-        box-shadow: none;
+        
         border: $card-border-width $card-border-style $card-border-color;
     }
 
@@ -178,7 +178,7 @@
     // Reset styles
     &.card-reset {
         border: 0 !important;
-        box-shadow: none !important;
+        
         background-color: transparent !important;
 
         > .card-header {

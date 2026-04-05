@@ -1,240 +1,50 @@
 :host {
   display: block;
-  width: 100%;
+  padding: 60px 60px;
+  min-height: calc(100vh - 65px);
 }
 
-.account-page {
-  min-height: 100vh;
-  background: #0f172a;
-  padding: 40px 0;
+.card-border {
+    border: 1px solid rgba(var(--bs-primary-rgb), 0.15);
 }
 
-.account-container {
-  width: min(1400px, calc(100% - 32px));
-  margin: 0 auto;
-}
-
-.account-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-.glass-card {
-  background: rgba(8, 19, 36, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-  color: #fff;
-}
-
-.account-profile-card {
-  margin-bottom: 24px;
-}
-
-.account-header {
-  padding: 24px 28px 0;
-
-  h3 {
-    margin: 0;
-    font-weight: 800;
-    color: #fff;
-  }
-}
-
-.account-body {
-  padding: 24px 28px 28px;
-}
-
-.account-content-card {
-  min-height: 300px;
-}
-
-.account-content-body {
-  padding: 24px 28px 28px;
-}
-
-.account-top {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-/* EN KRITIK FIX BURASI */
-.account-avatar {
-  position: relative;
-  width: 110px;
-  min-width: 110px;
-  height: 110px;
-  border-radius: 20px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  flex-shrink: 0;
-
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.account-avatar-status {
+.avatar-edit-btn {
   position: absolute;
-  right: 8px;
-  bottom: 8px;
-  width: 16px;
-  height: 16px;
+  top: -6px;
+  right: -6px;
+
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: #50cd89;
-  border: 2px solid #fff;
-}
 
-.account-user-info {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-}
-
-.account-user-name-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.account-user-name {
-  font-size: 1.7rem;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.2;
-}
-
-.account-user-email {
-  display: flex;
-  align-items: center;
-  color: rgba(255, 255, 255, 0.72);
-  word-break: break-word;
-}
-
-.account-nav-wrap {
-  margin-top: 24px;
-}
-
-.account-nav-list {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.account-nav-item {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
-  padding: 0 18px;
-  border-radius: 12px;
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.72);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid transparent;
-  font-weight: 700;
+
+  background: var(--bs-primary);
+  color: #fff;
+  border: none;
+
+  box-shadow: 0 0.5rem 1rem rgba(54, 153, 255, 0.25);
+
   transition: all 0.2s ease;
+  z-index: 5;
 }
 
-.account-nav-item:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+/* hover efekti */
+.avatar-edit-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0.75rem 1.5rem rgba(54, 153, 255, 0.35);
 }
 
-.account-nav-item.active {
-  color: #fff;
-  border-color: rgba(76, 140, 255, 0.45);
-  background: linear-gradient(135deg, rgba(31, 102, 255, 0.22) 0%, rgba(76, 140, 255, 0.12) 100%);
-}
-
-.summary-card {
-  height: fit-content;
-  position: sticky;
-  top: 24px;
-}
-
-.summary-row {
+/* ikon */
+.avatar-edit-btn app-keenicon {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
+  align-items: center;
+  justify-content: center;
 
-  span:first-child {
-    color: rgba(255, 255, 255, 0.62);
-  }
-
-  span:last-child {
-    color: #fff;
-    font-weight: 600;
-    text-align: right;
-  }
 }
 
-.summary-row.total {
-  font-weight: 800;
-}
-
-.summary-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 16px 0;
-}
-
-.summary-email {
-  word-break: break-word;
-}
-
-router-outlet + * {
-  display: block;
-  width: 100%;
-}
-
-@media (max-width: 992px) {
-  .account-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .summary-card {
-    position: static;
-  }
-}
-
-@media (max-width: 768px) {
-  .account-page {
-    padding: 24px 0;
-  }
-
-  .account-header {
-    padding: 20px 20px 0;
-  }
-
-  .account-body,
-  .account-content-body {
-    padding: 20px;
-  }
-
-  .account-top {
-    align-items: flex-start;
-  }
-
-  .account-avatar {
-    width: 90px;
-    min-width: 90px;
-    height: 90px;
-    border-radius: 16px;
-  }
-
-  .account-user-name {
-    font-size: 1.35rem;
-  }
+.avatar-edit-btn app-keenicon svg path {
+  fill: #fff !important;
 }

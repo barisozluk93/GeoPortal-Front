@@ -1,13 +1,13 @@
 <div class="d-flex flex-column flex-root">
   <div class="page d-flex flex-row flex-column-fluid">
-    <app-aside [asideDisplay]="asideDisplay" id="kt_aside" [ngClass]="asideCSSClasses"
+    <app-aside [isAdmin]="isAdmin" [asideDisplay]="asideDisplay" id="kt_aside" [ngClass]="asideCSSClasses"
       data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}"
       data-kt-drawer-overlay="true" data-kt-drawer-direction="start" data-kt-drawer-width="auto"
       data-kt-drawer-toggle="#kt_aside_toggle"></app-aside>
 
     <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
       <app-header id="kt_header" class="header" [ngClass]="headerCSSClasses"
-        [isMobile]="isMobile" 
+        [isMobile]="isMobile" [isAdmin]="isAdmin" 
         #ktHeader data-kt-sticky="true" data-kt-sticky-name="header">
       </app-header>
 

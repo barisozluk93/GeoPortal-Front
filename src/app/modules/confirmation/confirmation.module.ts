@@ -4,10 +4,12 @@ import { TranslationModule } from '../i18n/translation.module';
 import { InlineSVGModule } from 'ng-inline-svg-2';
 import { ModalsModule } from 'src/app/_metronic/partials';
 import { ConfirmationComponent } from './confirmation.component';
+import { CustomModalComponent } from '../common/custom-modal/custom-modal.component';
+import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
 
 @NgModule({
   declarations: [
-    ConfirmationComponent
+    ConfirmationComponent,
   ],
   exports: [
     ConfirmationComponent,
@@ -16,7 +18,8 @@ import { ConfirmationComponent } from './confirmation.component';
     CommonModule,
     TranslationModule,
     InlineSVGModule,
-    ModalsModule
+    ModalsModule,
+    CustomModalModule
   ],
 })
 export class ConfirmationModule {}

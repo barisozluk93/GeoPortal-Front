@@ -1,0 +1,68 @@
+<div
+  class="panel-backdrop"
+  *ngIf="isOpen"
+  (click)="onBackdropClick($event)"
+>
+  <section
+    class="panel"
+    [ngClass]="{
+      'panel--center': variant === 'center',
+      'panel--right': variant === 'right'
+    }"
+    [style.width]="variant === 'center' ? width : null"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="panel__header">
+      <div class="panel__header-left">
+        <div class="panel__badge">
+          <i class="ki-duotone ki-abstract-28 fs-3">
+            <span class="path1"></span>
+            <span class="path2"></span>
+          </i>
+        </div>
+
+        <div class="panel__titles">
+          <div class="panel__title">{{ title }}</div>
+          <div class="panel__subtitle" *ngIf="subtitle">
+            {{ subtitle }}
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="panel__close-btn"
+        (click)="close()"
+        aria-label="Close"
+      >
+        <i class="ki-duotone ki-cross fs-2">
+          <span class="path1"></span>
+          <span class="path2"></span>
+        </i>
+      </button>
+    </header>
+
+    <div class="panel__body">
+      <ng-content></ng-content>
+    </div>
+
+    <footer class="panel__footer" *ngIf="showFooter">
+      <button
+        type="button"
+        class="btn btn-light"
+        (click)="close()"
+      >
+        {{ cancelText | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="submitDisabled"
+        (click)="onSubmit()"
+      >
+        {{ submitText | translate }}
+      </button>
+    </footer>
+  </section>
+</div>

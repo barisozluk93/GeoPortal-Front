@@ -14,6 +14,8 @@ export class OrderModel {
     orderStatus?: number;
     orderStatusStr?: string;
     orderProducts?: OrderProductModel[];
+    deliveryAddressId?: number;
+    deliveryAddress?: UserAddressModel;
     invoiceAddressId?: number;
     invoiceAddress?: UserAddressModel;
   }

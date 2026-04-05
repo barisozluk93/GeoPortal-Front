@@ -5,7 +5,6 @@ import { OrderStatusEnum } from 'src/app/enums/permission.enum';
 import { OrderManagementService } from '../order-management.service';
 import { OrderModel } from '../models/order.model';
 import { InvoiceComponent } from './invoice/invoice.component';
-import { CommentComponent } from './comment/comment.component';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { BasketModel } from '../../basket-management/models/basket.model';
@@ -18,7 +17,6 @@ import { BasketModel } from '../../basket-management/models/basket.model';
 export class OrderDetailComponent implements OnInit, OnDestroy {
 
   @ViewChild('invoiceComponent') private invoiceComponent: InvoiceComponent;
-  @ViewChild('commentComponent') private commentComponent: CommentComponent;
 
   header: string = "Sipariş Detay";
   basket: BasketModel[] = [];
@@ -135,17 +133,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.invoiceComponent.openModal(orderProduct!);
   }
 
-  openCommentModal(orderProductId: number) {
-    var productId = this.order.orderProducts?.filter(f => f.id == orderProductId)[0].productId;
-    this.commentComponent.openModal(productId!);
-  }
-
   copyToClipboard(value: string | undefined | null): void {
     if (!value) return;
 
     navigator.clipboard.writeText(value).then(() => {
-      // istersen toast:
-      // this.toastr.success('Kopyalandı');
     }).catch(err => {
       console.error('Copy failed', err);
     });

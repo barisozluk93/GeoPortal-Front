@@ -1,26 +1,42 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+export interface AlertPayload {
+  type: string;
+  message: string;
+  messageIsTranslateKey?: boolean;
+  messageTranslateParams?: any;
+}
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class AlertService {
+  private _alert$ = new BehaviorSubject<AlertPayload | undefined>(undefined);
+  public alert$ = this._alert$.asObservable();
 
-    private _alert$? = new BehaviorSubject<any>(undefined);
-    public alert$ = this._alert$?.asObservable();
+  constructor() {}
 
-    constructor() { 
-    }
+  clearAlert() {
+    this._alert$.next(undefined);
+  }
 
-    clearAlert() {
-        this._alert$?.next(undefined);
-    }
+  createAlert(
+    type: string,
+    message: string,
+    messageIsTranslateKey: boolean = false,
+    messageTranslateParams: any = {}
+  ) {
+    console.log(message)
+    this._alert$.next({
+      type,
+      message,
+      messageIsTranslateKey,
+      messageTranslateParams,
+    });
+  }
 
-    createAlert(type: string, message: string) {
-        this._alert$?.next({type: type, message: message});    
-    }
-
-    getAlert() {
-        return this._alert$?.value;
-    }
+  getAlert() {
+    return this._alert$.value;
+  }
 }

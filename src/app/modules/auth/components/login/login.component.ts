@@ -7,6 +7,8 @@ import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BasketManagementService } from 'src/app/modules/basket-management/basket-management.service';
 import { BasketModel } from 'src/app/modules/basket-management/models/basket.model';
+import { NotificationSignalrService } from 'src/app/modules/common/signalR.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +30,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private basketManagementService: BasketManagementService
+    private basketManagementService: BasketManagementService,
+    private notificationService: NotificationSignalrService,
   ) {
     this.isLoading$ = this.authService.isLoading$;
     // redirect to home if already logged in
@@ -42,6 +45,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     // get return url from route parameters or default to '/'
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
+  }
+  
+  onBrandClick() {
+    this.router.navigate(['/landing/marketplace'])
   }
 
   // convenience getter for easy access to form fields
@@ -79,6 +86,14 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe((user: UserModelAuth | undefined) => {
         if (user) {
           
+          const authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
+          const lsValue = localStorage.getItem(authLocalStorageToken);
+          const authData = JSON.parse(lsValue!);
+
+          if(authData?.accessToken){
+            this.notificationService.startConnection(authData?.accessToken);
+          }
+
           if(user.roles.includes("1")) {
             this.returnUrl = "/dashboard";
           }

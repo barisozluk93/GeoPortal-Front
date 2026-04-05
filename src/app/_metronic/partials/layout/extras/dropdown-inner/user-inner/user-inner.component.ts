@@ -1,55 +1,63 @@
 import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TranslationService } from '../../../../../../modules/i18n';
-import { AuthService, UserType } from '../../../../../../modules/auth';
+import { AuthService } from '../../../../../../modules/auth';
 import { UserModel } from 'src/app/modules/user-management/models/user.model';
 import { UserManagementService } from 'src/app/modules/user-management/user-management.service';
 
 @Component({
   selector: 'app-user-inner',
   templateUrl: './user-inner.component.html',
-  styleUrls: ['./user-inner.component.scss']
 })
 export class UserInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class')
-  class = `menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px`;
-  @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
-  @Input() isAdminPanel: boolean;
+  class =
+    'menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-3 fs-6 w-300px border border-gray-200 bg-body shadow-sm';
 
-  language: LanguageFlag;
-  user: UserModel;
+  @HostBinding('attr.data-kt-menu')
+  dataKtMenu = 'true';
+
+  @Input() isAdmin: boolean = false;
+
+  language!: LanguageFlag;
+  user!: UserModel;
   langs = languages;
   private unsubscribe: Subscription[] = [];
 
-  constructor( 
+  constructor(
     private auth: AuthService,
     private userManagementService: UserManagementService,
     private translationService: TranslationService
   ) {}
 
   ngOnInit(): void {
-    this.auth.currentUserSubject.subscribe(auth => {
-      this.userManagementService.updateUser(auth?.id!);
+    const authSub = this.auth.currentUserSubject.subscribe((auth) => {
+      if (auth?.id) {
+        this.userManagementService.updateUser(auth.id);
+      }
     });
 
-    this.userManagementService.user$.subscribe(result => {
-      this.user = result!;
+    const userSub = this.userManagementService.user$.subscribe((result) => {
+      if (result) {
+        this.user = result;
+      }
     });
-    
+
+    this.unsubscribe.push(authSub, userSub);
+
     this.setLanguage(this.translationService.getSelectedLanguage());
   }
 
-  logout() {
+  logout(): void {
     this.auth.logout();
   }
 
-  selectLanguage(lang: string) {
+  selectLanguage(lang: string): void {
     this.translationService.setLanguage(lang);
     this.setLanguage(lang);
-    // document.location.reload();
   }
 
-  setLanguage(lang: string) {
+  setLanguage(lang: string): void {
     this.langs.forEach((language: LanguageFlag) => {
       if (language.lang === lang) {
         language.active = true;
@@ -60,7 +68,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
 }
@@ -73,7 +81,7 @@ interface LanguageFlag {
   active?: boolean;
 }
 
-const languages = [
+const languages: LanguageFlag[] = [
   {
     lang: 'en',
     nameTr: 'İngilizce',

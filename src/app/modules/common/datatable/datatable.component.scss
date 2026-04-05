@@ -1,44 +1,478 @@
-.card-header {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
+:host {
+  display: block;
+  width: 100%;
 }
 
-/* MODERN PRIMARY BUTTON */
-.btn.btn-gp.btn-gp-primary {
-  min-height: 36px;
-  padding: 0 14px;
-  border-radius: 10px;
-  border: none;
+/* Card */
+.card {
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px 0 rgba(var(--bs-dark-rgb), 0.03);
+}
 
-  background: linear-gradient(135deg, #1f66ff 0%, #4c8cff 100%);
-  color: #ffffff;
+/* Header */
+.card-header {
+  min-height: auto;
+}
 
-  font-weight: 600;
-  font-size: 0.85rem;
+.card-title {
+  margin: 0;
+}
 
+/* Sol üst meta alanı */
+.datatable-meta {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
 
-  box-shadow: 0 6px 18px rgba(31, 102, 255, 0.25);
+  color: var(--bs-gray-600);
+  font-size: 0.825rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.datatable-meta i {
+  font-size: 0.8rem;
+  color: var(--bs-primary);
+  opacity: 0.9;
+}
+
+/* Toolbar butonları */
+.card-toolbar .btn.btn-sm {
+  height: 38px;
+  border-radius: 0.8rem;
+  font-weight: 600;
+}
+
+.card-toolbar .btn.btn-light-primary {
+  border: 0;
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary);
+}
+
+.card-toolbar .btn.btn-light-primary:hover,
+.card-toolbar .btn.btn-light-primary:focus,
+.card-toolbar .btn.btn-light-primary:active {
+  background-color: rgba(var(--bs-primary-rgb), 0.16);
+  color: var(--bs-primary);
+}
+
+.card-toolbar .btn.btn-primary {
+  box-shadow: none;
+}
+
+/* Table genel */
+.table-responsive {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+/* Başlık */
+.table thead tr {
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.table thead th {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  border-bottom: 1px solid var(--bs-border-color) !important;
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+
+  color: var(--bs-gray-600) !important;
+  font-size: 0.78rem;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* Body hücreleri */
+.table tbody td {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  border: 0 !important;
+  vertical-align: middle;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+/* Metronic dashed row çizgilerini tamamen kapat */
+.table-row-dashed > tbody > tr > td,
+.table-row-dashed > tbody > tr > th,
+.table > :not(caption) > * > * {
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Satır */
+.datatable-row {
+  transition: none;
+}
+
+/* Hover: sadece hafif light-primary tint, border/shadow yok */
+.datatable-row:hover td {
+  background-color: rgba(var(--bs-primary-rgb), 0.045) !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* Hover'da kolon çizgisi gibi görünmesin */
+.datatable-row:hover td + td {
+  border-left: 0 !important;
+}
+
+/* Yazılar */
+.datatable-row .text-gray-800,
+.datatable-row .text-gray-900 {
+  transition: color 0.2s ease;
+}
+
+.datatable-row:hover .text-gray-800,
+.datatable-row:hover .text-gray-900 {
+  color: var(--bs-gray-900) !important;
+}
+
+/* Badge */
+.badge {
+  border-radius: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em;
+}
+
+/* Symbol image */
+.symbol.symbol-45px {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+}
+
+.symbol.symbol-45px img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+
+/* Action buttons */
+.btn.btn-icon.btn-sm {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 0.65rem;
   transition: all 0.2s ease;
 }
 
-/* HOVER */
-.btn.btn-gp.btn-gp-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(31, 102, 255, 0.35);
+.btn.btn-icon.btn-bg-light {
+  background-color: var(--bs-gray-100);
+  border: 0;
 }
 
-/* ACTIVE */
-.btn.btn-gp.btn-gp-primary:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(31, 102, 255, 0.25);
+.btn.btn-icon.btn-bg-light:hover {
+  background-color: var(--bs-gray-200);
 }
 
-/* ICON ALIGN */
-.btn.btn-gp.btn-gp-primary .svg-icon {
-  width: 16px;
-  height: 16px;
+/* Hover'da butonlar çok zıplamasın */
+.datatable-row:hover .btn.btn-icon {
+  transform: none;
+}
+
+/* Empty state */
+.table tbody tr td.text-center.py-10 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+
+.table tbody tr td.text-center.py-10 i {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+/* Pagination üst alan */
+.card-body > .d-flex.flex-column.flex-md-row.justify-content-between.align-items-center.pt-5.gap-3 {
+  border-top: 1px solid var(--bs-border-color);
+  margin-top: 1rem;
+  padding-top: 1rem !important;
+}
+
+/* ngb-pagination */
+::ng-deep ngb-pagination .pagination {
+  margin-bottom: 0;
+  gap: 0.35rem;
+}
+
+::ng-deep ngb-pagination .page-item .page-link {
+  min-width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 0.65rem !important;
+  border: 1px solid var(--bs-border-color);
+  background-color: var(--bs-body-bg);
+  color: var(--bs-gray-700);
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+  transition: all 0.2s ease;
+}
+
+::ng-deep ngb-pagination .page-item .page-link:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.08);
+  border-color: rgba(var(--bs-primary-rgb), 0.18);
+  color: var(--bs-primary);
+}
+
+::ng-deep ngb-pagination .page-item.active .page-link {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: var(--bs-white);
+}
+
+::ng-deep ngb-pagination .page-item.disabled .page-link {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .card-header {
+    padding-top: 1.25rem !important;
+  }
+
+  .table thead th,
+  .table tbody td {
+    white-space: nowrap;
+  }
+
+  .card-toolbar .btn.btn-sm {
+    height: 36px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .datatable-meta {
+    font-size: 0.77rem;
+  }
+
+  .table thead th {
+    font-size: 0.72rem;
+  }
+
+  .table tbody td {
+    padding-top: 0.85rem !important;
+    padding-bottom: 0.85rem !important;
+  }
+
+  .btn.btn-icon.btn-sm {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+  }
+}
+
+.datatable-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+}
+
+/* LEFT */
+.datatable-header__left {
+  display: flex;
+  flex-direction: column;
+}
+
+/* CENTER */
+.datatable-header__center {
+  display: flex;
+  justify-content: center;
+}
+
+/* RIGHT */
+.datatable-header__right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.datatable-filter-row th {
+  padding-top: 0.5rem !important;
+  padding-bottom: 1rem !important;
+  background: transparent !important;
+}
+
+.datatable-column-filter {
+  position: relative;
+  min-width: 160px;
+}
+
+.datatable-column-filter .form-control {
+  height: 36px;
+  padding-left: 2rem;
+  border-radius: 0.65rem;
+  font-size: 0.8rem;
+}
+
+.datatable-column-filter__icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  color: var(--bs-gray-500);
+  z-index: 2;
+}
+
+.datatable-filter-row .form-select,
+.datatable-filter-row .form-control {
+  min-height: 36px;
+  font-size: 0.8rem;
+  border-radius: 0.65rem;
+}
+
+.datatable-filter-empty {
+  height: 36px;
+}
+
+@media (max-width: 991.98px) {
+  .datatable-column-filter {
+    min-width: 140px;
+  }
+}
+
+.datatable-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.datatable-header__left {
+  display: flex;
+  flex-direction: column;
+}
+
+.datatable-header__right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.datatable-filter-row th {
+  padding-top: 0.5rem !important;
+  padding-bottom: 1rem !important;
+  background: transparent !important;
+}
+
+.datatable-column-filter {
+  position: relative;
+  min-width: 160px;
+}
+
+.datatable-column-filter .form-control {
+  height: 36px;
+  padding-left: 2rem;
+  border-radius: 0.65rem;
+  font-size: 0.8rem;
+}
+
+.datatable-column-filter__icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  color: var(--bs-gray-500);
+  z-index: 2;
+}
+
+.datatable-filter-row .form-select,
+.datatable-filter-row .form-control {
+  min-height: 36px;
+  font-size: 0.8rem;
+  border-radius: 0.65rem;
+}
+
+.datatable-filter-empty {
+  height: 36px;
+}
+
+@media (max-width: 991.98px) {
+  .datatable-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .datatable-header__right {
+    justify-content: flex-start;
+  }
+
+  .datatable-column-filter {
+    min-width: 140px;
+  }
+}
+
+.datatable-filter-select {
+  display: block;
+  width: 100%;
+}
+
+/* ANA CONTAINER */
+.datatable-filter-select ::ng-deep .custom-select-container {
+  height: 36px !important;
+  min-height: 36px !important;
+
+  padding: 0 10px !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  border-radius: 0.65rem !important;
+  font-size: 0.8rem !important;
+}
+
+/* TEXT ALANI */
+.datatable-filter-select ::ng-deep .selected-text {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-size: 0.8rem !important;
+  text-transform: none !important;
+  color: var(--bs-gray-700);
+}
+
+/* PLACEHOLDER */
+.datatable-filter-select ::ng-deep .placeholder-text {
+  font-size: 0.8rem !important;
+  color: var(--bs-gray-500)
+}
+
+/* VALUE */
+.datatable-filter-select ::ng-deep .selected-value {
+  font-size: 0.8rem !important;
+  line-height: 1 !important;
+}
+
+/* ARROW */
+.datatable-filter-select ::ng-deep .arrow {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem !important;
 }

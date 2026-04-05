@@ -1,6 +1,37 @@
-<div class="row">
-  <div class="col-lg-8 col-md-8"></div>
-  <div class="col-lg-4 col-md-4 col-sm-12">
-    <ngb-alert *ngIf="show" [type]="type" (closed)="close()">{{ message }}</ngb-alert>
+<div class="custom-alert-container" *ngIf="show">
+  <div class="custom-alert" [ngClass]="type">
+    <div class="alert-left">
+      <div class="alert-icon">
+        <span *ngIf="type === 'success'">✓</span>
+        <span *ngIf="type === 'danger' || type === 'error'">✕</span>
+        <span *ngIf="type === 'warning'">!</span>
+        <span *ngIf="type === 'info'">i</span>
+      </div>
+
+      <div class="alert-text">
+        <div class="alert-title">{{ alertTitleKey | translate }}</div>
+
+        <div class="alert-message">
+          <ng-container *ngIf="messageIsTranslateKey; else plainMessage">
+            {{ message | translate : messageTranslateParams }}
+          </ng-container>
+
+          <ng-template #plainMessage>
+            {{ message }}
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="close-btn"
+      (click)="close()"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+    >
+      ×
+    </button>
+
+    <div class="progress-bar"></div>
   </div>
 </div>

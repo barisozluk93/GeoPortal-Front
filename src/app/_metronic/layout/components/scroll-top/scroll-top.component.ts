@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, OnInit, Inject, HostListener } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 
 @Component({
   selector: 'scroll-top',
@@ -7,29 +7,33 @@ import { Component, OnInit, Inject, HostListener } from '@angular/core';
   styleUrls: ['./scroll-top.component.scss']
 })
 export class AppScrollTopComponent implements OnInit {
+  windowScrolled = false;
 
-  windowScrolled: boolean;
   constructor(@Inject(DOCUMENT) private document: Document) {}
-  @HostListener("window:scroll", [])
-  onWindowScroll() {
-      if (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop > 100) {
-          this.windowScrolled = true;
-      } 
-     else if (this.windowScrolled && window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop < 10) {
-          this.windowScrolled = false;
-      }
-  }
-  scrollToTop() {
-      (function smoothscroll() {
-          var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
-          if (currentScroll > 0) {
-              window.requestAnimationFrame(smoothscroll);
-              window.scrollTo(0, currentScroll - (currentScroll / 8));
-          }
-      })();
+
+  ngOnInit(): void {
+    this.checkScrollPosition();
   }
 
-  ngOnInit() {
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.checkScrollPosition();
   }
 
+  private checkScrollPosition(): void {
+    const scrollTop =
+      window.pageYOffset ||
+      this.document.documentElement.scrollTop ||
+      this.document.body.scrollTop ||
+      0;
+
+    this.windowScrolled = scrollTop > 160;
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
 }

@@ -27,6 +27,9 @@
         .form-control {
             @include border-top-start-radius($border-radius !important);
             @include border-bottom-start-radius($border-radius !important);
-        }
+        
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
     }
 }

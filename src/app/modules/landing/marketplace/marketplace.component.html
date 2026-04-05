@@ -1,0 +1,472 @@
+<div class="marketplace-page">
+  <div class="marketplace-grid">
+    <!-- SOL FİLTRE PANELİ -->
+    <aside class="filter-sidebar">
+      <div class="card marketplace-filter-card shadow-sm">
+        <div class="card-body p-8">
+          <div class="filter-label">
+            {{ 'MARKETPLACE.FILTERS.LABEL' | translate }}
+          </div>
+
+          <h2 class="filter-title">
+            {{ 'MARKETPLACE.FILTERS.TITLE' | translate }}
+          </h2>
+
+          <p class="filter-desc">
+            {{ 'MARKETPLACE.FILTERS.DESCRIPTION' | translate }}
+          </p>
+
+          <div class="mb-8">
+            <label class="form-label fw-bold mb-3">
+              {{ 'MARKETPLACE.FILTERS.SEARCH_LABEL' | translate }}
+            </label>
+
+            <input
+              type="text"
+              class="form-control form-control-lg form-control-solid"
+              [value]="searchText()"
+              (input)="setSearchText($any($event.target).value)"
+              [placeholder]="'MARKETPLACE.FILTERS.SEARCH_PLACEHOLDER' | translate"
+            />
+          </div>
+
+          <div class="mb-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <label class="form-label fw-bold mb-0">
+                {{ 'MARKETPLACE.FILTERS.MAX_CLOUD' | translate }}
+              </label>
+
+              <span class="filter-value">%{{ maxCloudRate() }}</span>
+            </div>
+
+            <input
+              type="range"
+              class="form-range marketplace-range"
+              min="0"
+              max="100"
+              step="1"
+              [value]="maxCloudRate()"
+              (input)="setMaxCloudRate(+$any($event.target).value)"
+            />
+          </div>
+
+          <div class="mb-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <label class="form-label fw-bold mb-0">
+                {{ 'MARKETPLACE.FILTERS.MAX_PRICE' | translate }}
+              </label>
+
+              <span class="filter-value">
+                ₺{{ maxPrice() | number:'1.0-0' }}
+              </span>
+            </div>
+
+            <input
+              type="range"
+              class="form-range marketplace-range"
+              min="0"
+              max="100000"
+              step="500"
+              [value]="maxPrice()"
+              (input)="setMaxPrice(+$any($event.target).value)"
+            />
+          </div>
+
+          <div class="d-grid gap-4">
+            <button type="button" class="btn btn-secondary" (click)="resetFilters()">
+              {{ 'MARKETPLACE.FILTERS.RESET' | translate }}
+            </button>
+
+            <button type="button" class="btn btn-primary" (click)="applyFilters()">
+              {{ 'MARKETPLACE.FILTERS.APPLY' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- SAĞ İÇERİK -->
+    <section class="market-content">
+      <div class="card content-topbar shadow-sm mb-8">
+        <div class="card-body py-7 px-8 d-flex flex-wrap justify-content-between align-items-center gap-4">
+          <div>
+            <h2 class="content-title mb-1">
+              {{ 'MARKETPLACE.LIST.TITLE' | translate }}
+            </h2>
+
+            <div class="content-subtitle">
+              {{ 'MARKETPLACE.LIST.TOTAL_FOUND' | translate:{ count: totalCount } }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="loading()" class="market-state">
+        {{ 'MARKETPLACE.LIST.LOADING' | translate }}
+      </div>
+
+      <div *ngIf="!loading() && errorMessage()" class="market-state market-state--error">
+        {{ 'MARKETPLACE.LIST.LOAD_ERROR' | translate }}
+      </div>
+
+      <div *ngIf="!loading() && !errorMessage() && items().length === 0" class="market-state">
+        {{ 'MARKETPLACE.LIST.EMPTY' | translate }}
+      </div>
+
+      <div class="product-grid" *ngIf="!loading() && !errorMessage() && items().length > 0">
+        <div class="card marketplace-product-card shadow-sm" *ngFor="let item of items(); trackBy: trackByItem">
+          <div class="marketplace-card-image">
+            <img [src]="item.previewUrl || item.thumbnailUrl" [alt]="item.name" />
+
+            <div class="marketplace-card-badges">
+              <span class="badge badge-dark badge-pill-custom">
+                {{ getResolutionBadgeText(item) }}
+              </span>
+
+              <span class="badge badge-dark badge-pill-custom">
+                {{ getCloudBadgeText(item) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body marketplace-product-card-body">
+            <div class="product-content">
+              <h4 class="product-title">
+                {{ item.name }}
+              </h4>
+
+              <div class="product-meta">
+                <span>
+                  {{ item.provider || ('MARKETPLACE.CARD.PROVIDER_FALLBACK' | translate) }}
+                </span>
+
+                <span>
+                  {{ item.acquisitionDate | date:'dd.MM.yyyy' }}
+                </span>
+              </div>
+
+              <div class="product-stats">
+                <div class="stat-box">
+                  <div class="stat-label">
+                    {{ 'MARKETPLACE.CARD.AREA' | translate }}
+                  </div>
+                  <div class="stat-value">
+                    {{ item.areaKm2 || 0 }} km²
+                  </div>
+                </div>
+
+                <div class="stat-box">
+                  <div class="stat-label">
+                    {{ 'MARKETPLACE.CARD.CLOUD' | translate }}
+                  </div>
+                  <div class="stat-value">
+                    %{{ item.cloudRate || 0 }}
+                  </div>
+                </div>
+
+                <div class="stat-box">
+                  <div class="stat-label">
+                    {{ 'MARKETPLACE.CARD.RESOLUTION' | translate }}
+                  </div>
+                  <div class="stat-value">
+                    {{ item.resolution || 0 }} m
+                  </div>
+                </div>
+              </div>
+
+              <div class="class-box" *ngIf="item.classes?.length">
+                <div class="class-box-title">
+                  {{ 'MARKETPLACE.CARD.CLASSES' | translate }}
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                  <span
+                    class="class-tag"
+                    [ngClass]="getClassTagClass(classItem.className)"
+                    *ngFor="let classItem of item.classes"
+                  >
+                    {{ classItem.className }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-footer">
+              <div class="product-secondary-actions d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary" (click)="openDetail(item)">
+                  {{ 'MARKETPLACE.CARD.DETAIL' | translate }}
+                </button>
+
+                <button type="button" class="btn btn-light-primary" (click)="openMapPreview(item)">
+                  {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
+                </button>
+              </div>
+
+              <div class="product-main-actions">
+                <div class="price-block">
+                  <div class="price-label">
+                    {{ 'MARKETPLACE.CARD.PRICE' | translate }}
+                  </div>
+
+                  <div class="price-value">
+                    ₺{{ item.price | number:'1.0-0' }}
+                  </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" (click)="addToCart(item)">
+                  <i class="bi bi-cart me-2"></i>
+                  {{ 'MARKETPLACE.CARD.ADD_TO_CART' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination-wrap mt-10" *ngIf="totalCount > paginationModel.pageSize">
+        <ngb-pagination
+          [collectionSize]="totalCount"
+          [(page)]="paginationModel.pageNumber"
+          [pageSize]="paginationModel.pageSize"
+          [rotate]="true"
+          [ellipses]="false"
+          [boundaryLinks]="true"
+          (pageChange)="onPageChanges()"
+        >
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div
+  class="drawer-overlay"
+  *ngIf="selectedItem() || mapPanelOpen()"
+  (click)="selectedItem() ? closeDetail() : closeMapPreview()"
+></div>
+
+<!-- DETAIL DRAWER -->
+<aside class="marketplace-drawer" [class.open]="!!selectedItem()">
+  <ng-container *ngIf="selectedItem() as item">
+    <div class="marketplace-drawer__card card border-0 rounded-0">
+      <div class="marketplace-drawer__header card-header">
+        <div class="card-title m-0 flex-column align-items-start">
+          <div class="marketplace-drawer__kicker">
+            {{ 'MARKETPLACE.DETAIL.KICKER' | translate }}
+          </div>
+          <h3 class="marketplace-drawer__title">
+            {{ item.name }}
+          </h3>
+        </div>
+
+        <div class="card-toolbar">
+          <button class="btn btn-sm btn-icon btn-secondary" type="button" (click)="closeDetail()">
+            <span
+              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+              class="svg-icon svg-icon-2"
+            ></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="marketplace-drawer__body card-body">
+        <div class="state-box" *ngIf="detailLoading()">
+          {{ 'MARKETPLACE.STATES.DETAIL_LOADING' | translate }}
+        </div>
+
+        <div class="state-box error" *ngIf="detailErrorMessage()">
+          {{ detailErrorMessage() | translate }}
+        </div>
+
+        <ng-container *ngIf="!detailLoading() && !detailErrorMessage()">
+          <div class="detail-preview">
+            <img [src]="item.previewUrl || item.thumbnailUrl" [alt]="item.name" />
+          </div>
+
+          <div class="detail-section">
+            <h4 class="detail-section__title">
+              {{ 'MARKETPLACE.DETAIL.DESCRIPTION' | translate }}
+            </h4>
+            <p class="detail-text">{{ item.description }}</p>
+          </div>
+
+          <div class="detail-section">
+            <h4 class="detail-section__title">
+              {{ 'MARKETPLACE.DETAIL.TECHNICAL_INFO' | translate }}
+            </h4>
+
+            <div class="detail-grid">
+              <div class="detail-grid__item">
+                <span>{{ 'MARKETPLACE.DETAIL.CITY' | translate }}</span>
+                <strong>{{ item.city || '-' }}</strong>
+              </div>
+
+              <div class="detail-grid__item">
+                <span>{{ 'MARKETPLACE.DETAIL.DISTRICT' | translate }}</span>
+                <strong>{{ item.district || '-' }}</strong>
+              </div>
+
+              <div class="detail-grid__item">
+                <span>{{ 'MARKETPLACE.DETAIL.DATE' | translate }}</span>
+                <strong>{{ item.acquisitionDate | date:'dd.MM.yyyy' }}</strong>
+              </div>
+
+              <div class="detail-grid__item">
+                <span>{{ 'MARKETPLACE.DETAIL.PROVIDER' | translate }}</span>
+                <strong>{{ item.provider || '-' }}</strong>
+              </div>
+
+              <div class="detail-grid__item">
+                <span>{{ 'MARKETPLACE.DETAIL.RESOLUTION' | translate }}</span>
+                <strong>{{ item.resolution }} m</strong>
+              </div>
+
+              <div class="detail-grid__item">
+                <span>{{ 'MARKETPLACE.DETAIL.CLOUD_RATE' | translate }}</span>
+                <strong>%{{ item.cloudRate }}</strong>
+              </div>
+
+              <div class="detail-grid__item">
+                <span>{{ 'MARKETPLACE.DETAIL.AREA' | translate }}</span>
+                <strong>{{ item.areaKm2 }} km²</strong>
+              </div>
+
+              <div class="detail-grid__item">
+                <span>{{ 'MARKETPLACE.DETAIL.DATA_TYPE' | translate }}</span>
+                <strong>{{ 'MARKETPLACE.DETAIL.DATA_TYPE_VALUE' | translate }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4 class="detail-section__title">
+              {{ 'MARKETPLACE.DETAIL.PACKAGE_CONTENT' | translate }}
+            </h4>
+
+            <div class="package-list">
+              <span class="badge badge-light-primary">
+                {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
+              </span>
+              <span class="badge badge-light-primary">
+                {{ 'MARKETPLACE.BUNDLE.SHORT_2' | translate }}
+              </span>
+              <span class="badge badge-light-primary">
+                {{ 'MARKETPLACE.BUNDLE.SHORT_3' | translate }}
+              </span>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4 class="detail-section__title">
+              {{ 'MARKETPLACE.DETAIL.CLASS_OUTPUTS' | translate }}
+            </h4>
+
+            <div class="package-list">
+              <span class="badge badge-light-info" *ngFor="let classItem of item.classes">
+                {{ classItem.className || classItem }}
+              </span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="marketplace-drawer__footer card-footer" *ngIf="!detailLoading() && !detailErrorMessage()">
+        <div class="detail-footer-bar">
+          <div class="detail-price-box">
+            <span class="price-box__label">
+              {{ 'MARKETPLACE.CARD.PRICE' | translate }}
+            </span>
+
+            <div class="detail-price">
+              {{ item.price | currency:(item.currency || 'TRY'):'symbol':'1.0-0' }}
+            </div>
+          </div>
+
+          <button class="btn btn-primary" type="button" (click)="addToCart(item)">
+            <i class="bi bi-cart me-2"></i>
+            {{ 'MARKETPLACE.ACTIONS.ADD_TO_CART' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</aside>
+
+<!-- MAP DRAWER -->
+<aside class="marketplace-drawer marketplace-drawer--map" [class.open]="mapPanelOpen()">
+  <ng-container *ngIf="selectedMapItem() as item">
+    <div class="marketplace-drawer__card card border-0 rounded-0">
+      <div class="marketplace-drawer__header card-header">
+        <div class="card-title m-0 flex-column align-items-start">
+          <div class="marketplace-drawer__kicker">
+            {{ 'MARKETPLACE.ACTIONS.MAP_PREVIEW' | translate }}
+          </div>
+          <h3 class="marketplace-drawer__title">
+            {{ item.name }}
+          </h3>
+        </div>
+
+        <div class="card-toolbar">
+          <button class="btn btn-sm btn-icon btn-secondary" type="button" (click)="closeMapPreview()">
+            <span
+              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+              class="svg-icon svg-icon-2"
+            ></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="marketplace-drawer__body card-body">
+        <div id="marketplace-map" class="marketplace-map"></div>
+
+        <div class="detail-section">
+          <h4 class="detail-section__title">
+            {{ 'MARKETPLACE.MAP.INFO_TITLE' | translate }}
+          </h4>
+
+          <div class="detail-grid">
+            <div class="detail-grid__item">
+              <span>{{ 'MARKETPLACE.DETAIL.CITY' | translate }}</span>
+              <strong>{{ item.city || '-' }}</strong>
+            </div>
+
+            <div class="detail-grid__item">
+              <span>{{ 'MARKETPLACE.DETAIL.DISTRICT' | translate }}</span>
+              <strong>{{ item.district || '-' }}</strong>
+            </div>
+
+            <div class="detail-grid__item">
+              <span>{{ 'MARKETPLACE.DETAIL.DATE' | translate }}</span>
+              <strong>{{ item.acquisitionDate | date:'dd.MM.yyyy' }}</strong>
+            </div>
+
+            <div class="detail-grid__item">
+              <span>{{ 'MARKETPLACE.DETAIL.PROVIDER' | translate }}</span>
+              <strong>{{ item.provider || '-' }}</strong>
+            </div>
+
+            <div class="detail-grid__item">
+              <span>{{ 'MARKETPLACE.DETAIL.RESOLUTION' | translate }}</span>
+              <strong>{{ item.resolution }} m</strong>
+            </div>
+
+            <div class="detail-grid__item">
+              <span>{{ 'MARKETPLACE.DETAIL.CLOUD_RATE' | translate }}</span>
+              <strong>%{{ item.cloudRate }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h4 class="detail-section__title">
+            {{ 'MARKETPLACE.MAP.NOTE_TITLE' | translate }}
+          </h4>
+
+          <p class="detail-text">
+            {{ 'MARKETPLACE.MAP.NOTE_TEXT' | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</aside>

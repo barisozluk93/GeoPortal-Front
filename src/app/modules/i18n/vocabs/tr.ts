@@ -15,53 +15,57 @@ export const locale = {
             APPS: 'Uygulamalar',
             DASHBOARD: 'Panel',
         },
-        AUTH: {
-            GENERAL: {
-                OR: 'Ya da',
-                SUBMIT_BUTTON: 'Gönder',
-                NO_ACCOUNT: 'Hesabınız yok mu?',
-                SIGNUP_BUTTON: 'Üye Ol',
-                SIGNOUT_BUTTON: 'Çıkış Yap',
-                FORGOT_BUTTON: 'Şifrenizi mi Unuttunuz',
-                BACK_BUTTON: 'Geri',
-                PRIVACY: 'Gizlilik',
-                LEGAL: 'Yasal',
-                CONTACT: 'İletişim',
+        "AUTH": {
+            "RESET": {
+                "TITLE": "Şifre Sıfırla",
+                "DESCRIPTION_RESET": "Yeni şifrenizi girerek hesabınızı güncelleyin",
+                "ERROR": "Bir hata oluştu, lütfen tekrar deneyin",
+                "SUCCESS": "Şifreniz başarıyla güncellendi",
+                "SUBMIT": "Şifreyi Güncelle",
+                "BACK": "Giriş ekranına dön"
             },
-            LOGIN: {
-                TITLE: 'Hesaba Giriş',
-                BUTTON: 'Giriş Yap',
+            "CONFIRM_PASSWORD": "Şifre Tekrarı",
+            "LOGIN": {
+                "TITLE": "Giriş Yap",
+                "OR": "VEYA"
             },
-            FORGOT: {
-                TITLE: 'Şifrenizi mi Unuttunuz?',
-                DESC: 'Şifrenizi sıfırlamak için e-postanızı girin',
-                SUCCESS: 'Hesabınız başarıyla sıfırlandı.'
+            "ASIDE": {
+                "EYEBROW": "Hoş geldiniz",
+                "TITLE_1": "İhtiyacınız olan her şey,",
+                "TITLE_2": "tek bir yerde",
+                "DESCRIPTION": "Devam etmek ve çalışma alanınızı sade, düzenli ve odaklı bir deneyimle yönetmek için giriş yapın."
             },
-            REGISTER: {
-                TITLE: 'Üye Ol',
-                DESC: 'Hesabınızı oluşturmak için bilgilerinizi girin',
-                SUCCESS: 'Hesabınız başarıyla kaydedildi.'
+            "REGISTER": {
+                "TITLE": "Kayıt Ol"
             },
-            INPUT: {
-                EMAIL: 'E-posta',
-                FULLNAME: 'Adınız Soyadınız',
-                PASSWORD: 'Şifre',
-                CONFIRM_PASSWORD: 'Şifreyi Onayla',
-                USERNAME: 'Kullanıcı Adı'
+            "VALIDATION": {
+                "EMAIL_REQUIRED": "E-posta zorunludur",
+                "EMAIL_INVALID": "Geçerli bir e-posta adresi giriniz",
+                "EMAIL_MIN": "E-posta en az 3 karakter olmalıdır",
+                "EMAIL_MAX": "E-posta en fazla 360 karakter olabilir",
+                "PASSWORD_REQUIRED": "Şifre zorunludur",
+                "PASSWORD_MIN": "Şifre en az 3 karakter olmalıdır",
+                "PASSWORD_MAX": "Şifre en fazla 100 karakter olabilir",
+                "CONFIRM_PASSWORD_REQUIRED": "Şifre tekrarı zorunludur",
+                "PASSWORD_NOT_MATCH": "Şifreler eşleşmiyor",
+                "NAME_REQUIRED": "Ad zorunludur",
+                "SURNAME_REQUIRED": "Soyad zorunludur",
+                "USERNAME_REQUIRED": "Kullanıcı adı zorunludur",
+                "PHONE_REQUIRED": "Telefon zorunludur",
+                "INVALID_PHONE": "Telefon geçersizdir",
             },
-            VALIDATION: {
-                INVALID: '{{isim}} geçerli değil',
-                REQUIRED: '{{isim}} zorunludur',
-                MIN_LENGTH: '{{isim}} minimum uzunluk {{min}}',
-                AGREEMENT_REQUIRED: 'Şartlar ve koşulları kabul etmek zorunludur',
-                NOT_FOUND: 'İstenen {{isim}} bulunamadı',
-                INVALID_LOGIN: 'Giriş bilgisi yanlış',
-                REQUIRED_FIELD: 'Zorunlu alan',
-                MIN_LENGTH_FIELD: 'Minimum alan uzunluğu:',
-                MAX_LENGTH_FIELD: 'Maksimum alan uzunluğu:',
-                INVALID_FIELD: 'Geçersiz alan',
+            "GENERAL": {
+                "SIGNOUT_BUTTON": "Çıkış Yap"
             }
         },
+        "EMAIL": "E-posta",
+        "PASSWORD": "Şifre",
+        "FORGOT_PASSWORD": "Şifremi unuttum",
+        "PLEASEWAIT": "Lütfen bekleyin...",
+        "LOGIN_CONTINUE": "Devam Et",
+        "NOTMEMBERYET": "Henüz üye değil misiniz?",
+        "SIGNUP": "Kayıt Ol",
+        "ERR_LOGIN": "E-posta veya şifre hatalı.",
         ECOMMERCE: {
             COMMON: {
                 SELECTED_RECORDS_COUNT: 'Seçilen kayıt sayısı: ',
@@ -119,6 +123,7 @@ export const locale = {
         REQUIRED_EMAIL: "E-posta zorunludur!",
         REQUIRED_USERNAME: "Kullanıcı adı zorunludur!",
         REQUIRED_PHONE: "Telefon zorunludur!",
+        INVALID_PHONE: "Telefon geçersizdir",
         REQUIRED_ROLE: "Rol zorunludur!",
         REQUIRED_ENGLISH_NAME: "İngilizce İsim zorunludur!",
         REQUIRED_CODE: "Kod zorunludur!",
@@ -137,14 +142,6 @@ export const locale = {
         ADDRESS: 'Adres',
         ICON: 'Simge',
         PARENT_MENU: 'Üst Menü',
-
-        ERR_LOGIN: 'Giriş bilgileri hatalı.',
-        FORGOT_PASSWORD: 'Şifremi Unuttum ?',
-
-        LOGIN_CONTINUE: 'Giriş Yap',
-        PLEASEWAIT: 'Lütfen Bekleyiniz...',
-        NOTMEMBERYET: '',
-        SIGNUP: 'Hesap Aç',
 
         RESETPASSWORDMAIL: 'Şifrenizi yenilemek için mail adresinizi giriniz.',
 
@@ -232,10 +229,6 @@ export const locale = {
         PENDING_APPROVAL: 'Onay Bekliyor',
         APPROVED: 'Onaylandı',
         PREPARING: 'Hazırlanıyor',
-        REJECTED: 'Reddedildi',
-        COMPLETED: 'Tamamlandı',
-        SHIPPED: 'Kargolandı',
-        DELIVERED: 'Teslim Edildi',
         TYPE_A_COMMENT: 'Bir yorum yazın...',
         INVOICE: 'Fatura',
 
@@ -279,7 +272,6 @@ export const locale = {
         FULL_ADDRESS: "Tam Adres",
 
         SIGN_IN_METHOD: "Giriş Yöntemi",
-        EMAIL: "E-posta",
         EMAIL_ADDRESS: "E-posta Adresi",
         UPDATE_EMAIL: "E-posta Adresini Güncelle",
         CHANGE_EMAIL: "E-posta Adresini Değiştir",
@@ -289,7 +281,6 @@ export const locale = {
         EMAIL_SHOULD_HAVE_MAXIMUM_360_SYMBOLS: "E-posta en fazla 360 karakter içermelidir!",
 
         // Password
-        PASSWORD: "Şifre",
         PASSWORD_SHOULD_HAVE_AT_LEAST_3_SYMBOLS: "Şifre en az 3 karakter içermelidir!",
         PASSWORD_SHOULD_HAVE_MAXIMUM_100_SYMBOLS: "Şifre en fazla 100 karakter içermelidir!",
         UPDATE_PASSWORD: "Şifreyi Güncelle",
@@ -333,199 +324,42 @@ export const locale = {
         INVOICE_ADDRESS: 'Fatura Adresi',
         SAME_ADDRESS: 'Faturamı Aynı Adrese Gönder',
         ORDER: 'Siparişi Tamamla',
-        brandTitle: 'GeoPortal',
-        brandSubtitle: 'Satellite Data Platform',
+        IN_BASKET: "Sepette",
 
-        "KICKER": "Uydu Verisi Platformu",
-        "TITLE": "Haritada Alan Seç, Uydu Görüntünü Anında Bul",
-        "COPY": "İhtiyacın olan bölgeyi harita üzerinde seç, o alana ait mevcut uydu görüntülerini saniyeler içinde keşfet ve satın al. Filtrele, karşılaştır ve projene en uygun veriyi kolayca indir.",
-
-        "SEARCH_TITLE": "Konum seç ve görüntüleri keşfet",
-        "SEARCH_PLACEHOLDER": "Şehir, adres veya bölge ara",
-        "SEARCH_BUTTON": "Ara",
-
-        "BENEFIT_1_TITLE": "Alan Bazlı Veri Seçimi",
-        "BENEFIT_1_DESC": "Harita üzerinde istediğin alanı çizerek sadece ihtiyacın olan veriyi hedefle.",
-
-        "BENEFIT_2_TITLE": "Gelişmiş Filtreleme",
-        "BENEFIT_2_DESC": "Tarih, çözünürlük ve bulut oranına göre görüntüleri filtrele.",
-
-        "BENEFIT_3_TITLE": "Hızlı Önizleme",
-        "BENEFIT_3_DESC": "Satın almadan önce görüntüleri harita üzerinde incele ve karşılaştır.",
-
-        "BENEFIT_4_TITLE": "Anında Satın Alma",
-        "BENEFIT_4_DESC": "Seçtiğin veriyi hızlıca sepete ekle ve anında erişim sağla.",
-
-        "USE_CASES": "Kullanım Alanları",
-        "SECTION2_TITLE": "Uydu Verisini Projelerine Entegre Et",
-        "SECTION2_COPY": "Şehir planlamadan tarıma, enerji projelerinden savunma uygulamalarına kadar geniş bir kullanım alanında, doğru zamanda doğru veriye ulaşarak daha hızlı ve doğru kararlar alın.",
-
-        "USECASE_1_TITLE": "Şehir Planlama",
-        "USECASE_1_DESC": "Gelişim analizi ve arazi kullanımı takibi",
-
-        "USECASE_2_TITLE": "Tarım & Çevre",
-        "USECASE_2_DESC": "Ürün sağlığı ve arazi değişim analizi",
-
-        "USECASE_3_TITLE": "Enerji & Altyapı",
-        "USECASE_3_DESC": "Proje sahası analizi ve izleme",
-
-        "API_KICKER": "Uydu Veri API Platformu",
-        "API_TITLE": "API Key ile Uydu Görüntülerini Uygulamalarına Entegre Et",
-        "API_COPY": "1 aylık API key satın al, istek gönder ve seçtiğin alan içindeki uydu görüntülerine programatik olarak eriş. Sonuçları uygulamalarında, servislerinde ve iş akışlarında kolayca kullan.",
-        "START_CODING": "Hemen Satın Al",
-        "DOCUMENTATION": "Dokümantasyon",
-        "ENDPOINTS": "Uç Noktalar",
-
-        "FEATURE_1_TITLE": "Alan Bazlı Sorgulama",
-        "FEATURE_1_DESC": "Seçtiğin alanı POST isteği ile gönder, o alan içinde kalan uydu görüntülerini listele.",
-
-        "FEATURE_2_TITLE": "Bearer Token Erişimi",
-        "FEATURE_2_DESC": "Satın aldığın 1 aylık API key ile güvenli erişim sağla ve servislerini kolayca kimlik doğrulamalı kullan.",
-
-        "FEATURE_3_TITLE": "Durum Sorgulama",
-        "FEATURE_3_DESC": "İşlemin tamamlanma durumunu ayrı uç noktadan takip et ve süreçlerini otomatikleştir.",
-
-        "DEVELOPER_FIRST": "Developer-first",
-        "API_SECTION2_TITLE": "Geliştiriciler İçin Tasarlanmış Uydu Veri Erişimi",
-        "API_SECTION2_COPY": "Harita tabanlı seçimleri backend süreçlerine taşıyan sade ve güçlü bir API yapısı sunar. Uydu görüntüsü arama, sonuç alma ve işlem durumu takibini uygulamalarına kolayca entegre edebilirsin.",
-
-        "API_USECASE_1_TITLE": "REST API Access",
-        "API_USECASE_1_DESC": "Alan gönderme, sonuç alma ve durum sorgulama için sade uç noktalar.",
-
-        "API_USECASE_2_TITLE": "Application Ready",
-        "API_USECASE_2_DESC": "Web, mobil, backend ve kurumsal sistemlerle kolay entegrasyon.",
-
-        "API_USECASE_3_TITLE": "Automation Friendly",
-        "API_USECASE_3_DESC": "Job status takibi ve otomatik veri akışları için uygun yapı.",
-
-        "CONTACT_KICKER": "İletişim",
-        "CONTACT_TITLE": "Uydu Veri İhtiyaçların İçin Bizimle İletişime Geç",
-        "CONTACT_COPY": "Uydu görüntüsü satın alma, API erişimi, kurumsal kullanım ve özel proje ihtiyaçların için ekibimizle iletişime geç. Sana en uygun çözümü birlikte planlayalım.",
-
-        "BUSINESS_EMAIL": "Kurumsal E-posta",
-        "SUBJECT": "Konu",
-        "MESSAGE": "Mesaj",
-        "SEND_MESSAGE": "Mesaj Gönder",
-
-        "VALIDATION_FULL_NAME": "Lütfen geçerli bir ad soyad girin.",
-        "VALIDATION_EMAIL": "Lütfen geçerli bir e-posta adresi girin.",
-        "VALIDATION_SUBJECT": "Lütfen bir konu girin.",
-        "VALIDATION_MESSAGE": "Lütfen en az 10 karakterlik bir mesaj girin.",
-
-        "FOOTER_DESCRIPTION": "Analiz, görselleştirme ve API tabanlı iş akışları için geospatial veri platformu.",
-
-        "PLATFORM": "Platform",
-        "DATA": "Veri",
-        "API": "API",
-        "CONTACT": "İletişim",
-
-        "LEGAL": "Yasal",
-        "TERMS_OF_SERVICE": "Kullanım Şartları",
-        "PRIVACY_POLICY": "Gizlilik Politikası",
-        "COOKIES": "Çerezler",
-
-        "COPYRIGHT": "© 2026 GeoPortal. Tüm hakları saklıdır.",
-
-        "TERMS_SHORT": "Şartlar",
-        "PRIVACY_SHORT": "Gizlilik",
-
-        "MAP_KICKER": "Harita Üzerinden Veri Keşfi",
-        "MAP_COPY": "Konum ara, katmanları yönet ve ilgi alanını yükleyerek uydu verilerini harita üzerinde incele.",
-        "MAP_SEARCH_PLACEHOLDER": "Şehir, bölge veya koordinat gir...",
-        "MAP_SEARCH_BUTTON": "Ara",
-        "SEARCH_RESULTS": "Arama Sonuçları",
-
-        "PANEL_KICKER": "Harita Kontrolleri",
-        "LAYER_MANAGER": "Katman Yöneticisi",
-        "BASEMAPS": "Altlık Haritalar",
-        "OVERLAYS": "Katmanlar",
-        "COLLAPSE": "Daralt",
-        "EXPAND": "Genişlet",
-
-        "OSM_STANDARD": "OSM Standard",
-        "OSM_HOT": "OSM HOT",
-        "AOI_UPLOADS": "AOI / Yüklemeler",
-        "UPLOAD_FILE": "Dosya Yükle",
-        "UPLOAD_HINT": "GeoJSON, JSON, KML veya ZIP Shape dosyaları yükleyerek haritaya ekleyebilirsin.",
-        "FILE_LOADED": "Yüklenen dosya",
-
-        "ZOOM_IN": "Yakınlaştır",
-        "ZOOM_OUT": "Uzaklaştır",
-        "RESET": "Sıfırla",
-        "POLYGON": "Poligon Çiz",
-
-        "MAP_STATUS": "Harita Durumu",
-        "ZOOM": "Yakınlık",
-        "COORDINATE": "Koordinat",
-        "BUY_DATA": "Veri Satın Al",
-        "LOADING": "Yükleniyor...",
-        "BUY": "Sepete Ekle",
-        "LAYER": "Katman",
-
+        "BRANDTITLE": 'GeoPortal',
+        "BRANDSUBTITLE": 'Uydu Veri Platformu',
         "MARKETPLACE": {
             "FILTERS": {
-                "KICKER": "Filtreler",
-                "TITLE": "Ürün Arama",
-                "SUBTITLE": "Şehir, bulut oranı ve fiyat filtreleri ile hazır veri paketlerini daraltın.",
-                "SEARCH_LABEL": "Ara",
-                "SEARCH_PLACEHOLDER": "Şehir, ilçe veya sağlayıcı",
-                "CITY_LABEL": "Şehir",
-                "ALL_CITIES": "Tümü",
-                "MAX_CLOUD_LABEL": "Maksimum Bulut Oranı",
-                "MAX_PRICE_LABEL": "Maksimum Fiyat",
-                "SORT_LABEL": "Sıralama"
+                "LABEL": "Filtreler",
+                "TITLE": "Uydu Görüntü Marketi",
+                "DESCRIPTION": "İhtiyacınıza uygun uydu görüntülerini filtreleyin, detaylarını inceleyin ve satın alma sepetinize ekleyin.",
+                "SEARCH_LABEL": "Arama",
+                "SEARCH_PLACEHOLDER": "Şehir, ilçe, sağlayıcı veya ürün adı ara",
+                "MAX_CLOUD": "Maksimum Bulut Oranı",
+                "MAX_PRICE": "Maksimum Fiyat",
+                "RESET": "Filtreleri Temizle",
+                "APPLY": "Filtreleri Uygula"
             },
-            "SORT": {
-                "NEWEST": "En Yeni",
-                "PRICE_ASC": "Fiyat Artan",
-                "PRICE_DESC": "Fiyat Azalan",
-                "CLOUD_ASC": "Bulut Oranı En Düşük"
-            },
-            "BUNDLE": {
-                "TITLE": "Satılan Veri Paketi",
-                "ITEM_1": "Ortorektifiye edilmiş görüntü",
-                "ITEM_2": "Pansharpen uygulanmış çıktı",
-                "ITEM_3": "Sınıflandırılmış veri katmanı",
-                "ITEM_4": "Hazır satın alma paketi",
-                "SHORT_1": "Ortorektifiye",
-                "SHORT_2": "Pansharpen",
-                "SHORT_3": "Sınıflandırılmış"
-            },
-            "ACTIONS": {
-                "CLEAR_FILTERS": "Filtreleri Temizle",
-                "REFRESH": "Yenile",
-                "DETAIL": "Detay",
-                "ADD_TO_CART": "Sepete Ekle",
-                "MAP_PREVIEW": "Harita Önizlemesi"
-            },
-            "RESULTS": {
-                "TITLE": "Hazır Uydu Görüntüleri",
-                "FOUND": "adet sonuç bulundu"
-            },
-            "STATES": {
+            "LIST": {
+                "TITLE": "Uydu Görüntüleri",
+                "TOTAL_FOUND": "{{count}} adet sonuç bulundu",
                 "LOADING": "Veriler yükleniyor...",
-                "DETAIL_LOADING": "Ürün detayı yükleniyor...",
-                "EMPTY_TITLE": "Sonuç bulunamadı",
-                "EMPTY_TEXT": "Arama kriterlerinizi genişleterek tekrar deneyin."
-            },
-            "ERRORS": {
-                "LOAD_LIST": "Marketplace verileri alınırken bir hata oluştu.",
-                "LOAD_DETAIL": "Ürün detayı alınırken bir hata oluştu."
-            },
-            "STATUS": {
-                "AVAILABLE": "Hazır",
-                "LIMITED": "Sınırlı"
+                "LOAD_ERROR": "Veriler yüklenirken bir hata oluştu.",
+                "EMPTY": "Filtrelerinize uygun kayıt bulunamadı."
             },
             "CARD": {
-                "CLOUD": "bulut",
+                "PROVIDER_FALLBACK": "Bilinmeyen Sağlayıcı",
                 "AREA": "Alan",
-                "CLOUD_RATE": "Bulut",
+                "CLOUD": "Bulut",
                 "RESOLUTION": "Çözünürlük",
-                "CLASSES": "Sınıflar",
-                "PRICE": "Fiyat"
+                "CLASSES": "Sınıflandırma Katmanları",
+                "DETAIL": "Detay",
+                "MAP_PREVIEW": "Harita Önizleme",
+                "PRICE": "Fiyat",
+                "ADD_TO_CART": "Sepete Ekle"
             },
             "DETAIL": {
-                "KICKER": "Ürün Detayı",
+                "KICKER": "Görüntü Detayı",
                 "DESCRIPTION": "Açıklama",
                 "TECHNICAL_INFO": "Teknik Bilgiler",
                 "CITY": "Şehir",
@@ -536,88 +370,94 @@ export const locale = {
                 "CLOUD_RATE": "Bulut Oranı",
                 "AREA": "Alan",
                 "DATA_TYPE": "Veri Tipi",
-                "DATA_TYPE_VALUE": "İşlenmiş Paket",
+                "DATA_TYPE_VALUE": "Ortorektifiye + Sınıflandırılmış Görüntü",
                 "PACKAGE_CONTENT": "Paket İçeriği",
-                "CLASS_OUTPUTS": "Sınıflandırma Çıktıları",
+                "CLASS_OUTPUTS": "Sınıf Çıktıları"
             },
-            "NAME": "Market"
+            "BUNDLE": {
+                "TITLE": "Paket İçeriği",
+                "SHORT_1": "Ortorektifiye",
+                "SHORT_2": "PanSharpen",
+                "SHORT_3": "Sınıflandırma"
+            },
+            "MAP": {
+                "INFO_TITLE": "Görüntü Bilgileri",
+                "NOTE_TITLE": "Bilgilendirme",
+                "NOTE_TEXT": "Bu alanda seçilen görüntünün harita önizlemesi gösterilir. Gerçek footprint veya GeoJSON verisi eklendiğinde kapsam bilgisi burada detaylı şekilde sunulacaktır."
+            },
+            "STATES": {
+                "DETAIL_LOADING": "Detay bilgileri yükleniyor..."
+            },
+            "ACTIONS": {
+                "ADD_TO_CART": "Sepete Ekle",
+                "MAP_PREVIEW": "Harita Önizleme"
+            }
         },
-
-        "CLICK_TO_SELECT": "Seçmek için tıklayın",
-        "NO_ADDRESS_FOUND": "Kayıtlı adres bulunamadı.",
-
-        "ENTER_CARD_INFORMATION": "Kart bilgilerinizi giriniz",
-        "CARD_PREVIEW": "Kart Önizleme",
-        "SECURE_PAYMENT": "Güvenli Ödeme",
-
-        "CARD_HOLDER": "Kart Sahibi",
-        "CARD_HOLDER_PLACEHOLDER": "Ad Soyad",
-        "CARD_HOLDER_REQUIRED": "Kart sahibi adı zorunludur.",
-        "CARD_HOLDER_MIN_LENGTH": "Kart sahibi adı en az 3 karakter olmalıdır.",
-
-        "CARD_NUMBER": "Kart Numarası",
-        "CARD_NUMBER_REQUIRED": "Kart numarası zorunludur.",
-        "CARD_NUMBER_INVALID": "Kart numarası 16 haneli olmalıdır.",
-
-        "EXPIRE_DATE": "Son Kullanma",
-        "EXPIRE_MONTH": "Ay",
-        "EXPIRE_YEAR": "Yıl",
-        "EXPIRE_MONTH_REQUIRED": "Son kullanma ayı zorunludur.",
-        "EXPIRE_MONTH_INVALID": "Ay bilgisi 01 ile 12 arasında olmalıdır.",
-        "EXPIRE_YEAR_REQUIRED": "Son kullanma yılı zorunludur.",
-        "EXPIRE_YEAR_INVALID": "Yıl bilgisi 2 haneli olmalıdır.",
-
-        "CVV": "CVV",
-        "CVV_REQUIRED": "CVV zorunludur.",
-        "CVV_INVALID": "CVV 3 veya 4 haneli olmalıdır.",
-
-        "INSTALLMENT": "Taksit",
-        "INSTALLMENT_LOWER": "taksit",
-        "SINGLE_PAYMENT": "Tek Çekim",
-
-        "PAYMENT_AGREEMENT_CONFIRM": "Ödeme bilgilerimi onaylıyorum ve siparişi tamamlamayı kabul ediyorum.",
-        "PAYMENT_AGREEMENT_REQUIRED": "Devam etmek için ödeme onayını vermelisiniz.",
-        "PAYMENT_FORM_INFO": "Kart bilgileriniz güvenli ödeme adımında kullanılacaktır.",
-
-        "PLEASE_SELECT_INVOICE_ADDRESS": "Lütfen fatura adresi seçiniz.",
-        "PLEASE_FILL_PAYMENT_FORM": "Lütfen ödeme formunu eksiksiz doldurunuz.",
-        "BASKET_IS_EMPTY": "Sepetiniz boş.",
-        "PAYMENT_KICKER": "Ödeme",
-        "PAYMENT_COPY": "Kart bilgilerinizi girerek siparişinizi güvenle tamamlayabilirsiniz.",
-        "PAYMENT_CONFIRMATION_TEXT": "Ödeme bilgilerimin doğru olduğunu onaylıyorum.",
-        "VALIDATION_CARD_HOLDER_REQUIRED": "Kart sahibi adı zorunludur.",
-        "VALIDATION_CARD_HOLDER_MIN": "Kart sahibi adı en az 3 karakter olmalıdır.",
-        "VALIDATION_CARD_NUMBER_REQUIRED": "Kart numarası zorunludur.",
-        "VALIDATION_CARD_NUMBER_PATTERN": "Kart numarası 16 haneli olmalıdır.",
-        "VALIDATION_EXPIRE_MONTH_REQUIRED": "Ay bilgisi zorunludur.",
-        "VALIDATION_EXPIRE_MONTH_PATTERN": "Ay değeri 01 ile 12 arasında olmalıdır.",
-        "VALIDATION_EXPIRE_YEAR_REQUIRED": "Yıl bilgisi zorunludur.",
-        "VALIDATION_EXPIRE_YEAR_PATTERN": "Yıl bilgisi 2 haneli olmalıdır.",
-        "VALIDATION_CVV_REQUIRED": "CVV zorunludur.",
-        "VALIDATION_CVV_PATTERN": "CVV 3 veya 4 haneli olmalıdır.",
-        "VALIDATION_PAYMENT_AGREEMENT": "Devam etmek için onay vermelisiniz.",
-        "NAME_REQUIRED": "Ad alanı zorunludur",
-        "SURNAME_REQUIRED": "Soyad alanı zorunludur",
-        "USERNAME_REQUIRED": "Kullanıcı adı zorunludur",
-        "PHONE_REQUIRED": "Telefon alanı zorunludur",
-        "INVALID_EMAIL": "Geçerli bir email giriniz",
-        "MIN_LENGTH": "Minimum karakter sayısı sağlanmadı",
-        "MAX_LENGTH": "Maksimum karakter sayısı aşıldı",
-        "ACCOUNT_SUMMARY": "Hesap Özeti",
-        "EMAIL_REQUIRED": "Email zorunludur",
-        "CURRENT_PASSWORD_REQUIRED": "Mevcut şifre zorunludur",
-        "NEW_PASSWORD_REQUIRED": "Yeni şifre zorunludur",
-        "CONFIRM_PASSWORD_REQUIRED": "Şifre tekrarı zorunludur",
-        "NEW_ORDER": "Yeni Sipariş",
-        "NEW_ORDER_MESSAGE": "Yeni bir siparişiniz bulunmaktadır.",
-        "ORDER_COMPLETED_MESSAGE": "Siparişiniz tamamlandı.",
-        "ORDER_REJECTED": "Sipariş Reddi",
-        "ORDER_REJECTED_MESSAGE": "Siparişiniz reddedildi.",
-        "ORDER_APPROVED": "Sipariş Onayı",
-        "ORDER_APPROVED_MESSAGE": "Siparişiniz onaylandı.",
-        "ORDER_PREPARING": "Sipariş Hazırlanıyor",
-        "ORDER_PREPARING_MESSAGE": "siparişiniz hazırlanıyor.",
-
+        "DATA_PAGE": {
+            "KICKER": "Veri Keşfi",
+            "TITLE": "İhtiyacınıza uygun veriyi tek ekranda keşfedin",
+            "COPY": "Uydu görüntüleri, işlenmiş veri katmanları ve analiz çıktıları arasından projenize uygun olanı hızlıca bulun, karşılaştırın ve değerlendirin.",
+            "SEARCH_TITLE": "Veri arama",
+            "SEARCH_PLACEHOLDER": "Bölge, veri tipi veya kullanım senaryosu yazın",
+            "SEARCH_BUTTON": "Ara",
+            "LOADING": "Yükleniyor...",
+            "USE_CASES": "Kullanım Alanları",
+            "SECTION2_TITLE": "Farklı sektörler için hazır veri akışı",
+            "SECTION2_COPY": "Tarım, şehir planlama, afet yönetimi ve çevresel analiz gibi birçok kullanım alanında ihtiyaç duyulan verileri tek bir yapı içinde keşfedebilir ve proje süreçlerinize entegre edebilirsiniz.",
+            "BENEFIT_1_TITLE": "Geniş veri kapsama alanı",
+            "BENEFIT_1_DESC": "Farklı bölgeler, çözünürlükler ve işlenmiş veri türleri arasından ihtiyacınıza en uygun seçenekleri bulun.",
+            "BENEFIT_2_TITLE": "Katmanlı veri yapısı",
+            "BENEFIT_2_DESC": "Ham görüntü, ortorektifiye ürün, PanSharpen ve sınıflandırılmış çıktı gibi farklı veri seviyelerine erişin.",
+            "BENEFIT_3_TITLE": "Hızlı karşılaştırma",
+            "BENEFIT_3_DESC": "Veri setlerini kapsam, kalite ve kullanım senaryolarına göre kolayca karşılaştırın ve seçim yapın.",
+            "BENEFIT_4_TITLE": "Projeye hazır çıktı",
+            "BENEFIT_4_DESC": "Analiz, haritalama ve operasyonel kullanım için uygun veri formatlarını tek akışta yönetin.",
+            "USECASE_1_TITLE": "Tarım ve arazi takibi",
+            "USECASE_1_DESC": "Ürün gelişimi, arazi kullanımı ve dönemsel değişimlerin izlenmesi için uygun veri akışı sağlar.",
+            "USECASE_2_TITLE": "Şehircilik ve planlama",
+            "USECASE_2_DESC": "Yerleşim alanları, yapılaşma ve kentsel büyüme analizlerinde kullanılabilecek veri setleri sunar.",
+            "USECASE_3_TITLE": "Afet ve çevre analizi",
+            "USECASE_3_DESC": "Risk alanlarının belirlenmesi, değişim tespiti ve çevresel etkilerin değerlendirilmesi için kullanılabilir."
+        },
+        "API_PAGE": {
+            "KICKER": "API Entegrasyonu",
+            "TITLE": "Uydu görüntülerine API key ile erişin ve işleyin",
+            "COPY": "API key ile polygon bazlı uydu verisi sorgulayabilir, görüntü işleme sürecini başlatabilir, işlem durumunu takip edebilir ve tamamlanan sonucu doğrudan sisteminize alabilirsiniz.",
+            "BUY_API_KEY": "API Key Satın Al",
+            "DOCUMENTATION": "Dokümantasyonu İncele",
+            "ENDPOINTS": "Yetkili Uçlar",
+            "FEATURE_1_TITLE": "Polygon ile veri sorgulama",
+            "FEATURE_1_DESC": "Belirlediğiniz alan için uydu görüntülerini otomatik olarak sorgulayın ve uygun ürünleri listeleyin.",
+            "FEATURE_2_TITLE": "İşleme başlatma ve takip",
+            "FEATURE_2_DESC": "Seçilen görüntü için image processing sürecini başlatın ve processId ile işlem durumunu takip edin.",
+            "FEATURE_3_TITLE": "Sonucu sisteminize alın",
+            "FEATURE_3_DESC": "İşlem tamamlandığında işlenmiş uydu görüntüsünü, önizlemeyi ve ek çıktı bağlantılarını doğrudan alın.",
+            "DEVELOPER_FIRST": "Geliştirici Odaklı",
+            "SECTION2_TITLE": "4 adımda tam API akışı",
+            "SECTION2_COPY": "Önce polygon ile uydu verilerini listeleyin. Ardından seçilen ürün için işleme sürecini başlatın. ProcessId ile durumu sorgulayın ve işlem tamamlandığında işlenmiş sonucu alın. Bu yapı, uydu görüntüsü kullanımını yazılım sistemlerinize kolayca entegre etmenizi sağlar.",
+            "USECASE_1_TITLE": "Backend otomasyonu",
+            "USECASE_1_DESC": "Uydu verisi sorgulama ve işleme akışını kendi servislerinizden otomatik olarak yönetin.",
+            "USECASE_2_TITLE": "GIS ve harita sistemleri",
+            "USECASE_2_DESC": "İşlenmiş görüntüleri kendi harita altyapınıza, analiz ekranlarınıza veya kurumsal uygulamalarınıza entegre edin.",
+            "USECASE_3_TITLE": "Kurumsal veri akışları",
+            "USECASE_3_DESC": "API key ile yetkili uçları kullanarak veri erişimini kontrollü ve ölçeklenebilir şekilde yönetin."
+        },
+        "CONTACT_PAGE": {
+            "KICKER": "İletişim",
+            "TITLE": "Uydu veri ihtiyaçların için bizimle iletişime geç",
+            "COPY": "Uydu görüntüsü satın alma, API erişimi, kurumsal kullanım ve özel proje ihtiyaçların için ekibimizle iletişime geç. Sana en uygun çözümü birlikte planlayalım.",
+            "FULL_NAME": "Ad Soyad",
+            "ORGANIZATION": "Organizasyon",
+            "BUSINESS_EMAIL": "E-posta",
+            "SUBJECT": "Konu",
+            "MESSAGE": "Mesaj",
+            "SEND": "Gönder",
+            "FORM_TITLE": "İletişim Formu",
+            "VALIDATION_FULL_NAME": "Ad soyad zorunludur",
+            "VALIDATION_EMAIL": "Geçerli bir e-posta giriniz",
+            "VALIDATION_SUBJECT": "Konu zorunludur",
+            "VALIDATION_MESSAGE": "Mesaj zorunludur"
+        },
         "API_DOC": {
             "SIDEBAR": {
                 "KICKER": "API Dokümantasyonu",
@@ -731,54 +571,325 @@ export const locale = {
                 }
             }
         },
-        "DATA_PAGE": {
-            "KICKER": "Uydu Verisi",
-            "TITLE": "Uydu görüntülerini bulun, seçin ve işleyin",
-            "COPY": "Belirlediğiniz alan için uydu görüntülerini listeleyin, filtreleyin ve ihtiyacınıza en uygun veriyi seçin. Seçtiğiniz görüntüyü işleyerek analiz ve kullanım için hazır çıktılara dönüştürün.",
-            "SEARCH_TITLE": "Alanınızı arayın",
-            "SEARCH_PLACEHOLDER": "İl, ilçe veya bölge adı girin",
-            "SEARCH_BUTTON": "Aramaya Başla",
-            "LOADING": "Yükleniyor...",
-            "BENEFIT_1_TITLE": "Uydu verisini hızlıca bulun",
-            "BENEFIT_1_DESC": "Polygon veya bölge bazlı arama ile ihtiyacınıza uygun uydu görüntülerini kısa sürede listeleyin.",
-            "BENEFIT_2_TITLE": "En uygun görüntüyü seçin",
-            "BENEFIT_2_DESC": "Tarih, çözünürlük ve bulut oranı gibi kriterlerle görüntüleri karşılaştırarak doğru veriyi belirleyin.",
-            "BENEFIT_3_TITLE": "İşleme sürecini başlatın",
-            "BENEFIT_3_DESC": "Seçtiğiniz uydu görüntüsü için ortorektifikasyon, pansharpen ve sınıflandırma gibi işlemleri başlatın.",
-            "BENEFIT_4_TITLE": "Hazır çıktıyı alın",
-            "BENEFIT_4_DESC": "İşlem tamamlandığında işlenmiş uydu görüntüsünü ve ilgili çıktı dosyalarını kullanıma hazır şekilde alın.",
-            "USE_CASES": "Kullanım Alanları",
-            "SECTION2_TITLE": "Tek platformda veri, işleme ve sonuç",
-            "SECTION2_COPY": "Platformumuz, yalnızca uydu görüntüsü listelemekle kalmaz; seçilen verinin işlenmesini ve sonuçların hazır şekilde alınmasını da tek akışta sunar. Böylece veri arama, seçim, işleme ve çıktı alma adımları tek bir deneyimde birleşir.",
-            "USECASE_1_TITLE": "Haritalama ve görselleştirme",
-            "USECASE_1_DESC": "Seçilen uydu görüntülerini harita tabanlı projelerde temel katman veya güncel görsel veri olarak kullanabilirsiniz.",
-            "USECASE_2_TITLE": "Analiz ve değerlendirme",
-            "USECASE_2_DESC": "İşlenmiş görüntüler sayesinde belirli alanları daha net inceleyebilir ve proje bazlı değerlendirmeler yapabilirsiniz.",
-            "USECASE_3_TITLE": "Kurumsal kullanım ve raporlama",
-            "USECASE_3_DESC": "İşlenmiş uydu çıktıları kurum içi planlama, raporlama ve sunum süreçlerinde doğrudan kullanılabilir."
+        "MAP": {
+            "KICKER": "Harita",
+            "TITLE": "Harita",
+            "PANEL": {
+                "KICKER": "Katmanlar",
+                "TITLE": "Katman Yöneticisi",
+                "SUBTITLE": "Altlıklar / Katmanlar",
+                "COLLAPSE": "Daralt"
+            },
+            "ACTIONS": {
+                "LAYER_MANAGER": "Katman Yöneticisi",
+                "SEARCH": "Haritada Ara",
+                "POLYGON": "Poligon",
+                "UPLOAD_FILE": "Dosya Yükle",
+                "RESET": "Sıfırla",
+                "ZOOM_IN": "Yakınlaştır",
+                "ZOOM_OUT": "Uzaklaştır"
+            },
+            "SEARCH": {
+                "KICKER": "Harita",
+                "TITLE": "Haritada Ara",
+                "PLACEHOLDER": "Konum, il, ilçe veya koordinat ara",
+                "RESULTS": "Arama Sonuçları",
+                "BUTTON": "Haritada Ara"
+            },
+            "STATUS": {
+                "TITLE": "Harita Durumu",
+                "COORDINATE": "Koordinat",
+                "ZOOM": "Zoom",
+                "LOADED_FILE": "Yüklenen dosya"
+            },
+            "UPLOAD": {
+                "TITLE": "Dosya Yükle",
+                "HINT": "GeoJSON, JSON, KML veya ZIP dosyası yükleyebilirsiniz.",
+                "LOADED_FILE": "Yüklenen dosya"
+            },
+            "STATE": {
+                "LOADING": "Yükleniyor",
+                "NO_DATA": "Gösterilecek veri bulunamadı"
+            },
+            "COMMON": {
+                "BASEMAPS": "Altlıklar",
+                "OVERLAYS": "Katmanlar",
+                "LAYER": "Katman",
+                "LAYERS": "Katmanlar",
+                "SERVICE_TYPE": "Servis Tipi",
+                "LAYER_NAME": "Katman Adı",
+                "GENERAL_INFO": "Genel Bilgiler",
+                "VISIBILITY": "Görünürlük",
+                "OPEN": "Açık",
+                "CLOSED": "Kapalı",
+                "OPACITY": "Saydamlık",
+                "ORDER_NO": "Sıra No",
+                "VERSION": "Versiyon",
+                "FORMAT": "Format",
+                "SERVICE_ENDPOINT": "Servis Adresi",
+                "REQUIRED": "Bu alan zorunludur",
+                "ACTIVE_FILTER": "Aktif Filtre",
+                "LANG": "tr",
+                "SELECT_AN_OPERATOR": "Opeatör seçin"
+            },
+            "LEGEND": {
+                "TITLE": "Lejant",
+                "SUBTITLE": "WMS katmanı için lejant görüntüsü",
+                "SUMMARY": "Katman Özeti",
+                "IMAGE": "Lejant Görseli",
+                "EMPTY": "Bu katman için lejant bulunamadı"
+            },
+            "INFO": {
+                "TITLE": "Katman Bilgisi",
+                "SUBTITLE": "servis detayları",
+                "WMS_NOTES": "WMS Notları",
+                "WFS_NOTES": "WFS Notları"
+            },
+            "FILTER": {
+                "TITLE": "Filtre",
+                "SUBTITLE": "katmanı için filtre kuralları",
+                "ADD_RULE": "Kural Ekle",
+                "CLEAR": "Filtreyi Temizle",
+                "APPLY": "Filtreyi Uygula",
+                "RULES": "Filtre Kuralları",
+                "FIELD": "Alan Adı",
+                "REFRESH_FIELDS": "Alanları Yenile",
+                "SELECT_FIELD": "Alan seçin",
+                "OPERATOR": "Operatör",
+                "VALUE": "Değer",
+                "SECOND_VALUE": "İkinci Değer",
+                "REMOVE_RULE": "Kuralı Sil",
+                "PREVIEW": "Filtre Önizleme",
+                "ATTRIBUTES_LOADING": "Öznitelik alanları yükleniyor...",
+                "NO_ATTRIBUTES_FOUND": "Öznitelik alanı bulunamadı.",
+                "ATTRIBUTE_LOAD_ERROR": "Öznitelik alanları alınamadı.",
+                "OPERATORS": {
+                    "CONTAINS": "İçerir",
+                    "BETWEEN": "Arasında"
+                }
+            },
+            "FEATURE": {
+                "TITLE": "Öznitelik Detayları",
+                "SELECTED": "Seçili Öznitelik",
+                "EMPTY": "Gösterilecek veri bulunamadı"
+            }
         },
-        "API_PAGE": {
-            "KICKER": "API Entegrasyonu",
-            "TITLE": "Uydu görüntülerine API key ile erişin ve işleyin",
-            "COPY": "API key ile polygon bazlı uydu verisi sorgulayabilir, görüntü işleme sürecini başlatabilir, işlem durumunu takip edebilir ve tamamlanan sonucu doğrudan sisteminize alabilirsiniz.",
-            "BUY_API_KEY": "API Key Satın Al",
-            "DOCUMENTATION": "Dokümantasyonu İncele",
-            "ENDPOINTS": "Yetkili Uçlar",
-            "FEATURE_1_TITLE": "Polygon ile veri sorgulama",
-            "FEATURE_1_DESC": "Belirlediğiniz alan için uydu görüntülerini otomatik olarak sorgulayın ve uygun ürünleri listeleyin.",
-            "FEATURE_2_TITLE": "İşleme başlatma ve takip",
-            "FEATURE_2_DESC": "Seçilen görüntü için image processing sürecini başlatın ve processId ile işlem durumunu takip edin.",
-            "FEATURE_3_TITLE": "Sonucu sisteminize alın",
-            "FEATURE_3_DESC": "İşlem tamamlandığında işlenmiş uydu görüntüsünü, önizlemeyi ve ek çıktı bağlantılarını doğrudan alın.",
-            "DEVELOPER_FIRST": "Geliştirici Odaklı",
-            "SECTION2_TITLE": "4 adımda tam API akışı",
-            "SECTION2_COPY": "Önce polygon ile uydu verilerini listeleyin. Ardından seçilen ürün için işleme sürecini başlatın. ProcessId ile durumu sorgulayın ve işlem tamamlandığında işlenmiş sonucu alın. Bu yapı, uydu görüntüsü kullanımını yazılım sistemlerinize kolayca entegre etmenizi sağlar.",
-            "USECASE_1_TITLE": "Backend otomasyonu",
-            "USECASE_1_DESC": "Uydu verisi sorgulama ve işleme akışını kendi servislerinizden otomatik olarak yönetin.",
-            "USECASE_2_TITLE": "GIS ve harita sistemleri",
-            "USECASE_2_DESC": "İşlenmiş görüntüleri kendi harita altyapınıza, analiz ekranlarınıza veya kurumsal uygulamalarınıza entegre edin.",
-            "USECASE_3_TITLE": "Kurumsal veri akışları",
-            "USECASE_3_DESC": "API key ile yetkili uçları kullanarak veri erişimini kontrollü ve ölçeklenebilir şekilde yönetin."
+        "CARD_HOLDER": "Kart Üzerindeki İsim",
+        "CARD_NUMBER": "Kart Numarası",
+        "EXPIRY_DATE": "Son Kullanma Tarihi",
+        "CVV": "CVV",
+        "PAYMENT_FORM_TITLE": "Ödeme Bilgileri",
+        "PAYMENT_FORM_SUBTITLE": "Kart bilgilerinizi girerek siparişinizi tamamlayın",
+        "CARD_HOLDER_PLACEHOLDER": "Ad Soyad",
+        "CARD_NUMBER_PLACEHOLDER": "•••• •••• •••• ••••",
+        "EXPIRY_DATE_PLACEHOLDER": "AA/YY",
+        "CVV_PLACEHOLDER": "•••",
+        "CARD_HOLDER_REQUIRED": "Lütfen kart sahibinin adını girin.",
+        "CARD_NUMBER_REQUIRED": "Geçerli bir kart numarası girin.",
+        "EXPIRY_DATE_REQUIRED": "Geçerli bir son kullanma tarihi girin.",
+        "CVV_REQUIRED": "Geçerli bir CVV girin.",
+        "PAYMENT_AGREEMENT": "Mesafeli satış sözleşmesini ve ödeme koşullarını kabul ediyorum.",
+        "PAYMENT_AGREEMENT_REQUIRED": "Devam etmek için onay vermelisiniz.",
+        "CARD_OWNER": "Kart Sahibi",
+        "ORDER_COMPLETION_TITLE": "Sipariş Tamamlama",
+        "ORDER_COMPLETION_SUBTITLE": "Adres ve ödeme bilgilerinizi tamamlayın",
+        "SELECTED_ADDRESS_INFO": "Sipariş için kullanılacak adresi seçin",
+        "SECURE_PAYMENT_INFO": "Kart bilgilerinizi güvenle girin",
+        "UPDATE_PERSONAL_INFORMATION": "Kişisel bilgilerinizi güncelleyin",
+        "AVATAR_SIZE_HINT": "300x300 px",
+        "MANAGE_EMAIL_AND_PASSWORD": "E-posta ve şifre bilgilerinizi yönetin",
+        "MANAGE_ADDRESSES": "Adreslerinizi yönetin",
+        "NO_ADDRESS_FOUND": "Henüz kayıtlı bir adres bulunmuyor",
+        "LOCATION": "Konum",
+        "SAVED_ADDRESSES": "Kayıtlı adresler",
+        "NEW_ORDER": "Yeni Sipariş",
+        "NEW_ORDER_MESSAGE": "Yeni bir siparişiniz bulunmaktadır.",
+        "ORDER_COMPLETED_MESSAGE": "Siparişiniz tamamlandı.",
+        "ORDER_REJECTED": "Sipariş Reddi",
+        "ORDER_REJECTED_MESSAGE": "Siparişiniz reddedildi.",
+        "ORDER_APPROVED": "Sipariş Onayı",
+        "ORDER_APPROVED_MESSAGE": "Siparişiniz onaylandı.",
+        "ORDER_PREPARING": "Sipariş Hazırlanıyor",
+        "ORDER_PREPARING_MESSAGE": "siparişiniz hazırlanıyor.",
+        "CLEAR": "Temizle",
+        "LAYER_GROUPS": "Katman Grupları",
+        "LAYERS": "Katmanlar",
+        "REJECTED": 'Reddedildi',
+        "COMPLETED": 'Tamamlandı',
+        "PERMISSION_FORM": {
+            "TITLE": "Yetki bilgilerini buradan ekleyebilir veya düzenleyebilirsiniz.",
+            "NAME": "Ad",
+            "CODE": "Kod",
+
+            "REQUIRED_NAME": "Ad alanı zorunludur.",
+            "REQUIRED_CODE": "Kod alanı zorunludur.",
+
+            "FORM": {
+                "MIN_LENGTH": "En az {{min}} karakter olmalıdır.",
+                "MAX_LENGTH": "En fazla {{max}} karakter olmalıdır.",
+                "INVALID_FORMAT": "Geçersiz format.",
+                "REQUIRED": "Bu alan zorunludur."
+            }
+        },
+        "ROLE_FORM": {
+            "TITLE": "Rol bilgilerini buradan ekleyebilir veya düzenleyebilirsiniz",
+            "NAME": "Ad",
+            "PERMISSIONS": "Yetkiler",
+
+            "REQUIRED_NAME": "Rol adı zorunludur",
+            "REQUIRED_PERMISSIONS": "En az bir yetki seçilmelidir",
+
+            "FORM": {
+                "MIN_LENGTH": "Minimum {{min}} karakter olmalıdır",
+                "MAX_LENGTH": "Maksimum {{max}} karakter olmalıdır"
+            }
+        },
+        "USER_FORM": {
+            "TITLE": "Kullanıcı bilgilerini buradan ekleyebilir veya düzenleyebilirsiniz",
+
+            "NAME": "Ad",
+            "SURNAME": "Soyad",
+            "EMAIL": "E-posta",
+            "PASSWORD": "Şifre",
+            "CONFIRM_PASSWORD": "Şifre Tekrar",
+            "USERNAME": "Kullanıcı Adı",
+            "PHONE": "Telefon",
+            "ROLE": "Rol",
+            "SELECT_ROLE": "Rol seçiniz",
+
+            "REQUIRED_NAME": "Ad zorunludur",
+            "REQUIRED_SURNAME": "Soyad zorunludur",
+            "REQUIRED_EMAIL": "E-posta zorunludur",
+            "INVALID_EMAIL": "Geçerli bir e-posta adresi giriniz",
+            "REQUIRED_PASSWORD": "Şifre zorunludur",
+            "PASSWORD_NOT_MATCH": "Şifreler uyuşmuyor",
+            "REQUIRED_USERNAME": "Kullanıcı adı zorunludur",
+            "REQUIRED_PHONE": "Telefon zorunludur",
+            "REQUIRED_ROLE": "Rol seçilmelidir",
+            "INVALID_PHONE": "Telefon geçersizdir",
+
+            "FORM": {
+                "MIN_LENGTH": "Minimum {{min}} karakter olmalıdır",
+                "MAX_LENGTH": "Maksimum {{max}} karakter olmalıdır"
+            }
+        },
+        "LAYERGROUP_FORM": {
+            "TITLE": "Katman grubunu ekleyebilir veya düzenleyebilirsiniz",
+            "NAME": "Ad",
+            "ORDER_NO": "Sıra No",
+
+            "REQUIRED_NAME": "Ad zorunludur",
+            "REQUIRED_ORDER": "Sıra numarası zorunludur",
+            "MIN_ORDER": "Sıra numarası en az 1 olmalıdır"
+        },
+        "LAYER_FORM": {
+            "TITLE": "Katman bilgilerini buradan ekleyebilir veya düzenleyebilirsiniz",
+            "VISIBLE": "Görünür",
+            "NAME": "Ad",
+            "TYPE": "Tip",
+            "URL": "Url",
+            "LAYER_NAME": "Katman Adı",
+            "FORMAT": "Format",
+            "VERSION": "Versiyon",
+            "OPACITY": "Saydamlık",
+            "ORDER_NO": "Sıra No",
+            "GROUP": "Grup",
+            "SELECT_GROUP": "Grup Seçiniz",
+            "SELECT_A_TYPE": "Tip Seçiniz",
+            "REQUIRED_NAME": "Ad zorunludur",
+            "REQUIRED_TYPE": "Tip zorunludur",
+            "REQUIRED_URL": "Url zorunludur",
+            "REQUIRED_LAYER_NAME": "Katman adı zorunludur",
+            "REQUIRED_OPACITY": "Saydamlık zorunludur",
+            "OPACITY_RANGE": "Saydamlık 0 ile 1 arasında olmalıdır",
+            "REQUIRED_ORDER_NO": "Sıra numarası zorunludur",
+            "MIN_ORDER_NO": "Sıra numarası en az 1 olmalıdır",
+            "REQUIRED_GROUP": "Grup seçimi zorunludur"
+        },
+        "INVOICE_FORM": {
+            "TITLE": "Fatura işlemlerini buradan yönetebilirsiniz.",
+            "PREVIEW": "Önizleme",
+            "PREVIEW_DESCRIPTION": "Yüklenen PDF dosyasını buradan görüntüleyebilirsiniz.",
+            "NO_FILE_SELECTED": "Henüz dosya seçilmedi",
+            "NO_PREVIEW_TITLE": "Önizleme bulunamadı",
+            "NO_PREVIEW_DESCRIPTION": "PDF yüklediğinizde burada önizleme gösterilecektir."
+        },
+        "ADDRESS_FORM": {
+            "TITLE": "Adres bilgilerini buradan ekleyebilir veya düzenleyebilirsiniz."
+        },
+        "FOOTER": {
+            "DESCRIPTION": "Coğrafi verilerinizi keşfedin, yönetin ve analiz edin.",
+            "PLATFORM": "Platform",
+            "MARKETPLACE": "Pazar Yeri",
+            "DATA": "Veri",
+            "API": "API",
+            "MAP": "Harita",
+            "CONTACT": "İletişim",
+            "LEGAL": "Yasal",
+            "TERMS_OF_SERVICE": "Kullanım Şartları",
+            "PRIVACY_POLICY": "Gizlilik Politikası",
+            "COOKIES": "Çerez Politikası"
+        },
+        "COPYRIGHT": "© 2026 GeoPortal. Tüm hakları saklıdır.",
+        "TERMS_SHORT": "Şartlar",
+        "PRIVACY_SHORT": "Gizlilik",
+        "MESSAGES": {
+            "SUCCESS": "İşlem başarı ile gerçekleştirildi.",
+            "ERROR": "Beklenmeyen bir hata oluştu.",
+            "LOGIN_REQUIRED_FOR_MORE_PRODUCTS": "Daha fazla ürün eklemek için lütfen giriş yapınız!",
+            "AVATAR_SIZE": "300x300px boyutlarında bir resim dosyası yükleyiniz!",
+            "SELECT_ADDRESS": "Lütfen adres seçiniz!",
+            "PAYMENT": "Lütfen ödeme bilgilerini eksiksiz doldurunuz!",
+            "CONTACT_SUCCESS": "Mesajınız başarıyla alınmıştır.",
+        },
+        "FILTERS": "Filters",
+        "CLEAR_FILTERS": "Clear Filters",
+        "ALL": "Hepsi",
+        "MIN_PRICE": "Min. Fiyat",
+        "MAX_PRICE": "Maks. Fiyat",
+
+        "SUPPORT_MANAGEMENT": {
+            "EYEBROW": "Support",
+            "PAGE_TITLE": "Destek Talepleri",
+            "SUMMARY_TITLE": "Genel Özet",
+            "TOTAL_RECORDS": "{{count}} kayıt",
+            "LAST_UPDATE": "Son Güncelleme",
+
+            "TICKET_TITLE": "Ticket",
+            "CUSTOMER": "Müşteri",
+            "EMAIL": "Email",
+            "ORGANIZATION": "Organizasyon",
+            "STATUS": "Durum",
+            "SUBJECT": "Konu",
+            "ADMIN": "Admin",
+
+            "MESSAGE_THREAD": "Mesaj Akışı",
+            "NO_MESSAGES": "Mesaj bulunamadı.",
+            "REPLY_AND_STATUS": "Yanıtla / Durum Güncelle",
+            "REPLY": "Yanıt",
+            "REPLY_PLACEHOLDER": "Müşteriye gönderilecek yanıtı yazınız",
+            "STATUS_PLACEHOLDER": "Durum seçiniz",
+            "ADMIN_EMAIL": "Admin Email",
+            "ADMIN_EMAIL_PLACEHOLDER": "admin@domain.com",
+
+            "UPDATE_STATUS_ONLY": "Sadece Durumu Güncelle",
+            "SEND_REPLY": "Yanıt Gönder",
+            "SENDING": "Gönderiliyor...",
+
+            "COLUMN_TICKET_NO": "Ticket No",
+            "COLUMN_CUSTOMER": "Müşteri",
+            "COLUMN_EMAIL": "Email",
+            "COLUMN_SUBJECT": "Konu",
+            "COLUMN_STATUS": "Durum",
+            "COLUMN_LAST_MESSAGE": "Son Mesaj",
+            "COLUMN_ACTIONS": "İşlemler",
+
+            "STATUS_NEW": "Yeni",
+            "STATUS_WAITING_FOR_ADMIN": "Admin Bekliyor",
+            "STATUS_WAITING_FOR_CUSTOMER": "Müşteri Bekliyor",
+            "STATUS_CUSTOMER_REPLIED": "Müşteri Cevapladı",
+            "STATUS_CLOSED": "Kapalı",
+            "STATUS_SPAM": "Spam"
         }
         // END (TR-EN-LANGUAGE-BRANCH)
     }

@@ -15,53 +15,57 @@ export const locale = {
       APPS: 'Apps',
       DASHBOARD: 'Dashboard',
     },
-    AUTH: {
-      GENERAL: {
-        OR: 'Or',
-        SUBMIT_BUTTON: 'Submit',
-        NO_ACCOUNT: 'Don\'t have an account?',
-        SIGNUP_BUTTON: 'Sign Up',
-        SIGNOUT_BUTTON: 'Sign Out',
-        FORGOT_BUTTON: 'Forgot Password',
-        BACK_BUTTON: 'Back',
-        PRIVACY: 'Privacy',
-        LEGAL: 'Legal',
-        CONTACT: 'Contact',
+    "AUTH": {
+      "LOGIN": {
+        "TITLE": "Sign In",
+        "OR": "OR"
       },
-      LOGIN: {
-        TITLE: 'Login Account',
-        BUTTON: 'Sign In',
+      "ASIDE": {
+        "EYEBROW": "Welcome",
+        "TITLE_1": "Everything you need,",
+        "TITLE_2": "all in one place",
+        "DESCRIPTION": "Sign in to continue and manage your workspace with a clean, simple and focused experience."
       },
-      FORGOT: {
-        TITLE: 'Forgotten Password?',
-        DESC: 'Enter your email to reset your password',
-        SUCCESS: 'Your account has been successfully reset.'
+      "REGISTER": {
+        "TITLE": "Sign Up"
       },
-      REGISTER: {
-        TITLE: 'Sign Up',
-        DESC: 'Enter your details to create your account',
-        SUCCESS: 'Your account has been successfuly registered.'
+      "VALIDATION": {
+        "EMAIL_REQUIRED": "Email is required",
+        "EMAIL_INVALID": "Please enter a valid email address",
+        "EMAIL_MIN": "Email should have at least 3 characters",
+        "EMAIL_MAX": "Email should have maximum 360 characters",
+        "PASSWORD_REQUIRED": "Password is required",
+        "PASSWORD_MIN": "Password should have at least 3 characters",
+        "PASSWORD_MAX": "Password should have maximum 100 characters",
+        "CONFIRM_PASSWORD_REQUIRED": "Confirm password is required",
+        "PASSWORD_NOT_MATCH": "Passwords do not match",
+        "NAME_REQUIRED": "Name is required",
+        "SURNAME_REQUIRED": "Surname is required",
+        "USERNAME_REQUIRED": "Username is required",
+        "PHONE_REQUIRED": "Phone is required",
+        "INVALID_PHONE": "Phone is invalid",
       },
-      INPUT: {
-        EMAIL: 'Email',
-        FULLNAME: 'Fullname',
-        PASSWORD: 'Password',
-        CONFIRM_PASSWORD: 'Confirm Password',
-        USERNAME: 'Username'
+      "GENERAL": {
+        "SIGNOUT_BUTTON": "Sign Out"
       },
-      VALIDATION: {
-        INVALID: '{{name}} is not valid',
-        REQUIRED: '{{name}} is required',
-        MIN_LENGTH: '{{name}} minimum length is {{min}}',
-        AGREEMENT_REQUIRED: 'Accepting terms & conditions are required',
-        NOT_FOUND: 'The requested {{name}} is not found',
-        INVALID_LOGIN: 'The login detail is incorrect',
-        REQUIRED_FIELD: 'Required field',
-        MIN_LENGTH_FIELD: 'Minimum field length:',
-        MAX_LENGTH_FIELD: 'Maximum field length:',
-        INVALID_FIELD: 'Field is not valid',
-      }
+      "RESET": {
+        "TITLE": "Reset Password",
+        "DESCRIPTION_RESET": "Enter your new password to update your account",
+        "ERROR": "Something went wrong, please try again",
+        "SUCCESS": "Your password has been successfully updated",
+        "SUBMIT": "Update Password",
+        "BACK": "Back to login"
+      },
+      "CONFIRM_PASSWORD": "Confirm Password"
     },
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "PLEASEWAIT": "Please wait...",
+    "LOGIN_CONTINUE": "Continue",
+    "NOTMEMBERYET": "Not a member yet?",
+    "SIGNUP": "Sign up",
+    "ERR_LOGIN": "Incorrect email or password.",
     ECOMMERCE: {
       COMMON: {
         SELECTED_RECORDS_COUNT: 'Selected records count: ',
@@ -119,6 +123,7 @@ export const locale = {
     REQUIRED_EMAIL: "E-mail is required!",
     REQUIRED_USERNAME: "Username is required!",
     REQUIRED_PHONE: "Phone is required!",
+    INVALID_PHONE: "Phone is invalid",
     REQUIRED_ROLE: "Role is required!",
     REQUIRED_ENGLISH_NAME: "Name in English is required!",
     REQUIRED_CODE: "Code is required!",
@@ -126,9 +131,9 @@ export const locale = {
     NOMATCH_PASSWORD: "'Passsword' and 'Confirm Password' didn't match!",
 
 
-    SELECT_ROLE: "Select a Role...",
-    SELECT_ORGANIZATION: "Select an Organization...",
-    SELECT_PERMISSION: "Select a Permission...",
+    SELECT_ROLE: "Select a Role",
+    SELECT_ORGANIZATION: "Select an Organization",
+    SELECT_PERMISSION: "Select a Permission",
 
     NAME_ENGLISH: "Name in English",
     SURNAME: "Surname",
@@ -137,14 +142,6 @@ export const locale = {
     ADDRESS: 'Address',
     ICON: 'Icon',
     PARENT_MENU: 'Parent Menu',
-
-    ERR_LOGIN: 'The login details are incorrect',
-    FORGOT_PASSWORD: 'Forgot Password ?',
-
-    LOGIN_CONTINUE: 'Continue',
-    PLEASEWAIT: 'Please wait...',
-    NOTMEMBERYET: 'Not a Member yet?',
-    SIGNUP: 'Sign up',
     RESETPASSWORDMAIL: 'Enter your email to reset your password.',
 
 
@@ -170,7 +167,7 @@ export const locale = {
     SUBMIT: "Submit",
     EDIT: "Edit",
     EDIT_STATUS: 'Edit Status',
-    SELECT_A_STATUS: 'Select a Status...',
+    SELECT_A_STATUS: 'Select a Status',
     DELETE: "Delete",
     YES: "Yes",
     NO: "No",
@@ -230,8 +227,7 @@ export const locale = {
     VENDOR: "Vendor",
     PENDING_APPROVAL: 'Pending Approval',
     APPROVED: 'Approved',
-    REJECTED: 'Rejected',
-    COMPLETED: 'Completed',
+    PREPARING: 'Preparing',
     SHIPPED: 'Shipped',
     DELIVERED: 'Delivered',
     TYPE_A_COMMENT: 'Type a comment...',
@@ -274,7 +270,6 @@ export const locale = {
     FULL_ADDRESS: "Full Address",
 
     SIGN_IN_METHOD: "Sign-in Method",
-    EMAIL: "Email",
     EMAIL_ADDRESS: "Email Address",
     UPDATE_EMAIL: "Update Email",
     CHANGE_EMAIL: "Change Email",
@@ -284,7 +279,6 @@ export const locale = {
     EMAIL_SHOULD_HAVE_MAXIMUM_360_SYMBOLS: "Email should have maximum 360 symbols!",
 
     // Password
-    PASSWORD: "Password",
     PASSWORD_SHOULD_HAVE_AT_LEAST_3_SYMBOLS: "Password should have at least 3 symbols!",
     PASSWORD_SHOULD_HAVE_MAXIMUM_100_SYMBOLS: "Password should have maximum 100 symbols!",
     RESET_PASSWORD: "Reset Password",
@@ -317,7 +311,7 @@ export const locale = {
     SHOPPING: 'Shopping',
 
     INVOICE_TYPE: "Invoice Type",
-    SELECT_INVOICE_TYPE: "Select an Invoice Type...",
+    SELECT_INVOICE_TYPE: "Select an Invoice Type",
     ADDRESS_HEADER: "Address Header",
     TAX_NO: "Tax Identification Number",
     TAX_OFFICE: "Tax Office",
@@ -329,201 +323,42 @@ export const locale = {
     INVOICE_ADDRESS: 'Invoice Address',
     SAME_ADDRESS: 'Send My Invoice to the Same Address',
     ORDER: 'Order',
-    brandTitle: 'GeoPortal',
-    brandSubtitle: 'Satellite Data Platform',
+    IN_BASKET: "In Basket",
 
-    "KICKER": "Satellite Data Platform",
-    "TITLE": "Select an Area on the Map, Instantly Find Satellite Imagery",
-    "COPY": "Draw your area of interest on the map, discover available satellite imagery within seconds, and purchase instantly. Filter, compare, and download the most suitable data for your project.",
-
-    "SEARCH_TITLE": "Select a location and explore imagery",
-    "SEARCH_PLACEHOLDER": "Search city, address or region",
-    "SEARCH_BUTTON": "Search",
-
-    "BENEFIT_1_TITLE": "Area-Based Data Selection",
-    "BENEFIT_1_DESC": "Draw your area on the map and focus only on the data you actually need.",
-
-    "BENEFIT_2_TITLE": "Advanced Filtering",
-    "BENEFIT_2_DESC": "Filter imagery by date, resolution, and cloud coverage.",
-
-    "BENEFIT_3_TITLE": "Instant Preview",
-    "BENEFIT_3_DESC": "Preview and compare imagery directly on the map before purchasing.",
-
-    "BENEFIT_4_TITLE": "Instant Purchase",
-    "BENEFIT_4_DESC": "Add selected data to your cart and access it instantly.",
-
-    "USE_CASES": "Use Cases",
-    "SECTION2_TITLE": "Integrate Satellite Data Into Your Projects",
-    "SECTION2_COPY": "From urban planning to agriculture, energy projects to defense applications, access the right data at the right time and make faster, more accurate decisions.",
-
-    "USECASE_1_TITLE": "Urban Planning",
-    "USECASE_1_DESC": "Track development and analyze land use changes",
-
-    "USECASE_2_TITLE": "Agriculture & Environment",
-    "USECASE_2_DESC": "Monitor crop health and land changes",
-
-    "USECASE_3_TITLE": "Energy & Infrastructure",
-    "USECASE_3_DESC": "Analyze and monitor project sites",
-
-    "API_KICKER": "Satellite Data API Platform",
-    "API_TITLE": "Integrate Satellite Imagery Into Your Applications with an API Key",
-    "API_COPY": "Purchase a 1-month API key, send requests, and programmatically access satellite imagery within your selected area. Easily use the results in your applications, services, and workflows.",
-    "START_CODING": "Buy Now",
-    "DOCUMENTATION": "Documentation",
-    "ENDPOINTS": "Endpoints",
-
-    "FEATURE_1_TITLE": "Area-Based Query",
-    "FEATURE_1_DESC": "Send your selected area in a POST request and retrieve satellite imagery within that boundary.",
-
-    "FEATURE_2_TITLE": "Bearer Token Access",
-    "FEATURE_2_DESC": "Use your purchased 1-month API key for secure authenticated access across your services.",
-
-    "FEATURE_3_TITLE": "Status Tracking",
-    "FEATURE_3_DESC": "Track the processing status from a separate endpoint and automate your workflows.",
-
-    "DEVELOPER_FIRST": "Developer-first",
-    "API_SECTION2_TITLE": "Satellite Data Access Designed for Developers",
-    "API_SECTION2_COPY": "A simple and powerful API structure that brings map-based selections into backend workflows. Easily integrate imagery search, result retrieval, and process status tracking into your applications.",
-
-    "API_USECASE_1_TITLE": "REST API Access",
-    "API_USECASE_1_DESC": "Clean endpoints for submitting areas, retrieving results, and checking status.",
-
-    "API_USECASE_2_TITLE": "Application Ready",
-    "API_USECASE_2_DESC": "Easy integration with web, mobile, backend, and enterprise systems.",
-
-    "API_USECASE_3_TITLE": "Automation Friendly",
-    "API_USECASE_3_DESC": "Built for job status tracking and automated data workflows.",
-
-    "CONTACT_KICKER": "Contact",
-    "CONTACT_TITLE": "Get in Touch for Your Satellite Data Needs",
-    "CONTACT_COPY": "Contact our team for satellite imagery purchases, API access, enterprise use cases, and custom project requirements. Let’s plan the right solution for you.",
-
-    "BUSINESS_EMAIL": "Business Email",
-    "SUBJECT": "Subject",
-    "MESSAGE": "Message",
-    "SEND_MESSAGE": "Send Message",
-
-    "VALIDATION_FULL_NAME": "Please enter a valid full name.",
-    "VALIDATION_EMAIL": "Please enter a valid email address.",
-    "VALIDATION_SUBJECT": "Please enter a subject.",
-    "VALIDATION_MESSAGE": "Please enter a message with at least 10 characters.",
-
-    "FOOTER_DESCRIPTION": "Geospatial data platform for analysis, visualization and API-driven workflows.",
-
-    "PLATFORM": "Platform",
-    "DATA": "Data",
-    "API": "API",
-    "CONTACT": "Contact",
-
-    "LEGAL": "Legal",
-    "TERMS_OF_SERVICE": "Terms of Service",
-    "PRIVACY_POLICY": "Privacy Policy",
-    "COOKIES": "Cookies",
-
-    "COPYRIGHT": "© 2026 GeoPortal. All rights reserved.",
-
-    "TERMS_SHORT": "Terms",
-    "PRIVACY_SHORT": "Privacy",
-
-
-    "MAP_KICKER": "Explore Data on the Map",
-    "MAP_COPY": "Search locations, manage layers, and upload your area of interest to inspect satellite data on the map.",
-    "MAP_SEARCH_PLACEHOLDER": "Search city, address or region",
-    "MAP_SEARCH_BUTTON": "Search",
-    "SEARCH_RESULTS": "Search Results",
-
-    "PANEL_KICKER": "Map Controls",
-    "LAYER_MANAGER": "Layer Manager",
-    "BASEMAPS": "Basemaps",
-    "OVERLAYS": "Overlays",
-    "COLLAPSE": "Collapse",
-    "EXPAND": "Expand",
-
-    "OSM_STANDARD": "OSM Standard",
-    "OSM_HOT": "OSM HOT",
-    "AOI_UPLOADS": "AOI / Uploads",
-    "UPLOAD_FILE": "Upload File",
-    "UPLOAD_HINT": "Upload GeoJSON, JSON, KML or ZIP Shape files to display them on the map.",
-    "FILE_LOADED": "Loaded file",
-
-    "ZOOM_IN": "Zoom In",
-    "ZOOM_OUT": "Zoom Out",
-    "RESET": "Reset View",
-    "POLYGON": "Draw Polygon",
-
-    "MAP_STATUS": "Map Status",
-    "ZOOM": "Zoom",
-    "COORDINATE": "Coordinate",
-    "BUY_DATA": "Buy Data",
-    "LOADING": "Loading...",
-    "BUY": "Add to Cart",
-    "LAYER": "Layer",
-
+    "BRANDTITLE": 'GeoPortal',
+    "BRANDSUBTITLE": 'Satellite Data Platform',
     "MARKETPLACE": {
-      "NAME": "Marketplace",
       "FILTERS": {
-        "KICKER": "Filters",
-        "TITLE": "Product Search",
-        "SUBTITLE": "Narrow processed data packages by city, cloud rate, and price filters.",
+        "LABEL": "Filters",
+        "TITLE": "Satellite Imagery Marketplace",
+        "DESCRIPTION": "Filter satellite imagery based on your needs, review the details, and add selected products to your cart.",
         "SEARCH_LABEL": "Search",
-        "SEARCH_PLACEHOLDER": "City, district, or provider",
-        "CITY_LABEL": "City",
-        "ALL_CITIES": "All",
-        "MAX_CLOUD_LABEL": "Maximum Cloud Rate",
-        "MAX_PRICE_LABEL": "Maximum Price",
-        "SORT_LABEL": "Sort"
+        "SEARCH_PLACEHOLDER": "Search by city, district, provider, or product name",
+        "MAX_CLOUD": "Maximum Cloud Rate",
+        "MAX_PRICE": "Maximum Price",
+        "RESET": "Reset Filters",
+        "APPLY": "Apply Filters"
       },
-      "SORT": {
-        "NEWEST": "Newest",
-        "PRICE_ASC": "Price: Low to High",
-        "PRICE_DESC": "Price: High to Low",
-        "CLOUD_ASC": "Lowest Cloud Rate"
-      },
-      "BUNDLE": {
-        "TITLE": "Sold Data Package",
-        "ITEM_1": "Orthorectified image",
-        "ITEM_2": "Pansharpen processed output",
-        "ITEM_3": "Classified data layer",
-        "ITEM_4": "Ready-to-purchase package",
-        "SHORT_1": "Orthorectified",
-        "SHORT_2": "Pansharpen",
-        "SHORT_3": "Classified"
-      },
-      "ACTIONS": {
-        "CLEAR_FILTERS": "Clear Filters",
-        "REFRESH": "Refresh",
-        "DETAIL": "Detail",
-        "ADD_TO_CART": "Add to Cart",
-        "MAP_PREVIEW": "Map Preview"
-      },
-      "RESULTS": {
-        "TITLE": "Processed Satellite Images",
-        "FOUND": "results found"
-      },
-      "STATES": {
+      "LIST": {
+        "TITLE": "Satellite Imagery",
+        "TOTAL_FOUND": "{{count}} results found",
         "LOADING": "Loading data...",
-        "DETAIL_LOADING": "Loading product detail...",
-        "EMPTY_TITLE": "No results found",
-        "EMPTY_TEXT": "Try broadening your search criteria."
-      },
-      "ERRORS": {
-        "LOAD_LIST": "An error occurred while loading marketplace data.",
-        "LOAD_DETAIL": "An error occurred while loading product detail."
-      },
-      "STATUS": {
-        "AVAILABLE": "Available",
-        "LIMITED": "Limited"
+        "LOAD_ERROR": "An error occurred while loading the data.",
+        "EMPTY": "No records matched your filters."
       },
       "CARD": {
-        "CLOUD": "cloud",
+        "PROVIDER_FALLBACK": "Unknown Provider",
         "AREA": "Area",
-        "CLOUD_RATE": "Cloud",
+        "CLOUD": "Cloud",
         "RESOLUTION": "Resolution",
-        "CLASSES": "Classes",
-        "PRICE": "Price"
+        "CLASSES": "Classification Layers",
+        "DETAIL": "Detail",
+        "MAP_PREVIEW": "Map Preview",
+        "PRICE": "Price",
+        "ADD_TO_CART": "Add to Cart"
       },
       "DETAIL": {
-        "KICKER": "Product Detail",
+        "KICKER": "Image Detail",
         "DESCRIPTION": "Description",
         "TECHNICAL_INFO": "Technical Information",
         "CITY": "City",
@@ -534,88 +369,94 @@ export const locale = {
         "CLOUD_RATE": "Cloud Rate",
         "AREA": "Area",
         "DATA_TYPE": "Data Type",
-        "DATA_TYPE_VALUE": "Processed Package",
+        "DATA_TYPE_VALUE": "Orthorectified + Classified Imagery",
         "PACKAGE_CONTENT": "Package Content",
-        "CLASS_OUTPUTS": "Classification Outputs"
+        "CLASS_OUTPUTS": "Class Outputs"
+      },
+      "BUNDLE": {
+        "TITLE": "Package Content",
+        "SHORT_1": "Orthorectified",
+        "SHORT_2": "PanSharpen",
+        "SHORT_3": "Classification"
+      },
+      "MAP": {
+        "INFO_TITLE": "Image Information",
+        "NOTE_TITLE": "Information",
+        "NOTE_TEXT": "This area displays the map preview of the selected imagery. When real footprint or GeoJSON data is provided, the coverage information will be shown here in detail."
+      },
+      "STATES": {
+        "DETAIL_LOADING": "Loading detail information..."
+      },
+      "ACTIONS": {
+        "ADD_TO_CART": "Add to Cart",
+        "MAP_PREVIEW": "Map Preview"
       }
     },
-
-    "CLICK_TO_SELECT": "Click to select",
-    "NO_ADDRESS_FOUND": "No saved address found.",
-
-    "ENTER_CARD_INFORMATION": "Enter your card information",
-    "CARD_PREVIEW": "Card Preview",
-    "SECURE_PAYMENT": "Secure Payment",
-
-    "CARD_HOLDER": "Card Holder",
-    "CARD_HOLDER_PLACEHOLDER": "Full Name",
-    "CARD_HOLDER_REQUIRED": "Card holder name is required.",
-    "CARD_HOLDER_MIN_LENGTH": "Card holder name must be at least 3 characters.",
-
-    "CARD_NUMBER": "Card Number",
-    "CARD_NUMBER_REQUIRED": "Card number is required.",
-    "CARD_NUMBER_INVALID": "Card number must be 16 digits.",
-
-    "EXPIRE_DATE": "Expiry Date",
-    "EXPIRE_MONTH": "Month",
-    "EXPIRE_YEAR": "Year",
-    "EXPIRE_MONTH_REQUIRED": "Expiry month is required.",
-    "EXPIRE_MONTH_INVALID": "Month must be between 01 and 12.",
-    "EXPIRE_YEAR_REQUIRED": "Expiry year is required.",
-    "EXPIRE_YEAR_INVALID": "Year must be 2 digits.",
-
-    "CVV": "CVV",
-    "CVV_REQUIRED": "CVV is required.",
-    "CVV_INVALID": "CVV must be 3 or 4 digits.",
-
-    "INSTALLMENT": "Installment",
-    "INSTALLMENT_LOWER": "installments",
-    "SINGLE_PAYMENT": "Single Payment",
-
-    "PAYMENT_AGREEMENT_CONFIRM": "I confirm my payment information and agree to complete the order.",
-    "PAYMENT_AGREEMENT_REQUIRED": "You must confirm the payment agreement to continue.",
-    "PAYMENT_FORM_INFO": "Your card information will be used during the secure payment step.",
-
-    "PLEASE_SELECT_INVOICE_ADDRESS": "Please select an invoice address.",
-    "PLEASE_FILL_PAYMENT_FORM": "Please fill in the payment form completely.",
-    "BASKET_IS_EMPTY": "Your basket is empty.",
-    "PAYMENT_KICKER": "Payment",
-    "PAYMENT_COPY": "You can securely complete your order by entering your card details.",
-    "PAYMENT_CONFIRMATION_TEXT": "I confirm that my payment information is correct.",
-    "VALIDATION_CARD_HOLDER_REQUIRED": "Card holder name is required.",
-    "VALIDATION_CARD_HOLDER_MIN": "Card holder name must be at least 3 characters.",
-    "VALIDATION_CARD_NUMBER_REQUIRED": "Card number is required.",
-    "VALIDATION_CARD_NUMBER_PATTERN": "Card number must be 16 digits.",
-    "VALIDATION_EXPIRE_MONTH_REQUIRED": "Month is required.",
-    "VALIDATION_EXPIRE_MONTH_PATTERN": "Month must be between 01 and 12.",
-    "VALIDATION_EXPIRE_YEAR_REQUIRED": "Year is required.",
-    "VALIDATION_EXPIRE_YEAR_PATTERN": "Year must be 2 digits.",
-    "VALIDATION_CVV_REQUIRED": "CVV is required.",
-    "VALIDATION_CVV_PATTERN": "CVV must be 3 or 4 digits.",
-    "VALIDATION_PAYMENT_AGREEMENT": "You must accept the confirmation to continue.",
-
-    "NAME_REQUIRED": "Name is required",
-    "SURNAME_REQUIRED": "Surname is required",
-    "USERNAME_REQUIRED": "Username is required",
-    "PHONE_REQUIRED": "Phone is required",
-    "INVALID_EMAIL": "Please enter a valid email",
-    "MIN_LENGTH": "Minimum length not satisfied",
-    "MAX_LENGTH": "Maximum length exceeded",
-    "ACCOUNT_SUMMARY": "Account Summary",
-    "EMAIL_REQUIRED": "Email is required",
-    "CURRENT_PASSWORD_REQUIRED": "Current password is required",
-    "NEW_PASSWORD_REQUIRED": "New password is required",
-    "CONFIRM_PASSWORD_REQUIRED": "Password confirmation is required",
-    "NEW_ORDER": "New Order",
-    "NEW_ORDER_MESSAGE": "You have a new order.",
-    "ORDER_COMPLETED_MESSAGE": "Your order has been completed.",
-    "ORDER_REJECTED": "Order Rejected",
-    "ORDER_REJECTED_MESSAGE": "Your order has been rejected.",
-    "ORDER_APPROVED": "Order Approved",
-    "ORDER_APPROVED_MESSAGE": "Your order has been approved.",
-    "ORDER_PREPARING": "Order Preparing",
-    "ORDER_PREPARING_MESSAGE": "Your order is being prepared.",
-
+    "DATA_PAGE": {
+      "KICKER": "Data Discovery",
+      "TITLE": "Discover the right data for your needs on a single screen",
+      "COPY": "Quickly find, compare, and evaluate the most suitable option for your project among satellite imagery, processed data layers, and analytical outputs.",
+      "SEARCH_TITLE": "Search data",
+      "SEARCH_PLACEHOLDER": "Type a region, data type, or use case",
+      "SEARCH_BUTTON": "Search",
+      "LOADING": "Loading...",
+      "USE_CASES": "Use Cases",
+      "SECTION2_TITLE": "A ready-to-use data flow for different industries",
+      "SECTION2_COPY": "You can explore and integrate the data needed for agriculture, urban planning, disaster management, environmental analysis, and many other use cases within a single unified structure.",
+      "BENEFIT_1_TITLE": "Broad data coverage",
+      "BENEFIT_1_DESC": "Find the most suitable options across different regions, resolutions, and processed data types.",
+      "BENEFIT_2_TITLE": "Layered data structure",
+      "BENEFIT_2_DESC": "Access multiple data levels such as raw imagery, orthorectified products, PanSharpen outputs, and classified results.",
+      "BENEFIT_3_TITLE": "Fast comparison",
+      "BENEFIT_3_DESC": "Easily compare datasets by coverage, quality, and use-case suitability before making a decision.",
+      "BENEFIT_4_TITLE": "Project-ready output",
+      "BENEFIT_4_DESC": "Manage data formats suitable for analysis, mapping, and operational workflows in a single flow.",
+      "USECASE_1_TITLE": "Agriculture and land monitoring",
+      "USECASE_1_DESC": "Provides a suitable data workflow for monitoring crop development, land use, and seasonal changes.",
+      "USECASE_2_TITLE": "Urban planning and development",
+      "USECASE_2_DESC": "Offers datasets that can be used for settlement analysis, construction monitoring, and urban growth assessment.",
+      "USECASE_3_TITLE": "Disaster and environmental analysis",
+      "USECASE_3_DESC": "Can be used to identify risk areas, detect changes, and assess environmental impacts."
+    },
+    "API_PAGE": {
+      "KICKER": "API Integration",
+      "TITLE": "Access and process satellite imagery with an API key",
+      "COPY": "With an API key, you can query satellite data by polygon, start image processing workflows, track the processing status, and retrieve completed results directly into your system.",
+      "BUY_API_KEY": "Buy API Key",
+      "DOCUMENTATION": "View Documentation",
+      "ENDPOINTS": "Authorized Endpoints",
+      "FEATURE_1_TITLE": "Query data by polygon",
+      "FEATURE_1_DESC": "Automatically query satellite imagery for a selected area and list matching products.",
+      "FEATURE_2_TITLE": "Start and track processing",
+      "FEATURE_2_DESC": "Start the image processing workflow for the selected imagery and track the process status with the processId.",
+      "FEATURE_3_TITLE": "Receive the result in your system",
+      "FEATURE_3_DESC": "Once processing is complete, retrieve the processed image, preview, and related output links directly.",
+      "DEVELOPER_FIRST": "Developer First",
+      "SECTION2_TITLE": "Complete API workflow in 4 steps",
+      "SECTION2_COPY": "First, list satellite imagery by polygon. Then start the processing workflow for the selected product. Check the status with the processId, and once the operation is complete, retrieve the processed result. This structure makes it easy to integrate satellite imagery workflows into your software systems.",
+      "USECASE_1_TITLE": "Backend automation",
+      "USECASE_1_DESC": "Manage satellite data querying and processing workflows automatically from your own services.",
+      "USECASE_2_TITLE": "GIS and mapping systems",
+      "USECASE_2_DESC": "Integrate processed imagery into your own map infrastructure, analysis screens, or enterprise applications.",
+      "USECASE_3_TITLE": "Enterprise data workflows",
+      "USECASE_3_DESC": "Use API-key-authorized endpoints to manage controlled and scalable data access."
+    },
+    "CONTACT_PAGE": {
+      "KICKER": "Contact",
+      "TITLE": "Get in Touch for Your Satellite Data Needs",
+      "COPY": "Contact our team for satellite imagery purchases, API access, enterprise use cases, and custom project requirements. Let’s plan the right solution for you.",
+      "FULL_NAME": "Fullname",
+      "ORGANIZATION": "Organization",
+      "BUSINESS_EMAIL": "E-mail",
+      "SUBJECT": "Subject",
+      "MESSAGE": "Message",
+      "SEND": "Send",
+      "FORM_TITLE": "Contact Form",
+      "VALIDATION_FULL_NAME": "Full name is required",
+      "VALIDATION_EMAIL": "Please enter a valid email",
+      "VALIDATION_SUBJECT": "Subject is required",
+      "VALIDATION_MESSAGE": "Message is required"
+    },
     "API_DOC": {
       "SIDEBAR": {
         "KICKER": "API Documentation",
@@ -729,56 +570,328 @@ export const locale = {
         }
       }
     },
-    "DATA_PAGE": {
-      "KICKER": "Satellite Data",
-      "TITLE": "Find, select, and process satellite imagery",
-      "COPY": "List satellite images for your target area, filter the results, and select the most suitable data for your project. Process the selected imagery and turn it into ready-to-use outputs for analysis and operational use.",
-      "SEARCH_TITLE": "Search your area",
-      "SEARCH_PLACEHOLDER": "Enter city, district, or region name",
-      "SEARCH_BUTTON": "Start Search",
-      "LOADING": "Loading...",
-      "BENEFIT_1_TITLE": "Find satellite data quickly",
-      "BENEFIT_1_DESC": "List relevant satellite imagery in a short time by searching with polygon or region-based queries.",
-      "BENEFIT_2_TITLE": "Choose the right image",
-      "BENEFIT_2_DESC": "Compare imagery by date, resolution, and cloud coverage to identify the right dataset.",
-      "BENEFIT_3_TITLE": "Start the processing workflow",
-      "BENEFIT_3_DESC": "Run operations such as orthorectification, pansharpening, and classification for the selected satellite image.",
-      "BENEFIT_4_TITLE": "Get ready-to-use outputs",
-      "BENEFIT_4_DESC": "When processing is completed, receive the processed satellite image and related output files in a usable format.",
-      "USE_CASES": "Use Cases",
-      "SECTION2_TITLE": "Data, processing, and result in a single platform",
-      "SECTION2_COPY": "Our platform does more than listing satellite imagery. It also lets you process the selected data and retrieve the final outputs in the same workflow. This brings data discovery, selection, processing, and result delivery together in one experience.",
-      "USECASE_1_TITLE": "Mapping and visualization",
-      "USECASE_1_DESC": "Use selected satellite imagery as a base layer or up-to-date visual dataset in map-based projects.",
-      "USECASE_2_TITLE": "Analysis and evaluation",
-      "USECASE_2_DESC": "Processed imagery helps you examine target areas more clearly and perform project-based evaluations.",
-      "USECASE_3_TITLE": "Enterprise use and reporting",
-      "USECASE_3_DESC": "Processed satellite outputs can be directly used in internal planning, reporting, and presentation workflows."
+    "MAP": {
+      "KICKER": "Map",
+      "TITLE": "Map",
+      "PANEL": {
+        "KICKER": "Layers",
+        "TITLE": "Layer Manager",
+        "SUBTITLE": "Basemaps / Overlays",
+        "COLLAPSE": "Collapse"
+      },
+      "ACTIONS": {
+        "LAYER_MANAGER": "Layer Manager",
+        "SEARCH": "Search Map",
+        "POLYGON": "Polygon",
+        "UPLOAD_FILE": "Upload File",
+        "RESET": "Reset",
+        "ZOOM_IN": "Zoom In",
+        "ZOOM_OUT": "Zoom Out"
+      },
+      "SEARCH": {
+        "KICKER": "Map",
+        "TITLE": "Search Map",
+        "PLACEHOLDER": "Search location, city, district, or coordinates",
+        "RESULTS": "Search Results",
+        "BUTTON": "Search Map"
+      },
+      "STATUS": {
+        "TITLE": "Map Status",
+        "COORDINATE": "Coordinate",
+        "ZOOM": "Zoom",
+        "LOADED_FILE": "Loaded file"
+      },
+      "UPLOAD": {
+        "TITLE": "Upload File",
+        "HINT": "You can upload GeoJSON, JSON, KML, or ZIP files.",
+        "LOADED_FILE": "Loaded file"
+      },
+      "STATE": {
+        "LOADING": "Loading",
+        "NO_DATA": "No data available to display"
+      },
+      "COMMON": {
+        "BASEMAPS": "Basemaps",
+        "OVERLAYS": "Overlays",
+        "LAYER": "Layer",
+        "LAYERS": "Layers",
+        "SERVICE_TYPE": "Service Type",
+        "LAYER_NAME": "Layer Name",
+        "GENERAL_INFO": "General Information",
+        "VISIBILITY": "Visibility",
+        "OPEN": "Open",
+        "CLOSED": "Closed",
+        "OPACITY": "Opacity",
+        "ORDER_NO": "Order No",
+        "VERSION": "Version",
+        "FORMAT": "Format",
+        "SERVICE_ENDPOINT": "Service Endpoint",
+        "REQUIRED": "This field is required",
+        "ACTIVE_FILTER": "Active Filter",
+        "LANG": "en",
+        "SELECT_AN_OPERATOR": "Select an Operator"
+      },
+      "LEGEND": {
+        "TITLE": "Legend",
+        "SUBTITLE": "Legend image for the WMS layer",
+        "SUMMARY": "Layer Summary",
+        "IMAGE": "Legend Image",
+        "EMPTY": "No legend is available for this layer"
+      },
+      "INFO": {
+        "TITLE": "Layer Info",
+        "SUBTITLE": "service details",
+        "WMS_NOTES": "WMS Notes",
+        "WFS_NOTES": "WFS Notes"
+      },
+      "FILTER": {
+        "TITLE": "Filter",
+        "SUBTITLE": "filter rules for the layer",
+        "ADD_RULE": "Add Rule",
+        "CLEAR": "Clear Filter",
+        "APPLY": "Apply Filter",
+        "RULES": "Filter Rules",
+        "FIELD": "Field Name",
+        "REFRESH_FIELDS": "Refresh Fields",
+        "SELECT_FIELD": "Select field",
+        "OPERATOR": "Operator",
+        "VALUE": "Value",
+        "SECOND_VALUE": "Second Value",
+        "REMOVE_RULE": "Remove Rule",
+        "PREVIEW": "Filter Preview",
+        "ATTRIBUTES_LOADING": "Attribute fields are loading...",
+        "NO_ATTRIBUTES_FOUND": "No attribute fields found.",
+        "ATTRIBUTE_LOAD_ERROR": "Attribute fields could not be loaded.",
+        "OPERATORS": {
+          "CONTAINS": "Contains",
+          "BETWEEN": "Between"
+        }
+      },
+      "FEATURE": {
+        "TITLE": "Feature Details",
+        "SELECTED": "Selected Feature",
+        "EMPTY": "No data available to display"
+      }
     },
-    "API_PAGE": {
-      "KICKER": "API Integration",
-      "TITLE": "Access and process satellite imagery with an API key",
-      "COPY": "With an API key, you can query satellite data by polygon, start image processing workflows, track the processing status, and retrieve completed results directly into your system.",
-      "BUY_API_KEY": "Buy API Key",
-      "DOCUMENTATION": "View Documentation",
-      "ENDPOINTS": "Authorized Endpoints",
-      "FEATURE_1_TITLE": "Query data by polygon",
-      "FEATURE_1_DESC": "Automatically query satellite imagery for a selected area and list matching products.",
-      "FEATURE_2_TITLE": "Start and track processing",
-      "FEATURE_2_DESC": "Start the image processing workflow for the selected imagery and track the process status with the processId.",
-      "FEATURE_3_TITLE": "Receive the result in your system",
-      "FEATURE_3_DESC": "Once processing is complete, retrieve the processed image, preview, and related output links directly.",
-      "DEVELOPER_FIRST": "Developer First",
-      "SECTION2_TITLE": "Complete API workflow in 4 steps",
-      "SECTION2_COPY": "First, list satellite imagery by polygon. Then start the processing workflow for the selected product. Check the status with the processId, and once the operation is complete, retrieve the processed result. This structure makes it easy to integrate satellite imagery workflows into your software systems.",
-      "USECASE_1_TITLE": "Backend automation",
-      "USECASE_1_DESC": "Manage satellite data querying and processing workflows automatically from your own services.",
-      "USECASE_2_TITLE": "GIS and mapping systems",
-      "USECASE_2_DESC": "Integrate processed imagery into your own map infrastructure, analysis screens, or enterprise applications.",
-      "USECASE_3_TITLE": "Enterprise data workflows",
-      "USECASE_3_DESC": "Use API-key-authorized endpoints to manage controlled and scalable data access."
-    }
 
+    "CARD_HOLDER": "Name on Card",
+    "CARD_NUMBER": "Card Number",
+    "EXPIRY_DATE": "Expiry Date",
+    "CVV": "CVV",
+    "PAYMENT_FORM_TITLE": "Payment Information",
+    "PAYMENT_FORM_SUBTITLE": "Complete your order by entering your card details",
+    "CARD_HOLDER_PLACEHOLDER": "Full Name",
+    "CARD_NUMBER_PLACEHOLDER": "•••• •••• •••• ••••",
+    "EXPIRY_DATE_PLACEHOLDER": "MM/YY",
+    "CVV_PLACEHOLDER": "•••",
+    "CARD_HOLDER_REQUIRED": "Please enter the cardholder name.",
+    "CARD_NUMBER_REQUIRED": "Please enter a valid card number.",
+    "EXPIRY_DATE_REQUIRED": "Please enter a valid expiry date.",
+    "CVV_REQUIRED": "Please enter a valid CVV.",
+    "PAYMENT_AGREEMENT": "I accept the distance sales agreement and payment terms.",
+    "PAYMENT_AGREEMENT_REQUIRED": "You must accept this to continue.",
+    "CARD_OWNER": "Card Holder",
+    "ORDER_COMPLETION_TITLE": "Complete Order",
+    "ORDER_COMPLETION_SUBTITLE": "Complete your address and payment details",
+    "SELECTED_ADDRESS_INFO": "Select the address to use for this order",
+    "SECURE_PAYMENT_INFO": "Enter your card details securely",
+    "UPDATE_PERSONAL_INFORMATION": "Update your personal information",
+    "AVATAR_SIZE_HINT": "300x300 px",
+    "MANAGE_EMAIL_AND_PASSWORD": "Manage your email and password",
+    "MANAGE_ADDRESSES": "Manage your addresses",
+    "NO_ADDRESS_FOUND": "No saved address found yet",
+    "LOCATION": "Location",
+    "SAVED_ADDRESSES": "Saved addresses",
+    "NEW_ORDER": "Yeni Sipariş",
+    "NEW_ORDER_MESSAGE": "Yeni bir siparişiniz bulunmaktadır.",
+    "ORDER_COMPLETED_MESSAGE": "Your order has been completed.",
+    "ORDER_REJECTED": "Order Rejected",
+    "ORDER_REJECTED_MESSAGE": "Your order has been rejected.",
+    "ORDER_APPROVED": "Order Approved",
+    "ORDER_APPROVED_MESSAGE": "Your order has been approved.",
+    "ORDER_PREPARING": "Order Preparing",
+    "ORDER_PREPARING_MESSAGE": "Your order is being prepared.",
+    "CLEAR": "Clear",
+    "LAYER_GROUPS": "Layer Groups",
+    "LAYERS": "Layers",
+    "REJECTED": 'Rejected',
+    "COMPLETED": 'Completed',
+    "PERMISSION_FORM": {
+      "TITLE": "You can add or edit permission information here.",
+
+      "NAME": "Name",
+      "CODE": "Code",
+
+      "REQUIRED_NAME": "Name is required.",
+      "REQUIRED_CODE": "Code is required.",
+
+      "FORM": {
+        "REQUIRED": "This field is required.",
+        "MIN_LENGTH": "Minimum {{min}} characters required.",
+        "MAX_LENGTH": "Maximum {{max}} characters allowed.",
+        "INVALID_FORMAT": "Invalid format."
+      }
+    },
+    "ROLE_FORM": {
+      "TITLE": "You can add or edit role information here",
+      "NAME": "Name",
+      "PERMISSIONS": "Permissions",
+
+      "REQUIRED_NAME": "Role name is required",
+      "REQUIRED_PERMISSIONS": "At least one permission must be selected",
+
+      "FORM": {
+        "MIN_LENGTH": "Must be at least {{min}} characters",
+        "MAX_LENGTH": "Must be at most {{max}} characters"
+      }
+    },
+    "USER_FORM": {
+      "TITLE": "You can add or edit user information here",
+
+      "NAME": "Name",
+      "SURNAME": "Surname",
+      "EMAIL": "Email",
+      "PASSWORD": "Password",
+      "CONFIRM_PASSWORD": "Confirm Password",
+      "USERNAME": "Username",
+      "PHONE": "Phone",
+      "ROLE": "Role",
+      "SELECT_ROLE": "Select role",
+
+      "REQUIRED_NAME": "Name is required",
+      "REQUIRED_SURNAME": "Surname is required",
+      "REQUIRED_EMAIL": "Email is required",
+      "INVALID_EMAIL": "Please enter a valid email address",
+      "REQUIRED_PASSWORD": "Password is required",
+      "PASSWORD_NOT_MATCH": "Passwords do not match",
+      "REQUIRED_USERNAME": "Username is required",
+      "REQUIRED_PHONE": "Phone is required",
+      "REQUIRED_ROLE": "Role is required",
+      "INVALID_PHONE": "Phone is invalid",
+
+      "FORM": {
+        "MIN_LENGTH": "Must be at least {{min}} characters",
+        "MAX_LENGTH": "Must be at most {{max}} characters"
+      }
+    },
+    "LAYERGROUP_FORM": {
+      "TITLE": "You can add or edit the layer group",
+      "NAME": "Name",
+      "ORDER_NO": "Order No",
+
+      "REQUIRED_NAME": "Name is required",
+      "REQUIRED_ORDER": "Order number is required",
+      "MIN_ORDER": "Order number must be at least 1"
+    },
+    "LAYER_FORM": {
+      "TITLE": "You can add or edit layer information here",
+      "VISIBLE": "Visible",
+      "NAME": "Name",
+      "TYPE": "Type",
+      "URL": "Url",
+      "LAYER_NAME": "Layer Name",
+      "FORMAT": "Format",
+      "VERSION": "Version",
+      "OPACITY": "Opacity",
+      "ORDER_NO": "Order No",
+      "GROUP": "Group",
+      "SELECT_GROUP": "Select a Group",
+      "SELECT_A_TYPE": "Select a Type",
+
+      "REQUIRED_NAME": "Name is required",
+      "REQUIRED_TYPE": "Type is required",
+      "REQUIRED_URL": "Url is required",
+      "REQUIRED_LAYER_NAME": "Layer name is required",
+      "REQUIRED_OPACITY": "Opacity is required",
+      "OPACITY_RANGE": "Opacity must be between 0 and 1",
+      "REQUIRED_ORDER_NO": "Order number is required",
+      "MIN_ORDER_NO": "Order number must be at least 1",
+      "REQUIRED_GROUP": "Group is required"
+    },
+    "INVOICE_FORM": {
+      "TITLE": "You can manage invoice operations here.",
+      "PREVIEW": "Preview",
+      "PREVIEW_DESCRIPTION": "You can view the uploaded PDF file here.",
+      "NO_FILE_SELECTED": "No file selected yet",
+      "NO_PREVIEW_TITLE": "No preview available",
+      "NO_PREVIEW_DESCRIPTION": "When you upload a PDF, its preview will appear here."
+    },
+    "ADDRESS_FORM": {
+      "TITLE": "You can add or edit address information here."
+    },
+    "FOOTER": {
+      "DESCRIPTION": "Explore, manage and analyze your geospatial data.",
+      "PLATFORM": "Platform",
+      "MARKETPLACE": "Marketplace",
+      "DATA": "Data",
+      "API": "API",
+      "MAP": "Map",
+      "CONTACT": "Contact",
+      "LEGAL": "Legal",
+      "TERMS_OF_SERVICE": "Terms of Service",
+      "PRIVACY_POLICY": "Privacy Policy",
+      "COOKIES": "Cookies Policy"
+    },
+    "COPYRIGHT": "© 2026 GeoPortal. All rights reserved.",
+    "TERMS_SHORT": "Terms",
+    "PRIVACY_SHORT": "Privacy",
+    "MESSAGES": {
+      "SUCCESS": "Transaction successfuly completed.",
+      "ERROR": "An error has occured.",
+      "LOGIN_REQUIRED_FOR_MORE_PRODUCTS": "Please log in to add more products!",
+      "AVATAR_SIZE": "Please upload an image file with dimensions of 300x300 pixels!",
+      "SELECT_ADDRESS": "Please select an address!",
+      "PAYMENT": "Please fill in the payment information completely!",
+      "CONTACT_SUCCESS": "Your message succesfully commited.",
+    },
+    "FILTERS": "Filters",
+    "CLEAR_FILTERS": "Clear Filters",
+    "ALL": "All",
+    "MIN_PRICE": "Min. Price",
+    "MAX_PRICE": "Max. Price",
+    "SUPPORT_MANAGEMENT": {
+      "EYEBROW": "Support",
+      "PAGE_TITLE": "Support Tickets",
+      "SUMMARY_TITLE": "Overview",
+      "TOTAL_RECORDS": "{{count}} records",
+      "LAST_UPDATE": "Last Update",
+
+      "TICKET_TITLE": "Ticket",
+      "CUSTOMER": "Customer",
+      "EMAIL": "Email",
+      "ORGANIZATION": "Organization",
+      "STATUS": "Status",
+      "SUBJECT": "Subject",
+      "ADMIN": "Admin",
+
+      "MESSAGE_THREAD": "Message Thread",
+      "NO_MESSAGES": "No messages found.",
+      "REPLY_AND_STATUS": "Reply / Update Status",
+      "REPLY": "Reply",
+      "REPLY_PLACEHOLDER": "Write the reply to be sent to the customer",
+      "STATUS_PLACEHOLDER": "Select status",
+      "ADMIN_EMAIL": "Admin Email",
+      "ADMIN_EMAIL_PLACEHOLDER": "admin@domain.com",
+
+      "UPDATE_STATUS_ONLY": "Update Status Only",
+      "SEND_REPLY": "Send Reply",
+      "SENDING": "Sending...",
+
+      "COLUMN_TICKET_NO": "Ticket No",
+      "COLUMN_CUSTOMER": "Customer",
+      "COLUMN_EMAIL": "Email",
+      "COLUMN_SUBJECT": "Subject",
+      "COLUMN_STATUS": "Status",
+      "COLUMN_LAST_MESSAGE": "Last Message",
+      "COLUMN_ACTIONS": "Actions",
+
+      "STATUS_NEW": "New",
+      "STATUS_WAITING_FOR_ADMIN": "Waiting For Admin",
+      "STATUS_WAITING_FOR_CUSTOMER": "Waiting For Customer",
+      "STATUS_CUSTOMER_REPLIED": "Customer Replied",
+      "STATUS_CLOSED": "Closed",
+      "STATUS_SPAM": "Spam"
+    }
     // END (TR-EN-LANGUAGE-BRANCH)
   }
 };

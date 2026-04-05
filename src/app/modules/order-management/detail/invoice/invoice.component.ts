@@ -1,74 +1,67 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
-import { ModalComponent, ModalConfig } from "src/app/_metronic/partials";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { OrderProductModel } from "../../models/orderproduct.model";
 import { TranslateService } from "@ngx-translate/core";
 import { forkJoin } from "rxjs";
 
 @Component({
-    selector: 'app-orderinvoice-edit',
-    templateUrl: './invoice.component.html',
-    styleUrls: ['./invoice.component.scss'],
+  selector: 'app-orderinvoice-edit',
+  templateUrl: './invoice.component.html',
+  styleUrls: ['./invoice.component.scss'],
 })
 export class InvoiceComponent implements OnInit {
 
-    @ViewChild('modal') private modalComponent: ModalComponent;
-    @Output() isSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
-    
-    modalConfig: ModalConfig;
-    fileName: string;
-    pdfSrc: any;
+  @Output() isSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    orderProduct: OrderProductModel;
+  isModalOpen: boolean = false;
+  modalTitle: string = '';
 
-    constructor( 
-        private translate: TranslateService
-    ) {}
+  fileName: string;
+  pdfSrc: any;
 
-    ngAfterViewInit(): void {
-        
+  orderProduct: OrderProductModel;
+
+  constructor(
+    private translate: TranslateService
+  ) {}
+
+  ngOnInit(): void {}
+
+  openModal(orderProduct: OrderProductModel) {
+
+    const keys = ['INVOICE'];
+    const translations: any = {};
+
+    forkJoin(keys.map(k => this.translate.get(k))).subscribe(results => {
+      keys.forEach((k, i) => translations[k] = results[i]);
+      this.modalTitle = translations['INVOICE'];
+    });
+
+    this.orderProduct = orderProduct;
+
+    if (!this.orderProduct.fileResult.fileContents.includes(
+      "data:" + this.orderProduct.fileResult.contentType + ";base64,"
+    )) {
+      this.orderProduct.fileResult.fileContents =
+        "data:" +
+        this.orderProduct.fileResult.contentType +
+        ";base64," +
+        this.orderProduct.fileResult.fileContents;
     }
 
-    ngOnInit(): void {
-    }
-    
-    openModal(orderProduct: OrderProductModel) {
-        const keys = ['INVOICE', 'CLOSE', 'DOWNLOAD'];
+    this.pdfSrc = this.orderProduct.fileResult.fileContents;
+    this.fileName = this.orderProduct.fileName!;
 
-        const translations: any = {};
+    this.isModalOpen = true;
+  }
 
-        const observables = keys.map(key => this.translate.get(key));
+  closeModal() {
+    this.isModalOpen = false;
+  }
 
-        forkJoin(observables).subscribe((results) => {
-            keys.forEach((key, index) => {
-                translations[key] = results[index]
-            })
-        })
-
-        this.orderProduct = orderProduct;
-
-        this.modalConfig = {
-            modalTitle: translations['INVOICE'],
-            closeButtonLabel: translations['CLOSE'],
-            dismissButtonLabel: translations['DOWNLOAD'],
-            onDismiss: this.downloadFile.bind(this),
-        };
-
-        if(!this.orderProduct.fileResult.fileContents.includes("data:" + this.orderProduct.fileResult.contentType + ";base64,"))
-        {
-            this.orderProduct.fileResult.fileContents = "data:" + this.orderProduct.fileResult.contentType + ";base64," + this.orderProduct.fileResult.fileContents;
-        }
-        
-        this.pdfSrc = this.orderProduct.fileResult.fileContents;
-        this.fileName = this.orderProduct.fileName!;
-        this.modalComponent.open();
-    }
-
-    downloadFile() {
-        const downloadLink = document.createElement('a');
-        downloadLink.href = this.pdfSrc;
-        downloadLink.download = this.fileName;
-        downloadLink.click();
-
-        return true;
-    }
+  downloadFile() {
+    const link = document.createElement('a');
+    link.href = this.pdfSrc;
+    link.download = this.fileName;
+    link.click();
+  }
 }

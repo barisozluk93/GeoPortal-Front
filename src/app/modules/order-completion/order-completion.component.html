@@ -1,323 +1,351 @@
-<section class="checkout-page">
-  <div class="checkout-hero">
-    <div class="checkout-overlay"></div>
+<app-address-editsave #editSaveComponent (isSuccess)="isSuccess($event)"></app-address-editsave>
 
-    <div class="checkout-container checkout-hero-content">
-      <app-address-editsave #editSaveComponent (isSuccess)="isSuccess($event)"></app-address-editsave>
-
-      <div class="checkout-grid">
-        <div class="checkout-main">
-
-          <div class="checkout-tabs">
-            <div class="checkout-tabs-row">
-              <div class="checkout-tab-col">
-                <div
-                  (click)="setActiveTabId('address')"
-                  [ngClass]="activeTabId == 'address' ? 'checkout-tab active' : 'checkout-tab'">
-
-                  <div class="checkout-tab-title">
-                    {{ 'ADDRESS_INFOS' | translate }}
-                  </div>
-
-                  <ng-container *ngIf="selectedInvoiceAddress">
-                    <div class="checkout-tab-text">
-                      {{ selectedInvoiceAddress.address }}
-                    </div>
-                    <div class="checkout-tab-text">
-                      {{ selectedInvoiceAddress.district }}/{{ selectedInvoiceAddress.city }}
-                    </div>
-                    <div class="checkout-tab-text">
-                      {{ selectedInvoiceAddress.country }}
-                    </div>
-                  </ng-container>
-                </div>
-              </div>
-
-              <div class="checkout-tab-col">
-                <div
-                  (click)="setActiveTabId('payment')"
-                  [ngClass]="activeTabId == 'payment' ? 'checkout-tab active' : 'checkout-tab'">
-
-                  <div class="checkout-tab-title">
-                    {{ 'PAYMENT_INFOS' | translate }}
-                  </div>
-
-                  <div class="checkout-tab-text">
-                    {{ 'PAYMENT_CONFIRMATION_TEXT' | translate }}
-                  </div>
-                </div>
-              </div>
+<div class="row g-7 order-completion-page">
+  <div class="col-12 col-xxl-8">
+    <div class="card checkout-card shadow-sm">
+      <div class="card-header border-0 pt-8 pb-0">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 w-100">
+          <div>
+            <h2 class="checkout-page-title mb-1">
+              {{ 'ORDER_COMPLETION_TITLE' | translate }}
+            </h2>
+            <div class="checkout-page-subtitle">
+              {{ 'ORDER_COMPLETION_SUBTITLE' | translate }}
             </div>
           </div>
 
-          <div class="checkout-panel" *ngIf="activeTabId == 'address'">
-            <div class="checkout-panel-header">
-              <h3 class="checkout-panel-title">
-                {{ 'INVOICE_ADDRESS' | translate }}
-              </h3>
+          <div class="checkout-page-badge">
+            <i class="ki-duotone ki-basket fs-4 me-2">
+              <span class="path1"></span>
+              <span class="path2"></span>
+              <span class="path3"></span>
+              <span class="path4"></span>
+            </i>
+            <span>{{ totalPrice.toFixed(2) }} ₺</span>
+          </div>
+        </div>
+      </div>
 
-              <div class="checkout-panel-toolbar">
-                <a (click)="openSaveModal()" class="btn btn-sm btn-light-primary">
-                  <span
-                    [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
-                    class="svg-icon svg-icon-3"></span>
-                  {{ 'MENU.NEW' | translate }}
-                </a>
-              </div>
-            </div>
+      <div class="card-body pt-6 pb-8">
+        <div class="checkout-tabs mb-8">
+          <button type="button" class="checkout-tab" [ngClass]="{ active: activeTabId === 'address' }"
+            (click)="setActiveTabId('address')">
+            <span class="checkout-tab__step">01</span>
+            <span class="checkout-tab__content">
+              <span class="checkout-tab__title">
+                {{ 'ADDRESS_INFOS' | translate }}
+              </span>
+              <span class="checkout-tab__desc" *ngIf="selectedAddress">
+                {{ selectedAddress.addressHeader }}
+              </span>
+            </span>
+          </button>
 
-            <div class="checkout-panel-body">
-              <div class="row gy-5 g-xl-8">
-                <ng-container *ngFor="let item of invoiceAddresses">
-                  <div class="col-xxl-6">
-                    <div
-                      class="address-glass-card"
-                      [ngClass]="item.selected ? 'selected' : ''"
-                      (click)="selectInvoiceAddress(item.id)">
+          <button type="button" class="checkout-tab" [ngClass]="{ active: activeTabId === 'payment' }"
+            (click)="setActiveTabId('payment')">
+            <span class="checkout-tab__step">02</span>
+            <span class="checkout-tab__content">
+              <span class="checkout-tab__title">
+                {{ 'PAYMENT_INFOS' | translate }}
+              </span>
+              <span class="checkout-tab__desc">
+                {{ 'SECURE_PAYMENT_INFO' | translate }}
+              </span>
+            </span>
+          </button>
+        </div>
 
-                      <div class="address-glass-header">
-                        <div class="address-glass-title">
-                          {{ item.addressHeader }}
-                        </div>
+        <!-- ADDRESS TAB -->
+        <ng-container *ngIf="activeTabId === 'address'">
+          <div class="row g-7">
+            <div class="col-12">
+              <div class="card inner-section-card h-100">
+                <div class="card-header border-0 pt-7 pb-0">
+                  <div class="d-flex align-items-center justify-content-between w-100 gap-3 flex-wrap">
+                    <div>
+                      <h3 class="inner-section-title mb-1">
+                        {{ 'ADDRESS_INFOS' | translate }}
+                      </h3>
+                      <div class="inner-section-subtitle">
+                        {{ 'SELECTED_ADDRESS_INFO' | translate }}
+                      </div>
+                    </div>
 
-                        <div class="address-glass-toolbar">
-                          <button
-                            (click)="openEditModal(item.id); $event.stopPropagation()"
-                            type="button"
-                            class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
-                            title="Edit">
-                            <span
-                              [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
-                              class="svg-icon svg-icon-2"></span>
+                    <button type="button" (click)="openSaveModal()" class="btn btn-light-primary btn-sm">
+                      <i class="ki-duotone ki-plus fs-4 me-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                      </i>
+                      {{ 'MENU.NEW' | translate }}
+                    </button>
+                  </div>
+                </div>
+
+                <div class="card-body pt-6">
+                  <div class="address-list d-flex flex-column gap-4">
+                    <ng-container *ngFor="let item of addresses">
+                      <div class="address-card" [ngClass]="{ selected: item.selected }"
+                        (click)="selectAddress(item.id)">
+                        <div class="address-card__header">
+                          <div class="address-card__title-wrap">
+                            <div class="address-card__title">
+                              {{ item.addressHeader }}
+                            </div>
+                            <div class="address-card__person">
+                              {{ item.name }} {{ item.surname }}
+                            </div>
+                          </div>
+
+                          <button type="button" class="btn btn-sm btn-icon btn-light-primary"
+                            (click)="openEditModal(item.id); $event.stopPropagation()">
+                            <i class="ki-duotone ki-pencil fs-3">
+                              <span class="path1"></span>
+                              <span class="path2"></span>
+                            </i>
                           </button>
                         </div>
-                      </div>
 
-                      <div class="address-glass-body">
-                        <div class="address-line strong">
-                          {{ item.name }} {{ item.surname }}
+                        <div class="address-card__body">
+                          <div class="address-card__line">{{ item.address }}</div>
+                          <div class="address-card__line">{{ item.district }}/{{ item.city }}</div>
+                          <div class="address-card__line">{{ item.country }}</div>
+                          <div class="address-card__phone">{{ item.phone }}</div>
                         </div>
-                        <div class="address-line">
-                          {{ item.address }}
-                        </div>
-                        <div class="address-line">
-                          {{ item.district }}/{{ item.city }}
-                        </div>
-                        <div class="address-line">
-                          {{ item.country }}
-                        </div>
-                        <div class="address-line strong">
-                          {{ item.phone }}
+
+                        <div class="address-card__check" *ngIf="item.selected">
+                          <i class="ki-duotone ki-check-circle fs-2 text-primary">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                          </i>
                         </div>
                       </div>
-                    </div>
+                    </ng-container>
                   </div>
-                </ng-container>
+                </div>
               </div>
             </div>
           </div>
+        </ng-container>
 
-          <div class="checkout-panel" *ngIf="activeTabId == 'payment'">
-            <div class="checkout-panel-body">
-              <div class="payment-grid">
+        <!-- PAYMENT TAB -->
+        <ng-container *ngIf="activeTabId === 'payment'">
+          <div class="row g-7">
+            <div class="col-12 col-xl-6">
+              <div class="payment-card-preview">
+                <div class="payment-card-preview__top">
+                  <div class="payment-card-preview__chip"></div>
 
-                <div class="payment-preview-side">
-                  <div class="payment-preview-card">
-                    <div class="payment-card-chip"></div>
+                  <div class="payment-card-preview__brand-badge" [ngClass]="{
+                      'is-visa': detectedCardType === 'Visa',
+                      'is-mastercard': detectedCardType === 'Mastercard',
+                      'is-amex': detectedCardType === 'Amex',
+                      'is-default': detectedCardType === 'Card'
+                    }">
+                    <ng-container [ngSwitch]="detectedCardType">
+                      <ng-container *ngSwitchCase="'Visa'">
+                        <span class="payment-card-preview__brand-text">VISA</span>
+                      </ng-container>
 
-                    <div class="payment-card-number">
-                      {{ cardNumberPreview }}
+                      <ng-container *ngSwitchCase="'Mastercard'">
+                        <span class="payment-card-preview__mc-logo">
+                          <span class="circle circle-left"></span>
+                          <span class="circle circle-right"></span>
+                        </span>
+                        <span class="payment-card-preview__brand-text">mastercard</span>
+                      </ng-container>
+
+                      <ng-container *ngSwitchCase="'Amex'">
+                        <span class="payment-card-preview__brand-text">AMEX</span>
+                      </ng-container>
+
+                      <ng-container *ngSwitchDefault>
+                        <span class="payment-card-preview__brand-text">CARD</span>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <div class="payment-card-preview__number">
+                  {{ getFormattedCardNumber() }}
+                </div>
+
+                <div class="payment-card-preview__bottom">
+                  <div>
+                    <div class="payment-card-preview__label">
+                      {{ 'CARD_OWNER' | translate }}
                     </div>
+                    <div class="payment-card-preview__value">
+                      {{ getCardHolderPreview() }}
+                    </div>
+                  </div>
 
-                    <div class="payment-card-footer">
-                      <div>
-                        <div class="payment-card-label">
+                  <div>
+                    <div class="payment-card-preview__label">
+                      {{ 'EXPIRY_DATE' | translate }}
+                    </div>
+                    <div class="payment-card-preview__value">
+                      {{ getExpiryPreview() }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-xl-6">
+              <div class="card inner-section-card">
+                <div class="card-header border-0 pt-7 pb-0">
+                  <div>
+                    <h3 class="inner-section-title mb-1">
+                      {{ 'PAYMENT_FORM_TITLE' | translate }}
+                    </h3>
+                    <div class="inner-section-subtitle">
+                      {{ 'PAYMENT_FORM_SUBTITLE' | translate }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-body pt-6">
+                  <form [formGroup]="paymentForm" novalidate>
+                    <div class="row g-5">
+
+                      <!-- CARD HOLDER -->
+                      <div class="col-12">
+                        <label class="form-label fw-semibold text-gray-700">
                           {{ 'CARD_HOLDER' | translate }}
-                        </div>
-                        <div class="payment-card-value">
-                          {{ cardHolderPreview }}
+                        </label>
+
+                        <input type="text" class="form-control form-control-lg form-control-solid"
+                          formControlName="cardHolder" [placeholder]="'CARD_HOLDER_PLACEHOLDER' | translate" [ngClass]="{
+          'is-invalid': isFieldInvalid('cardHolder')
+        }" />
+
+                        <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('cardHolder')">
+                          {{ 'CARD_HOLDER_REQUIRED' | translate }}
                         </div>
                       </div>
 
-                      <div>
-                        <div class="payment-card-label">
-                          {{ 'EXPIRE_DATE' | translate }}
-                        </div>
-                        <div class="payment-card-value">
-                          {{ expirePreview }}
+                      <!-- CARD NUMBER -->
+                      <div class="col-12">
+                        <label class="form-label fw-semibold text-gray-700">
+                          {{ 'CARD_NUMBER' | translate }}
+                        </label>
+
+                        <input type="text" class="form-control form-control-lg form-control-solid"
+                          formControlName="cardNumber" [placeholder]="'CARD_NUMBER_PLACEHOLDER' | translate"
+                          maxlength="19" (input)="onCardNumberInput()" [ngClass]="{
+          'is-invalid': isFieldInvalid('cardNumber')
+        }" />
+
+                        <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('cardNumber')">
+                          {{ 'CARD_NUMBER_REQUIRED' | translate }}
                         </div>
                       </div>
+
+                      <!-- EXPIRY -->
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold text-gray-700">
+                          {{ 'EXPIRY_DATE' | translate }}
+                        </label>
+
+                        <input type="text" class="form-control form-control-lg form-control-solid"
+                          formControlName="expiry" [placeholder]="'EXPIRY_DATE_PLACEHOLDER' | translate" maxlength="5"
+                          (input)="onExpiryInput()" [ngClass]="{
+          'is-invalid': isFieldInvalid('expiry')
+        }" />
+
+                        <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('expiry')">
+                          {{ 'EXPIRY_DATE_REQUIRED' | translate }}
+                        </div>
+                      </div>
+
+                      <!-- CVV -->
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold text-gray-700">
+                          {{ 'CVV' | translate }}
+                        </label>
+
+                        <input type="password" class="form-control form-control-lg form-control-solid"
+                          formControlName="cvv" [placeholder]="'CVV_PLACEHOLDER' | translate" maxlength="4"
+                          (input)="onCvvInput()" [ngClass]="{
+          'is-invalid': isFieldInvalid('cvv')
+        }" />
+
+                        <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('cvv')">
+                          {{ 'CVV_REQUIRED' | translate }}
+                        </div>
+                      </div>
+
+                      <!-- AGREEMENT -->
+                      <div class="col-12">
+                        <label class="form-check form-check-custom form-check-solid align-items-start">
+                          <input class="form-check-input mt-1" type="checkbox" formControlName="agreement" [ngClass]="{
+            'is-invalid': isFieldInvalid('agreement')
+          }" />
+                          <span class="form-check-label text-gray-700 fw-semibold ms-3">
+                            {{ 'PAYMENT_AGREEMENT' | translate }}
+                          </span>
+                        </label>
+
+                        <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('agreement')">
+                          {{ 'PAYMENT_AGREEMENT_REQUIRED' | translate }}
+                        </div>
+                      </div>
+
                     </div>
-                  </div>
+                  </form>
                 </div>
-
-                <div class="payment-form-side">
-                  <div class="payment-form-panel">
-                    <form [formGroup]="paymentForm" (ngSubmit)="confirmOrder()">
-                      <div class="row g-3">
-                        <div class="col-12">
-                          <input
-                            class="form-control gp-input"
-                            [ngClass]="{ 'invalid': (submitted || f['cardHolderName'].touched) && f['cardHolderName'].invalid }"
-                            type="text"
-                            formControlName="cardHolderName"
-                            [placeholder]="'CARD_HOLDER' | translate"
-                            (input)="onCardHolderInput($event)" />
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['cardHolderName'].touched) && f['cardHolderName'].errors?.['required']">
-                            {{ 'VALIDATION_CARD_HOLDER_REQUIRED' | translate }}
-                          </small>
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['cardHolderName'].touched) && f['cardHolderName'].errors?.['minlength']">
-                            {{ 'VALIDATION_CARD_HOLDER_MIN' | translate }}
-                          </small>
-                        </div>
-
-                        <div class="col-12">
-                          <input
-                            class="form-control gp-input"
-                            [ngClass]="{ 'invalid': (submitted || f['cardNumber'].touched) && f['cardNumber'].invalid }"
-                            type="text"
-                            [value]="cardNumberPreview"
-                            [placeholder]="'CARD_NUMBER' | translate"
-                            (input)="onCardNumberInput($event)"
-                            (blur)="f['cardNumber'].markAsTouched()" />
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['cardNumber'].touched) && f['cardNumber'].errors?.['required']">
-                            {{ 'VALIDATION_CARD_NUMBER_REQUIRED' | translate }}
-                          </small>
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['cardNumber'].touched) && f['cardNumber'].errors?.['pattern']">
-                            {{ 'VALIDATION_CARD_NUMBER_PATTERN' | translate }}
-                          </small>
-                        </div>
-
-                        <div class="col-md-4">
-                          <input
-                            class="form-control gp-input"
-                            [ngClass]="{ 'invalid': (submitted || f['expireMonth'].touched) && f['expireMonth'].invalid }"
-                            type="text"
-                            formControlName="expireMonth"
-                            placeholder="MM"
-                            (input)="onExpireMonthInput($event)" />
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['expireMonth'].touched) && f['expireMonth'].errors?.['required']">
-                            {{ 'VALIDATION_EXPIRE_MONTH_REQUIRED' | translate }}
-                          </small>
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['expireMonth'].touched) && f['expireMonth'].errors?.['pattern']">
-                            {{ 'VALIDATION_EXPIRE_MONTH_PATTERN' | translate }}
-                          </small>
-                        </div>
-
-                        <div class="col-md-4">
-                          <input
-                            class="form-control gp-input"
-                            [ngClass]="{ 'invalid': (submitted || f['expireYear'].touched) && f['expireYear'].invalid }"
-                            type="text"
-                            formControlName="expireYear"
-                            placeholder="YY"
-                            (input)="onExpireYearInput($event)" />
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['expireYear'].touched) && f['expireYear'].errors?.['required']">
-                            {{ 'VALIDATION_EXPIRE_YEAR_REQUIRED' | translate }}
-                          </small>
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['expireYear'].touched) && f['expireYear'].errors?.['pattern']">
-                            {{ 'VALIDATION_EXPIRE_YEAR_PATTERN' | translate }}
-                          </small>
-                        </div>
-
-                        <div class="col-md-4">
-                          <input
-                            class="form-control gp-input"
-                            [ngClass]="{ 'invalid': (submitted || f['cvv'].touched) && f['cvv'].invalid }"
-                            type="password"
-                            formControlName="cvv"
-                            [placeholder]="'CVV' | translate"
-                            (input)="onCvvInput($event)" />
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['cvv'].touched) && f['cvv'].errors?.['required']">
-                            {{ 'VALIDATION_CVV_REQUIRED' | translate }}
-                          </small>
-
-                          <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="(submitted || f['cvv'].touched) && f['cvv'].errors?.['pattern']">
-                            {{ 'VALIDATION_CVV_PATTERN' | translate }}
-                          </small>
-                        </div>
-
-                        <div class="col-12">
-                          <label class="payment-agreement">
-                            <input type="checkbox" formControlName="agreement" />
-                            <span>{{ 'PAYMENT_CONFIRMATION_TEXT' | translate }}</span>
-                          </label>
-
-                          <small
-                            class="text-danger d-block mt-2"
-                            *ngIf="(submitted || f['agreement'].touched) && f['agreement'].errors?.['required']">
-                            {{ 'VALIDATION_PAYMENT_AGREEMENT' | translate }}
-                          </small>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
-
-        </div>
-
-        <div class="checkout-summary">
-          <div class="summary-panel">
-            <div class="checkout-panel-header">
-              <h3 class="checkout-panel-title">
-                {{ 'ORDER_SUMMARY' | translate }}
-              </h3>
-            </div>
-
-            <div class="checkout-panel-body summary-body">
-              <div class="summary-row">
-                <span>{{ 'TOTAL_OF_THE_PRODUCTS' | translate }}</span>
-                <span>{{ totalPrice | currency:'TRY':'symbol' }}</span>
-              </div>
-
-              <div class="summary-divider"></div>
-
-              <div class="summary-row total">
-                <span>{{ 'TOTAL' | translate }}</span>
-                <span>{{ totalPrice | currency:'TRY':'symbol' }}</span>
-              </div>
-
-              <button type="button" (click)="confirmOrder()" class="btn btn-gp btn-gp-primary w-100">
-                <span class="indicator-label">{{ 'ORDER' | translate }}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
+        </ng-container>
       </div>
     </div>
   </div>
-</section>
+
+  <div class="col-12 col-xxl-4">
+    <div class="card basket-summary-card shadow-sm sticky-summary">
+      <div class="card-header border-0 pt-8 pb-0">
+        <div class="d-flex flex-column">
+          <div class="basket-summary-card__eyebrow">
+            {{ 'ORDER_SUMMARY' | translate }}
+          </div>
+          <h3 class="basket-summary-card__title mb-1">
+            {{ 'TOTAL' | translate }}
+          </h3>
+          <span class="basket-summary-card__subtitle">
+            {{ numberOfItem }} {{ 'PRODUCT' | translate }}
+          </span>
+        </div>
+      </div>
+
+      <div class="card-body pt-6 pb-8">
+        <div class="basket-summary-panel">
+          <div class="basket-summary-row">
+            <span class="basket-summary-row__label">
+              {{ 'TOTAL_OF_THE_PRODUCTS' | translate }}
+            </span>
+            <span class="basket-summary-row__value">
+              {{ totalPrice.toFixed(2) }} ₺
+            </span>
+          </div>
+
+          <div class="separator separator-dashed my-4"></div>
+
+          <div class="basket-summary-total">
+            <span class="basket-summary-total__label">
+              {{ 'TOTAL' | translate }}
+            </span>
+            <span class="basket-summary-total__value">
+              {{ totalPrice.toFixed(2) }} ₺
+            </span>
+          </div>
+
+          <button type="button" (click)="confirmOrder()" class="btn btn-primary btn-lg w-100 mt-7 basket-summary-btn"
+            [disabled]="basket.length === 0">
+            {{ 'ORDER' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

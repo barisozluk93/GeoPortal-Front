@@ -21,7 +21,10 @@
 
             & + .form-control {
                 border-left-color: $input-border-color;
-            }
+            
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
         }
 
         .form-control {
@@ -30,7 +33,10 @@
 
             & + .input-group-text {
                 border-left-color: $input-border-color;
-            }
+            
+  border-color: var(--form-border-focus);
+  box-shadow: var(--form-shadow-focus);
+}
         }
     }
 }

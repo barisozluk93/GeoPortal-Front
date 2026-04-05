@@ -20,6 +20,9 @@ import { AddressesComponent } from './addresses/addresses.component';
 import { AddressListComponent } from './addresses/forms/list/list.component';
 import { ConfirmationModule } from '../confirmation/confirmation.module';
 import { AddressEditSaveComponent } from './addresses/forms/list/edit-save/edit-save.component';
+import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
+import { CustomSelectModule } from '../common/select/custom-select.module.module';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,13 @@ import { AddressEditSaveComponent } from './addresses/forms/list/edit-save/edit-
     AlertModule,
     TranslateModule,
     InlineSVGModule,
-    ModalsModule
+    CustomModalModule,
+    CustomSelectModule,
+    NgxMaskDirective,
+    NgxMaskPipe
+  ],
+  providers: [
+    provideNgxMask()
   ],
   exports: [
     AddressEditSaveComponent

@@ -1,21 +1,18 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { BasketService } from 'src/app/_metronic/partials/layout/basket/basket.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth';
 import { OrderManagementService } from '../order-management/order-management.service';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
-import { TranslateService } from '@ngx-translate/core';
 import { OrderModel } from '../order-management/models/order.model';
 import { UserManagementService } from '../user-management/user-management.service';
 import { UserAddressModel } from '../user-management/models/user-address.model';
 import { AddressEditSaveComponent } from '../account/addresses/forms/list/edit-save/edit-save.component';
 import { BasketModel } from '../basket-management/models/basket.model';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
-export type RegistrationTabsType =
-  | 'address'
-  | 'payment';
+export type RegistrationTabsType = 'address' | 'payment';
 
 @Component({
   selector: 'app-order-completion',
@@ -23,11 +20,11 @@ export type RegistrationTabsType =
   styleUrls: ['./order-completion.component.scss'],
 })
 export class OrderCompletionComponent implements OnInit, OnDestroy {
-  @ViewChild('editSaveComponent') private editSaveComponent!: AddressEditSaveComponent;
+  @ViewChild('editSaveComponent') private editSaveComponent: AddressEditSaveComponent;
 
-  invoiceAddresses: UserAddressModel[] = [];
-  selectedInvoiceAddress!: UserAddressModel;
-  selectedInvoiceAddressId: number = 0;
+  addresses: UserAddressModel[] = [];
+  selectedAddressId!: number;
+  selectedAddress!: UserAddressModel;
 
   activeTabId: RegistrationTabsType = 'address';
 
@@ -40,10 +37,8 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
   numberOfItem: number = 0;
   totalPrice: number = 0;
 
-  paymentForm: FormGroup;
+  paymentForm!: FormGroup;
   submitted: boolean = false;
-
-  private basketSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -51,53 +46,25 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
     private orderManagementService: OrderManagementService,
     private alertService: AlertService,
     private router: Router,
-    public translate: TranslateService,
     private userManagementService: UserManagementService,
-    private fb: FormBuilder
-  ) {
-    this.paymentForm = this.fb.group({
-      cardHolderName: ['', [Validators.required, Validators.minLength(3)]],
-      cardNumber: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
-      expireMonth: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])$/)]],
-      expireYear: ['', [Validators.required, Validators.pattern(/^\d{2}$/)]],
-      cvv: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
-      agreement: [false, [Validators.requiredTrue]]
-    });
-  }
-
-  get f(): { [key: string]: AbstractControl } {
-    return this.paymentForm.controls;
-  }
-
-  get cardNumberPreview(): string {
-    const value = this.f['cardNumber']?.value || '';
-    return this.formatCardNumber(value);
-  }
-
-  get cardHolderPreview(): string {
-    const value = this.f['cardHolderName']?.value || '';
-    return value ? value.toUpperCase() : 'CARD HOLDER';
-  }
-
-  get expirePreview(): string {
-    const month = this.f['expireMonth']?.value || 'MM';
-    const year = this.f['expireYear']?.value || 'YY';
-    return `${month}/${year}`;
-  }
+    private fb: FormBuilder,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
-    const currentUser = this.authService.currentUserValue;
+    this.initPaymentForm();
 
+    const currentUser = this.authService.currentUserValue;
     if (currentUser) {
       this.currentUserIsExist = true;
       this.currentUser = currentUser;
       this.basketService.loadBasketFromDb();
-      this.loadInvoiceAddresses();
+      this.loadAddresses();
     } else {
       this.currentUserIsExist = false;
     }
 
-    this.basketSubscription = this.basketService.basket$.subscribe(result => {
+    this.basketService.basket$.subscribe(result => {
       if (result) {
         this.numberOfItem = 0;
         this.totalPrice = 0;
@@ -106,7 +73,7 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
 
         result.forEach(item => {
           this.numberOfItem += 1;
-          this.totalPrice += item.product?.price || 0;
+          this.totalPrice += item.product?.price!;
 
           if (this.basket.length === 0) {
             this.basket.push({
@@ -119,11 +86,14 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
               totalPrice: item.product?.price
             });
           } else {
-            const itemInBasket = this.basket.find(f => f.productId === item.productId);
-
-            if (itemInBasket) {
-              itemInBasket.numberOf = (itemInBasket.numberOf || 0) + 1;
-              itemInBasket.totalPrice = (itemInBasket.totalPrice || 0) + (item.product?.price || 0);
+            const itemInBasket = this.basket.filter(f => f.productId == item.productId);
+            if (itemInBasket.length > 0) {
+              if (itemInBasket[0].numberOf) {
+                itemInBasket[0].numberOf += 1;
+              }
+              if (itemInBasket[0].totalPrice) {
+                itemInBasket[0].totalPrice += item.product?.price!;
+              }
             } else {
               this.basket.push({
                 id: 0,
@@ -141,33 +111,167 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.basketSubscription?.unsubscribe();
+  ngOnDestroy(): void {}
+
+  initPaymentForm(): void {
+    this.paymentForm = this.fb.group({
+      cardHolder: ['', [Validators.required, Validators.minLength(3)]],
+      cardNumber: ['', [Validators.required, Validators.minLength(19)]],
+      expiry: ['', [Validators.required, this.expiryValidator]],
+      cvv: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(4)]],
+      agreement: [false, Validators.requiredTrue]
+    });
   }
 
-  isSuccess(event: any): void {
-    this.loadInvoiceAddresses();
+  expiryValidator(control: AbstractControl): ValidationErrors | null {
+    const value = (control.value || '').trim();
+
+    if (!value) {
+      return null;
+    }
+
+    const regex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+    if (!regex.test(value)) {
+      return { invalidExpiry: true };
+    }
+
+    const [monthStr, yearStr] = value.split('/');
+    const month = Number(monthStr);
+    const year = Number(`20${yearStr}`);
+
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+      return { expired: true };
+    }
+
+    return null;
   }
 
-  loadInvoiceAddresses(): void {
+  onCardNumberInput(): void {
+    const control = this.paymentForm.get('cardNumber');
+    if (!control) return;
+
+    let value = (control.value || '').replace(/\D/g, '').substring(0, 16);
+    value = value.replace(/(.{4})/g, '$1 ').trim();
+
+    control.setValue(value, { emitEvent: false });
+  }
+
+  onExpiryInput(): void {
+    const control = this.paymentForm.get('expiry');
+    if (!control) return;
+
+    let value = (control.value || '').replace(/\D/g, '').substring(0, 4);
+
+    if (value.length >= 3) {
+      value = `${value.substring(0, 2)}/${value.substring(2)}`;
+    }
+
+    control.setValue(value, { emitEvent: false });
+  }
+
+  onCvvInput(): void {
+    const control = this.paymentForm.get('cvv');
+    if (!control) return;
+
+    const value = (control.value || '').replace(/\D/g, '').substring(0, 4);
+    control.setValue(value, { emitEvent: false });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.paymentForm.get(fieldName);
+    return !!field && field.invalid && (field.touched || this.submitted);
+  }
+
+  get detectedCardType(): string {
+    const rawValue = (this.paymentForm.get('cardNumber')?.value || '').replace(/\s/g, '');
+
+    if (rawValue.startsWith('4')) return 'Visa';
+    if (/^5[1-5]/.test(rawValue)) return 'Mastercard';
+    if (/^3[47]/.test(rawValue)) return 'Amex';
+
+    return 'Card';
+  }
+
+  getFormattedCardNumber(): string {
+    const value = this.paymentForm.get('cardNumber')?.value;
+    return value && value.trim().length > 0 ? value : '•••• •••• •••• ••••';
+  }
+
+  getCardHolderPreview(): string {
+    const value = this.paymentForm.get('cardHolder')?.value;
+    return value && value.trim().length > 0 ? value.toUpperCase() : 'AD SOYAD';
+  }
+
+  getExpiryPreview(): string {
+    const value = this.paymentForm.get('expiry')?.value;
+    return value && value.trim().length > 0 ? value : 'AA/YY';
+  }
+
+  confirmOrder(): void {
+    this.submitted = true;
+    this.paymentForm.markAllAsTouched();
+
+    if (!(this.selectedAddressId > 0)) {
+      this.alertService.createAlert('warning', this.translate.instant("MESSAGES.SELECT_ADDRESS"));
+      this.activeTabId = 'address';
+      return;
+    }
+
+    if (this.paymentForm.invalid) {
+      this.alertService.createAlert('warning', this.translate.instant("MESSAGES.PAYMENT"));
+      this.activeTabId = 'payment';
+      return;
+    }
+
+    const data: OrderModel = {
+      id: 0,
+      basketId: this.basketFromStorage[0].id,
+      userId: this.currentUser.id,
+      price: this.totalPrice,
+      deliveryAddressId: this.selectedAddressId,
+      invoiceAddressId: this.selectedAddressId
+    };
+
+    this.orderManagementService.save(data).subscribe(result => {
+      if (result.isSuccess) {
+        this.basketService.loadBasketFromDb();
+        this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
+
+        setTimeout(() => {
+          this.router.navigate(['/landing/marketplace']);
+        }, 2500);
+      } else {
+        this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
+      }
+    });
+  }
+
+  isSuccess(event: boolean): void {
+    this.loadAddresses();
+  }
+
+  loadAddresses(): void {
     this.userManagementService.userAddressList(this.currentUser.id).subscribe(result => {
       if (result.isSuccess) {
         let i = 0;
-
-        result.data.forEach((item: UserAddressModel) => {
+        result.data.forEach(item => {
           if (i === 0) {
             item.selected = true;
-            this.selectedInvoiceAddressId = item.id;
-            this.selectedInvoiceAddress = item;
+            this.selectedAddressId = item.id;
+            this.selectedAddress = item;
           } else {
             item.selected = false;
           }
           i++;
         });
 
-        this.invoiceAddresses = result.data;
+        this.addresses = result.data;
       } else {
-        this.invoiceAddresses = [];
+        this.addresses = [];
       }
     });
   }
@@ -180,116 +284,19 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
     this.editSaveComponent.openModal(this.currentUser.id, undefined);
   }
 
-  selectInvoiceAddress(id: number): void {
-    this.invoiceAddresses.forEach(item => {
+  selectAddress(id: number): void {
+    this.addresses.forEach(item => {
       item.selected = item.id === id;
 
       if (item.id === id) {
-        this.selectedInvoiceAddress = item;
+        this.selectedAddress = item;
       }
     });
 
-    this.selectedInvoiceAddressId = id;
+    this.selectedAddressId = id;
   }
 
   setActiveTabId(tabId: RegistrationTabsType): void {
     this.activeTabId = tabId;
-  }
-
-  confirmOrder(): void {
-    this.submitted = true;
-
-    if (!this.selectedInvoiceAddressId || this.selectedInvoiceAddressId <= 0) {
-      this.alertService.createAlert(
-        'warning',
-        this.translate.instant('PLEASE_SELECT_INVOICE_ADDRESS')
-      );
-      this.setActiveTabId('address');
-      return;
-    }
-
-    if (this.paymentForm.invalid) {
-      this.paymentForm.markAllAsTouched();
-      this.alertService.createAlert(
-        'warning',
-        this.translate.instant('PLEASE_FILL_PAYMENT_FORM')
-      );
-      this.setActiveTabId('payment');
-      return;
-    }
-
-    if (!this.basketFromStorage || this.basketFromStorage.length === 0) {
-      this.alertService.createAlert(
-        'warning',
-        this.translate.instant('BASKET_IS_EMPTY')
-      );
-      return;
-    }
-
-    const data: OrderModel = {
-      id: 0,
-      basketId: this.basketFromStorage[0].id,
-      userId: this.currentUser.id,
-      price: this.totalPrice,
-      invoiceAddressId: this.selectedInvoiceAddressId
-    };
-
-    this.orderManagementService.save(data).subscribe(result => {
-      if (result.isSuccess) {
-        this.basketService.loadBasketFromDb();
-        this.alertService.createAlert('success', result.message);
-
-        setTimeout(() => {
-          this.router.navigate(['/ordermanagement/' + result.data.id]);
-        }, 2500);
-      } else {
-        this.alertService.createAlert('danger', result.message);
-      }
-    });
-  }
-
-  onCardNumberInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const numericValue = (input.value || '').replace(/\D/g, '').slice(0, 16);
-    this.paymentForm.patchValue({ cardNumber: numericValue }, { emitEvent: false });
-    input.value = this.formatCardNumber(numericValue);
-  }
-
-  onCardHolderInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = (input.value || '').replace(/\s+/g, ' ').trimStart();
-    this.paymentForm.patchValue({ cardHolderName: value }, { emitEvent: false });
-  }
-
-  onExpireMonthInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let numericValue = (input.value || '').replace(/\D/g, '').slice(0, 2);
-
-    if (numericValue.length === 1 && Number(numericValue) > 1) {
-      numericValue = `0${numericValue}`;
-    }
-
-    this.paymentForm.patchValue({ expireMonth: numericValue }, { emitEvent: false });
-    input.value = numericValue;
-  }
-
-  onExpireYearInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const numericValue = (input.value || '').replace(/\D/g, '').slice(0, 2);
-    this.paymentForm.patchValue({ expireYear: numericValue }, { emitEvent: false });
-    input.value = numericValue;
-  }
-
-  onCvvInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const numericValue = (input.value || '').replace(/\D/g, '').slice(0, 4);
-    this.paymentForm.patchValue({ cvv: numericValue }, { emitEvent: false });
-    input.value = numericValue;
-  }
-
-  private formatCardNumber(value: string): string {
-    const cleaned = (value || '').replace(/\D/g, '').slice(0, 16);
-    const groups = cleaned.match(/.{1,4}/g);
-    return groups ? groups.join(' ') : '#### #### #### ####';
   }
 }

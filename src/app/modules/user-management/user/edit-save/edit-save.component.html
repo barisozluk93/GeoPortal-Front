@@ -1,117 +1,201 @@
-<app-modal #modal [modalConfig]="modalConfig">
-  <form class="form modern-form" [formGroup]="form" novalidate>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>{{ 'NAME' | translate }}</label>
+<app-custom-modal
+  [isOpen]="isModalOpen"
+  [title]="modalTitle"
+  [subtitle]="'USER_FORM.TITLE' | translate"
+  [width]="'900px'"
+  (closed)="closeModal()"
+  (submitted)="submit()"
+  variant="center"
+  [showFooter]="true"
+>
+  <form class="form w-100" [formGroup]="form" novalidate>
+    <div class="row">
+
+      <!-- NAME -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.NAME' | translate }}
+        </label>
+
         <input
-          type="text"
+          class="form-control form-control-lg form-control-solid"
           formControlName="name"
-          [class.invalid]="f['name'].invalid && (f['name'].touched || f['name'].dirty)"
+          [placeholder]="'USER_FORM.NAME' | translate"
+          [ngClass]="{
+            'is-invalid': isInvalid('name')
+          }"
         />
-        <span class="error" *ngIf="f['name'].hasError('required') && (f['name'].touched || f['name'].dirty)">
-          {{ 'REQUIRED_NAME' | translate }}
-        </span>
+
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('name')">
+          {{ 'USER_FORM.REQUIRED_NAME' | translate }}
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>{{ 'SURNAME' | translate }}</label>
+      <!-- SURNAME -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.SURNAME' | translate }}
+        </label>
+
         <input
-          type="text"
+          class="form-control form-control-lg form-control-solid"
           formControlName="surname"
-          [class.invalid]="f['surname'].invalid && (f['surname'].touched || f['surname'].dirty)"
+          [placeholder]="'USER_FORM.SURNAME' | translate"
+          [ngClass]="{
+            'is-invalid': isInvalid('surname')
+          }"
         />
-        <span class="error" *ngIf="f['surname'].hasError('required') && (f['surname'].touched || f['surname'].dirty)">
-          {{ 'REQUIRED_SURNAME' | translate }}
-        </span>
+
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('surname')">
+          {{ 'USER_FORM.REQUIRED_SURNAME' | translate }}
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>{{ 'EMAIL' | translate }}</label>
+      <!-- EMAIL -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.EMAIL' | translate }}
+        </label>
+
         <input
           type="email"
+          class="form-control form-control-lg form-control-solid"
           formControlName="email"
-          [class.invalid]="f['email'].invalid && (f['email'].touched || f['email'].dirty)"
+          [placeholder]="'USER_FORM.EMAIL' | translate"
+          [ngClass]="{
+            'is-invalid': isInvalid('email')
+          }"
         />
-        <span class="error" *ngIf="f['email'].hasError('required') && (f['email'].touched || f['email'].dirty)">
-          {{ 'REQUIRED_EMAIL' | translate }}
-        </span>
-        <span class="error" *ngIf="f['email'].hasError('email') && (f['email'].touched || f['email'].dirty)">
-          {{ 'EMAIL_IS_INVALID' | translate }}
-        </span>
+
+        <ng-container *ngIf="isInvalid('email')">
+          <div class="invalid-feedback d-block" *ngIf="f['email'].errors?.['required']">
+            {{ 'USER_FORM.REQUIRED_EMAIL' | translate }}
+          </div>
+          <div class="invalid-feedback d-block" *ngIf="f['email'].errors?.['email']">
+            {{ 'USER_FORM.INVALID_EMAIL' | translate }}
+          </div>
+        </ng-container>
       </div>
 
-      <div class="form-group">
-        <label>{{ 'USERNAME' | translate }}</label>
+      <!-- USERNAME -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.USERNAME' | translate }}
+        </label>
+
         <input
-          type="text"
+          class="form-control form-control-lg form-control-solid"
           formControlName="username"
-          [class.invalid]="f['username'].invalid && (f['username'].touched || f['username'].dirty)"
+          [placeholder]="'USER_FORM.USERNAME' | translate"
+          [ngClass]="{
+            'is-invalid': isInvalid('username')
+          }"
         />
-        <span class="error" *ngIf="f['username'].hasError('required') && (f['username'].touched || f['username'].dirty)">
-          {{ 'REQUIRED_USERNAME' | translate }}
-        </span>
+
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('username')">
+          {{ 'USER_FORM.REQUIRED_USERNAME' | translate }}
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>{{ 'PHONE' | translate }}</label>
+      <!-- PASSWORD -->
+      <div class="col-md-6 fv-row mb-8" *ngIf="form.controls['id'].value == 0">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.PASSWORD' | translate }}
+        </label>
+
+        <input
+          type="password"
+          class="form-control form-control-lg form-control-solid"
+          formControlName="password"
+          [placeholder]="'USER_FORM.PASSWORD' | translate"
+          [ngClass]="{
+            'is-invalid': isInvalid('password')
+          }"
+        />
+
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('password')">
+          {{ 'USER_FORM.REQUIRED_PASSWORD' | translate }}
+        </div>
+      </div>
+
+      <!-- CONFIRM PASSWORD -->
+      <div class="col-md-6 fv-row mb-8" *ngIf="form.controls['id'].value == 0">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.CONFIRM_PASSWORD' | translate }}
+        </label>
+
+        <input
+          type="password"
+          class="form-control form-control-lg form-control-solid"
+          formControlName="cPassword"
+          [placeholder]="'USER_FORM.CONFIRM_PASSWORD' | translate"
+          [ngClass]="{
+            'is-invalid': isInvalid('cPassword')
+          }"
+        />
+
+        <div class="invalid-feedback d-block" *ngIf="f['cPassword'].errors?.['required'] && isInvalid('cPassword')">
+          {{ 'USER_FORM.REQUIRED_CONFIRM_PASSWORD' | translate }}
+        </div>
+
+        <div class="invalid-feedback d-block" *ngIf="f['cPassword'].errors?.['ConfirmPassword']">
+          {{ 'USER_FORM.PASSWORD_NOT_MATCH' | translate }}
+        </div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.PHONE' | translate }}
+        </label>
+
         <input
           type="tel"
+          class="form-control form-control-lg form-control-solid"
           formControlName="phone"
-          [class.invalid]="f['phone'].invalid && (f['phone'].touched || f['phone'].dirty)"
+          mask="(000) 000 00 00"
+          [showMaskTyped]="true"
+          [dropSpecialCharacters]="false"
+          autocomplete="off"
+          placeholder="(___) ___ __ __"
+          [ngClass]="{
+            'is-invalid': isInvalid('phone')
+          }"
         />
-        <span class="error" *ngIf="f['phone'].hasError('required') && (f['phone'].touched || f['phone'].dirty)">
-          {{ 'REQUIRED_PHONE' | translate }}
-        </span>
+
+        <ng-container *ngIf="isInvalid('phone')">
+          <div class="invalid-feedback d-block" *ngIf="f['phone'].errors?.['required']">
+            {{ 'USER_FORM.REQUIRED_PHONE' | translate }}
+          </div>
+          <div class="invalid-feedback d-block" *ngIf="f['phone'].errors?.['pattern']">
+            {{ 'USER_FORM.INVALID_PHONE' | translate }}
+          </div>
+        </ng-container>
       </div>
 
-      <div class="form-group">
-        <label>{{ 'ROLE' | translate }}</label>
-        <select
+      <!-- ROLE -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.ROLE' | translate }}
+        </label>
+
+        <app-custom-select
           formControlName="roles"
-          [class.invalid]="f['roles'].invalid && (f['roles'].touched || f['roles'].dirty)"
+          [items]="roleList"
+          bindLabel="name"
+          bindValue="id"
+          [multiple]="false"
+          [clearable]="true"
+          [placeholder]="'USER_FORM.SELECT_ROLE' | translate"
+          [invalid]="isInvalid('roles')"
         >
-          <option [ngValue]="null">{{ 'SELECT_ROLE' | translate }}</option>
-          <ng-container *ngFor="let item of roleList">
-            <option [ngValue]="item.id">{{ item.name }}</option>
-          </ng-container>
-        </select>
-        <span class="error" *ngIf="f['roles'].hasError('required') && (f['roles'].touched || f['roles'].dirty)">
-          {{ 'REQUIRED_ROLE' | translate }}
-        </span>
+        </app-custom-select>
+
+        <div class="invalid-feedback d-block" *ngIf="isInvalid('roles')">
+          {{ 'USER_FORM.REQUIRED_ROLE' | translate }}
+        </div>
       </div>
 
-      <div class="form-group form-group-full" *ngIf="form.controls['id'].value == 0">
-        <label>{{ 'PASSWORD' | translate }}</label>
-        <input
-          type="password"
-          formControlName="password"
-          [class.invalid]="f['password'].invalid && (f['password'].touched || f['password'].dirty)"
-        />
-        <span class="error" *ngIf="f['password'].hasError('required') && (f['password'].touched || f['password'].dirty)">
-          {{ 'PASSWORD_REQUIRED' | translate }}
-        </span>
-        <span class="error" *ngIf="f['password'].hasError('minlength') && (f['password'].touched || f['password'].dirty)">
-          {{ 'PASSWORD_SHOULD_HAVE_AT_LEAST_3_SYMBOLS' | translate }}
-        </span>
-      </div>
-
-      <div class="form-group form-group-full" *ngIf="form.controls['id'].value == 0">
-        <label>{{ 'CONFIRM_PASSWORD' | translate }}</label>
-        <input
-          type="password"
-          formControlName="cPassword"
-          [class.invalid]="
-            (f['cPassword'].invalid && (f['cPassword'].touched || f['cPassword'].dirty)) ||
-            (f['cPassword'].errors?.['ConfirmPassword'] && (f['cPassword'].touched || f['cPassword'].dirty))
-          "
-        />
-        <span class="error" *ngIf="f['cPassword'].hasError('required') && (f['cPassword'].touched || f['cPassword'].dirty)">
-          {{ 'CONFIRM_PASSWORD' | translate }} {{ 'IS_REQUIRED' | translate }}
-        </span>
-        <span class="error" *ngIf="f['cPassword'].errors?.['ConfirmPassword'] && (f['cPassword'].touched || f['cPassword'].dirty)">
-          {{ 'NOMATCH_PASSWORD' | translate }}
-        </span>
-      </div>
     </div>
   </form>
-</app-modal>
+</app-custom-modal>

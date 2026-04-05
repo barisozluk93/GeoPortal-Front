@@ -151,7 +151,7 @@
 
         // Toolbar
         [data-kt-app-header-fixed="true"][data-kt-app-toolbar-fixed="true"] & {
-            box-shadow: none;    
+                
         }
     } 
 }
@@ -229,11 +229,11 @@
     .app-header {
         // Toolbar
         [data-kt-app-header-fixed-mobile="true"][data-kt-app-toolbar-fixed-mobile="true"] & {
-            box-shadow: none;    
+                
         }
 
         [data-kt-app-header-fixed-mobile="true"][data-kt-app-toolbar-sticky="on"] & {
-            box-shadow: none;    
+                
         }
     }    
 }

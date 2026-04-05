@@ -1,99 +1,151 @@
-<app-confirmation
-  #confirmationComponent
-  (dismissButtonClick)="delete($event)"
-></app-confirmation>
+<app-confirmation #confirmationComponent (dismissButtonClick)="delete($event)"></app-confirmation>
+<app-address-editsave #editSaveComponent (isSuccess)="isSuccess($event)"></app-address-editsave>
 
-<app-address-editsave
-  #editSaveComponent
-  (isSuccess)="isSuccess($event)"
-></app-address-editsave>
-
-<div class="address-card-wrapper" *ngIf="user">
-  <div class="address-card">
-    <div class="address-card-header">
-      <div class="address-title-area">
-        <h3>{{ 'MYADDRESSES' | translate }}</h3>
-      </div>
-
-      <div class="address-toolbar">
-        <button type="button" class="btn-primary" (click)="openSaveModal()">
-          <span
-            [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
-            class="svg-icon svg-icon-3"
-          ></span>
-          {{ 'MENU.NEW' | translate }}
-        </button>
+<div *ngIf="user" class="address-book-page">
+  <!-- HERO / HEADER -->
+  <div class="address-book-hero mb-8">
+    <div class="address-book-hero__content">
+      <div class="address-book-hero__eyebrow">{{ 'MYADDRESSES' | translate }}</div>
+      <h3 class="address-book-hero__title">{{ 'MYADDRESSES' | translate }}</h3>
+      <div class="address-book-hero__subtitle">
+        {{ 'MANAGE_ADDRESSES' | translate }}
       </div>
     </div>
 
-    <div class="address-card-body">
-      <div class="address-grid" *ngIf="addresses.length > 0">
-        <ng-container *ngFor="let item of addresses">
-          <div class="address-item-card">
-            <div class="address-item-header">
-              <div class="address-item-title">
-                {{ item.addressHeader }}
+    <div class="address-book-hero__actions">
+      <button type="button" class="btn btn-primary address-add-btn" (click)="openSaveModal()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3 me-1"></span>
+        {{ 'MENU.NEW' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS / INFO STRIP -->
+  <div class="address-book-strip mb-8" *ngIf="addresses.length > 0">
+    <div class="address-book-strip__item">
+      <span class="address-book-strip__label">{{ 'MYADDRESSES' | translate }}</span>
+      <strong class="address-book-strip__value">{{ addresses.length }}</strong>
+    </div>
+
+    <div class="address-book-strip__divider"></div>
+
+    <div class="address-book-strip__item">
+      <span class="address-book-strip__label">{{ 'ADDRESS' | translate }}</span>
+      <strong class="address-book-strip__value">{{ 'SAVED_ADDRESSES' | translate }}</strong>
+    </div>
+  </div>
+
+  <!-- ADDRESS GRID -->
+  <div class="row g-6" *ngIf="addresses.length > 0; else emptyState">
+    <div class="col-12 col-md-6 col-xxl-4" *ngFor="let item of addresses">
+      <div class="address-premium-card h-100">
+
+        <!-- TOP -->
+        <div class="address-premium-card__top">
+          <div class="address-premium-card__avatar">
+            <span [inlineSVG]="'./assets/media/icons/duotune/communication/com006.svg'"
+              class="svg-icon svg-icon-2"></span>
+          </div>
+
+          <div class="address-premium-card__top-content">
+            <div class="address-premium-card__header-row">
+
+              <div>
+                <div class="address-premium-card__title">
+                  {{ item.addressHeader }}
+                </div>
+                <div class="address-premium-card__person">
+                  {{ item.name }} {{ item.surname }}
+                </div>
               </div>
 
-              <div class="address-item-actions">
-                <button
-                  (click)="openDeleteModal(item.id)"
-                  type="button"
-                  class="icon-btn danger"
-                  title="Delete"
-                >
-                  <span
-                    [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
-                    class="svg-icon svg-icon-2"
-                  ></span>
+              <!-- ACTIONS -->
+              <div class="address-premium-card__actions">
+                <button type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openEditModal(item.id)"
+                  [title]="'EDIT' | translate">
+                  <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'" class="svg-icon svg-icon-2"></span>
                 </button>
 
-                <button
-                  (click)="openEditModal(item.id)"
-                  type="button"
-                  class="icon-btn primary"
-                  title="Edit"
-                >
-                  <span
-                    [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
-                    class="svg-icon svg-icon-2"
-                  ></span>
+                <button type="button" class="btn btn-icon btn-sm btn-light-danger" (click)="openDeleteModal(item.id)"
+                  [title]="'DELETE' | translate">
+                  <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
+                    class="svg-icon svg-icon-2"></span>
                 </button>
               </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- BODY -->
+        <div class="address-premium-card__body">
+
+          <div class="address-meta-row">
+            <div class="address-meta-row__icon">
+              <span [inlineSVG]="'./assets/media/icons/duotune/maps/map001.svg'" class="svg-icon svg-icon-4"></span>
             </div>
 
-            <div class="address-item-body">
-              <div class="address-name">
-                {{ item.name }} {{ item.surname }}
+            <div class="address-meta-row__content">
+              <div class="address-meta-row__label">
+                {{ 'ADDRESS' | translate }}
               </div>
-
-              <div class="address-line">
+              <div class="address-meta-row__value">
                 {{ item.address }}
               </div>
+            </div>
+          </div>
 
-              <div class="address-line">
-                {{ item.district }}/{{ item.city }}
+          <div class="address-meta-row">
+            <div class="address-meta-row__icon">
+              <span [inlineSVG]="'./assets/media/icons/duotune/maps/map004.svg'" class="svg-icon svg-icon-4"></span>
+            </div>
+
+            <div class="address-meta-row__content">
+              <div class="address-meta-row__label">
+                {{ 'LOCATION' | translate }}
               </div>
-
-              <div class="address-line">
-                {{ item.country }}
+              <div class="address-meta-row__value">
+                {{ item.district }} / {{ item.city }} / {{ item.country }}
               </div>
+            </div>
+          </div>
 
-              <div class="address-phone">
+          <div class="address-meta-row">
+            <div class="address-meta-row__icon">
+              <span [inlineSVG]="'./assets/media/icons/duotune/communication/com005.svg'"
+                class="svg-icon svg-icon-4"></span>
+            </div>
+
+            <div class="address-meta-row__content">
+              <div class="address-meta-row__label">
+                {{ 'CONTRACT_PHONE' | translate }}
+              </div>
+              <div class="address-meta-row__value address-meta-row__value--strong">
                 {{ item.phone }}
               </div>
             </div>
           </div>
-        </ng-container>
-      </div>
 
-      <div class="empty-state" *ngIf="addresses.length == 0">
-        <div class="empty-state-card">
-          <div class="empty-state-text">
-            {{ 'NO_DATA_AVAILABLE' | translate }}
-          </div>
         </div>
+
       </div>
     </div>
   </div>
+
+  <!-- EMPTY STATE -->
+  <ng-template #emptyState>
+    <div class="address-empty-state">
+      <div class="address-empty-state__icon">
+        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen005.svg'" class="svg-icon svg-icon-3x"></span>
+      </div>
+
+      <div class="address-empty-state__title">{{ 'NO_DATA_AVAILABLE' | translate }}</div>
+      <div class="address-empty-state__subtitle">{{ 'NO_ADDRESS_FOUND' | translate }}</div>
+
+      <button type="button" class="btn btn-primary px-6" (click)="openSaveModal()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3 me-1"></span>
+        {{ 'MENU.NEW' | translate }}
+      </button>
+    </div>
+  </ng-template>
 </div>

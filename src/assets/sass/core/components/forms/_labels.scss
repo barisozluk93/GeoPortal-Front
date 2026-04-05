@@ -1,8 +1,9 @@
-
 //
 // Col form label
 //
 
-.col-form-label {
-	@include font-size($form-label-font-size);
+.col-form-label,
+.form-label {
+  @include font-size($form-label-font-size);
+  color: rgba(233, 240, 255, 0.88);
 }

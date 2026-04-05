@@ -9,10 +9,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './modules/auth/services/auth.service';
-// #fake-start#
 import { Interceptor } from './http-interceptor/http-interceptor';
-import { ToastrModule } from 'ngx-toastr';
-// #fake-end#
+import { AlertModule } from './_metronic/partials/layout/alert/alert.module';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -28,27 +27,13 @@ function appInitializer(authService: AuthService) {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot({
-      positionClass: 'toast-top-center',
-      timeOut: 3000,
-      closeButton: true,
-      progressBar: true,
-      preventDuplicates: true
-    }),
     TranslateModule.forRoot(),
     HttpClientModule,
     ClipboardModule,
-    // #fake-start#
-    // environment.isMockEnabled
-    //   ? HttpClientInMemoryWebApiModule.forRoot(FakeAPIService, {
-    //       passThruUnknownUrl: true,
-    //       dataEncapsulation: false,
-    //     })
-    //   : [],
-    // #fake-end#
+    AlertModule,
     AppRoutingModule,
     InlineSVGModule.forRoot(),
-    NgbModule,
+    NgbModule
   ],
   providers: [
     {
@@ -61,7 +46,7 @@ function appInitializer(authService: AuthService) {
       provide: HTTP_INTERCEPTORS,
       useClass: Interceptor,
       multi: true
-    }
+    },
   ],
   bootstrap: [AppComponent],
 })

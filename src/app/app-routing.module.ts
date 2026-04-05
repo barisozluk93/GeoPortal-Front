@@ -3,11 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'landing/marketplace',
-    pathMatch: 'full',
-  },
-  {
     path: 'auth',
     loadChildren: () =>
       import('./modules/auth/auth.module').then((m) => m.AuthModule),
@@ -19,6 +14,7 @@ export const routes: Routes = [
   },
   {
     path: '',
+    // canActivate: [AuthGuard],
     loadChildren: () =>
       import('./_metronic/layout/layout.module').then((m) => m.LayoutModule),
   },

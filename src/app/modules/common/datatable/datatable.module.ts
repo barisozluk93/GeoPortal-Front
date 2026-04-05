@@ -7,6 +7,7 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { DropdownMenusModule } from 'src/app/_metronic/partials';
 import { TranslationModule } from '../../i18n';
+import { CustomSelectModule } from '../select/custom-select.module.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { TranslationModule } from '../../i18n';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    InlineSVGModule
+    InlineSVGModule,
+    CustomSelectModule
   ],
 })
 export class DataTableModule {}
