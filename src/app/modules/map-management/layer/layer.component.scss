@@ -1,39 +1,120 @@
-.layer-search-card {
-  border: 1px solid var(--bs-border-color);
-  border-radius: 1rem;
-  background-color: var(--bs-body-bg);
-  box-shadow: 0 0.5rem 1.25rem rgba(15, 23, 42, 0.04);
+.layer-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 28, 50, 0.35);
+  backdrop-filter: blur(2px);
+  z-index: 109;
 }
 
-.layer-search-icon {
-  position: absolute;
-  top: 50%;
-  left: 1.1rem;
-  transform: translateY(-50%);
-  color: var(--bs-gray-500);
-  font-size: 0.95rem;
+.layer-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  width: 50vw;
+  max-width: 100%;
+
+  height: 100vh;
+  z-index: 110;
+
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
   pointer-events: none;
+
+  &.open {
+    transform: translateX(0);
+    pointer-events: auto;
+  }
 }
 
-.layer-search-input {
-  height: 48px;
-  padding-left: 2.9rem;
-  padding-right: 1rem;
-  border-radius: 0.85rem;
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
+
+.layer-drawer__card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-left: 1px solid var(--bs-gray-200);
+  box-shadow: -0.5rem 0 2rem rgba(0, 0, 0, 0.08);
+  background: var(--bs-body-bg);
 }
 
-.layer-search-input:focus {
-  border-color: rgba(var(--bs-primary-rgb), 0.35);
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.12);
-  background-color: var(--bs-body-bg);
+.layer-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 80px;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--bs-gray-200);
+  flex: 0 0 auto;
 }
 
-/* Mobile */
-@media (max-width: 991.98px) {
-  .layer-search-card .btn {
+.layer-drawer__kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--bs-primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.layer-drawer__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--bs-gray-900);
+  line-height: 1.4;
+}
+
+.layer-drawer__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+}
+
+/* MAP FULL */
+.layer-map {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bs-gray-200);
+}
+
+.layer-map app-map {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.layer-map ::ng-deep app-map,
+.layer-map ::ng-deep app-map > div,
+.layer-map ::ng-deep app-map .ol-viewport,
+.layer-map ::ng-deep app-map .ol-unselectable,
+.layer-map ::ng-deep app-map .ol-overlaycontainer-stopevent {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* TABLE KISMI SOLDA KALSIN (opsiyonel ama güzel olur) */
+.layer-page {
+  display: flex;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .layer-drawer {
+    width: 50vw;
+  }
+}
+
+@media (max-width: 992px) {
+  .layer-drawer {
+    width: 50vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .layer-drawer {
     width: 100%;
-    justify-content: center;
   }
 }

@@ -6,9 +6,7 @@
 .contact-hero {
   position: relative;
   width: 100%;
-  height: calc(100vh - 65px);
   min-height: calc(100vh - 65px);
-  width: 100%;
   overflow: hidden;
   display: flex;
   align-items: stretch;
@@ -25,20 +23,19 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(5, 10, 20, 0.84) 0%,
-      rgba(7, 18, 36, 0.68) 45%,
-      rgba(6, 13, 24, 0.86) 100%
-    );
+  background: linear-gradient(
+    135deg,
+    rgba(5, 10, 20, 0.84) 0%,
+    rgba(7, 18, 36, 0.68) 45%,
+    rgba(6, 13, 24, 0.86) 100%
+  );
 }
 
 .contact-hero-content {
   position: relative;
   z-index: 3;
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 65px);
   display: flex;
   align-items: center;
   padding-bottom: 32px;
@@ -66,7 +63,6 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-
   padding: 8px 14px;
   border-radius: 999px;
 
@@ -76,22 +72,17 @@
   text-transform: uppercase;
 
   color: var(--bs-primary);
-
   background: rgba(var(--bs-primary-rgb), 0.08);
   border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
-
   backdrop-filter: blur(6px);
+
+  box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.15);
+  transition: all 0.2s ease;
 
   i {
     font-size: 0.85rem;
     color: var(--bs-primary);
   }
-
-  /* subtle glow */
-  box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.15);
-
-  /* hover (çok hafif) */
-  transition: all 0.2s ease;
 
   &:hover {
     transform: translateY(-1px);
@@ -119,30 +110,29 @@
 /* FORM CARD */
 .contact-form-card {
   width: 100%;
-  border-radius: 1.25rem;
   border-radius: 1rem;
   background: var(--bs-light-primary);
   border: 1px solid rgba(var(--bs-primary-rgb), 0.15);
   box-shadow: var(--bs-shadow-lg);
   color: var(--bs-text);
   backdrop-filter: blur(14px);
-}
 
-.contact-form-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1) !important;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .invalid-feedback {
+    font-size: 0.8rem;
+    border-color: var(--bs-danger) !important;
+    color: var(--bs-danger) !important;
+  }
 }
 
 .contact-form-title {
   color: #ffffff;
   font-size: 1.08rem;
   font-weight: 700;
-}
-
-.contact-form-card .invalid-feedback {
-  font-size: 0.8rem;
-  border-color: var(--bs-danger) !important;
-  color: var(--bs-danger) !important;
 }
 
 .contact-submit-btn {
@@ -169,7 +159,7 @@
 
 @media (max-width: 768px) {
   .contact-hero {
-    min-height: 100svh;
+    min-height: calc(100svh - 65px);
   }
 
   .contact-hero-content {

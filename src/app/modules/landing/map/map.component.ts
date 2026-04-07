@@ -212,7 +212,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     ];
   }
 
-  ngAfterViewInit(): void {
+  initializeMap() {
     this.view = new View({
       center: this.defaultCenter,
       zoom: this.defaultZoom
@@ -253,6 +253,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     setTimeout(() => {
       this.map?.updateSize();
     }, 0);
+  }
+
+  ngAfterViewInit(): void {
+    this.initializeMap();
   }
 
   ngOnDestroy(): void {
@@ -712,13 +716,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       }
     }
 
-    if (!hasVisibleBaseMap) {
-      this.activateFirstBasemap();
-    }
-
     this.layerGroups.set([...groups]);
   }
-
   private activateFirstBasemap(): void {
     const groups = this.layerGroups();
 
@@ -1819,5 +1818,28 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   trackByLayer(_: number, item: UiLayerModel): number {
     return item.id;
+  }
+
+  refreshMap(): void {
+    if (!this.map) return;
+
+    this.closeLegend();
+    this.closeInfo();
+    this.closeFilterDrawer();
+    this.closeFeatureInfoDrawer();
+
+    this.mapLayerRegistry.forEach((layer) => {
+      this.map?.removeLayer(layer);
+    });
+
+    this.mapLayerRegistry.clear();
+    this.layerGroups.set([]);
+
+    this.loadLayerGroups();
+
+    setTimeout(() => {
+      this.map?.updateSize();
+      this.map?.render();
+    }, 250);
   }
 }

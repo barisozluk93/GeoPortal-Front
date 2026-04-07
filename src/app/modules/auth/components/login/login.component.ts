@@ -9,6 +9,7 @@ import { BasketManagementService } from 'src/app/modules/basket-management/baske
 import { BasketModel } from 'src/app/modules/basket-management/models/basket.model';
 import { NotificationSignalrService } from 'src/app/modules/common/signalR.service';
 import { environment } from 'src/environments/environment';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
   selector: 'app-login',
@@ -94,7 +95,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.notificationService.startConnection(authData?.accessToken);
           }
 
-          if(user.roles.includes("1")) {
+          if(user.roles.includes(RoleEnum.SuperAdmin)) {
             this.returnUrl = "/dashboard";
           }
           else{

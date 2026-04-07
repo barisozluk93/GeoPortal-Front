@@ -1,23 +1,32 @@
-<div class="custom-alert-container" *ngIf="show">
-  <div class="custom-alert" [ngClass]="type">
+<div class="custom-alert-container" *ngIf="alertCount > 0">
+  <div
+    class="custom-alert"
+    *ngFor="let alert of alerts; trackBy: trackByAlertId"
+    [ngClass]="[
+      alert.type,
+      alert.isClosing ? 'toast-leave' : 'toast-enter'
+    ]"
+  >
     <div class="alert-left">
       <div class="alert-icon">
-        <span *ngIf="type === 'success'">✓</span>
-        <span *ngIf="type === 'danger' || type === 'error'">✕</span>
-        <span *ngIf="type === 'warning'">!</span>
-        <span *ngIf="type === 'info'">i</span>
+        <span *ngIf="alert.type === 'success'">✓</span>
+        <span *ngIf="alert.type === 'danger' || alert.type === 'error'">✕</span>
+        <span *ngIf="alert.type === 'warning'">!</span>
+        <span *ngIf="alert.type === 'info'">i</span>
       </div>
 
       <div class="alert-text">
-        <div class="alert-title">{{ alertTitleKey | translate }}</div>
+        <div class="alert-title">
+          {{ getAlertTitleKey(alert.type) | translate }}
+        </div>
 
         <div class="alert-message">
-          <ng-container *ngIf="messageIsTranslateKey; else plainMessage">
-            {{ message | translate : messageTranslateParams }}
+          <ng-container *ngIf="alert.messageIsTranslateKey; else plainMessage">
+            {{ alert.message | translate : alert.messageTranslateParams }}
           </ng-container>
 
           <ng-template #plainMessage>
-            {{ message }}
+            {{ alert.message }}
           </ng-template>
         </div>
       </div>
@@ -26,7 +35,7 @@
     <button
       type="button"
       class="close-btn"
-      (click)="close()"
+      (click)="close(alert.id)"
       [attr.aria-label]="'COMMON.CLOSE' | translate"
     >
       ×

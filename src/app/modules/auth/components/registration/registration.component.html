@@ -1,7 +1,6 @@
 <form class="login-form" [formGroup]="registrationForm" novalidate (ngSubmit)="submit()">
   <div class="login-card register-card">
 
-    <!-- HEADER --> 
     <div class="login-card__header text-center">
       <div class="login-brand justify-content-center mb-6" (click)="onBrandClick()" style="cursor: pointer;">
         <div class="login-brand__icon bg-primary text-white">
@@ -19,7 +18,6 @@
       </h1>
     </div>
 
-    <!-- ERROR -->
     <ng-container *ngIf="errorState === errorStates.HasError">
       <div class="alert alert-danger d-flex align-items-center mb-6 py-4 px-4 rounded-4">
         <i class="ki-outline ki-information-5 fs-3 me-3"></i>
@@ -27,7 +25,6 @@
       </div>
     </ng-container>
 
-    <!-- SUCCESS -->
     <ng-container *ngIf="errorState === errorStates.NoError">
       <div class="alert alert-success d-flex align-items-center mb-6 py-4 px-4 rounded-4">
         <i class="ki-outline ki-check-circle fs-3 me-3"></i>
@@ -35,103 +32,274 @@
       </div>
     </ng-container>
 
-    <!-- FORM GRID -->
+    <div class="mb-8">
+      <label class="form-label fw-semibold text-gray-800 d-block mb-4">
+        {{ 'AUTH.REGISTER.USER_TYPE' | translate }}
+      </label>
+
+      <div class="d-flex flex-wrap">
+        <button
+          type="button"
+          class="btn w-50"
+          [ngClass]="activeTabId === 'bireysel' ? 'btn-primary' : 'btn-light-primary'"
+          (click)="setActiveTabId('bireysel')"
+        >
+          {{ 'AUTH.REGISTER.INDIVIDUAL' | translate }}
+        </button>
+
+        <button
+          type="button"
+          class="btn w-50"
+          [ngClass]="activeTabId === 'kurumsal' ? 'btn-primary' : 'btn-light-primary'"
+          (click)="setActiveTabId('kurumsal')"
+        >
+          {{ 'AUTH.REGISTER.CORPORATE' | translate }}
+        </button>
+      </div>
+    </div>
+
     <div class="row g-5">
 
-      <!-- NAME -->
       <div class="col-md-6">
         <label class="form-label fw-semibold text-gray-800">{{ 'NAME' | translate }}</label>
         <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['name'].invalid && f['name'].touched}">
-          <input type="text" class="form-control form-control-lg form-control-solid" formControlName="name"
-            placeholder="Adınız" />
+          <input
+            type="text"
+            class="form-control form-control-lg form-control-solid"
+            formControlName="name"
+            [placeholder]="'NAME' | translate"
+          />
         </div>
         <ng-container
-          *ngTemplateOutlet="formError; context:{control:f['name'],validation:'required',message:('AUTH.VALIDATION.NAME_REQUIRED'|translate)}"></ng-container>
+          *ngTemplateOutlet="formError; context:{control:f['name'],validation:'required',message:('AUTH.VALIDATION.NAME_REQUIRED'|translate)}">
+        </ng-container>
       </div>
 
-      <!-- SURNAME -->
       <div class="col-md-6">
         <label class="form-label fw-semibold text-gray-800">{{ 'SURNAME' | translate }}</label>
-        <div class="input-group login-input-group"
-          [ngClass]="{'is-invalid': f['surname'].invalid && f['surname'].touched}">
-          <input type="text" class="form-control form-control-lg form-control-solid" formControlName="surname"
-            placeholder="Soyadınız" />
+        <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['surname'].invalid && f['surname'].touched}">
+          <input
+            type="text"
+            class="form-control form-control-lg form-control-solid"
+            formControlName="surname"
+            [placeholder]="'SURNAME' | translate"
+          />
         </div>
         <ng-container
-          *ngTemplateOutlet="formError; context:{control:f['surname'],validation:'required',message:('AUTH.VALIDATION.SURNAME_REQUIRED'|translate)}"></ng-container>
+          *ngTemplateOutlet="formError; context:{control:f['surname'],validation:'required',message:('AUTH.VALIDATION.SURNAME_REQUIRED'|translate)}">
+        </ng-container>
       </div>
 
-      <!-- USERNAME -->
       <div class="col-md-6">
         <label class="form-label fw-semibold text-gray-800">{{ 'USERNAME' | translate }}</label>
-        <div class="input-group login-input-group"
-          [ngClass]="{'is-invalid': f['username'].invalid && f['username'].touched}">
+        <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['username'].invalid && f['username'].touched}">
           <span class="input-group-text"><i class="ki-outline ki-user fs-4"></i></span>
-          <input type="text" class="form-control form-control-lg form-control-solid" formControlName="username"
-            placeholder="username" />
+          <input
+            type="text"
+            class="form-control form-control-lg form-control-solid"
+            formControlName="username"
+            [placeholder]="'USERNAME' | translate"
+          />
         </div>
         <ng-container
-          *ngTemplateOutlet="formError; context:{control:f['username'],validation:'required',message:('AUTH.VALIDATION.USERNAME_REQUIRED'|translate)}"></ng-container>
+          *ngTemplateOutlet="formError; context:{control:f['username'],validation:'required',message:('AUTH.VALIDATION.USERNAME_REQUIRED'|translate)}">
+        </ng-container>
       </div>
 
-      <!-- PHONE -->
       <div class="col-md-6">
         <label class="form-label fw-semibold text-gray-800">{{ 'PHONE' | translate }}</label>
 
         <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['phone'].invalid && f['phone'].touched}">
-
           <span class="input-group-text">
             <i class="ki-outline ki-phone fs-4"></i>
           </span>
 
-          <input type="tel" class="form-control form-control-lg form-control-solid" formControlName="phone"
-            mask="(0000) 000 00 00" [showMaskTyped]="true" [dropSpecialCharacters]="false"
-            placeholder="05xx xxx xx xx" />
+          <input
+            type="tel"
+            class="form-control form-control-lg form-control-solid"
+            formControlName="phone"
+            mask="(000) 000 00 00"
+            [showMaskTyped]="true"
+            [dropSpecialCharacters]="false"
+            placeholder="(___) ___ __ __"
+          />
         </div>
 
-        <!-- REQUIRED -->
-        <ng-container *ngTemplateOutlet="formError;
-      context:{control:f['phone'],validation:'required',message:('AUTH.VALIDATION.PHONE_REQUIRED'|translate)}">
+        <ng-container
+          *ngTemplateOutlet="formError; context:{control:f['phone'],validation:'required',message:('AUTH.VALIDATION.PHONE_REQUIRED'|translate)}">
         </ng-container>
 
-        <!-- MASK / PATTERN -->
         <div class="invalid-feedback d-block" *ngIf="f['phone'].errors?.['pattern'] && f['phone'].touched">
           {{ 'AUTH.VALIDATION.INVALID_PHONE' | translate }}
         </div>
       </div>
 
-      <!-- EMAIL -->
       <div class="col-12">
         <label class="form-label fw-semibold text-gray-800">{{ 'EMAIL' | translate }}</label>
         <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['email'].invalid && f['email'].touched}">
           <span class="input-group-text"><i class="ki-outline ki-sms fs-4"></i></span>
-          <input type="email" class="form-control form-control-lg form-control-solid" formControlName="email"
-            placeholder="example@email.com" />
+          <input
+            type="email"
+            class="form-control form-control-lg form-control-solid"
+            formControlName="email"
+            placeholder="example@email.com"
+          />
         </div>
         <ng-container
-          *ngTemplateOutlet="formError; context:{control:f['email'],validation:'required',message:('AUTH.VALIDATION.EMAIL_REQUIRED'|translate)}"></ng-container>
+          *ngTemplateOutlet="formError; context:{control:f['email'],validation:'required',message:('AUTH.VALIDATION.EMAIL_REQUIRED'|translate)}">
+        </ng-container>
+        <ng-container
+          *ngTemplateOutlet="formError; context:{control:f['email'],validation:'email',message:('AUTH.VALIDATION.INVALID_EMAIL'|translate)}">
+        </ng-container>
       </div>
 
-      <!-- PASSWORD -->
+      <ng-container *ngIf="isCorporate">
+        <div class="col-12">
+          <label class="form-label fw-semibold text-gray-800">
+            {{ 'AUTH.REGISTER.ORGANIZATION' | translate }}
+          </label>
+
+          <app-custom-select
+            [size]="'lg'"
+            formControlName="organizationId"
+            [items]="organizations"
+            bindLabel="name"
+            bindValue="id"
+            [multiple]="false"
+            [clearable]="true"
+            [placeholder]="'AUTH.REGISTER.SELECT_ORGANIZATION' | translate"
+            [invalid]="isInvalid('organizationId')">
+          </app-custom-select>
+
+          <ng-container
+            *ngTemplateOutlet="formError; context:{control:f['organizationId'],validation:'required',message:('AUTH.VALIDATION.ORGANIZATION_REQUIRED'|translate)}">
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="isCorporate && isOtherSelected">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-gray-800">
+            {{ 'AUTH.REGISTER.ORG_NAME' | translate }}
+          </label>
+          <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['orgName'].invalid && f['orgName'].touched}">
+            <input
+              type="text"
+              class="form-control form-control-lg form-control-solid"
+              formControlName="orgName"
+              [placeholder]="'AUTH.REGISTER.ORG_NAME' | translate"
+            />
+          </div>
+          <ng-container
+            *ngTemplateOutlet="formError; context:{control:f['orgName'],validation:'required',message:('AUTH.VALIDATION.ORG_NAME_REQUIRED'|translate)}">
+          </ng-container>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-gray-800">
+            {{ 'AUTH.REGISTER.TAX_NO' | translate }}
+          </label>
+          <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['taxNo'].invalid && f['taxNo'].touched}">
+            <input
+              type="text"
+              class="form-control form-control-lg form-control-solid"
+              formControlName="taxNo"
+              [placeholder]="'AUTH.REGISTER.TAX_NO' | translate"
+            />
+          </div>
+          <ng-container
+            *ngTemplateOutlet="formError; context:{control:f['taxNo'],validation:'required',message:('AUTH.VALIDATION.TAX_NO_REQUIRED'|translate)}">
+          </ng-container>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label fw-semibold text-gray-800">
+            {{ 'AUTH.REGISTER.TAX_OFFICE' | translate }}
+          </label>
+          <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['taxOffice'].invalid && f['taxOffice'].touched}">
+            <input
+              type="text"
+              class="form-control form-control-lg form-control-solid"
+              formControlName="taxOffice"
+              [placeholder]="'AUTH.REGISTER.TAX_OFFICE' | translate"
+            />
+          </div>
+          <ng-container
+            *ngTemplateOutlet="formError; context:{control:f['taxOffice'],validation:'required',message:('AUTH.VALIDATION.TAX_OFFICE_REQUIRED'|translate)}">
+          </ng-container>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-gray-800">
+            {{ 'AUTH.REGISTER.ORG_PHONE' | translate }}
+          </label>
+          <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['orgPhone'].invalid && f['orgPhone'].touched}">
+            <span class="input-group-text"><i class="ki-outline ki-phone fs-4"></i></span>
+            <input
+              type="tel"
+              class="form-control form-control-lg form-control-solid"
+              formControlName="orgPhone"
+              mask="(000) 000 00 00"
+              [showMaskTyped]="true"
+              [dropSpecialCharacters]="false"
+              placeholder="(___) ___ __ __"
+            />
+          </div>
+          <div class="invalid-feedback d-block" *ngIf="f['orgPhone'].errors?.['pattern'] && f['orgPhone'].touched">
+            {{ 'AUTH.VALIDATION.INVALID_PHONE' | translate }}
+          </div>
+        </div>
+
+        <div class="col-6">
+          <label class="form-label fw-semibold text-gray-800">
+            {{ 'AUTH.REGISTER.ORG_EMAIL' | translate }}
+          </label>
+          <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['orgEmail'].invalid && f['orgEmail'].touched}">
+            <span class="input-group-text"><i class="ki-outline ki-sms fs-4"></i></span>
+            <input
+              type="email"
+              class="form-control form-control-lg form-control-solid"
+              formControlName="orgEmail"
+              [placeholder]="'AUTH.REGISTER.ORG_EMAIL' | translate"
+            />
+          </div>
+          <ng-container
+            *ngTemplateOutlet="formError; context:{control:f['orgEmail'],validation:'email',message:('AUTH.VALIDATION.INVALID_EMAIL'|translate)}">
+          </ng-container>
+        </div>
+      </ng-container>
+
       <div class="col-md-6">
         <label class="form-label fw-semibold text-gray-800">{{ 'PASSWORD' | translate }}</label>
-        <div class="input-group login-input-group"
-          [ngClass]="{'is-invalid': f['password'].invalid && f['password'].touched}">
+        <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['password'].invalid && f['password'].touched}">
           <span class="input-group-text"><i class="ki-outline ki-lock fs-4"></i></span>
-          <input type="password" class="form-control form-control-lg form-control-solid" formControlName="password"
-            placeholder="••••••••" />
+          <input
+            type="password"
+            class="form-control form-control-lg form-control-solid"
+            formControlName="password"
+            placeholder="••••••••"
+          />
         </div>
+        <ng-container
+          *ngTemplateOutlet="formError; context:{control:f['password'],validation:'required',message:('AUTH.VALIDATION.PASSWORD_REQUIRED'|translate)}">
+        </ng-container>
       </div>
 
-      <!-- CONFIRM -->
       <div class="col-md-6">
         <label class="form-label fw-semibold text-gray-800">{{ 'CONFIRM_PASSWORD' | translate }}</label>
-        <div class="input-group login-input-group"
-          [ngClass]="{'is-invalid': f['cPassword'].errors && f['cPassword'].touched}">
+        <div class="input-group login-input-group" [ngClass]="{'is-invalid': f['cPassword'].errors && f['cPassword'].touched}">
           <span class="input-group-text"><i class="ki-outline ki-lock fs-4"></i></span>
-          <input type="password" class="form-control form-control-lg form-control-solid" formControlName="cPassword"
-            placeholder="••••••••" />
+          <input
+            type="password"
+            class="form-control form-control-lg form-control-solid"
+            formControlName="cPassword"
+            placeholder="••••••••"
+          />
         </div>
+
+        <ng-container
+          *ngTemplateOutlet="formError; context:{control:f['cPassword'],validation:'required',message:('AUTH.VALIDATION.CONFIRM_PASSWORD_REQUIRED'|translate)}">
+        </ng-container>
 
         <div class="invalid-feedback d-block" *ngIf="f['cPassword'].errors?.['ConfirmPassword']">
           {{ 'AUTH.VALIDATION.PASSWORD_NOT_MATCH' | translate }}
@@ -140,10 +308,8 @@
 
     </div>
 
-    <!-- SUBMIT -->
     <div class="d-grid mt-8">
       <button type="submit" class="btn btn-primary btn-lg login-submit" [disabled]="registrationForm.invalid">
-
         <ng-container *ngIf="!(isLoading$ | async)">
           {{ 'SUBMIT' | translate }}
         </ng-container>
@@ -151,11 +317,9 @@
         <ng-container *ngIf="isLoading$ | async">
           {{ 'PLEASEWAIT' | translate }}
         </ng-container>
-
       </button>
     </div>
 
-    <!-- FOOTER -->
     <div class="text-center mt-6">
       <span class="text-gray-600">{{ 'ALREADY_HAVE_AN_ACCOUNT' | translate }}</span>
       <a routerLink="/auth/login" class="login-link fw-bold ms-1">
@@ -168,5 +332,7 @@
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
   <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
     <div class="invalid-feedback d-block">
-      {{ message }} </div>
-  </ng-container> </ng-template>
+      {{ message }}
+    </div>
+  </ng-container>
+</ng-template>

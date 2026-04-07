@@ -6,10 +6,10 @@ import { OrderModel } from './models/order.model';
 import { PaginationModel } from 'src/app/models/pagination.model';
 import { OrderManagementService } from './order-management.service';
 import { formatDate } from '@angular/common';
-import { OrderStatusEnum } from 'src/app/enums/permission.enum';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
+import { OrderStatusEnum } from 'src/app/enums/order-status.enum';
 
 @Component({
   selector: 'app-order-management',

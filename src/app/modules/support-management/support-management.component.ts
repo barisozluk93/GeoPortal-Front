@@ -18,7 +18,7 @@ interface DatatableFilterModel {
   styleUrls: ['./support-management.component.scss'],
 })
 export class SupportManagementComponent implements OnInit {
-  header = 'Destek Talepleri';
+  header = 'SUPPORT_MANAGEMENT.HEADER';
   isDetailModalOpen = false;
   isSubmitting = false;
   replyForm: FormGroup
@@ -43,23 +43,23 @@ export class SupportManagementComponent implements OnInit {
   };
 
   columnListTr: ColumnModel[] = [
-    { name: 'Ticket No', index: 'ticketNo', visibility: true },
-    { name: 'Müşteri', index: 'customerName', visibility: true },
-    { name: 'Email', index: 'customerEmail', visibility: true },
-    { name: 'Konu', index: 'subject', visibility: true },
-    { name: 'Durum', index: 'status', visibility: true },
-    { name: 'Son Mesaj', index: 'lastMessageAtDisplay', visibility: true },
-    { name: 'İşlemler', index: null, visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_TICKET_NO', index: 'ticketNo', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_CUSTOMER', index: 'customerName', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_EMAIL', index: 'customerEmail', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_SUBJECT', index: 'subject', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_STATUS', index: 'status', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_LAST_MESSAGE', index: 'lastMessageAtDisplay', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_ACTIONS', index: null, visibility: true },
   ];
 
   columnListEn: ColumnModel[] = [
-    { name: 'Ticket No', index: 'ticketNo', visibility: true },
-    { name: 'Customer', index: 'customerName', visibility: true },
-    { name: 'Email', index: 'customerEmail', visibility: true },
-    { name: 'Subject', index: 'subject', visibility: true },
-    { name: 'Status', index: 'status', visibility: true },
-    { name: 'Last Message', index: 'lastMessageAtDisplay', visibility: true },
-    { name: 'Actions', index: null, visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_TICKET_NO', index: 'ticketNo', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_CUSTOMER', index: 'customerName', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_EMAIL', index: 'customerEmail', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_SUBJECT', index: 'subject', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_STATUS', index: 'status', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_LAST_MESSAGE', index: 'lastMessageAtDisplay', visibility: true },
+    { name: 'SUPPORT_MANAGEMENT.COLUMN_ACTIONS', index: null, visibility: true },
   ];
 
   columnList: ColumnModel[] = [];
@@ -116,9 +116,15 @@ export class SupportManagementComponent implements OnInit {
     const currentLang = this.translate.currentLang;
 
     if (currentLang === 'tr') {
-      this.columnList = this.columnListTr;
+      this.columnList = this.columnListTr.map(item => ({
+        ...item,
+        name: this.translate.instant(item.name)
+      }));
     } else {
-      this.columnList = this.columnListEn;
+      this.columnList = this.columnListEn.map(item => ({
+        ...item,
+        name: this.translate.instant(item.name)
+      }));
     }
   }
 
@@ -167,7 +173,7 @@ export class SupportManagementComponent implements OnInit {
         this.selectedTicket = result?.data || null;
 
         if (!this.selectedTicket) {
-          this.alertService.createAlert('warning', 'Ticket bulunamadı.');
+          this.alertService.createAlert('warning', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.TICKET_NOT_FOUND'));
           return;
         }
 
@@ -180,7 +186,7 @@ export class SupportManagementComponent implements OnInit {
         this.isDetailModalOpen = true;
       },
       error: () => {
-        this.alertService.createAlert('danger', 'Ticket detayı alınamadı.');
+        this.alertService.createAlert('danger', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.TICKET_DETAIL_ERROR'));
       },
     });
   }
@@ -219,20 +225,20 @@ export class SupportManagementComponent implements OnInit {
         }).subscribe({
           next: () => {
             this.isSubmitting = false;
-            this.alertService.createAlert('success', 'Yanıt başarıyla gönderildi.');
+            this.alertService.createAlert('success', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.REPLY_SUCCESS'));
             this.openDetailModal(this.selectedTicket!.id);
             this.loadTickets();
           },
           error: () => {
             this.isSubmitting = false;
-            this.alertService.createAlert('warning', 'Yanıt gönderildi ancak durum güncellenemedi.');
+            this.alertService.createAlert('warning', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.REPLY_SUCCESS_STATUS_ERROR'));
             this.loadTickets();
           },
         });
       },
       error: () => {
         this.isSubmitting = false;
-        this.alertService.createAlert('danger', 'Yanıt gönderilemedi.');
+        this.alertService.createAlert('danger', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.REPLY_ERROR'));
       },
     });
   }
@@ -254,13 +260,13 @@ export class SupportManagementComponent implements OnInit {
     this.supportManagementService.updateTicketStatus(this.selectedTicket.id, { status }).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.alertService.createAlert('success', 'Durum güncellendi.');
+        this.alertService.createAlert('success', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.STATUS_UPDATED'));
         this.openDetailModal(this.selectedTicket!.id);
         this.loadTickets();
       },
       error: () => {
         this.isSubmitting = false;
-        this.alertService.createAlert('danger', 'Durum güncellenemedi.');
+        this.alertService.createAlert('danger', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.STATUS_UPDATE_ERROR'));
       },
     });
   }
@@ -268,17 +274,17 @@ export class SupportManagementComponent implements OnInit {
   getStatusLabel(status: string): string {
     switch (status) {
       case 'New':
-        return 'Yeni';
+        return this.translate.instant('SUPPORT_MANAGEMENT.STATUS_NEW');
       case 'WaitingForAdmin':
-        return 'Admin Bekliyor';
+        return this.translate.instant('SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_ADMIN');
       case 'WaitingForCustomer':
-        return 'Müşteri Bekliyor';
+        return this.translate.instant('SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_CUSTOMER');
       case 'CustomerReplied':
-        return 'Müşteri Cevapladı';
+        return this.translate.instant('SUPPORT_MANAGEMENT.STATUS_CUSTOMER_REPLIED');
       case 'Closed':
-        return 'Kapalı';
+        return this.translate.instant('SUPPORT_MANAGEMENT.STATUS_CLOSED');
       case 'Spam':
-        return 'Spam';
+        return this.translate.instant('SUPPORT_MANAGEMENT.STATUS_SPAM');
       default:
         return status || '-';
     }

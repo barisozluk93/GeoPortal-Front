@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, LOCALE_ID, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { formatDate } from '@angular/common';
-import { OrderStatusEnum } from 'src/app/enums/permission.enum';
+import { OrderStatusEnum } from 'src/app/enums/order-status.enum';
 import { OrderManagementService } from '../order-management.service';
 import { OrderModel } from '../models/order.model';
 import { InvoiceComponent } from './invoice/invoice.component';
@@ -26,11 +26,12 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   orderId: number;
   order: OrderModel;
   private langChangeSubscription: any;
+  copiedMap: { [key: number]: boolean } = {};
 
   constructor(
-    private orderManagementService: OrderManagementService, 
-    private translate: TranslateService, 
-    private route: ActivatedRoute, 
+    private orderManagementService: OrderManagementService,
+    private translate: TranslateService,
+    private route: ActivatedRoute,
     @Inject(LOCALE_ID) public locale: string
   ) {
   }
@@ -48,25 +49,25 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   getById() {
-    const keys = ['ORDER_COMPLETED', 'ORDER_NOT_YET_COMPLETED','PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'REJECTED', 'COMPLETED'];
+    const keys = ['ORDER_COMPLETED', 'ORDER_NOT_YET_COMPLETED', 'PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'REJECTED', 'COMPLETED'];
 
     const translationRequest = keys.map(key => this.translate.get(key));
-    forkJoin(translationRequest).subscribe((translations)=>{
-      const [orderCompleted, orderNotYetCompleted,pendingApprovalText, approvedText, preparingText, rejectedText, completedText] = translations;
+    forkJoin(translationRequest).subscribe((translations) => {
+      const [orderCompleted, orderNotYetCompleted, pendingApprovalText, approvedText, preparingText, rejectedText, completedText] = translations;
 
       this.orderManagementService.getById(this.orderId).subscribe(result => {
         if (result.isSuccess) {
           result.data.orderDate = formatDate(result.data.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
-  
+
           if (result.data.orderStatus == OrderStatusEnum['Sipariş Tamamlandı']) {
             result.data.orderStatusStr = orderCompleted;
           }
           else if (result.data.orderStatus == OrderStatusEnum['Sipariş Tamamlanmadı']) {
             result.data.orderStatusStr = orderNotYetCompleted;
           }
-  
+
           this.order = result.data;
-  
+
           this.order.orderProducts?.forEach(orderProduct => {
             if (orderProduct.orderStatus == OrderStatusEnum['Onay Bekliyor']) {
               orderProduct.orderStatusStr = pendingApprovalText;
@@ -84,15 +85,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
               orderProduct.orderStatusStr = completedText;
               var today = new Date();
               var controlDate = this.addDays(orderProduct.proccessDate!, 15);
-  
-              if(today.getTime() <= controlDate.getTime()) {
+
+              if (today.getTime() <= controlDate.getTime()) {
                 orderProduct.canEvaluate = true;
               }
-              else{
+              else {
                 orderProduct.canEvaluate = false;
               }
             }
-  
+
             orderProduct.proccessDate = formatDate(orderProduct.proccessDate!, "dd/MM/yyyy HH:mm", this.locale);
           })
         }
@@ -110,7 +111,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       this.getById();
     });
 
-    this.updateHeader(); 
+    this.updateHeader();
     this.route.paramMap
       .pipe()
       .subscribe(params => {
@@ -133,10 +134,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.invoiceComponent.openModal(orderProduct!);
   }
 
-  copyToClipboard(value: string | undefined | null): void {
+  copyToClipboard(value: string | undefined | null, itemId: number): void {
     if (!value) return;
 
     navigator.clipboard.writeText(value).then(() => {
+      this.copiedMap[itemId] = true;
+
+      setTimeout(() => {
+        this.copiedMap[itemId] = false;
+      }, 2000);
     }).catch(err => {
       console.error('Copy failed', err);
     });

@@ -7,6 +7,8 @@ import { RoleModel } from "../../models/role.model";
 import { UserModel } from "../../models/user.model";
 import { UserManagementService } from "../../user-management.service";
 import { ConfirmPasswordValidator } from "./confirm-password.validator";
+import { OrganizationModel } from "src/app/modules/organization-management/models/organization.model";
+import { OrganizationManagementService } from "src/app/modules/organization-management/organization-management.service";
 
 @Component({
   selector: "app-user-editsave",
@@ -21,10 +23,12 @@ export class UserEditSaveComponent implements OnInit {
 
   form: FormGroup;
   roleList: RoleModel[] = [];
+  organizationList: OrganizationModel[];
 
   constructor(
     private fb: FormBuilder,
     private userManagementService: UserManagementService,
+    private organizationManagementService: OrganizationManagementService,
     private alertService: AlertService,
     private translate: TranslateService
   ) { }
@@ -60,6 +64,9 @@ export class UserEditSaveComponent implements OnInit {
         password: ["", Validators.required],
         cPassword: ["", Validators.required],
         roles: [null, Validators.required],
+        organizations: [
+          null
+        ],
         isDeleted: false,
         isSystemData: false
       },
@@ -72,10 +79,15 @@ export class UserEditSaveComponent implements OnInit {
   openModal(userId?: number): void {
     forkJoin([
       this.userManagementService.allRoles(),
+      this.organizationManagementService.all(),
       this.translate.get(["NEW_RECORD", "EDIT"])
-    ]).subscribe(([rolesResult, translations]) => {
+    ]).subscribe(([rolesResult, organizationsResult, translations]) => {
       if (rolesResult.isSuccess) {
         this.roleList = rolesResult.data;
+      }
+
+      if (organizationsResult.isSuccess) {
+        this.organizationList = organizationsResult.data;
       }
 
       this.modalTitle = userId ? translations["EDIT"] : translations["NEW_RECORD"];
@@ -105,6 +117,7 @@ export class UserEditSaveComponent implements OnInit {
           username: "",
           phone: "",
           roles: null,
+          organizations: null,
           isDeleted: false,
           isSystemData: false
         });
@@ -124,7 +137,8 @@ export class UserEditSaveComponent implements OnInit {
 
     const data: UserModel = {
       ...temp,
-      roles: temp.roles ? [temp.roles] : []
+      roles: temp.roles ? [temp.roles] : [],
+      organizations: temp.organizations ? [temp.organizations] : []
     };
 
     const request =

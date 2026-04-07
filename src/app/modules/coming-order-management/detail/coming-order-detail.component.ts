@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, LOCALE_ID, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { formatDate } from '@angular/common';
-import { OrderStatusEnum } from 'src/app/enums/permission.enum';
+import { OrderStatusEnum } from 'src/app/enums/order-status.enum';
 import { ComingOrderManagementService } from '../coming-order-management.service';
 import { OrderProductModel } from '../models/orderproduct.model';
 import { StatusComponent } from './status/status.component';

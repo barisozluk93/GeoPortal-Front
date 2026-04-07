@@ -1,12 +1,12 @@
 :host {
   display: block;
-  padding: 60px 60px;
   min-height: calc(100vh - 65px);
+  padding: 60px;
 }
 
 .order-detail-card {
-  border-radius: 1rem;
   background-color: var(--bs-body-bg);
+  border-radius: 1rem;
   box-shadow: 0 0 20px rgba(76, 87, 125, 0.06);
 
   .card-header {
@@ -20,21 +20,21 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   font-size: 0.9rem;
-  color: var(--bs-gray-600);
   font-weight: 500;
+  color: var(--bs-gray-600);
 
   b {
-    color: var(--bs-gray-900);
     font-weight: 700;
+    color: var(--bs-gray-900);
   }
 }
 
 .dot {
+  flex: 0 0 auto;
   width: 4px;
   height: 4px;
-  background: var(--bs-gray-400);
   border-radius: 50%;
-  flex: 0 0 auto;
+  background: var(--bs-gray-400);
 }
 
 .info-inline {
@@ -42,8 +42,8 @@
   flex-wrap: wrap;
   gap: 1.5rem 2rem;
   padding: 1.25rem 0 1.5rem;
-  border-bottom: 1px solid var(--bs-border-color);
   margin-bottom: 1.75rem;
+  border-bottom: 1px solid var(--bs-border-color);
 
   &__item {
     display: flex;
@@ -53,29 +53,32 @@
     min-width: 0;
   }
 
-  .label {
+  .label,
+  .product-box__label {
     font-size: 0.8rem;
     font-weight: 700;
-    color: var(--bs-gray-600);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
     line-height: 1.2;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bs-gray-600);
+  }
+
+  .value,
+  .sub {
+    line-height: 1.4;
+    word-break: break-word;
   }
 
   .value {
     font-size: 1rem;
     font-weight: 700;
     color: var(--bs-gray-900);
-    line-height: 1.4;
-    word-break: break-word;
   }
 
   .sub {
     font-size: 0.85rem;
-    color: var(--bs-gray-600);
     font-weight: 500;
-    line-height: 1.4;
-    word-break: break-word;
+    color: var(--bs-gray-600);
   }
 }
 
@@ -112,17 +115,14 @@
 
 .product-box {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 1.5rem;
-
-  background: var(--bs-body-bg); // 🔥 düz beyaz
+  padding: 1.5rem;
   border: 1px solid var(--bs-border-color);
   border-radius: 0.85rem;
-  padding: 1.5rem;
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); // çok hafif
-
+  background: var(--bs-body-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
 
   &:hover {
@@ -131,20 +131,15 @@
   }
 
   &__label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    color: var(--bs-gray-600);
-    font-weight: 700;
-    letter-spacing: 0.04em;
     margin-bottom: 0.45rem;
   }
 
   &__title {
+    margin-bottom: 0.5rem;
     font-size: 1.25rem;
     font-weight: 800;
-    color: var(--bs-gray-900);
     line-height: 1.45;
-    margin-bottom: 0.5rem;
+    color: var(--bs-gray-900);
   }
 
   &__price {
@@ -158,9 +153,9 @@
 
     .btn {
       min-width: 170px;
+      padding: 0.8rem 1.2rem;
       border-radius: 0.6rem;
       font-weight: 700;
-      padding: 0.8rem 1.2rem;
     }
   }
 }
@@ -199,6 +194,10 @@
 }
 
 @media (max-width: 575.98px) {
+  :host {
+    padding: 40px 20px;
+  }
+
   .order-detail-card {
     border-radius: 0.85rem;
   }

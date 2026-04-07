@@ -3,108 +3,98 @@
 
 <div class="row" *ngIf="order">
   <div class="col-12">
-
-    <div class="card order-detail-card">
-
+    <div class="card order-detail-card border-0">
       <!-- HEADER -->
       <div class="card-header border-0 py-6 px-7 d-flex justify-content-between align-items-center flex-wrap gap-4">
-
         <div>
           <h3 class="fw-bold text-gray-900 mb-2">{{header}}</h3>
-
           <div class="meta-row">
             <span>
               {{'ORDER_NUMBER' | translate}}:
               <b>#{{order.orderNo}}</b>
             </span>
-
             <span class="dot"></span>
-
             <span>
               {{'ORDER_DATE' | translate}}:
               <b>{{order.orderDate}}</b>
             </span>
           </div>
         </div>
-
         <div class="text-end">
           <div class="text-muted fs-8">{{'AMOUNT_TL' | translate}}</div>
           <div class="text-primary fw-bolder fs-2">
             {{order.price.toFixed(2)}} ₺
           </div>
         </div>
-
       </div>
-
       <!-- BODY -->
       <div class="card-body px-7 pb-7 pt-0">
-
         <!-- STATUS -->
         <div class="info-inline">
-
           <div class="info-inline__item">
             <span class="label">{{'STATUS' | translate}}</span>
-
-            <span
-              class="status-pill"
-              [ngClass]="{
+            <span class="status-pill" [ngClass]="{
                 'status-pill--success': order.orderStatus == 5,
                 'status-pill--danger': order.orderStatus != 5
-              }"
-            >
+              }">
               {{order.orderStatusStr}}
             </span>
           </div>
-
         </div>
-
         <!-- PRODUCTS -->
         <div class="product-list">
-
           <div class="product-row" *ngFor="let item of order.orderProducts">
-
             <!-- LEFT -->
             <div class="product-row__left">
               <div class="product-row__title">
                 {{item.product?.name}}
               </div>
-
+              <div class="product-row__apikey" *ngIf="item.product?.categoryId === 2 && item.productValue">
+                <span class="product-row__apikey-value">
+                  {{ item.productValue }}
+                </span>
+                <button type="button" class="btn btn-icon btn-sm btn-light-primary product-row__copy-btn"
+                  (click)="copyToClipboard(item.productValue, item.id)"
+                  [attr.aria-label]="copiedMap[item.id] ? 'Copied' : 'Copy'"
+                  [attr.title]="copiedMap[item.id] ? 'Copied' : 'Copy'">
+                  <span class="product-row__copy-icon-wrap" [ngClass]="{ 'is-copied': copiedMap[item.id] }">
+                    <ng-container *ngIf="!copiedMap[item.id]; else copiedIcon">
+                      <i class="ki-duotone ki-copy fs-5 product-row__copy-icon">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                      </i>
+                    </ng-container>
+                    <ng-template #copiedIcon>
+                      <i class="ki-duotone ki-check fs-5 text-success product-row__copy-icon">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                      </i>
+                    </ng-template>
+                  </span>
+                </button>
+              </div>
               <div class="product-row__price">
                 {{item.product?.price?.toFixed(2)}} ₺
               </div>
             </div>
-
             <!-- RIGHT -->
             <div class="product-row__right">
-
               <div class="product-status">
                 {{item.orderStatusStr}}
-
                 <div *ngIf="item.orderStatus != 0" class="product-status__date">
                   {{item.proccessDate}}
                 </div>
               </div>
-
               <div class="product-actions" *ngIf="item.orderStatus == 3 || item.orderStatus == 4">
-
-                <button
-                  *ngIf="item.orderStatus == 4 && item.fileId! > 0"
-                  (click)="openInvoiceModal(item.id)"
-                  class="btn btn-light-primary btn-sm w-100"
-                >
+                <button *ngIf="item.orderStatus == 4 && item.fileId! > 0" (click)="openInvoiceModal(item.id)"
+                  class="btn btn-light-primary btn-sm w-100">
                   {{'VIEW_INVOICE' | translate}}
                 </button>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
     </div>
-
   </div>
 </div>

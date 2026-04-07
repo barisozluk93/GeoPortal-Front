@@ -23,6 +23,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   hasEditPermission: boolean;
   hasDeletePermission: boolean;
   hasNewRecordPermission: boolean;
+  hasExportPermission: boolean;
 
   filterModel: Record<string, any> = {};
 
@@ -60,6 +61,7 @@ export class RoleComponent implements OnInit, OnDestroy {
         this.hasDeletePermission = permissionList.includes(PermissionEnum['RoleScene.Delete.Permission']);
         this.hasEditPermission = permissionList.includes(PermissionEnum['RoleScene.Edit.Permission']);
         this.hasNewRecordPermission = permissionList.includes(PermissionEnum['RoleScene.Save.Permission']);
+        this.hasExportPermission = permissionList.includes(PermissionEnum['Table.Export.Permission']);
       }
     });
   }
@@ -172,5 +174,39 @@ export class RoleComponent implements OnInit, OnDestroy {
     });
 
     return params;
+  }
+
+  exportExcel(event: boolean) {
+    this.userManagementService.exportRoleExcel().subscribe({
+      next: (response) => {
+        const blob = response.body;
+        if (!blob) {
+          return;
+        }
+
+        const fileName = this.getFileNameFromHeader(response.headers.get('content-disposition')) || 'Roller.xlsx';
+        this.downloadBlob(blob, fileName);
+      },
+      error: (err) => {
+        console.error('Excel export hatası:', err);
+      }
+    });
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  private getFileNameFromHeader(contentDisposition: string | null): string | null {
+    if (!contentDisposition) return null;
+
+    const match = /filename="?([^"]+)"?/i.exec(contentDisposition);
+    return match?.[1] ?? null;
   }
 }

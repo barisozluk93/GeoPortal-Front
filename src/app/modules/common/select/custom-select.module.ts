@@ -16,14 +16,8 @@ import { CustomSelectComponent } from './custom-select.component';
     CustomSelectComponent,
   ],
   imports: [
-    DropdownMenusModule,
-    NgbPaginationModule,
     CommonModule,
     TranslationModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    InlineSVGModule
   ],
 })
 export class CustomSelectModule {}

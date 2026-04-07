@@ -36,7 +36,18 @@ export const locale = {
                 "DESCRIPTION": "Devam etmek ve çalışma alanınızı sade, düzenli ve odaklı bir deneyimle yönetmek için giriş yapın."
             },
             "REGISTER": {
-                "TITLE": "Kayıt Ol"
+                "TITLE": "Kayıt Ol",
+                "USER_TYPE": "Kayıt Tipi",
+                "INDIVIDUAL": "Bireysel",
+                "CORPORATE": "Kurumsal",
+                "ORGANIZATION": "Organizasyon",
+                "SELECT_ORGANIZATION": "Organizasyon seçiniz",
+                "OTHER_ORGANIZATION": "Diğer",
+                "ORG_NAME": "Organizasyon Adı",
+                "TAX_NO": "Vergi Numarası",
+                "TAX_OFFICE": "Vergi Dairesi",
+                "ORG_PHONE": "Telefon",
+                "ORG_EMAIL": "E-Posta",
             },
             "VALIDATION": {
                 "EMAIL_REQUIRED": "E-posta zorunludur",
@@ -53,6 +64,11 @@ export const locale = {
                 "USERNAME_REQUIRED": "Kullanıcı adı zorunludur",
                 "PHONE_REQUIRED": "Telefon zorunludur",
                 "INVALID_PHONE": "Telefon geçersizdir",
+                "ORGANIZATION_REQUIRED": "Lütfen bir organizasyon seçiniz.",
+                "ORG_NAME_REQUIRED": "Organizasyon adı zorunludur.",
+                "TAX_NO_REQUIRED": "Vergi numarası zorunludur.",
+                "TAX_OFFICE_REQUIRED": "Vergi dairesi zorunludur.",
+                "INVALID_EMAIL": "E-posta geçersizdir",
             },
             "GENERAL": {
                 "SIGNOUT_BUTTON": "Çıkış Yap"
@@ -716,6 +732,18 @@ export const locale = {
         "LAYERS": "Katmanlar",
         "REJECTED": 'Reddedildi',
         "COMPLETED": 'Tamamlandı',
+        "ORGANIZATION_FORM": {
+            "TITLE": "Organizasyon bilgilerini buradan ekleyebilir veya düzenleyebilirsiniz",
+            "NAME": "Organizasyon Adı",
+            "TAX_NO": "Vergi Numarası",
+            "TAX_OFFICE": "Vergi Dairesi",
+            "PHONE": "Telefon",
+            "EMAIL": "E-Posta",
+            "REQUIRED_NAME": "Organizasyon adı zorunludur.",
+            "REQUIRED_TAX_NO": "Vergi numarası zorunludur.",
+            "REQUIRED_TAX_OFFICE": "Vergi dairesi zorunludur.",
+            "INVALID_EMAIL": "Geçerli bir e-posta adresi giriniz."
+        },
         "PERMISSION_FORM": {
             "TITLE": "Yetki bilgilerini buradan ekleyebilir veya düzenleyebilirsiniz.",
             "NAME": "Ad",
@@ -756,6 +784,8 @@ export const locale = {
             "PHONE": "Telefon",
             "ROLE": "Rol",
             "SELECT_ROLE": "Rol seçiniz",
+            "ORGANIZATION": "Organizasyon",
+            "SELECT_ORGANIZATION": "Organizasyon seçiniz",
 
             "REQUIRED_NAME": "Ad zorunludur",
             "REQUIRED_SURNAME": "Soyad zorunludur",
@@ -844,6 +874,7 @@ export const locale = {
         },
         "FILTERS": "Filters",
         "CLEAR_FILTERS": "Clear Filters",
+        "EXPORT": "Excel Dışa Aktar",
         "ALL": "Hepsi",
         "MIN_PRICE": "Min. Fiyat",
         "MAX_PRICE": "Maks. Fiyat",
@@ -889,7 +920,24 @@ export const locale = {
             "STATUS_WAITING_FOR_CUSTOMER": "Müşteri Bekliyor",
             "STATUS_CUSTOMER_REPLIED": "Müşteri Cevapladı",
             "STATUS_CLOSED": "Kapalı",
-            "STATUS_SPAM": "Spam"
+            "STATUS_SPAM": "Spam",
+
+            "ALERT": {
+                "TICKET_NOT_FOUND": "Ticket bulunamadı.",
+                "TICKET_DETAIL_ERROR": "Ticket detayı alınamadı.",
+                "REPLY_SUCCESS": "Yanıt başarıyla gönderildi.",
+                "REPLY_SUCCESS_STATUS_ERROR": "Yanıt gönderildi ancak durum güncellenemedi.",
+                "REPLY_ERROR": "Yanıt gönderilemedi.",
+                "STATUS_UPDATED": "Durum güncellendi.",
+                "STATUS_UPDATE_ERROR": "Durum güncellenemedi."
+            }
+        },
+        "ALERT": {
+            "SUCCESS": "Başarılı",
+            "ERROR": "Hata",
+            "WARNING": "Uyarı",
+            "INFO": "Bilgi",
+            "NOTIFICATION": "Bildirim"
         }
         // END (TR-EN-LANGUAGE-BRANCH)
     }

@@ -6,13 +6,12 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { TranslationModule } from '../i18n/translation.module';
-import { ModalsModule } from 'src/app/_metronic/partials';
 
 import { SupportManagementComponent } from './support-management.component';
 import { SupportManagementRoutingModule } from './support-management-routing.module';
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
 import { DataTableModule } from '../common/datatable/datatable.module';
-import { CustomSelectModule } from '../common/select/custom-select.module.module';
+import { CustomSelectModule } from '../common/select/custom-select.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +26,6 @@ import { CustomSelectModule } from '../common/select/custom-select.module.module
     SupportManagementRoutingModule,
     InlineSVGModule,
     NgbPaginationModule,
-    ModalsModule,
     DataTableModule,
     CustomSelectModule,
     CustomModalModule,

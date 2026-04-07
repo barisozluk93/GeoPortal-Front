@@ -57,7 +57,7 @@
         </label>
 
         <input type="tel" class="form-control form-control-solid" formControlName="phone" mask="(000) 000 00 00"
-          [showMaskTyped]="true" [dropSpecialCharacters]="false" [ngClass]="{
+          [showMaskTyped]="true" [dropSpecialCharacters]="false" placeholder="(___) ___ __ __" [ngClass]="{
       'is-invalid':
         form.controls['phone'].invalid &&
         (form.controls['phone'].dirty || form.controls['phone'].touched)

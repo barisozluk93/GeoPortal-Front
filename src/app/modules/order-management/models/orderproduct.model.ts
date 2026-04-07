@@ -19,5 +19,6 @@ export class OrderProductModel {
   fileResult?: any;
   fileName?: string;
   canEvaluate?: boolean;
-  }
+  productValue?: string
+}
   

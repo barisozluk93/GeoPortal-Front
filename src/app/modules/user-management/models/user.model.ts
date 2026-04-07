@@ -1,3 +1,5 @@
+import { OrganizationModel } from "../../organization-management/models/organization.model";
+
 export class UserModel {
     id: number;
     name: string;
@@ -10,6 +12,7 @@ export class UserModel {
     isDeleted: boolean;
     isSystemData: boolean;
     organizations: number[];
+    organization?: OrganizationModel;
     roles: number[];
     isProducer: boolean;
     fileId?: number;

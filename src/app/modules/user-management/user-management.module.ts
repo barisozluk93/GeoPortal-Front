@@ -9,15 +9,13 @@ import { PermissionComponent } from './permission/permission.component';
 import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
 import { PermissionEditSaveComponent } from './permission/edit-save/edit-save.component';
-import { ModalsModule } from 'src/app/_metronic/partials';
 import { RoleEditSaveComponent } from './role/edit-save/edit-save.component';
 import { UserEditSaveComponent } from './user/edit-save/edit-save.component';
 import { ConfirmationModule } from '../confirmation/confirmation.module';
 import { DataTableModule } from '../common/datatable/datatable.module';
-import { CustomModalComponent } from '../common/custom-modal/custom-modal.component';
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
-import { CustomSelectModule } from '../common/select/custom-select.module.module';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { CustomSelectModule } from '../common/select/custom-select.module';
 
 @NgModule({
   declarations: [

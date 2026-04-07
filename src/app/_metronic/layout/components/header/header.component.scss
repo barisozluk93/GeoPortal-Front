@@ -286,3 +286,94 @@ app-topbar {
 .mobile-padding {
   padding: 20px 20px !important;
 }
+
+/* =========================================================
+   PATCH ONLY - HEADER MOBILE OVERLAP FIX
+   Tasarımı bozmadan mobilde brand'in basketin altına düşmesini engeller
+   ========================================================= */
+
+.modern-header-container,
+.modern-header-left,
+.modern-header-right,
+.brand-wrapper,
+.brand-modern {
+  min-width: 0;
+}
+
+@media (max-width: 991.98px) {
+  .modern-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+  }
+
+  .modern-header-left {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .modern-header-right {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .brand-wrapper {
+    min-width: 0;
+    flex: 1 1 auto;
+    margin-right: 0.5rem !important;
+    overflow: hidden;
+  }
+
+  .brand-modern {
+    min-width: 0;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* Mobilde sadece G göründüğü için logonun küçülüp alta düşmesini engeller */
+  .brand-mark {
+    flex: 0 0 auto;
+  }
+
+  app-topbar {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+
+  /* Topbar içindeki basket ve ikonların alt satıra kaymasını engeller */
+  .modern-header-right app-topbar > * {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .modern-header-container {
+    gap: 0.5rem;
+  }
+
+  .modern-header-left {
+    flex: 1 1 auto;
+  }
+
+  .modern-header-right {
+    flex: 0 0 auto;
+  }
+
+  .brand-wrapper {
+    margin-right: 0.25rem !important;
+  }
+
+  .mobile-toggle-btn {
+    flex: 0 0 auto;
+  }
+}

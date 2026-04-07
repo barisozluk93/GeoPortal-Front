@@ -287,3 +287,112 @@
     justify-content: center;
   }
 }
+
+/* =========================================================
+   PATCH ONLY
+   Mevcut tasarımı, renkleri, card görünümünü bozmadan
+   sadece mobil taşma ve hizalama düzeltmeleri
+   ========================================================= */
+
+.basket-management-page,
+.basket-items,
+.basket-item,
+.basket-item__inner {
+  min-width: 0;
+}
+
+.basket-item__inner .row > [class*='col-'] {
+  min-width: 0;
+}
+
+.basket-item__title {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal !important;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.basket-item__meta {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.basket-price-box,
+.basket-price-box__value {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.basket-price-box__value {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 991.98px) {
+  .sticky-summary {
+    position: static;
+    top: auto;
+  }
+
+  .basket-item__inner .row {
+    --bs-gutter-y: 0.75rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .basket-management-page .row {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1rem;
+  }
+
+  .basket-item .row {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.75rem;
+  }
+
+  .basket-item__inner {
+    overflow: hidden;
+  }
+
+  .basket-item__title {
+    font-size: inherit;
+    line-height: 1.4;
+  }
+
+  .basket-page-badge {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .basket-summary-row,
+  .basket-summary-total {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .basket-summary-row__label,
+  .basket-summary-total__label {
+    min-width: 0;
+    flex: 1 1 auto;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .basket-summary-row__value,
+  .basket-summary-total__value {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 399.98px) {
+  .basket-item__title,
+  .basket-summary-row__label,
+  .basket-summary-total__label {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+}

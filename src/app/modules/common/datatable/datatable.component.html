@@ -16,9 +16,18 @@
 
       <!-- RIGHT -->
       <div class="datatable-header__right">
-        <button type="button" class="btn btn-sm btn-light-primary" (click)="toggleFilters()">
-          <i class="fa-solid fa-filter me-2"></i>
-          {{ 'FILTERS' | translate }}
+        <button *ngIf="hasMapPreviewPermission" type="button" class="btn btn-icon btn-sm btn-light-info me-2"
+          (click)="onMapPreviewClick()" title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate}}">
+          <i class="fa-solid fa-map me-2"></i>
+        </button>
+
+        <button *ngIf="hasExportPermission" type="button" class="btn btn-icon btn-sm btn-light-success me-2"
+          (click)="onExportExcelClick()" title="{{ 'EXPORT' | translate }}">
+          <i class="fa-solid fa-file-excel"></i>
+        </button>
+
+        <button type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="toggleFilters()">
+          <i class="fa-solid fa-filter me-2" title="{{ 'FILTERS' | translate }}"></i>
         </button>
 
         <button *ngIf="showFilters" type="button" class="btn btn-sm btn-light ms-2" (click)="clearAllFilters()">
@@ -57,7 +66,6 @@
             <ng-container *ngFor="let column of columnList">
               <th *ngIf="column.visibility && column.index != null">
                 <ng-container [ngSwitch]="column.index">
-                  <!-- orderstatus -->
                   <ng-container *ngSwitchCase="'orderStatusStr'">
                     <app-custom-select size="sm" class="datatable-filter-select" [items]="orderStatusFilterOptions"
                       bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
@@ -66,7 +74,6 @@
                     </app-custom-select>
                   </ng-container>
 
-                  <!-- type -->
                   <ng-container *ngSwitchCase="'type'">
                     <app-custom-select size="sm" class="datatable-filter-select" [items]="typeFilterOptions"
                       bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
@@ -75,7 +82,6 @@
                     </app-custom-select>
                   </ng-container>
 
-                  <!-- isVisible -->
                   <ng-container *ngSwitchCase="'isVisible'">
                     <app-custom-select size="sm" class="datatable-filter-select" [items]="booleanFilterOptions"
                       bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
@@ -84,7 +90,6 @@
                     </app-custom-select>
                   </ng-container>
 
-                  <!-- isDeleted -->
                   <ng-container *ngSwitchCase="'isDeleted'">
                     <app-custom-select size="sm" class="datatable-filter-select" [items]="statusFilterOptions"
                       bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
@@ -93,7 +98,6 @@
                     </app-custom-select>
                   </ng-container>
 
-                  <!-- lastMessageAtUtc datetime range -->
                   <ng-container *ngSwitchCase="'lastMessageAtDisplay'">
                     <div class="d-flex flex-column gap-2">
                       <input type="datetime-local" class="form-control form-control-solid form-control-sm"
@@ -108,7 +112,6 @@
                     </div>
                   </ng-container>
 
-                  <!-- order date datetime range -->
                   <ng-container *ngSwitchCase="'orderDate'">
                     <div class="d-flex flex-column gap-2">
                       <input type="datetime-local" class="form-control form-control-solid form-control-sm"
@@ -123,7 +126,6 @@
                     </div>
                   </ng-container>
 
-                  <!-- price range -->
                   <ng-container *ngSwitchCase="'priceStr'">
                     <div class="d-flex flex-column gap-2">
                       <input type="number" class="form-control form-control-solid form-control-sm"
@@ -138,12 +140,10 @@
                     </div>
                   </ng-container>
 
-                  <!-- image -->
                   <ng-container *ngSwitchCase="'fileResult'">
                     <div class="datatable-filter-empty"></div>
                   </ng-container>
 
-                  <!-- default text filter -->
                   <ng-container *ngSwitchDefault>
                     <div class="datatable-column-filter">
                       <i class="fa-solid fa-magnifying-glass datatable-column-filter__icon"></i>
@@ -154,7 +154,6 @@
                     </div>
                   </ng-container>
 
-                  <!-- support status -->
                   <ng-container *ngSwitchCase="'status'">
                     <app-custom-select size="sm" class="datatable-filter-select" [items]="supportStatusFilterOptions"
                       bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
@@ -175,21 +174,18 @@
         <tbody>
           <tr *ngFor="let data of dataSource" class="datatable-row">
             <ng-container *ngFor="let column of columnList">
-              <!-- IMAGE -->
               <td *ngIf="column.visibility && column.index == 'fileResult'">
                 <div class="symbol symbol-45px">
                   <img [src]="data[column.index].fileContents" alt="" />
                 </div>
               </td>
 
-              <!-- TYPE -->
               <td *ngIf="column.visibility && column.index == 'type'">
                 <span class="badge badge-light-primary">
                   {{ getLayerTypeLabel(data[column.index]) }}
                 </span>
               </td>
 
-              <!-- VISIBLE -->
               <td *ngIf="column.visibility && column.index == 'isVisible'">
                 <span *ngIf="data[column.index]" class="badge badge-light-success">
                   {{ 'YES' | translate }}
@@ -199,14 +195,12 @@
                 </span>
               </td>
 
-              <!-- Ticket Status -->
               <td *ngIf="column.visibility && column.index == 'status'">
                 <span class="badge" [ngClass]="getSupportStatusBadgeClass(data[column.index])">
                   {{ getSupportStatusLabel(data[column.index]) }}
                 </span>
               </td>
 
-              <!-- NORMAL -->
               <td *ngIf="
                   column.visibility &&
                   column.index != null &&
@@ -221,7 +215,6 @@
                 </span>
               </td>
 
-              <!-- STATUS -->
               <td *ngIf="column.visibility && column.index == 'isDeleted'">
                 <span *ngIf="!data[column.index]" class="badge badge-light-success">
                   {{ 'ACTIVE' | translate }}
@@ -231,18 +224,12 @@
                 </span>
               </td>
 
-              <!-- ACTIONS -->
-              <td *ngIf="
-                  column.visibility &&
-                  column.index == null &&
-                  !data['isSystemData'] &&
-                  !data['isDeleted']" class="text-end">
-                <div class="d-flex justify-content-end flex-shrink-0">
-                  <div *ngIf="!(hasEditPermission || hasDeletePermission || hasShowPermission)">
-                    <span></span>
-                  </div>
+              <td *ngIf="column.visibility && column.index == null" class="text-end">
+                <div
+                  *ngIf="!data['isSystemData'] && !data['isDeleted'] && (hasEditPermission || hasDeletePermission || hasShowPermission)"
+                  class="d-flex justify-content-end flex-shrink-0">
                   <button *ngIf="hasShowPermission" (click)="onRowClick(data['id'])"
-                    class="btn btn-icon btn-bg-light btn-active-color-info btn-sm me-1" type="button">
+                    class="btn btn-icon btn-bg-light btn-sm me-1" type="button">
                     <i class="fa-solid fa-eye"></i>
                   </button>
 
@@ -260,7 +247,6 @@
             </ng-container>
           </tr>
 
-          <!-- EMPTY -->
           <tr *ngIf="!dataSource || dataSource.length == 0">
             <td [attr.colspan]="columnList.length" class="text-center py-10">
               <i class="fa-solid fa-inbox fs-2x text-gray-400 mb-3"></i>
@@ -273,11 +259,10 @@
       </table>
     </div>
 
-    <!-- PAGINATION -->
     <div *ngIf="totalCount > 0"
       class="d-flex flex-column flex-md-row justify-content-end align-items-center pt-5 gap-3">
-      <ngb-pagination [collectionSize]="totalCount" [(page)]="paginationModel.pageNumber"
-        [pageSize]="paginationModel.pageSize" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"
+      <ngb-pagination [collectionSize]="totalCount" [(page)]="paginationModel.pageNumber" [maxSize]="5" 
+        [pageSize]="paginationModel.pageSize" [rotate]="true" [ellipses]="true" [boundaryLinks]="true"
         (pageChange)="onPageChanges()">
       </ngb-pagination>
     </div>

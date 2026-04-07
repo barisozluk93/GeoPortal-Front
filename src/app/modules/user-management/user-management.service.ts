@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ResultModel } from 'src/app/models/result.model';
 import { PagingResult } from 'src/app/models/paging-result.model';
@@ -83,6 +83,13 @@ export class UserManagementService {
         return this.http.delete<ResultModel<PermissionModel[]>>(`${API_USER_PERMISSION_URL}/Delete/${id}`);
     }
 
+    exportPermissionExcel(): Observable<HttpResponse<Blob>> {
+        return this.http.post(`${API_USER_PERMISSION_URL}/Export/Excel`, null, {
+            responseType: 'blob',
+            observe: 'response'
+        });
+    }
+
     rolePaging(
         pageNumber: number,
         pageSize: number,
@@ -120,6 +127,13 @@ export class UserManagementService {
         return this.http.delete<ResultModel<RoleModel[]>>(`${API_USER_ROLE_URL}/Delete/${id}`);
     }
 
+    exportRoleExcel(): Observable<HttpResponse<Blob>> {
+        return this.http.post(`${API_USER_ROLE_URL}/Export/Excel`, null, {
+            responseType: 'blob',
+            observe: 'response'
+        });
+    }
+
     userPaging(pageNumber: number, pageSize: number, filterParams?: HttpParams
     ): Observable<ResultModel<PagingResult<UserModel[]>>> {
 
@@ -127,7 +141,7 @@ export class UserManagementService {
         params = params
             .set("PageNumber", pageNumber)
             .set("PageSize", pageSize);
-            
+
         return this.http.get<ResultModel<PagingResult<UserModel[]>>>(`${API_USER_URL}/Paginate`,
             { params });
     }
@@ -182,5 +196,12 @@ export class UserManagementService {
 
     getUserAddressById(id: number): Observable<ResultModel<UserAddressModel>> {
         return this.http.get<ResultModel<UserAddressModel>>(`${API_USER_URL}/UserAddressById/${id}`);
+    }
+
+    exportUserExcel(): Observable<HttpResponse<Blob>> {
+        return this.http.post(`${API_USER_URL}/Export/Excel`, null, {
+            responseType: 'blob',
+            observe: 'response'
+        });
     }
 }

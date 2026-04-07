@@ -4,6 +4,7 @@ import { NotificationModel } from 'src/app/models/notification.model';
 import { AuthService } from 'src/app/modules/auth';
 import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AlertService } from '../../../alert/alert.service';
 
 @Component({
   selector: 'app-notifications-inner',
@@ -27,6 +28,7 @@ export class NotificationsInnerComponent implements OnInit, OnChanges {
     private authService: AuthService,
     private router: Router,
     private translate: TranslateService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {}
@@ -71,9 +73,15 @@ export class NotificationsInnerComponent implements OnInit, OnChanges {
           if (notification.userId) {
             this.notificationService.updateNotifications(notification.userId);
           }
+
+          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
+        }
+        else{
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       },
       error: (error) => {
+        this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         console.error('Bildirim silinirken hata oluştu:', error);
       }
     });

@@ -5,6 +5,8 @@ import { TranslateService } from "@ngx-translate/core";
 import { forkJoin } from "rxjs";
 import { UserManagementService } from "src/app/modules/user-management/user-management.service";
 import { UserAddressModel } from "src/app/modules/user-management/models/user-address.model";
+import { AuthService } from "src/app/modules/auth/services/auth.service";
+import { OrganizationManagementService } from "src/app/modules/organization-management/organization-management.service";
 
 @Component({
   selector: 'app-address-editsave',
@@ -31,8 +33,10 @@ export class AddressEditSaveComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private userManagementService: UserManagementService,
+    private authService: AuthService,
     private translate: TranslateService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private organizationManagementService: OrganizationManagementService
   ) { }
 
   get f() {
@@ -159,6 +163,67 @@ export class AddressEditSaveComponent implements OnInit, AfterViewInit {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
+  private resetInvoiceLockedFields(): void {
+    this.form.get('invoiceType')?.enable({ emitEvent: false });
+    this.form.get('firmaAdi')?.enable({ emitEvent: false });
+    this.form.get('vkn')?.enable({ emitEvent: false });
+    this.form.get('vergiDairesi')?.enable({ emitEvent: false });
+  }
+
+  private applyInvoiceInfoFromCurrentUser(): void {
+    const orgString = this.authService.currentUserValue?.organizations;
+    let organizations: number[] = [];
+
+    try {
+      organizations = orgString ? JSON.parse(orgString) : [];
+    } catch {
+      organizations = [];
+    }
+
+    this.resetInvoiceLockedFields();
+
+    if (!organizations || organizations.length === 0) {
+      this.form.patchValue(
+        {
+          invoiceType: 1,
+          firmaAdi: '',
+          vkn: '',
+          vergiDairesi: ''
+        },
+        { emitEvent: true }
+      );
+
+      this.form.get('invoiceType')?.disable({ emitEvent: false });
+      return;
+    }
+
+    const firstOrganizationId = organizations[0];
+    if (Number.isNaN(firstOrganizationId)) {
+      return;
+    }
+
+    this.organizationManagementService.getById(firstOrganizationId).subscribe(result => {
+      if (!result.isSuccess) {
+        return;
+      }
+
+      this.form.patchValue(
+        {
+          invoiceType: 2,
+          firmaAdi: result.data?.name ?? '',
+          vkn: result.data?.taxNo ?? '',
+          vergiDairesi: result.data?.taxOffice ?? ''
+        },
+        { emitEvent: true }
+      );
+
+      this.form.get('invoiceType')?.disable({ emitEvent: false });
+      this.form.get('firmaAdi')?.disable({ emitEvent: false });
+      this.form.get('vkn')?.disable({ emitEvent: false });
+      this.form.get('vergiDairesi')?.disable({ emitEvent: false });
+    });
+  }
+
   openModal(userId: number, addressId?: number) {
     const keys = ['NEW_RECORD', 'EDIT'];
     const translations: any = {};
@@ -175,10 +240,34 @@ export class AddressEditSaveComponent implements OnInit, AfterViewInit {
         : translations['EDIT'];
     });
 
+    this.form.get('invoiceType')?.enable({ emitEvent: false });
+    this.form.get('firmaAdi')?.enable({ emitEvent: false });
+    this.form.get('vkn')?.enable({ emitEvent: false });
+    this.form.get('vergiDairesi')?.enable({ emitEvent: false });
+
     if (addressId) {
       this.userManagementService.getUserAddressById(addressId).subscribe(result => {
         if (result.isSuccess) {
+          this.form.reset({
+            id: 0,
+            invoiceType: undefined,
+            name: "",
+            surname: "",
+            phone: "",
+            country: "",
+            city: "",
+            district: "",
+            address: "",
+            addressHeader: "",
+            vkn: "",
+            vergiDairesi: "",
+            firmaAdi: "",
+            userId: userId,
+            isDeleted: false
+          });
+
           this.form.patchValue(result.data);
+          this.applyInvoiceInfoFromCurrentUser();
           this.isModalOpen = true;
         }
       });
@@ -201,6 +290,7 @@ export class AddressEditSaveComponent implements OnInit, AfterViewInit {
         isDeleted: false
       });
 
+      this.applyInvoiceInfoFromCurrentUser();
       this.isModalOpen = true;
     }
   }

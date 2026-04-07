@@ -20,6 +20,12 @@ const Routing: Routes = [
       import('../modules/map-management/map-management.module').then((m) => m.MapManagementModule),
   },
   {
+    path: 'organizationmanagement',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('../modules/organization-management/organization-management.module').then((m) => m.OrganizationManagementModule),
+  },
+  {
     path: 'supportmanagement',
     canActivate: [AuthGuard],
     loadChildren: () =>

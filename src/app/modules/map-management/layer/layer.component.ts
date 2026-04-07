@@ -10,6 +10,8 @@ import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.serv
 import { TranslateService } from '@ngx-translate/core';
 import { MapManagementService } from '../map-management.service';
 import { HttpParams } from '@angular/common/http';
+import { MapComponent } from '../../landing/map/map.component';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
   selector: 'app-layer',
@@ -19,15 +21,15 @@ import { HttpParams } from '@angular/common/http';
 export class LayerComponent implements OnInit, OnDestroy {
   @ViewChild('editSaveComponent') private editSaveComponent: LayerEditSaveComponent;
   @ViewChild('confirmationComponent') private confirmationComponent: ConfirmationComponent;
+  @ViewChild('map') private mapComponent: MapComponent;
 
   hasEditPermission = true;
   hasDeletePermission = true;
   hasNewRecordPermission = true;
   hasPreviewMapPermission = true;
+  hasExportPermission = true;
 
   filterModel: Record<string, any> = {};
-
-  // Yeni drawer state
   isMapPreviewDrawerOpen = false;
 
   constructor(
@@ -75,7 +77,8 @@ export class LayerComponent implements OnInit, OnDestroy {
         this.hasDeletePermission = permissionList.includes(PermissionEnum['UserScene.Delete.Permission']);
         this.hasEditPermission = permissionList.includes(PermissionEnum['UserScene.Edit.Permission']);
         this.hasNewRecordPermission = permissionList.includes(PermissionEnum['UserScene.Save.Permission']);
-        this.hasPreviewMapPermission = true;
+        this.hasExportPermission = permissionList.includes(PermissionEnum['Table.Export.Permission']);
+        this.hasPreviewMapPermission = result.roles.includes(RoleEnum.SuperAdmin);
       }
     });
   }
@@ -85,6 +88,7 @@ export class LayerComponent implements OnInit, OnDestroy {
       if (result.isSuccess) {
         this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
         this.loadData();
+        this.mapComponent.refreshMap();
       } else {
         this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
       }
@@ -93,6 +97,7 @@ export class LayerComponent implements OnInit, OnDestroy {
 
   isSuccess(_: boolean) {
     this.loadData();
+    this.mapComponent.refreshMap();
   }
 
   loadData() {
@@ -140,7 +145,7 @@ export class LayerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() { }
-
+  
   openDeleteModal(event: number) {
     let deleteText = '';
     this.translate.get('DELETE').subscribe((translation) => {
@@ -167,7 +172,7 @@ export class LayerComponent implements OnInit, OnDestroy {
     document.body.style.overflow = '';
   }
 
-  toggleMapPreviewDrawer() {
+  toggleMapPreviewDrawer(event: boolean) {
     if (this.isMapPreviewDrawerOpen) {
       this.closeMapPreviewDrawer();
       return;
@@ -204,5 +209,39 @@ export class LayerComponent implements OnInit, OnDestroy {
     });
 
     return params;
+  }
+
+  exportExcel(event: boolean) {
+    this.mapManagementService.exportLayerExcel().subscribe({
+      next: (response) => {
+        const blob = response.body;
+        if (!blob) {
+          return;
+        }
+
+        const fileName = this.getFileNameFromHeader(response.headers.get('content-disposition')) || 'Katmanlar.xlsx';
+        this.downloadBlob(blob, fileName);
+      },
+      error: (err) => {
+        console.error('Excel export hatası:', err);
+      }
+    });
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  private getFileNameFromHeader(contentDisposition: string | null): string | null {
+    if (!contentDisposition) return null;
+
+    const match = /filename="?([^"]+)"?/i.exec(contentDisposition);
+    return match?.[1] ?? null;
   }
 }

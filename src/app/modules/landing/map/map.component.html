@@ -535,6 +535,7 @@
                     </div>
 
                     <app-custom-select
+                      [size]="'lg'"
                       class="map-custom-select"
                       [invalid]="!!filter.invalidField"
                       [disabled]="filterLayer.fieldsLoading || !getFieldSelectItems(filterLayer).length"
@@ -565,6 +566,7 @@
                     <label class="filter-label-mini">{{ 'MAP.FILTER.OPERATOR' | translate }}</label>
 
                     <app-custom-select
+                      [size]="'lg'"
                       class="map-custom-select"
                       [invalid]="!!filter.invalidOperator"
                       [items]="operatorSelectItems"

@@ -24,7 +24,8 @@ export class UserComponent implements OnInit, OnDestroy {
   hasEditPermission: boolean;
   hasDeletePermission: boolean;
   hasNewRecordPermission: boolean;
-
+  hasExportPermission: boolean;
+  
   filterModel: Record<string, any> = {};
 
   constructor(
@@ -86,6 +87,9 @@ export class UserComponent implements OnInit, OnDestroy {
         else {
           this.hasNewRecordPermission = false;
         }
+
+        this.hasExportPermission = permissionList.includes(PermissionEnum['Table.Export.Permission']);
+
       }
     });
   }
@@ -199,5 +203,39 @@ export class UserComponent implements OnInit, OnDestroy {
     });
 
     return params;
+  }
+
+  exportExcel(event: boolean) {
+    this.userManagementService.exportUserExcel().subscribe({
+      next: (response) => {
+        const blob = response.body;
+        if (!blob) {
+          return;
+        }
+
+        const fileName = this.getFileNameFromHeader(response.headers.get('content-disposition')) || 'Kullanıcılar.xlsx';
+        this.downloadBlob(blob, fileName);
+      },
+      error: (err) => {
+        console.error('Excel export hatası:', err);
+      }
+    });
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  private getFileNameFromHeader(contentDisposition: string | null): string | null {
+    if (!contentDisposition) return null;
+
+    const match = /filename="?([^"]+)"?/i.exec(contentDisposition);
+    return match?.[1] ?? null;
   }
 }

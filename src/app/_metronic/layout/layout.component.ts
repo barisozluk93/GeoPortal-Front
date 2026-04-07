@@ -11,6 +11,7 @@ import { LayoutInitService } from './core/layout-init.service';
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/modules/auth';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
   selector: 'app-layout',
@@ -119,7 +120,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
       let currentUser = this.authService.currentUserValue;
 
-      if (currentUser?.roles.includes("1")) {
+      if (currentUser?.roles.includes(RoleEnum.SuperAdmin)) {
         this.isAdmin = true;
       }
       else {

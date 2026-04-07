@@ -27,7 +27,18 @@ export const locale = {
         "DESCRIPTION": "Sign in to continue and manage your workspace with a clean, simple and focused experience."
       },
       "REGISTER": {
-        "TITLE": "Sign Up"
+        "TITLE": "Sign Up",
+        "USER_TYPE": "Registration Type",
+        "INDIVIDUAL": "Individual",
+        "CORPORATE": "Corporate",
+        "ORGANIZATION": "Organization",
+        "SELECT_ORGANIZATION": "Select organization",
+        "OTHER_ORGANIZATION": "Other",
+        "ORG_NAME": "Organization Name",
+        "TAX_NO": "Tax Number",
+        "TAX_OFFICE": "Tax Office",
+        "ORG_PHONE": "Phone",
+        "ORG_EMAIL": "Email"
       },
       "VALIDATION": {
         "EMAIL_REQUIRED": "Email is required",
@@ -44,6 +55,11 @@ export const locale = {
         "USERNAME_REQUIRED": "Username is required",
         "PHONE_REQUIRED": "Phone is required",
         "INVALID_PHONE": "Phone is invalid",
+        "ORGANIZATION_REQUIRED": "Please select an organization.",
+        "ORG_NAME_REQUIRED": "Organization name is required.",
+        "TAX_NO_REQUIRED": "Tax number is required.",
+        "TAX_OFFICE_REQUIRED": "Tax office is required.",
+        "INVALID_EMAIL": "E-mail is invalid.",
       },
       "GENERAL": {
         "SIGNOUT_BUTTON": "Sign Out"
@@ -296,7 +312,7 @@ export const locale = {
     PASSWORD_MISMATCH: "'New Passsword' and 'Confirm New Password' didn't match.",
 
     CATEGORY: "Category",
-    SELECT_CATEGORY: "Select a Category...",
+    SELECT_CATEGORY: "Select a Category",
     BRAND: "Brand",
     PRICE: "Price",
     DISCOUNT: "İndirim",
@@ -443,11 +459,11 @@ export const locale = {
     },
     "CONTACT_PAGE": {
       "KICKER": "Contact",
-      "TITLE": "Get in Touch for Your Satellite Data Needs",
+      "TITLE": "Get in touch for your satellite data needs",
       "COPY": "Contact our team for satellite imagery purchases, API access, enterprise use cases, and custom project requirements. Let’s plan the right solution for you.",
       "FULL_NAME": "Fullname",
       "ORGANIZATION": "Organization",
-      "BUSINESS_EMAIL": "E-mail",
+      "BUSINESS_EMAIL": "E-Mail",
       "SUBJECT": "Subject",
       "MESSAGE": "Message",
       "SEND": "Send",
@@ -653,7 +669,7 @@ export const locale = {
         "RULES": "Filter Rules",
         "FIELD": "Field Name",
         "REFRESH_FIELDS": "Refresh Fields",
-        "SELECT_FIELD": "Select field",
+        "SELECT_FIELD": "Select a Field",
         "OPERATOR": "Operator",
         "VALUE": "Value",
         "SECOND_VALUE": "Second Value",
@@ -716,6 +732,19 @@ export const locale = {
     "LAYERS": "Layers",
     "REJECTED": 'Rejected',
     "COMPLETED": 'Completed',
+
+    "ORGANIZATION_FORM": {
+      "TITLE": "You can add or edit organization information here.",
+      "NAME": "Organization Name",
+      "TAX_NO": "Tax Number",
+      "TAX_OFFICE": "Tax Office",
+      "PHONE": "Phone",
+      "EMAIL": "Email",
+      "REQUIRED_NAME": "Organization name is required.",
+      "REQUIRED_TAX_NO": "Tax number is required.",
+      "REQUIRED_TAX_OFFICE": "Tax office is required.",
+      "INVALID_EMAIL": "Please enter a valid email address."
+    },
     "PERMISSION_FORM": {
       "TITLE": "You can add or edit permission information here.",
 
@@ -756,7 +785,9 @@ export const locale = {
       "USERNAME": "Username",
       "PHONE": "Phone",
       "ROLE": "Role",
-      "SELECT_ROLE": "Select role",
+      "SELECT_ROLE": "Select a Role",
+      "ORGANIZATION": "Organization",
+      "SELECT_ORGANIZATION": "Select an Organization",
 
       "REQUIRED_NAME": "Name is required",
       "REQUIRED_SURNAME": "Surname is required",
@@ -846,6 +877,7 @@ export const locale = {
     },
     "FILTERS": "Filters",
     "CLEAR_FILTERS": "Clear Filters",
+    "EXPORT": "Excel Export",
     "ALL": "All",
     "MIN_PRICE": "Min. Price",
     "MAX_PRICE": "Max. Price",
@@ -869,7 +901,7 @@ export const locale = {
       "REPLY_AND_STATUS": "Reply / Update Status",
       "REPLY": "Reply",
       "REPLY_PLACEHOLDER": "Write the reply to be sent to the customer",
-      "STATUS_PLACEHOLDER": "Select status",
+      "STATUS_PLACEHOLDER": "Select a Status",
       "ADMIN_EMAIL": "Admin Email",
       "ADMIN_EMAIL_PLACEHOLDER": "admin@domain.com",
 
@@ -890,8 +922,24 @@ export const locale = {
       "STATUS_WAITING_FOR_CUSTOMER": "Waiting For Customer",
       "STATUS_CUSTOMER_REPLIED": "Customer Replied",
       "STATUS_CLOSED": "Closed",
-      "STATUS_SPAM": "Spam"
+      "STATUS_SPAM": "Spam",
+      "ALERT": {
+        "TICKET_NOT_FOUND": "Ticket not found.",
+        "TICKET_DETAIL_ERROR": "Ticket detail could not be retrieved.",
+        "REPLY_SUCCESS": "Reply sent successfully.",
+        "REPLY_SUCCESS_STATUS_ERROR": "Reply sent, but status could not be updated.",
+        "REPLY_ERROR": "Reply could not be sent.",
+        "STATUS_UPDATED": "Status updated.",
+        "STATUS_UPDATE_ERROR": "Status could not be updated."
+      }
+    },
+    "ALERT": {
+      "SUCCESS": "Başarılı",
+      "ERROR": "Hata",
+      "WARNING": "Uyarı",
+      "INFO": "Bilgi",
+      "NOTIFICATION": "Bildirim"
     }
     // END (TR-EN-LANGUAGE-BRANCH)
-  }
+  },
 };

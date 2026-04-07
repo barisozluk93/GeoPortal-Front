@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ResultModel } from 'src/app/models/result.model';
 import { PagingResult } from 'src/app/models/paging-result.model';
@@ -18,10 +18,10 @@ export class MapManagementService {
   layerPaging(pageNumber: number, pageSize: number, filterParams?: HttpParams
       ): Observable<ResultModel<PagingResult<LayerModel[]>>> {
   
-          let params = filterParams ?? new HttpParams();
-          params = params
-              .set("PageNumber", pageNumber)
-              .set("PageSize", pageSize);
+    let params = filterParams ?? new HttpParams();
+    params = params
+      .set('PageNumber', pageNumber)
+      .set('PageSize', pageSize);
 
     return this.http.get<ResultModel<PagingResult<LayerModel[]>>>(`${API_MAP_URL}/PaginateLayer`, { params });
   }
@@ -42,6 +42,13 @@ export class MapManagementService {
     return this.http.delete<ResultModel<boolean>>(`${API_MAP_URL}/DeleteLayer/${id}`);
   }
 
+  exportLayerExcel(): Observable<HttpResponse<Blob>> {
+    return this.http.post(`${API_MAP_URL}/ExportLayer/Excel`, null, {
+      responseType: 'blob',
+      observe: 'response'
+    });
+  }
+
   allLayerGroups(): Observable<ResultModel<LayerGroupModel[]>> {
     return this.http.get<ResultModel<LayerGroupModel[]>>(`${API_MAP_URL}/GetLayerGroups`);
   }
@@ -49,10 +56,10 @@ export class MapManagementService {
   layerGroupPaging(pageNumber: number, pageSize: number, filterParams?: HttpParams
       ): Observable<ResultModel<PagingResult<LayerGroupModel[]>>> {
   
-          let params = filterParams ?? new HttpParams();
-          params = params
-              .set("PageNumber", pageNumber)
-              .set("PageSize", pageSize);
+    let params = filterParams ?? new HttpParams();
+    params = params
+      .set('PageNumber', pageNumber)
+      .set('PageSize', pageSize);
 
     return this.http.get<ResultModel<PagingResult<LayerGroupModel[]>>>(`${API_MAP_URL}/PaginateLayerGroup`, { params });
   }
@@ -71,5 +78,12 @@ export class MapManagementService {
 
   layerGroupDelete(id: number): Observable<ResultModel<boolean>> {
     return this.http.delete<ResultModel<boolean>>(`${API_MAP_URL}/DeleteLayerGroup/${id}`);
+  }
+
+  exportLayerGroupExcel(): Observable<HttpResponse<Blob>> {
+    return this.http.post(`${API_MAP_URL}/ExportLayerGroup/Excel`, null, {
+      responseType: 'blob',
+      observe: 'response'
+    });
   }
 }

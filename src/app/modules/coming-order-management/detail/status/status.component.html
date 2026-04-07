@@ -7,7 +7,7 @@
         {{ 'STATUS' | translate }}
       </label>
 
-      <app-custom-select formControlName="orderStatus" [items]="status" bindLabel="name" bindValue="id"
+      <app-custom-select [size]="'lg'" formControlName="orderStatus" [items]="status" bindLabel="name" bindValue="id"
         [placeholder]="'SELECT_A_STATUS' | translate"
         [invalid]="f['orderStatus'].invalid && (f['orderStatus'].touched || f['orderStatus'].dirty)">
       </app-custom-select>

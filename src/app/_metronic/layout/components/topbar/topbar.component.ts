@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
@@ -40,7 +40,8 @@ export class TopbarComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private translationService: TranslationService,
     private signalRService: NotificationSignalrService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -104,17 +105,19 @@ export class TopbarComponent implements OnInit, OnDestroy {
           return;
         }
 
-        const exists = this.notifications.some(x => x.id === notification.id);
-        if (exists) {
-          return;
-        }
+        this.ngZone.run(() => {
+          const exists = this.notifications.some(x => x.id === notification.id);
+          if (exists) {
+            return;
+          }
 
-        this.notifications.unshift(notification);
-        this.totalNotificationCount = this.notifications.length;
-        this.unreadedNotificationCount++;
+          this.notifications.unshift(notification);
+          this.totalNotificationCount = this.notifications.length;
+          this.unreadedNotificationCount++;
 
-        this.triggerNotificationAnimation();
-        this.showNotificationAlert(notification);
+          this.triggerNotificationAnimation();
+          this.showNotificationAlert(notification);
+        });
       });
 
     this.signalRService.unreadCount$
@@ -124,7 +127,9 @@ export class TopbarComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.unreadedNotificationCount = count;
+        this.ngZone.run(() => {
+          this.unreadedNotificationCount = count;
+        });
       });
   }
 

@@ -62,6 +62,7 @@ export class ApiComponent {
       }
 
       this.basketService.setBasket(basket);
+      this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
     }
   }
 }

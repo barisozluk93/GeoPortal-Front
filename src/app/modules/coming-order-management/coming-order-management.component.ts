@@ -4,12 +4,13 @@ import { AuthService, UserType } from '../auth';
 import { ColumnModel } from 'src/app/models/column-model';
 import { PaginationModel } from 'src/app/models/pagination.model';
 import { formatDate } from '@angular/common';
-import { OrderStatusEnum } from 'src/app/enums/permission.enum';
+import { OrderStatusEnum } from 'src/app/enums/order-status.enum';
 import { ComingOrderManagementService } from './coming-order-management.service';
 import { OrderProductModel } from './models/orderproduct.model';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
   selector: 'app-coming-order-management',
@@ -23,7 +24,8 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
   hasEditPermission: boolean = false;
   hasDeletePermission: boolean = false;
   hasNewRecordPermission: boolean = false;
-  hasShowPermission: boolean = true;
+  hasShowPermission: boolean;
+  hasExportPermission: boolean;
 
   filterModel: Record<string, any> = {};
   tableName: string = "Aldığım Siparişler";
@@ -55,6 +57,21 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
 
   constructor(private authService: AuthService, private router: Router, private comingOrderManagementService: ComingOrderManagementService,
     private translate: TranslateService, @Inject(LOCALE_ID) public locale: string) {
+  }
+
+  controlPermissions() {
+    this.authService.currentUserSubject.asObservable().subscribe(result => {
+
+      if(result) {
+        this.hasShowPermission = result?.roles.includes(RoleEnum.SuperAdmin);
+        this.hasExportPermission = result?.roles.includes(RoleEnum.SuperAdmin);
+      }
+      else{
+        this.hasShowPermission = false;
+        this.hasExportPermission = false;
+      }
+
+    });
   }
 
   loadData() {
@@ -116,6 +133,7 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
       this.currentUser = currentUser;
     }
 
+    this.controlPermissions();
     this.paginationModel = { pageNumber: 1, pageSize: 10 } as PaginationModel;
     this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
       this.updateTranslationsAndColumns();
@@ -181,5 +199,39 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
     });
 
     return params;
+  }
+
+  exportExcel(event: boolean) {
+    this.comingOrderManagementService.exportExcel().subscribe({
+      next: (response) => {
+        const blob = response.body;
+        if (!blob) {
+          return;
+        }
+
+        const fileName = this.getFileNameFromHeader(response.headers.get('content-disposition')) || 'Siparişler.xlsx';
+        this.downloadBlob(blob, fileName);
+      },
+      error: (err) => {
+        console.error('Excel export hatası:', err);
+      }
+    });
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  private getFileNameFromHeader(contentDisposition: string | null): string | null {
+    if (!contentDisposition) return null;
+
+    const match = /filename="?([^"]+)"?/i.exec(contentDisposition);
+    return match?.[1] ?? null;
   }
 }

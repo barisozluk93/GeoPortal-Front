@@ -18,6 +18,7 @@ import {
 import { environment } from '../../../../../../../environments/environment';
 import { AuthService } from 'src/app/modules/auth';
 import { MenuModel } from 'src/app/models/menu.model';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 type HeaderMenuModel = MenuModel & {
   open?: boolean;
@@ -101,6 +102,20 @@ const menuList: HeaderMenuModel[] = [
         open: false,
       }
     ]
+  },
+  {
+    id: 16,
+    name: 'Organizasyon Yönetimi',
+    nameEn: 'Organization Management',
+    url: '/organizationmanagement',
+    icon: undefined,
+    permissionId: 61,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    isForbid: undefined,
+    open: false,
   },
   {
     id: 6,
@@ -260,7 +275,7 @@ export class MenuTabComponent implements OnInit, AfterViewInit, OnDestroy {
   appPreviewChangelogUrl: string = environment.appPreviewChangelogUrl;
   @ViewChild('ktAsideScroll', { static: true }) ktAsideScroll: ElementRef;
   private unsubscribe: Subscription[] = [];
-  @Input() isAdmin: boolean;
+  isAdmin: boolean = false;
 
   menuList: MenuModel[] = menuList;
   permissionList: number[] | undefined;
@@ -275,6 +290,17 @@ export class MenuTabComponent implements OnInit, AfterViewInit, OnDestroy {
     this.routingChanges();
 
     this.authService.currentUserSubject.asObservable().subscribe(result => {
+      if(result) {
+        if(result?.roles.includes(RoleEnum.SuperAdmin)) {
+          this.isAdmin = true;
+        }
+        else{
+          this.isAdmin = false;
+        }
+      }
+      else{
+        this.isAdmin = false;
+      }
 
       if (result?.permissions) {
         this.permissionList = (JSON.parse(result?.permissions) as number[]);

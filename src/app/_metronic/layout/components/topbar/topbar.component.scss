@@ -132,3 +132,47 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* =========================================================
+   PATCH ONLY - TOPBAR OVERFLOW FIX
+   ========================================================= */
+
+:host {
+  display: flex;
+  align-items: center;
+  min-width: fit-content;
+}
+
+/* TÜM ITEMLARI TEK SATIRDA TUT */
+:host > * {
+  flex: 0 0 auto;
+}
+
+/* =========================
+   MOBILE FIX
+   ========================= */
+
+@media (max-width: 991.98px) {
+  :host {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 6px; /* margin yerine gap kullan */
+  }
+
+  /* kritik: marginleri kaldır */
+  :host > * {
+    margin-right: 0 !important;
+  }
+
+  /* iconlar küçülmez */
+  .symbol-40px {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* basket de küçülmez */
+  app-basket {
+    flex: 0 0 auto;
+  }
+}

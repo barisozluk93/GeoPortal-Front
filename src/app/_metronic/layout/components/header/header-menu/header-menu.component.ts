@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { RoleEnum } from 'src/app/enums/role.enum';
 import { MenuModel } from 'src/app/models/menu.model';
 import { AuthService } from 'src/app/modules/auth';
 
@@ -85,6 +86,20 @@ const menuList: HeaderMenuModel[] = [
         open: false,
       }
     ]
+  },
+  {
+    id: 16,
+    name: 'Organizasyon Yönetimi',
+    nameEn: 'Organization Management',
+    url: '/organizationmanagement',
+    icon: undefined,
+    permissionId: 61,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    isForbid: undefined,
+    open: false,
   },
   {
     id: 6,
@@ -314,7 +329,7 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if(this.authService.currentUserValue) {
-      this.isAdmin = this.authService.currentUserValue.roles.includes("1");
+      this.isAdmin = this.authService.currentUserValue.roles.includes(RoleEnum.SuperAdmin);
     }
     else{
       this.isAdmin = false;

@@ -6,13 +6,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg-2';
-import { CustomSelectModule } from '../common/select/custom-select.module.module';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
 import { DataComponent } from './data/data.component';
 import { ApiComponent } from './api/api.component';
 import { ContactComponent } from './contact/contact.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { MapComponent } from './map/map.component';
+import { CustomSelectModule } from '../common/select/custom-select.module';
 
 @NgModule({
   declarations: [
@@ -36,8 +36,8 @@ import { MapComponent } from './map/map.component';
     InlineSVGModule,
     CustomSelectModule
   ],
-  // exports: [
-  //   MapViewComponent
-  // ]
+  exports: [
+    MapComponent
+  ]
 })
 export class LandingModule {}

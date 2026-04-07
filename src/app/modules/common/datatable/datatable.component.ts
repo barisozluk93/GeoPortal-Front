@@ -23,6 +23,8 @@ export class DataTableComponent implements OnInit, OnDestroy {
   @Input() hasDeletePermission: boolean;
   @Input() hasNewRecordPermission: boolean;
   @Input() hasShowPermission: boolean = false;
+  @Input() hasMapPreviewPermission: boolean = false;
+  @Input() hasExportPermission: boolean = false;
   @Input() filterModel: DatatableFilterModel = {};
 
   @Output() paginationModelChange: EventEmitter<PaginationModel> = new EventEmitter<PaginationModel>();
@@ -31,6 +33,8 @@ export class DataTableComponent implements OnInit, OnDestroy {
   @Output() deleteButtonClick: EventEmitter<number> = new EventEmitter<number>();
   @Output() showButtonClick: EventEmitter<number> = new EventEmitter<number>();
   @Output() filterModelChange: EventEmitter<DatatableFilterModel> = new EventEmitter<DatatableFilterModel>();
+  @Output() mapPreviewClick: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() exportExcelClick: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   permissionList: number[] = [];
   showFilters: boolean = false;
@@ -79,24 +83,24 @@ export class DataTableComponent implements OnInit, OnDestroy {
   ];
 
   supportStatusFilterOptions = [
-  { label: 'SUPPORT_MANAGEMENT.STATUS_NEW', value: 'New' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_ADMIN', value: 'WaitingForAdmin' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_CUSTOMER', value: 'WaitingForCustomer' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_CUSTOMER_REPLIED', value: 'CustomerReplied' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_CLOSED', value: 'Closed' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_SPAM', value: 'Spam' },
-];
+    { label: 'SUPPORT_MANAGEMENT.STATUS_NEW', value: 'New' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_ADMIN', value: 'WaitingForAdmin' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_CUSTOMER', value: 'WaitingForCustomer' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_CUSTOMER_REPLIED', value: 'CustomerReplied' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_CLOSED', value: 'Closed' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_SPAM', value: 'Spam' },
+  ];
 
-supportStatusFilterOptionsTemp = [
-  { label: 'SUPPORT_MANAGEMENT.STATUS_NEW', value: 'New' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_ADMIN', value: 'WaitingForAdmin' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_CUSTOMER', value: 'WaitingForCustomer' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_CUSTOMER_REPLIED', value: 'CustomerReplied' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_CLOSED', value: 'Closed' },
-  { label: 'SUPPORT_MANAGEMENT.STATUS_SPAM', value: 'Spam' },
-];
+  supportStatusFilterOptionsTemp = [
+    { label: 'SUPPORT_MANAGEMENT.STATUS_NEW', value: 'New' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_ADMIN', value: 'WaitingForAdmin' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_CUSTOMER', value: 'WaitingForCustomer' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_CUSTOMER_REPLIED', value: 'CustomerReplied' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_CLOSED', value: 'Closed' },
+    { label: 'SUPPORT_MANAGEMENT.STATUS_SPAM', value: 'Spam' },
+  ];
 
-  constructor(private authService: AuthService, private translate: TranslateService) { }
+  constructor(private authService: AuthService, private translate: TranslateService) {}
 
   ngOnInit(): void {
     this.statusFilterOptions.forEach(item => {
@@ -153,10 +157,18 @@ supportStatusFilterOptionsTemp = [
     });
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   toggleFilters(): void {
     this.showFilters = !this.showFilters;
+  }
+
+  onMapPreviewClick(): void {
+    this.mapPreviewClick.emit(true);
+  }
+
+  onExportExcelClick(): void {
+    this.exportExcelClick.emit(true);
   }
 
   onRowClick(id: number): void {

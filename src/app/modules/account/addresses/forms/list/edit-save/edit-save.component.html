@@ -55,7 +55,7 @@
           mask="(000) 000 00 00"
           [showMaskTyped]="true"
           [dropSpecialCharacters]="false"
-          placeholder="05xx xxx xx xx"
+          placeholder="(___) ___ __ __"
           [ngClass]="{ 'is-invalid': isInvalid('phone') }"
         />
 
@@ -161,6 +161,7 @@
         </label>
 
         <app-custom-select
+          [size]="'lg'"
           formControlName="invoiceType"
           [items]="invoiceTypes"
           bindLabel="name"

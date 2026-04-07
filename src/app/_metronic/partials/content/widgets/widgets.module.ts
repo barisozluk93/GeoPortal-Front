@@ -23,12 +23,12 @@ import { MixedWidget10Component } from './mixed/mixed-widget10/mixed-widget10.co
 import { MixedWidget11Component } from './mixed/mixed-widget11/mixed-widget11.component';
 // Tiles
 import { TilesWidget1Component } from './tiles/tiles-widget1/tiles-widget1.component';
-import { TilesWidget3Component } from './tiles/tiles-widget3/tiles-widget3.component';
+// import { TilesWidget3Component } from './tiles/tiles-widget3/tiles-widget3.component';
 import { TilesWidget10Component } from './tiles/tiles-widget10/tiles-widget10.component';
 import { TilesWidget11Component } from './tiles/tiles-widget11/tiles-widget11.component';
 import { TilesWidget12Component } from './tiles/tiles-widget12/tiles-widget12.component';
 import { TilesWidget13Component } from './tiles/tiles-widget13/tiles-widget13.component';
-import { TilesWidget14Component } from './tiles/tiles-widget14/tiles-widget14.component';
+// import { TilesWidget14Component } from './tiles/tiles-widget14/tiles-widget14.component';
 // Other
 import { DropdownMenusModule } from '../dropdown-menus/dropdown-menus.module';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -99,12 +99,12 @@ import { TablesWidget14Component } from './tables/tables-widget14/tables-widget1
     MixedWidget11Component,
     // Tiles,
     TilesWidget1Component,
-    TilesWidget3Component,
+    // TilesWidget3Component,
     TilesWidget10Component,
     TilesWidget11Component,
     TilesWidget12Component,
     TilesWidget13Component,
-    TilesWidget14Component,
+    // TilesWidget14Component,
     // Other
     ListsWidget2Component,
     ListsWidget5Component,
@@ -179,12 +179,12 @@ import { TablesWidget14Component } from './tables/tables-widget14/tables-widget1
     MixedWidget11Component,
     // Tiles,
     TilesWidget1Component,
-    TilesWidget3Component,
+    // TilesWidget3Component,
     TilesWidget10Component,
     TilesWidget11Component,
     TilesWidget12Component,
     TilesWidget13Component,
-    TilesWidget14Component,
+    // TilesWidget14Component,
     // Other
     ListsWidget2Component,
     ListsWidget5Component,

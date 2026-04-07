@@ -1,11 +1,6 @@
-<!-- PAGE WRAPPER -->
-<div class="d-flex flex-column gap-7">
-
-  <app-datatable [header]="tableName" [paginationModel]="paginationModel" [dataSource]="dataSource"
-    [totalCount]="totalCount" [columnList]="columnList" (paginationModelChange)="paginationModelChange($event)"
-    (showButtonClick)="routeToOrderDetail($event)" (filterModelChange)="onFilterModelChange($event)"
-    class="card card-xxl-stretch border-0 mb-5 mb-xl-8" [hasEditPermission]="hasEditPermission"
-    [hasDeletePermission]="hasDeletePermission" [hasNewRecordPermission]="hasNewRecordPermission"
-    [hasShowPermission]="hasShowPermission"></app-datatable>
-
-</div>
+<app-datatable [header]="tableName" [paginationModel]="paginationModel" [dataSource]="dataSource"
+  [totalCount]="totalCount" [columnList]="columnList" (paginationModelChange)="paginationModelChange($event)"
+  (showButtonClick)="routeToOrderDetail($event)" (filterModelChange)="onFilterModelChange($event)"
+  class="card card-xxl-stretch border-0 mb-5 mb-xl-8" [hasEditPermission]="hasEditPermission"
+  [hasDeletePermission]="hasDeletePermission" [hasNewRecordPermission]="hasNewRecordPermission"
+  [hasShowPermission]="hasShowPermission"></app-datatable>

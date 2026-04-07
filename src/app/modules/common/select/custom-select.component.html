@@ -1,14 +1,10 @@
-<div
-  #trigger
-  class="custom-select-container"
-  [ngClass]="[
-    sizeClass,
-    invalid ? 'is-invalid' : '',
-    disabled ? 'disabled' : '',
-    isOpen ? 'open' : ''
-  ]"
-  (click)="toggle($event)"
->
+<div #trigger class="custom-select-container form-control form-control-solid" [ngClass]="{
+  sm: size === 'sm',
+  lg: size === 'lg',
+  'is-invalid': invalid,
+  disabled: disabled,
+  open: isOpen
+}" (click)="toggle($event)">
   <div class="selected-text">
     <ng-container *ngIf="multiple; else singleTemplate">
       <ng-container *ngIf="selectedItems.length > 0; else multiPlaceholder">

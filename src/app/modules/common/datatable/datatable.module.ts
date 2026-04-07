@@ -7,7 +7,7 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { DropdownMenusModule } from 'src/app/_metronic/partials';
 import { TranslationModule } from '../../i18n';
-import { CustomSelectModule } from '../select/custom-select.module.module';
+import { CustomSelectModule } from '../select/custom-select.module';
 
 @NgModule({
   declarations: [

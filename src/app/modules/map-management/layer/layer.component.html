@@ -17,12 +17,54 @@
     (newButtonClick)="openSaveModal($event)"
     (deleteButtonClick)="openDeleteModal($event)"
     (editButtonClick)="openEditModal($event)"
+    (mapPreviewClick)="toggleMapPreviewDrawer($event)"
+    (exportExcelClick)="exportExcel($event)"
     class="card card-xxl-stretch border-0 mb-5 mb-xl-8"
     [hasEditPermission]="hasEditPermission"
     [hasDeletePermission]="hasDeletePermission"
     [hasNewRecordPermission]="hasNewRecordPermission"
+    [hasMapPreviewPermission]="hasPreviewMapPermission"
+    [hasExportPermission]="hasExportPermission"
     (filterModelChange)="onFilterModelChange($event)"
   >
   </app-datatable>
 
 </div>
+
+<!-- OVERLAY -->
+<div
+  class="layer-drawer-overlay"
+  *ngIf="isMapPreviewDrawerOpen"
+  (click)="closeMapPreviewDrawer()"
+></div>
+
+<!-- MAP DRAWER -->
+<aside class="layer-drawer layer-drawer--map" [class.open]="isMapPreviewDrawerOpen">
+  <div class="layer-drawer__card card border-0 rounded-0">
+    <div class="layer-drawer__header card-header">
+      <div class="card-title m-0 flex-column align-items-start">
+        <div class="layer-drawer__kicker">
+          {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate}}
+        </div>
+        <h3 class="layer-drawer__title">
+          {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate}}
+        </h3>
+      </div>
+
+      <div class="card-toolbar">
+        <button class="btn btn-sm btn-icon btn-secondary" type="button" (click)="closeMapPreviewDrawer()">
+          <span
+            [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+            class="svg-icon svg-icon-2"
+          ></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="layer-drawer__body card-body">
+      <div class="layer-map">
+        <app-map #map></app-map>
+      </div>
+    </div>
+  </div>
+</aside>

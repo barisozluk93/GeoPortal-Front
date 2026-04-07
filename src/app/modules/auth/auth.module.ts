@@ -10,8 +10,8 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { AuthComponent } from './auth.component';
 import { TranslationModule } from '../i18n/translation.module';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { CustomSelectModule } from '../common/select/custom-select.module';
 
 @NgModule({
   declarations: [
@@ -29,9 +29,9 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbNavModule,
     NgxMaskDirective,
-    NgxMaskPipe
+    NgxMaskPipe,
+    CustomSelectModule
   ],
   providers: [
     provideNgxMask()

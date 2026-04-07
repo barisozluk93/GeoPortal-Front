@@ -8,6 +8,7 @@ import {
   StickyComponent,
   ToggleComponent,
 } from '../../_metronic/kt/components';
+import { AuthService } from '../auth';
 
 const BODY_CLASSES = ['bgi-size-cover', 'bgi-position-center', 'bgi-no-repeat'];
 
@@ -18,7 +19,7 @@ const BODY_CLASSES = ['bgi-size-cover', 'bgi-position-center', 'bgi-no-repeat'];
 })
 export class ErrorsComponent implements OnInit, OnDestroy {
   @HostBinding('class') class = 'd-flex flex-column flex-root';
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth: AuthService) {}
 
   ngOnInit(): void {
     BODY_CLASSES.forEach((c) => document.body.classList.add(c));
@@ -29,7 +30,14 @@ export class ErrorsComponent implements OnInit, OnDestroy {
   }
 
   routeToDashboard() {
-    this.router.navigate(['dashboard']);
+
+    if(this.auth.currentUserValue?.roles?.includes('1')) {
+      this.router.navigate(['dashboard']);
+    }
+    else {
+      this.router.navigate(['landing/marketplace']);
+    }
+
     setTimeout(() => {
       ToggleComponent.bootstrap();
       ScrollTopComponent.bootstrap();

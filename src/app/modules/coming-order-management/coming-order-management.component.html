@@ -13,5 +13,7 @@
   [hasDeletePermission]="hasDeletePermission"
   [hasNewRecordPermission]="hasNewRecordPermission"
   [hasShowPermission]="hasShowPermission"
+  [hasExportPermission]="hasExportPermission"
+  (exportExcelClick)="exportExcel($event)"
   (filterModelChange)="onFilterModelChange($event)"
 ></app-datatable>

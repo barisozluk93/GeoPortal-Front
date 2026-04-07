@@ -24,7 +24,8 @@ export class PermissionComponent implements OnInit, OnDestroy {
   hasEditPermission: boolean;
   hasDeletePermission: boolean;
   hasNewRecordPermission: boolean;
-
+  hasExportPermission: boolean;
+  
   filterModel: Record<string, any> = {};
 
   constructor(
@@ -79,6 +80,9 @@ export class PermissionComponent implements OnInit, OnDestroy {
         else {
           this.hasNewRecordPermission = false;
         }
+
+        this.hasExportPermission = permissionList.includes(PermissionEnum['Table.Export.Permission']);
+
       }
     });
   }
@@ -181,14 +185,48 @@ export class PermissionComponent implements OnInit, OnDestroy {
   }
 
   buildFilterQueryParams(filterModel: Record<string, any>): HttpParams {
-      let params = new HttpParams();
-  
-      Object.entries(filterModel || {}).forEach(([key, value]) => {
-        if (value !== null && value !== undefined && value !== '') {
-          params = params.set(key, String(value));
+    let params = new HttpParams();
+
+    Object.entries(filterModel || {}).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return params;
+  }
+
+  exportExcel(event: boolean) {
+    this.userManagementService.exportPermissionExcel().subscribe({
+      next: (response) => {
+        const blob = response.body;
+        if (!blob) {
+          return;
         }
-      });
-  
-      return params;
-    }
+
+        const fileName = this.getFileNameFromHeader(response.headers.get('content-disposition')) || 'Yetkiler.xlsx';
+        this.downloadBlob(blob, fileName);
+      },
+      error: (err) => {
+        console.error('Excel export hatası:', err);
+      }
+    });
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  private getFileNameFromHeader(contentDisposition: string | null): string | null {
+    if (!contentDisposition) return null;
+
+    const match = /filename="?([^"]+)"?/i.exec(contentDisposition);
+    return match?.[1] ?? null;
+  }
 }

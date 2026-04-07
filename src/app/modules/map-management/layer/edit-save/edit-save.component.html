@@ -34,7 +34,7 @@
           {{ 'LAYER_FORM.TYPE' | translate }}
         </label>
 
-        <app-custom-select formControlName="type" [items]="layerTypes" bindLabel="label" bindValue="value"
+        <app-custom-select formControlName="type" [size]="'lg'" [items]="layerTypes" bindLabel="label" bindValue="value"
           [placeholder]="'LAYER_FORM.SELECT_A_TYPE' | translate" [invalid]="isInvalid('type')">
         </app-custom-select>
 
@@ -138,7 +138,7 @@
           {{ 'LAYER_FORM.GROUP' | translate }}
         </label>
 
-        <app-custom-select formControlName="layerGroupId" [items]="layerGroupList" bindLabel="name" bindValue="id"
+        <app-custom-select [size]="'lg'" formControlName="layerGroupId" [items]="layerGroupList" bindLabel="name" bindValue="id"
           [placeholder]="'LAYER_FORM.SELECT_GROUP' | translate" [invalid]="isInvalid('layerGroupId')">
         </app-custom-select>
 

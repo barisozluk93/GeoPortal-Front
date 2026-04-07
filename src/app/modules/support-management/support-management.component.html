@@ -1,6 +1,6 @@
 <app-datatable [header]="'SUPPORT_MANAGEMENT.PAGE_TITLE' | translate" [columnList]="columnList"
   [dataSource]="dataSource" [totalCount]="totalCount" [paginationModel]="paginationModel" [hasEditPermission]="true"
-  [hasDeletePermission]="false" [hasNewRecordPermission]="false" [hasShowPermission]="true" [filterModel]="filterModel"
+  [hasDeletePermission]="false" [hasNewRecordPermission]="false" [hasShowPermission]="false" [filterModel]="filterModel"
   (paginationModelChange)="onPaginationChanged($event)" (filterModelChange)="onFilterChanged($event)"
   (showButtonClick)="openDetailModal($event)" (editButtonClick)="openReplyModal($event)"
   class="card card-xxl-stretch border-0 mb-5 mb-xl-8">
@@ -11,7 +11,6 @@
   [title]="selectedTicket ? (('SUPPORT_MANAGEMENT.TICKET_TITLE' | translate) + ' #' + selectedTicket.ticketNo) : ('SUPPORT_MANAGEMENT.PAGE_TITLE' | translate)"
   [subtitle]="selectedTicket?.subject || ''" [width]="'1100px'" variant="center" [showFooter]="false"
   (closed)="closeDetailModal()">
-
   <ng-container *ngIf="selectedTicket">
     <div class="support-detail">
       <div class="support-detail__header card card-flush mb-7">
@@ -124,7 +123,7 @@
                 <label class="form-label fw-semibold text-gray-800">
                   {{ 'SUPPORT_MANAGEMENT.STATUS' | translate }}
                 </label>
-                <app-custom-select [items]="statusOptions" bindLabel="label" bindValue="value"
+                <app-custom-select [size]="'lg'" [items]="statusOptions" bindLabel="label" bindValue="value"
                   [placeholder]="'SUPPORT_MANAGEMENT.STATUS_PLACEHOLDER' | translate" formControlName="status">
                 </app-custom-select>
               </div>
@@ -133,7 +132,7 @@
                 <label class="form-label fw-semibold text-gray-800">
                   {{ 'SUPPORT_MANAGEMENT.ADMIN_EMAIL' | translate }}
                 </label>
-                <input type="email" class="form-control form-control-solid" formControlName="adminEmail"
+                <input type="email" class="form-control form-control-solid form-control-lg" formControlName="adminEmail"
                   [placeholder]="'SUPPORT_MANAGEMENT.ADMIN_EMAIL_PLACEHOLDER' | translate" />
               </div>
 
@@ -141,7 +140,7 @@
                 <label class="form-label fw-semibold text-gray-800">
                   {{ 'SUPPORT_MANAGEMENT.REPLY' | translate }}
                 </label>
-                <textarea rows="7" class="form-control form-control-solid" formControlName="message"
+                <textarea rows="7" class="form-control form-control-solid form-control-lg" formControlName="message"
                   [placeholder]="'SUPPORT_MANAGEMENT.REPLY_PLACEHOLDER' | translate"></textarea>
               </div>
 

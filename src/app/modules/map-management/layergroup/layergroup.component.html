@@ -9,6 +9,6 @@
   [paginationModel]="paginationModel" [dataSource]="dataSource" [totalCount]="totalCount" [columnList]="columnList"
   (paginationModelChange)="paginationModelChange($event)" (newButtonClick)="openSaveModal($event)"
   (deleteButtonClick)="openDeleteModal($event)" (editButtonClick)="openEditModal($event)"
-  [hasEditPermission]="hasEditPermission" [hasDeletePermission]="hasDeletePermission"
-  [hasNewRecordPermission]="hasNewRecordPermission" (filterModelChange)="onFilterModelChange($event)">
+  [hasEditPermission]="hasEditPermission" [hasDeletePermission]="hasDeletePermission" [hasExportPermission]="hasExportPermission"
+  [hasNewRecordPermission]="hasNewRecordPermission" (exportExcelClick)="exportExcel($event)" (filterModelChange)="onFilterModelChange($event)">
 </app-datatable>

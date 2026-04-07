@@ -34,7 +34,7 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
   @Input() disabled: boolean = false;
   @Input() multiple: boolean = false;
   @Input() clearable: boolean = true;
-  @Input() size: 'sm' | 'md' | 'lg' = 'md';
+  @Input() size: 'sm' | 'lg' | null = null;
 
   @ViewChild('trigger', { static: true }) triggerRef!: ElementRef<HTMLElement>;
 
@@ -50,24 +50,13 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
   onTouched: any = () => { };
 
 
-  get sizeClass(): string {
-    switch (this.size) {
-      case 'sm':
-        return 'form-control form-control-solid form-control-sm';
-      case 'lg':
-        return 'form-control form-control-solid form-control-lg';
-      default:
-        return 'form-control form-control-solid';
-    }
-  }
-
   ngAfterViewInit(): void {
     this.scrollParents = this.getScrollParents(this.triggerRef.nativeElement);
   }
 
   get selectedItem() {
     if (this.multiple) return null;
-    return this.items.find(x => x[this.bindValue] == this.value);
+    return this.items ? this.items.find(x => x[this.bindValue] == this.value) : null;
   }
 
   get selectedItems() {

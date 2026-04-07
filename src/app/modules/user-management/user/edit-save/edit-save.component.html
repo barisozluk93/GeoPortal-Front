@@ -180,6 +180,7 @@
         </label>
 
         <app-custom-select
+          [size]="'lg'"
           formControlName="roles"
           [items]="roleList"
           bindLabel="name"
@@ -196,6 +197,25 @@
         </div>
       </div>
 
+      <!-- ORGANIZATION -->
+      <div class="col-md-6 fv-row mb-8">
+        <label class="form-label fs-6 fw-bolder text-gray-900">
+          {{ 'USER_FORM.ORGANIZATION' | translate }}
+        </label>
+
+        <app-custom-select
+          [size]="'lg'"
+          formControlName="organizations"
+          [items]="organizationList"
+          bindLabel="name"
+          bindValue="id"
+          [multiple]="false"
+          [clearable]="true"
+          [placeholder]="'USER_FORM.SELECT_ORGANIZATION' | translate"
+          [invalid]="isInvalid('organizations')"
+        >
+        </app-custom-select>
+      </div>
     </div>
   </form>
 </app-custom-modal>

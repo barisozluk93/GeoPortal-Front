@@ -46,7 +46,7 @@ export class ContactComponent {
         this.alertService.createAlert("success", this.translate.instant("MESSAGES.CONTACT_SUCCESS"));
       }
       else {
-        this.alertService.createAlert("error", this.translate.instant("MESSAGES.ERROR"));
+        this.alertService.createAlert("danger", this.translate.instant("MESSAGES.ERROR"));
       }
     })
 
