@@ -1,0 +1,14 @@
+<div class="satdash__panel card h-100">
+  <div class="satdash__panel-header card-header border-0">
+    <div>
+      <div class="satdash__panel-title">{{ title }}</div>
+      <div class="satdash__panel-subtitle">{{ subtitle }}</div>
+    </div>
+
+    <span class="satdash__panel-chip" [ngClass]="chipClass">{{ chip }}</span>
+  </div>
+
+  <div class="card-body" [ngClass]="bodyClass">
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="table-responsive d-none d-lg-block">
+  <table class="table satdash__table align-middle gs-0 gy-4">
+    <thead>
+      <tr>
+        <th>Sipariş No</th>
+        <th>Müşteri</th>
+        <th>Tip</th>
+        <th>Kanal</th>
+        <th>Bölge</th>
+        <th>Tutar</th>
+        <th>Durum</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td class="fw-bold text-white">{{ order.id }}</td>
+        <td>
+          <div class="d-flex flex-column">
+            <span class="fw-bold text-white">{{ order.customerName }}</span>
+            <span class="satdash__muted fs-8">{{ order.createdAt }}</span>
+          </div>
+        </td>
+        <td>{{ order.customerType }}</td>
+        <td>{{ order.sourceType }}</td>
+        <td>{{ order.region }}</td>
+        <td class="fw-bold text-white">₺{{ order.amount | number:'1.0-0':'tr' }}</td>
+        <td>
+          <span [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="satdash__mobile-order-list d-lg-none">
+  <div class="satdash__mobile-order-card" *ngFor="let order of orders">
+    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+      <div>
+        <div class="satdash__mobile-order-title">{{ order.id }}</div>
+        <div class="satdash__muted fs-8 mt-1">{{ order.createdAt }}</div>
+      </div>
+      <span [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+    </div>
+
+    <div class="satdash__mobile-order-grid">
+      <div class="satdash__mobile-order-item">
+        <span class="label">Müşteri</span>
+        <span class="value">{{ order.customerName }}</span>
+      </div>
+      <div class="satdash__mobile-order-item">
+        <span class="label">Tip</span>
+        <span class="value">{{ order.customerType }}</span>
+      </div>
+      <div class="satdash__mobile-order-item">
+        <span class="label">Kanal</span>
+        <span class="value">{{ order.sourceType }}</span>
+      </div>
+      <div class="satdash__mobile-order-item">
+        <span class="label">Bölge</span>
+        <span class="value">{{ order.region }}</span>
+      </div>
+      <div class="satdash__mobile-order-item satdash__mobile-order-item--full">
+        <span class="label">Tutar</span>
+        <span class="value value--price">₺{{ order.amount | number:'1.0-0':'tr' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

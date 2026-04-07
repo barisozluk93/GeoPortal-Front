@@ -1,76 +1,229 @@
-<!-- begin::Row -->
-<div class="row gy-5 g-xl-8">
-  <div class="col-xxl-4">
-    <app-mixed-widget2
-      class="card card-xl-stretch mb-xl-8"
-      chartColor="danger"
-      chartHeight="200px"
-      strokeColor="#cb1e46"
-    ></app-mixed-widget2>
-  </div>
-  <div class="col-xxl-4">
-    <app-lists-widget5 class="card card-xxl-stretch"></app-lists-widget5>
-  </div>
-  <div class="col-xxl-4">
-    <app-mixed-widget10
-      class="card card-xxl-stretch-50 mb-5 mb-xl-8"
-      chartColor="primary"
-      chartHeight="150px"
-    ></app-mixed-widget10>
-    <app-mixed-widget11
-      class="card card-xxl-stretch-50 mb-5 mb-xl-8"
-      chartColor="primary"
-      chartHeight="175px"
-    ></app-mixed-widget11>
-  </div>
-</div>
-<!-- end::Row -->
+<div class="satdash container-fluid">
+  <app-filter-bar
+    [filters]="filters"
+    (filter)="loadDashboard()"
+    (reset)="resetFilters()"
+    (quickRange)="applyQuickRange($event)"
+  ></app-filter-bar>
 
-<!-- begin::Row -->
-<div class="row gy-5 gx-xl-8">
-  <div class="col-xxl-4">
-    <app-lists-widget3
-      class="card card-xxl-stretch mb-xl-3"
-    ></app-lists-widget3>
-  </div>
-  <div class="col-xl-8">
-    <app-tables-widget10
-      class="card card-xxl-stretch mb-5 mb-xl-8"
-    ></app-tables-widget10>
-  </div>
-</div>
-<!-- end::Row -->
+  <ng-container *ngIf="!loading && overview; else loadingTemplate">
+    <div class="satdash__hero card mb-8">
+      <div class="card-body p-5 p-lg-7 p-xl-10">
+        <div class="row align-items-center g-6 g-xl-8">
+          <div class="col-12 col-xl-8">
+            <div class="satdash__eyebrow">
+              <span class="satdash__eyebrow-dot"></span>
+              SATELLITE DATA COMMERCE & OPERATIONS
+            </div>
 
-<!-- begin::Row -->
-<div class="row gy-5 g-xl-8">
-  <div class="col-xl-4">
-    <app-lists-widget2 class="card card-xl-stretch mb-xl-8"></app-lists-widget2>
-  </div>
-  <div class="col-xl-4">
-    <app-lists-widget6 class="card card-xl-stretch mb-xl-8"></app-lists-widget6>
-  </div>
-  <div class="col-xl-4">
-    <app-lists-widget4
-      class="card card-xl-stretch mb-5 mb-xl-8"
-    ></app-lists-widget4>
-  </div>
-</div>
-<!-- end::Row -->
+            <h1 class="satdash__hero-title mt-4 mb-4">
+              Uydu veri satış, API kullanımı ve sipariş operasyonlarını
+              <span>tek ekranda yönetin</span>
+            </h1>
 
-<div class="row g-5 gx-xxl-8">
-  <div class="col-xxl-4">
-    <app-mixed-widget8
-      class="card card-xxl-stretch mb-xl-3"
-      chartColor="success"
-      chartHeight="150px"
-    ></app-mixed-widget8>
-  </div>
-  <div class="col-xxl-8">
-    <app-tables-widget5
-      class="card card-xxl-stretch mb-5 mb-xxl-8"
-    ></app-tables-widget5>
-  </div>
-  <div class="col-xxl-4">
-    <app-lists-widget8 class="card card-xxl-stretch"></app-lists-widget8>
-  </div>
+            <p class="satdash__hero-text mb-0">
+              Marketplace gelirleri, API abonelikleri, bölgesel talepler, sipariş yaşam döngüsü
+              ve entegrasyon sağlığını anlık izleyin.
+            </p>
+          </div>
+
+          <div class="col-12 col-xl-4">
+            <div class="satdash__hero-metrics">
+              <div class="satdash__hero-metric">
+                <div class="satdash__hero-metric-label">Bugünkü API Çağrısı</div>
+                <div class="satdash__hero-metric-value">
+                  {{ formatNumber(overview.kpis.totalApiCallsToday) }}
+                </div>
+              </div>
+
+              <div class="satdash__hero-metric">
+                <div class="satdash__hero-metric-label">Bölgesel Talep</div>
+                <div class="satdash__hero-metric-value">
+                  {{ formatNumber(overview.kpis.regionalDemandCount) }}
+                </div>
+              </div>
+
+              <div class="satdash__hero-metric">
+                <div class="satdash__hero-metric-label">Bireysel Üye</div>
+                <div class="satdash__hero-metric-value">
+                  {{ formatNumber(overview.kpis.individualMembers) }}
+                </div>
+              </div>
+
+              <div class="satdash__hero-metric">
+                <div class="satdash__hero-metric-label">Kurumsal Üye</div>
+                <div class="satdash__hero-metric-value">
+                  {{ formatNumber(overview.kpis.corporateMembers) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-kpi-card [kpis]="overview.kpis"></app-kpi-card>
+
+    <div class="row g-4 g-xl-7 mb-8">
+      <div class="col-12 col-xl-8">
+        <app-chart-card
+          title="Gelir Trendi"
+          subtitle="Marketplace + API + toplam gelir"
+          chip="Live"
+        >
+          <apx-chart
+            [series]="revenueChart.series!"
+            [chart]="revenueChart.chart!"
+            [xaxis]="revenueChart.xaxis!"
+            [yaxis]="revenueChart.yaxis!"
+            [stroke]="revenueChart.stroke!"
+            [tooltip]="revenueChart.tooltip!"
+            [dataLabels]="revenueChart.dataLabels!"
+            [legend]="revenueChart.legend!"
+            [fill]="revenueChart.fill!"
+            [grid]="revenueChart.grid!"
+            [markers]="revenueChart.markers!"
+            [colors]="revenueChart.colors!"
+          ></apx-chart>
+        </app-chart-card>
+      </div>
+
+      <div class="col-12 col-xl-4">
+        <app-chart-card
+          title="Gelir Kırılımı"
+          subtitle="Kaynağa göre gelir dağılımı"
+          chip="Revenue"
+          chipClass="satdash__panel-chip--soft"
+        >
+          <apx-chart
+            [series]="revenueBreakdownChart.series!"
+            [chart]="revenueBreakdownChart.chart!"
+            [labels]="revenueBreakdownChart.labels!"
+            [legend]="revenueBreakdownChart.legend!"
+            [dataLabels]="revenueBreakdownChart.dataLabels!"
+            [plotOptions]="revenueBreakdownChart.plotOptions!"
+            [responsive]="revenueBreakdownChart.responsive!"
+            [tooltip]="revenueBreakdownChart.tooltip!"
+            [stroke]="revenueBreakdownChart.stroke!"
+            [colors]="revenueBreakdownChart.colors!"
+          ></apx-chart>
+        </app-chart-card>
+      </div>
+    </div>
+
+    <div class="row g-4 g-xl-7 mb-8">
+      <div class="col-12 col-xl-6">
+        <app-chart-card
+          title="Sipariş Yaşam Döngüsü"
+          subtitle="Operasyon hattındaki siparişler"
+          chip="Pipeline"
+          chipClass="satdash__panel-chip--warn"
+        >
+          <apx-chart
+            [series]="orderPipelineChart.series!"
+            [chart]="orderPipelineChart.chart!"
+            [xaxis]="orderPipelineChart.xaxis!"
+            [yaxis]="orderPipelineChart.yaxis!"
+            [plotOptions]="orderPipelineChart.plotOptions!"
+            [dataLabels]="orderPipelineChart.dataLabels!"
+            [tooltip]="orderPipelineChart.tooltip!"
+            [grid]="orderPipelineChart.grid!"
+            [colors]="orderPipelineChart.colors!"
+          ></apx-chart>
+        </app-chart-card>
+      </div>
+
+      <div class="col-12 col-xl-6">
+        <app-chart-card
+          title="API Kullanımı"
+          subtitle="Günlük çağrı trendi"
+          chip="API"
+          chipClass="satdash__panel-chip--info"
+        >
+          <apx-chart
+            [series]="apiUsageChart.series!"
+            [chart]="apiUsageChart.chart!"
+            [xaxis]="apiUsageChart.xaxis!"
+            [yaxis]="apiUsageChart.yaxis!"
+            [stroke]="apiUsageChart.stroke!"
+            [tooltip]="apiUsageChart.tooltip!"
+            [dataLabels]="apiUsageChart.dataLabels!"
+            [legend]="apiUsageChart.legend!"
+            [fill]="apiUsageChart.fill!"
+            [grid]="apiUsageChart.grid!"
+            [markers]="apiUsageChart.markers!"
+            [colors]="apiUsageChart.colors!"
+          ></apx-chart>
+        </app-chart-card>
+      </div>
+    </div>
+
+    <div class="row g-4 g-xl-7 mb-8">
+      <div class="col-12 col-xl-8">
+        <app-chart-card
+          title="Son Siparişler"
+          subtitle="En son oluşturulan siparişler ve operasyon durumları"
+          chip="Orders"
+          chipClass="satdash__panel-chip--soft"
+        >
+          <app-orders-table [orders]="overview.recentOrders"></app-orders-table>
+        </app-chart-card>
+      </div>
+
+      <div class="col-12 col-xl-4">
+        <app-chart-card
+          title="Bölgesel Talepler"
+          subtitle="Harita üzerinden gelen aktif talepler"
+          chip="Demand"
+          chipClass="satdash__panel-chip--soft"
+        >
+          <app-regional-demands [demands]="overview.regionalDemands"></app-regional-demands>
+        </app-chart-card>
+      </div>
+    </div>
+
+    <div class="row g-4 g-xl-7">
+      <div class="col-12 col-xl-4">
+        <app-chart-card
+          title="Üyelik Dağılımı"
+          subtitle="Bireysel ve kurumsal kullanıcılar"
+          chip="Members"
+          chipClass="satdash__panel-chip--soft"
+        >
+          <apx-chart
+            [series]="membershipChart.series!"
+            [chart]="membershipChart.chart!"
+            [labels]="membershipChart.labels!"
+            [legend]="membershipChart.legend!"
+            [dataLabels]="membershipChart.dataLabels!"
+            [plotOptions]="membershipChart.plotOptions!"
+            [responsive]="membershipChart.responsive!"
+            [tooltip]="membershipChart.tooltip!"
+            [stroke]="membershipChart.stroke!"
+            [colors]="membershipChart.colors!"
+          ></apx-chart>
+        </app-chart-card>
+      </div>
+
+      <div class="col-12 col-xl-8">
+        <app-chart-card
+          title="Sistem Sağlığı"
+          subtitle="Temel servis ve entegrasyon durumları"
+          chip="Healthy"
+          chipClass="satdash__panel-chip--success"
+        >
+          <app-system-health [items]="overview.systemHealth"></app-system-health>
+        </app-chart-card>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingTemplate>
+    <div class="satdash__loading card">
+      <div class="card-body text-center py-20">
+        <div class="spinner-border text-primary mb-4"></div>
+        <div class="satdash__muted">Dashboard yükleniyor...</div>
+      </div>
+    </div>
+  </ng-template>
 </div>

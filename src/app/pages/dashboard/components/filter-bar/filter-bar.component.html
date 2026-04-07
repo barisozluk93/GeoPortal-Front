@@ -1,0 +1,67 @@
+<div class="satdash__quickbar mb-6">
+  <div class="satdash__quickbar-left">
+    <button class="satdash__quickchip" (click)="onQuickRange('7d')">Son 7 Gün</button>
+    <button class="satdash__quickchip" (click)="onQuickRange('30d')">Son 30 Gün</button>
+    <button class="satdash__quickchip" (click)="onQuickRange('month')">Bu Ay</button>
+    <button class="satdash__quickchip" (click)="onQuickRange('today')">Bugün</button>
+  </div>
+
+  <div class="satdash__quickbar-right">
+    <span class="satdash__live-dot"></span>
+    <span class="satdash__quickbar-text">Canlı görünüm</span>
+  </div>
+</div>
+
+<div class="satdash__filter card mb-8">
+  <div class="card-body p-6">
+    <div class="row g-4 align-items-end">
+      <div class="col-12 col-md-6 col-xl-3">
+        <label class="form-label satdash__label">Başlangıç Tarihi</label>
+        <input
+          type="date"
+          class="form-control satdash__control"
+          [(ngModel)]="filters.startDate"
+        />
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3">
+        <label class="form-label satdash__label">Bitiş Tarihi</label>
+        <input
+          type="date"
+          class="form-control satdash__control"
+          [(ngModel)]="filters.endDate"
+        />
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-2">
+        <label class="form-label satdash__label">Üyelik Tipi</label>
+        <select class="form-select satdash__control" [(ngModel)]="filters.customerType">
+          <option [ngValue]="'Tümü'">Tümü</option>
+          <option [ngValue]="'Bireysel'">Bireysel</option>
+          <option [ngValue]="'Kurumsal'">Kurumsal</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-2">
+        <label class="form-label satdash__label">Kanal</label>
+        <select class="form-select satdash__control" [(ngModel)]="filters.channel">
+          <option [ngValue]="'Tümü'">Tümü</option>
+          <option [ngValue]="'Marketplace'">Marketplace</option>
+          <option [ngValue]="'API'">API</option>
+          <option [ngValue]="'Özel Talep'">Özel Talep</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-xl-2">
+        <div class="satdash__filter-actions d-grid d-md-flex gap-3">
+          <button type="button" class="btn satdash__btn satdash__btn--primary flex-fill" (click)="onFilter()">
+            Filtrele
+          </button>
+          <button type="button" class="btn satdash__btn satdash__btn--ghost flex-fill" (click)="onReset()">
+            Sıfırla
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
