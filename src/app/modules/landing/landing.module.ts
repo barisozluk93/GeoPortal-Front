@@ -13,6 +13,7 @@ import { ContactComponent } from './contact/contact.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { MapComponent } from './map/map.component';
 import { CustomSelectModule } from '../common/select/custom-select.module';
+import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { CustomSelectModule } from '../common/select/custom-select.module';
     DatePipe,
     NgbPaginationModule,
     InlineSVGModule,
-    CustomSelectModule
+    CustomSelectModule,
+    CustomModalModule
   ],
   exports: [
     MapComponent

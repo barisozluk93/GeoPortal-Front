@@ -29,7 +29,7 @@
     <img *ngIf="user?.fileId != undefined" [src]="user?.fileResult?.fileContents" alt="image" />
   </div>
   <!--end::Menu wrapper-->
-  <app-user-inner [isAdmin]="isAdmin"></app-user-inner>
+  <app-user-inner></app-user-inner>
 </div>
 
 <div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-3">

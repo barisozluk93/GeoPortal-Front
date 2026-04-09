@@ -1,34 +1,26 @@
 <ng-container *ngIf="user">
   <!-- USER HEADER -->
-  <div class="px-5 py-4">
-    <div class="d-flex align-items-center rounded-3 p-3" style="background-color: rgba(var(--bs-primary-rgb), 0.12);">
+  <div class="user-menu__header px-5 py-4">
+    <div class="user-menu__profile-card d-flex align-items-center rounded-3 p-3">
       <div class="symbol symbol-45px me-4 flex-shrink-0">
-        <img
-          *ngIf="user?.fileId == undefined"
-          src="./assets/media/avatars/blank.png"
-          alt="user-avatar"
-        />
+        <img *ngIf="user?.fileId == undefined" src="./assets/media/avatars/blank.png" alt="user-avatar" />
 
-        <img
-          *ngIf="user?.fileId != undefined"
-          [src]="user?.fileResult?.fileContents"
-          alt="user-avatar"
-        />
+        <img *ngIf="user?.fileId != undefined" [src]="user?.fileResult?.fileContents" alt="user-avatar" />
       </div>
 
       <div class="d-flex flex-column min-w-0">
-        <div class="fw-bold fs-6 text-gray-900 text-truncate">
+        <div class="fw-bold fs-6 user-menu__name text-truncate">
           {{ user.name }} {{ user.surname }}
         </div>
 
-        <div class="text-muted fs-7 text-truncate">
+        <div class="user-menu__email fs-7 text-truncate">
           {{ user.email }}
         </div>
       </div>
     </div>
   </div>
 
-  <div class="separator mx-5 my-2"></div>
+  <div class="separator mx-5 my-2 user-menu__separator"></div>
 
   <!-- PROFILE -->
   <div class="menu-item px-3">
@@ -55,12 +47,8 @@
   </div>
 
   <!-- LANGUAGE -->
-  <div
-    class="menu-item px-3"
-    data-kt-menu-trigger="hover"
-    data-kt-menu-placement="left-start"
-    data-kt-menu-flip="bottom"
-  >
+  <div class="menu-item px-3" data-kt-menu-trigger="hover" data-kt-menu-placement="left-start"
+    data-kt-menu-flip="bottom">
     <a class="menu-link px-3 rounded-3 cursor-pointer">
       <span class="menu-icon">
         <i class="fa-solid fa-language fs-5"></i>
@@ -71,29 +59,16 @@
       </span>
 
       <span class="ms-auto d-flex align-items-center me-2">
-        <img
-          class="w-20px h-20px rounded-1 me-2"
-          [src]="language.flag"
-          alt="language-flag"
-        />
-        <span class="fs-7 text-gray-700">
+        <img class="w-20px h-20px rounded-1 me-2" [src]="language.flag" alt="language-flag" />
+        <span class="fs-7 user-menu__lang-label">
           {{ ('LANG' | translate) === 'tr' ? language.nameTr : language.nameEn }}
         </span>
       </span>
     </a>
 
-    <div
-      class="menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-2 w-200px border border-gray-200 bg-body shadow-sm"
-    >
-      <div
-        *ngFor="let l of langs"
-        class="menu-item px-3"
-        (click)="selectLanguage(l.lang)"
-      >
-        <a
-          class="menu-link px-3 rounded-3 d-flex align-items-center"
-          [ngClass]="{ active: l.lang === language.lang }"
-        >
+    <div class="menu-sub menu-sub-dropdown menu-column menu-rounded fw-semibold py-2 w-200px user-menu__subdropdown">
+      <div *ngFor="let l of langs" class="menu-item px-3" (click)="selectLanguage(l.lang)">
+        <a class="menu-link px-3 rounded-3 d-flex align-items-center" [ngClass]="{ active: l.lang === language.lang }">
           <span class="symbol symbol-20px me-3">
             <img class="rounded-1" [src]="l.flag" alt="language-flag" />
           </span>
@@ -110,13 +85,16 @@
     </div>
   </div>
 
-  <div class="separator mx-5 my-2"></div>
+  <div class="separator mx-5 my-2 user-menu__separator"></div>
 
   <!-- LOGOUT -->
   <div class="menu-item px-3">
-    <a (click)="logout()" class="menu-link px-3 rounded-3 cursor-pointer text-danger">
-      <span class="menu-icon">
-        <i class="fa-solid fa-right-from-bracket fs-5 text-danger"></i>
+    <a (click)="logout()" class="menu-link px-3 rounded-3 cursor-pointer user-menu__logout">
+      <span class="menu-icon ">
+        <i class="ki-duotone ki-exit-right fs-2 text-danger">
+          <span class="path1"></span>
+          <span class="path2"></span>
+        </i>
       </span>
       <span class="menu-title">
         {{ 'AUTH.GENERAL.SIGNOUT_BUTTON' | translate }}

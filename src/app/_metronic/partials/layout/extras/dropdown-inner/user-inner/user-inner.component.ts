@@ -4,6 +4,7 @@ import { TranslationService } from '../../../../../../modules/i18n';
 import { AuthService } from '../../../../../../modules/auth';
 import { UserModel } from 'src/app/modules/user-management/models/user.model';
 import { UserManagementService } from 'src/app/modules/user-management/user-management.service';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
   selector: 'app-user-inner',
@@ -17,7 +18,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   @HostBinding('attr.data-kt-menu')
   dataKtMenu = 'true';
 
-  @Input() isAdmin: boolean = false;
+  isAdmin: boolean = false;
 
   language!: LanguageFlag;
   user!: UserModel;
@@ -33,7 +34,11 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const authSub = this.auth.currentUserSubject.subscribe((auth) => {
       if (auth?.id) {
+        this.isAdmin = auth.roles.includes(RoleEnum.SuperAdmin) ? true : false;
         this.userManagementService.updateUser(auth.id);
+      }
+      else{
+        this.isAdmin = false;
       }
     });
 

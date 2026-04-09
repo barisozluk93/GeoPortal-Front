@@ -1,68 +1,78 @@
 <div
-  class="panel-backdrop"
+  class="modal fade show d-block"
+  tabindex="-1"
   *ngIf="isOpen"
   (click)="onBackdropClick($event)"
 >
-  <section
-    class="panel"
+  <div
+    class="modal-dialog"
     [ngClass]="{
-      'panel--center': variant === 'center',
-      'panel--right': variant === 'right'
+      'modal-dialog-centered': variant === 'center',
+      'modal-dialog-end': variant === 'right'
     }"
-    [style.width]="variant === 'center' ? width : null"
+    [style.maxWidth]="variant === 'center' ? width : null"
     (click)="$event.stopPropagation()"
   >
-    <header class="panel__header">
-      <div class="panel__header-left">
-        <div class="panel__badge">
-          <i class="ki-duotone ki-abstract-28 fs-3">
+    <div class="modal-content">
+
+      <div class="modal-header border-0">
+        <div class="d-flex align-items-center gap-3 min-w-0">
+          <div class="symbol symbol-48px">
+            <span class="symbol-label">
+              <i class="ki-duotone ki-abstract-28">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i>
+            </span>
+          </div>
+
+          <div class="min-w-0">
+            <h3 class="fw-bold mb-1 text-truncate">
+              {{ title }}
+            </h3>
+
+            <div *ngIf="subtitle" class="text-muted fs-7">
+              {{ subtitle }}
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-icon btn-sm btn-light"
+          (click)="close()"
+          aria-label="Close"
+        >
+          <i class="ki-duotone ki-cross">
             <span class="path1"></span>
             <span class="path2"></span>
           </i>
-        </div>
-
-        <div class="panel__titles">
-          <div class="panel__title">{{ title }}</div>
-          <div class="panel__subtitle" *ngIf="subtitle">
-            {{ subtitle }}
-          </div>
-        </div>
+        </button>
       </div>
 
-      <button
-        type="button"
-        class="panel__close-btn"
-        (click)="close()"
-        aria-label="Close"
-      >
-        <i class="ki-duotone ki-cross fs-2">
-          <span class="path1"></span>
-          <span class="path2"></span>
-        </i>
-      </button>
-    </header>
+      <div class="modal-body">
+        <ng-content></ng-content>
+      </div>
 
-    <div class="panel__body">
-      <ng-content></ng-content>
+      <div class="modal-footer border-0" *ngIf="showFooter">
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="close()"
+        >
+          {{ cancelText | translate }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="submitDisabled"
+          (click)="onSubmit()"
+        >
+          {{ submitText | translate }}
+        </button>
+      </div>
+
     </div>
-
-    <footer class="panel__footer" *ngIf="showFooter">
-      <button
-        type="button"
-        class="btn btn-light"
-        (click)="close()"
-      >
-        {{ cancelText | translate }}
-      </button>
-
-      <button
-        type="button"
-        class="btn btn-primary"
-        [disabled]="submitDisabled"
-        (click)="onSubmit()"
-      >
-        {{ submitText | translate }}
-      </button>
-    </footer>
-  </section>
+  </div>
 </div>

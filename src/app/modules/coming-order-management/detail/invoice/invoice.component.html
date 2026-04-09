@@ -13,30 +13,24 @@
   variant="center"
   [showFooter]="false"
 >
-  <div class="row g-8">
+  <div class="invoice-layout">
+    <!-- LEFT PANEL -->
+    <div class="invoice-layout__side">
+      <div class="card h-100">
+        <div class="card-body">
+          <!-- FILE BOX -->
+          <div class="file-box">
+            <span
+              [inlineSVG]="'./assets/media/svg/files/pdf.svg'"
+              class="svg-icon svg-icon-4x mb-4"
+            ></span>
 
-    <!-- FILE PANEL -->
-    <div class="col-xl-3">
-      <div class="card border border-gray-200 shadow-sm rounded-3 h-100">
-        <div class="card-body p-6">
-
-          <div
-            class="d-flex flex-column align-items-center justify-content-center rounded-3 border border-gray-300 bg-light-primary min-h-250px px-6 py-10 mb-6"
-          >
-            <div class="mb-5">
-              <span
-                [inlineSVG]="'./assets/media/svg/files/pdf.svg'"
-                class="svg-icon svg-icon-5x"
-              ></span>
-            </div>
-
-            <div class="text-center">
-              <div class="fs-6 fw-semibold text-gray-900 text-break">
-                {{ fileName || ('INVOICE_FORM.NO_FILE_SELECTED' | translate) }}
-              </div>
+            <div class="file-box__name">
+              {{ fileName || ('INVOICE_FORM.NO_FILE_SELECTED' | translate) }}
             </div>
           </div>
 
+          <!-- INPUT -->
           <input
             #fileUpload
             type="file"
@@ -45,7 +39,8 @@
             (change)="onFileChange($event)"
           />
 
-          <div class="d-flex gap-3">
+          <!-- ACTIONS -->
+          <div class="d-flex gap-3 mt-5">
             <button
               type="button"
               class="btn btn-light-primary flex-grow-1 d-flex align-items-center justify-content-center"
@@ -55,6 +50,7 @@
                 [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
                 class="svg-icon svg-icon-3 me-2"
               ></span>
+
               {{
                 fileName
                   ? ('CHANGE' | translate)
@@ -67,7 +63,6 @@
               class="btn btn-light-danger btn-icon"
               (click)="openDeleteModal()"
               [disabled]="!fileName"
-              title="{{ 'DELETE' | translate }}"
             >
               <span
                 [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
@@ -79,20 +74,22 @@
       </div>
     </div>
 
-    <!-- PDF PREVIEW -->
-    <div class="col-xl-9" *ngIf="pdfSrc">
-      <div class="card border border-gray-200 shadow-sm rounded-3 h-100">
-        <div class="card-body p-4">
+    <!-- RIGHT PANEL -->
+    <div class="invoice-layout__content">
+      <!-- PREVIEW -->
+      <div *ngIf="pdfSrc" class="card h-100">
+        <div class="card-body">
           <div class="mb-4">
-            <h3 class="fs-5 fw-bold text-gray-900 mb-1">
+            <h3 class="fs-5 fw-bold mb-1">
               {{ 'INVOICE_FORM.PREVIEW' | translate }}
             </h3>
+
             <div class="text-muted fs-7">
               {{ 'INVOICE_FORM.PREVIEW_DESCRIPTION' | translate }}
             </div>
           </div>
 
-          <div class="border rounded-3 overflow-hidden bg-white">
+          <div class="pdf-container">
             <pdf-viewer
               [src]="pdfSrc"
               [render-text]="true"
@@ -104,22 +101,15 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- EMPTY PREVIEW -->
-    <div class="col-xl-8" *ngIf="!pdfSrc">
-      <div
-        class="card border border-dashed border-gray-300 shadow-sm rounded-3 h-100"
-      >
-        <div
-          class="card-body d-flex flex-column align-items-center justify-content-center text-center p-10 min-h-500px"
-        >
+      <!-- EMPTY -->
+      <div *ngIf="!pdfSrc" class="card h-100 empty-preview">
+        <div class="card-body">
           <span
             [inlineSVG]="'./assets/media/svg/files/pdf.svg'"
             class="svg-icon svg-icon-4x mb-5"
           ></span>
 
-          <div class="fs-4 fw-bold text-gray-800 mb-2">
+          <div class="fs-4 fw-bold mb-2">
             {{ 'INVOICE_FORM.NO_PREVIEW_TITLE' | translate }}
           </div>
 
@@ -129,6 +119,5 @@
         </div>
       </div>
     </div>
-
   </div>
 </app-custom-modal>

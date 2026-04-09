@@ -12,7 +12,7 @@
       <div class="col-md-6">
         <label class="form-label fw-semibold">{{ 'FIRST_NAME' | translate }}</label>
 
-        <input type="text" class="form-control form-control-solid" formControlName="name" [ngClass]="{
+        <input type="text" class="form-control" formControlName="name" [ngClass]="{
             'is-invalid': form.controls['name'].invalid && (form.controls['name'].dirty || form.controls['name'].touched)
           }" />
 
@@ -26,7 +26,7 @@
       <div class="col-md-6">
         <label class="form-label fw-semibold">{{ 'LAST_NAME' | translate }}</label>
 
-        <input type="text" class="form-control form-control-solid" formControlName="surname" [ngClass]="{
+        <input type="text" class="form-control" formControlName="surname" [ngClass]="{
             'is-invalid': form.controls['surname'].invalid && (form.controls['surname'].dirty || form.controls['surname'].touched)
           }" />
 
@@ -40,7 +40,7 @@
       <div class="col-md-6">
         <label class="form-label fw-semibold">{{ 'USERNAME' | translate }}</label>
 
-        <input type="text" class="form-control form-control-solid" formControlName="username" [ngClass]="{
+        <input type="text" class="form-control" formControlName="username" [ngClass]="{
             'is-invalid': form.controls['username'].invalid && (form.controls['username'].dirty || form.controls['username'].touched)
           }" />
 
@@ -56,7 +56,7 @@
           {{ 'CONTRACT_PHONE' | translate }}
         </label>
 
-        <input type="tel" class="form-control form-control-solid" formControlName="phone" mask="(000) 000 00 00"
+        <input type="tel" class="form-control" formControlName="phone" mask="(000) 000 00 00"
           [showMaskTyped]="true" [dropSpecialCharacters]="false" placeholder="(___) ___ __ __" [ngClass]="{
       'is-invalid':
         form.controls['phone'].invalid &&

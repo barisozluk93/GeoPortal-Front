@@ -1,46 +1,91 @@
-<section class="data-page">
-  <!-- 1) HERO SECTION -->
+<div class="data-page">
   <section class="data-hero">
-    <div class="data-hero-overlay"></div>
-
-    <div class="container data-hero-content">
-      <div class="data-hero-grid">
-        <div class="data-hero-left">
-          <div class="data-kicker mb-6">
-            <i class="bi bi-globe2"></i>
+    <div class="container-fluid">
+      <div class="data-hero__grid">
+        <div class="data-hero__content">
+          <div class="data-hero__kicker badge badge-light-primary">
             {{ 'DATA_PAGE.KICKER' | translate }}
           </div>
 
-          <h1 class="data-hero-title">
+          <h1 class="data-hero__title">
             {{ 'DATA_PAGE.TITLE' | translate }}
           </h1>
 
-          <p class="data-hero-subtitle">
+          <p class="data-hero__copy text-muted fs-6">
             {{ 'DATA_PAGE.COPY' | translate }}
           </p>
+
+          <div class="data-search-card">
+            <div class="data-search-card__title">
+              {{ 'DATA_PAGE.SEARCH_TITLE' | translate }}
+            </div>
+
+            <div class="data-search-box">
+              <i class="ki-outline ki-magnifier fs-2 text-gray-500"></i>
+
+              <input type="text" class="form-control form-control-solid" [ngModel]="searchQuery()"
+                (ngModelChange)="searchQuery.set($event)" [placeholder]="'DATA_PAGE.SEARCH_PLACEHOLDER' | translate"
+                (keyup.enter)="submitSearch()" />
+
+              <button class="btn btn-primary data-search-btn" (click)="submitSearch()" [disabled]="loading()">
+                {{ loading() ? ('DATA_PAGE.LOADING' | translate) : ('DATA_PAGE.SEARCH_BUTTON' | translate) }}
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="data-hero-right">
-          <div class="card shadow-lg data-search-card">
-            <div class="card-body p-8 p-lg-10">
-              <div class="data-search-title mb-6">
-                {{ 'DATA_PAGE.SEARCH_TITLE' | translate }}
+        <div class="data-hero__visual">
+          <div class="data-summary-card">
+            <div class="data-summary-card__header">
+              <div class="data-summary-card__eyebrow">
+                {{ 'DATA_PAGE.SUMMARY_KICKER' | translate }}
+              </div>
+              <h3 class="data-summary-card__title">
+                {{ 'DATA_PAGE.SUMMARY_TITLE' | translate }}
+              </h3>
+            </div>
+
+            <div class="data-summary-card__list">
+              <div class="data-summary-item">
+                <div class="data-summary-item__icon">
+                  <i class="ki-outline ki-shop fs-2"></i>
+                </div>
+                <div class="data-summary-item__body">
+                  <div class="data-summary-item__title">
+                    {{ 'DATA_PAGE.CARD_1_TITLE' | translate }}
+                  </div>
+                  <div class="data-summary-item__text">
+                    {{ 'DATA_PAGE.CARD_1_DESC' | translate }}
+                  </div>
+                </div>
               </div>
 
-              <div class="data-search-row">
-                <div class="position-relative flex-grow-1">
-                  <span class="data-search-icon">
-                    <i class="bi bi-search"></i>
-                  </span>
-
-                  <input type="text" class="form-control form-control-lg form-control-solid data-search-input" [ngModel]="searchQuery()"
-                    (ngModelChange)="searchQuery.set($event)" [placeholder]="'DATA_PAGE.SEARCH_PLACEHOLDER' | translate"
-                    (keyup.enter)="submitSearch()" />
+              <div class="data-summary-item">
+                <div class="data-summary-item__icon">
+                  <i class="ki-outline ki-geolocation fs-2"></i>
                 </div>
+                <div class="data-summary-item__body">
+                  <div class="data-summary-item__title">
+                    {{ 'DATA_PAGE.CARD_2_TITLE' | translate }}
+                  </div>
+                  <div class="data-summary-item__text">
+                    {{ 'DATA_PAGE.CARD_2_DESC' | translate }}
+                  </div>
+                </div>
+              </div>
 
-                <button class="btn btn-primary data-search-btn" (click)="submitSearch()" [disabled]="loading()">
-                  {{ loading() ? ('DATA_PAGE.LOADING' | translate) : ('DATA_PAGE.SEARCH_BUTTON' | translate) }}
-                </button>
+              <div class="data-summary-item">
+                <div class="data-summary-item__icon">
+                  <i class="ki-outline ki-code fs-2"></i>
+                </div>
+                <div class="data-summary-item__body">
+                  <div class="data-summary-item__title">
+                    {{ 'DATA_PAGE.CARD_3_TITLE' | translate }}
+                  </div>
+                  <div class="data-summary-item__text">
+                    {{ 'DATA_PAGE.CARD_3_DESC' | translate }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -49,119 +94,129 @@
     </div>
   </section>
 
-  <!-- 2) FEATURE CARDS SECTION -->
-  <section class="data-feature-section">
-    <div class="container">
-      <div class="text-center mb-15">
-        <h2 class="data-section-title mb-4">
+  <section class="data-section">
+    <div class="container-fluid">
+      <div class="data-section__header">
+        <div class="data-section__kicker badge badge-light-primary">
+          {{ 'DATA_PAGE.USE_CASES' | translate }}
+        </div>
+        <h2 class="data-section__title">
           {{ 'DATA_PAGE.SECTION2_TITLE' | translate }}
         </h2>
-
-        <p class="data-section-copy">
+        <p class="data-section__copy text-muted">
           {{ 'DATA_PAGE.SECTION2_COPY' | translate }}
         </p>
       </div>
 
-      <div class="row g-7">
-        <!-- CARD -->
-        <div class="col-12 col-md-6 col-xl-3" *ngFor="let i of [1,2,3,4]">
-          <div class="card h-100 shadow-sm data-info-card">
-            <div class="card-body p-8">
-
-              <!-- ICON -->
-              <div class="data-card-icon mb-6">
-                <i class="bi fs-2" [ngClass]="{
-                  'bi-globe2': i === 1,
-                  'bi-layers': i === 2,
-                  'bi-grid-1x2-fill': i === 3,
-                  'bi-stars': i === 4
-                }">
-                </i>
-              </div>
-
-              <h3 class="data-card-title">
-                {{ ('DATA_PAGE.BENEFIT_' + i + '_TITLE') | translate }}
-              </h3>
-
-              <p class="data-card-text">
-                {{ ('DATA_PAGE.BENEFIT_' + i + '_DESC') | translate }}
-              </p>
-
+      <div class="data-access-grid">
+        <div class="card data-access-card">
+          <div class="card-body p-7">
+            <div class="data-access-card__icon">
+              <i class="ki-outline ki-shop fs-2x"></i>
             </div>
+
+            <h3 class="data-access-card__title">
+              {{ 'DATA_PAGE.ACCESS_1_TITLE' | translate }}
+            </h3>
+
+            <p class="data-access-card__text">
+              {{ 'DATA_PAGE.ACCESS_1_DESC' | translate }}
+            </p>
+
+            <ul class="data-access-card__list">
+              <li>{{ 'DATA_PAGE.ACCESS_1_ITEM_1' | translate }}</li>
+              <li>{{ 'DATA_PAGE.ACCESS_1_ITEM_2' | translate }}</li>
+              <li>{{ 'DATA_PAGE.ACCESS_1_ITEM_3' | translate }}</li>
+            </ul>
+
+            <a routerLink="/landing/marketplace" class="btn btn-light-primary mt-auto">
+              {{ 'DATA_PAGE.ACCESS_1_ACTION' | translate }}
+            </a>
+          </div>
+        </div>
+
+        <div class="card data-access-card">
+          <div class="card-body p-7">
+            <div class="data-access-card__icon">
+              <i class="ki-outline ki-geolocation fs-2x"></i>
+            </div>
+
+            <h3 class="data-access-card__title">
+              {{ 'DATA_PAGE.ACCESS_2_TITLE' | translate }}
+            </h3>
+
+            <p class="data-access-card__text">
+              {{ 'DATA_PAGE.ACCESS_2_DESC' | translate }}
+            </p>
+
+            <ul class="data-access-card__list">
+              <li>{{ 'DATA_PAGE.ACCESS_2_ITEM_1' | translate }}</li>
+              <li>{{ 'DATA_PAGE.ACCESS_2_ITEM_2' | translate }}</li>
+              <li>{{ 'DATA_PAGE.ACCESS_2_ITEM_3' | translate }}</li>
+            </ul>
+
+            <a routerLink="/landing/map" class="btn btn-light-primary mt-auto">
+              {{ 'DATA_PAGE.ACCESS_2_ACTION' | translate }}
+            </a>
+          </div>
+        </div>
+
+        <div class="card data-access-card">
+          <div class="card-body p-7">
+            <div class="data-access-card__icon">
+              <i class="ki-outline ki-code fs-2x"></i>
+            </div>
+
+            <h3 class="data-access-card__title">
+              {{ 'DATA_PAGE.ACCESS_3_TITLE' | translate }}
+            </h3>
+
+            <p class="data-access-card__text">
+              {{ 'DATA_PAGE.ACCESS_3_DESC' | translate }}
+            </p>
+
+            <ul class="data-access-card__list">
+              <li>{{ 'DATA_PAGE.ACCESS_3_ITEM_1' | translate }}</li>
+              <li>{{ 'DATA_PAGE.ACCESS_3_ITEM_2' | translate }}</li>
+              <li>{{ 'DATA_PAGE.ACCESS_3_ITEM_3' | translate }}</li>
+            </ul>
+
+            <a routerLink="/landing/api" class="btn btn-light-primary mt-auto">
+              {{ 'DATA_PAGE.ACCESS_3_ACTION' | translate }}
+            </a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3) SHOWCASE SECTION -->
-  <section class="data-showcase-section">
-    <div class="container">
-      <div class="data-showcase-shell">
-        <div class="row align-items-center g-8">
-          <div class="col-12 col-xl-6">
-            <div class="data-showcase-content">
-              <div class="text-primary-light fw-bold fs-7 text-uppercase mb-4">
-                {{ 'DATA_PAGE.USE_CASES' | translate }}
-              </div>
-
-              <h2 class="data-showcase-title mb-5">
-                {{ 'DATA_PAGE.SECTION2_TITLE' | translate }}
-              </h2>
-
-              <p class="data-showcase-copy mb-0">
-                {{ 'DATA_PAGE.SECTION2_COPY' | translate }}
-              </p>
-            </div>
+  <section class="data-section data-section--compact">
+    <div class="container-fluid">
+      <div class="data-flow-band">
+        <div class="data-flow-band__item">
+          <span class="data-flow-band__step">01</span>
+          <div>
+            <h4>{{ 'DATA_PAGE.FLOW_1_TITLE' | translate }}</h4>
+            <p>{{ 'DATA_PAGE.FLOW_1_DESC' | translate }}</p>
           </div>
+        </div>
 
-          <div class="col-12 col-xl-6">
-            <div class="row g-6">
-              <div class="col-12">
-                <div class="card data-mini-card">
-                  <div class="card-body p-8">
-                    <h4 class="data-mini-card-title mb-4">
-                      {{ 'DATA_PAGE.USECASE_1_TITLE' | translate }}
-                    </h4>
+        <div class="data-flow-band__item">
+          <span class="data-flow-band__step">02</span>
+          <div>
+            <h4>{{ 'DATA_PAGE.FLOW_2_TITLE' | translate }}</h4>
+            <p>{{ 'DATA_PAGE.FLOW_2_DESC' | translate }}</p>
+          </div>
+        </div>
 
-                    <p class="data-mini-card-text mb-0">
-                      {{ 'DATA_PAGE.USECASE_1_DESC' | translate }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <div class="card data-mini-card">
-                  <div class="card-body p-8">
-                    <h4 class="data-mini-card-title mb-4">
-                      {{ 'DATA_PAGE.USECASE_2_TITLE' | translate }}
-                    </h4>
-
-                    <p class="data-mini-card-text mb-0">
-                      {{ 'DATA_PAGE.USECASE_2_DESC' | translate }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <div class="card data-mini-card">
-                  <div class="card-body p-8">
-                    <h4 class="data-mini-card-title mb-4">
-                      {{ 'DATA_PAGE.USECASE_3_TITLE' | translate }}
-                    </h4>
-
-                    <p class="data-mini-card-text mb-0">
-                      {{ 'DATA_PAGE.USECASE_3_DESC' | translate }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="data-flow-band__item">
+          <span class="data-flow-band__step">03</span>
+          <div>
+            <h4>{{ 'DATA_PAGE.FLOW_3_TITLE' | translate }}</h4>
+            <p>{{ 'DATA_PAGE.FLOW_3_DESC' | translate }}</p>
           </div>
         </div>
       </div>
     </div>
   </section>
-</section>
+</div>

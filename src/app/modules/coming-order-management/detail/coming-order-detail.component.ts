@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, LOCALE_ID, Inject, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { OrderStatusEnum } from 'src/app/enums/order-status.enum';
 import { ComingOrderManagementService } from '../coming-order-management.service';
@@ -26,7 +26,11 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
   private langChangeSubscription: any;
 
   constructor(private comingOrderManagementService: ComingOrderManagementService, private translate: TranslateService,
-    private route: ActivatedRoute, @Inject(LOCALE_ID) public locale: string) {
+    private route: ActivatedRoute, @Inject(LOCALE_ID) public locale: string, private router: Router) {
+  }
+
+  backToList(): void {
+    this.router.navigate(['/incomingordermanagement']);
   }
 
   ngOnDestroy(): void {

@@ -12,10 +12,12 @@ import { SupportManagementRoutingModule } from './support-management-routing.mod
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
 import { DataTableModule } from '../common/datatable/datatable.module';
 import { CustomSelectModule } from '../common/select/custom-select.module';
+import { SupportManagementDetailComponent } from './detail/support-management-detail.component';
 
 @NgModule({
   declarations: [
     SupportManagementComponent,
+    SupportManagementDetailComponent
   ],
   imports: [
     CommonModule,

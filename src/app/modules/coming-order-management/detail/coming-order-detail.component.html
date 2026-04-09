@@ -4,121 +4,125 @@
 <app-orderinvoice-edit #invoiceComponent (isSuccess)="isSuccess($event)">
 </app-orderinvoice-edit>
 
-<div class="row" *ngIf="orderProduct">
-  <div class="col-12">
-    <div class="card order-detail-card border-0">
+<div class="order-detail-page">
+  <div class="order-detail-page__grid">
+    <!-- LEFT -->
+    <div class="order-side-panel">
+      <div class="card h-100">
+        <div class="card-header border-0 flex-column align-items-start">
+          <h3 class="card-title mb-1">{{ header }}</h3>
+          <span class="text-muted fw-semibold">#{{ orderProduct.order?.orderNo }}</span>
+        </div>
 
-      <!-- HEADER -->
-      <div class="card-header border-0 py-6 px-7">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-4 w-100">
+        <div class="card-body">
+          <div class="info-list">
+            <div class="info-item">
+              <span class="label">{{ 'ORDER_NUMBER' | translate }}</span>
+              <span class="value">#{{ orderProduct.order?.orderNo }}</span>
+            </div>
 
-          <div>
-            <h3 class="fw-bold text-gray-900 mb-1">{{ header }}</h3>
+            <div class="info-item">
+              <span class="label">{{ 'ORDER_DATE' | translate }}</span>
+              <span class="value">{{ orderProduct.orderDate || '-' }}</span>
+            </div>
 
-            <div class="meta-row">
-              <span>
-                {{ 'ORDER_NUMBER' | translate }}:
-                <b>#{{ orderProduct.order?.orderNo }}</b>
+            <div class="info-item">
+              <span class="label">{{ 'STATUS' | translate }}</span>
+
+              <span class="badge fw-bold px-4 py-2" style="width: fit-content;" [ngClass]="{
+      'badge-light-warning': orderProduct.orderStatus == 0,
+      'badge-light-primary': orderProduct.orderStatus == 1,
+      'badge-light-danger': orderProduct.orderStatus == 2,
+      'badge-light-info': orderProduct.orderStatus == 3,
+      'badge-light-success': orderProduct.orderStatus == 4
+    }">
+                {{ orderProduct.orderStatusStr }}
               </span>
+            </div>
 
-              <span class="dot"></span>
+            <div class="info-item" *ngIf="orderProduct.orderStatus != 0">
+              <span class="label">{{ 'DATE' | translate }}</span>
+              <span class="value">{{ orderProduct.proccessDate || '-' }}</span>
+            </div>
 
-              <span>
-                {{ 'ORDER_DATE' | translate }}:
-                <b>{{ orderProduct.orderDate }}</b>
+            <div class="info-item">
+              <span class="label">{{ 'INVOICE_ADDRESS' | translate }}</span>
+              <span class="value">
+                {{ orderProduct.order?.invoiceAddress?.district }}/{{ orderProduct.order?.invoiceAddress?.city }}
+              </span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">{{ 'AMOUNT_TL' | translate }}</span>
+              <span class="value value--price">
+                {{ orderProduct.product?.price?.toFixed(2) }} ₺
               </span>
             </div>
           </div>
+        </div>
 
-          <div class="text-end">
-            <div class="text-muted fs-8">{{ 'AMOUNT_TL' | translate }}</div>
-            <div class="text-primary fw-bolder fs-2">
-              {{ orderProduct.product?.price?.toFixed(2) }} ₺
-            </div>
-          </div>
+        <div class="card-footer">
+          <button *ngIf="orderProduct.orderStatus != 4" (click)="openEditModal()" class="btn btn-primary w-100">
+            {{ 'UPDATE_STATUS' | translate }}
+          </button>
 
+          <button *ngIf="orderProduct.orderStatus == 4" (click)="openInvoiceModal()" class="btn btn-primary w-100">
+            {{ 'UPLOAD_INVOICE' | translate }}
+          </button>
+
+          <button type="button" class="btn btn-light-primary mt-5 w-100" (click)="backToList()">
+            <i class="ki-duotone ki-arrow-left fs-4 me-1"></i>
+            {{ 'SUPPORT_MANAGEMENT.BACK' | translate }}
+          </button>
         </div>
       </div>
+    </div>
 
-      <!-- BODY -->
-      <div class="card-body px-7 pt-0 pb-7">
-
-        <!-- 🔥 INLINE INFO BAR -->
-        <div class="info-inline">
-
-          <!-- STATUS -->
-          <div class="info-inline__item">
-            <span class="label">{{ 'STATUS' | translate }}</span>
-
-            <span
-              class="status-pill"
-              [ngClass]="{
-                'status-pill--warning': orderProduct.orderStatus == 0,
-                'status-pill--info': orderProduct.orderStatus == 1 || orderProduct.orderStatus == 2,
-                'status-pill--primary': orderProduct.orderStatus == 3,
-                'status-pill--success': orderProduct.orderStatus == 4
-              }"
-            >
-              {{ orderProduct.orderStatusStr }}
-            </span>
-
-            <span *ngIf="orderProduct.orderStatus != 0" class="sub">
-              {{ orderProduct.proccessDate }}
-            </span>
+    <!-- RIGHT -->
+    <div class="product-detail-panel">
+      <div class="card h-100">
+        <div class="card-header border-0 flex-column align-items-start">
+          <div class="badge badge-light-primary mb-5">{{ 'PRODUCT' | translate }}</div>
+          <h3 class="card-title mb-2">{{ orderProduct.product?.name }}</h3>
+          <div class="product-price">
+            {{ orderProduct.product?.price?.toFixed(2) }} ₺
           </div>
-
-          <!-- INVOICE -->
-          <div class="info-inline__item">
-            <span class="label">{{ 'INVOICE_ADDRESS' | translate }}</span>
-
-            <span class="value">
-              {{ orderProduct.order?.invoiceAddress?.address }}
-            </span>
-
-            <span class="sub">
-              {{ orderProduct.order?.invoiceAddress?.district }}/{{ orderProduct.order?.invoiceAddress?.city }}
-            </span>
-          </div>
-
         </div>
 
-        <!-- PRODUCT -->
-        <div class="product-box">
-
-          <div>
-            <div class="product-box__label">{{ 'PRODUCT' | translate }}</div>
-
-            <div class="product-box__title">
-              {{ orderProduct.product?.name }}
+        <div class="card-body">
+          <div class="product-summary-box">
+            <div class="product-summary-box__item">
+              <span class="label">{{ 'PRODUCT' | translate }}</span>
+              <span class="value">{{ orderProduct.product?.name || '-' }}</span>
             </div>
 
-            <div class="product-box__price">
-              {{ orderProduct.product?.price?.toFixed(2) }} ₺
+            <div class="product-summary-box__item">
+              <span class="label">{{ 'AMOUNT_TL' | translate }}</span>
+              <span class="value">{{ orderProduct.product?.price?.toFixed(2) }} ₺</span>
+            </div>
+
+            <div class="product-summary-box__item">
+              <span class="label">{{ 'STATUS' | translate }}</span>
+              <span class="value">{{ orderProduct.orderStatusStr || '-' }}</span>
             </div>
           </div>
 
-          <div class="product-box__action">
+          <div class="product-hero">
+            <div class="product-hero__content">
+              <div class="product-hero__title">
+                {{ orderProduct.product?.name }}
+              </div>
 
-            <button
-              *ngIf="orderProduct.orderStatus != 4"
-              (click)="openEditModal()"
-              class="btn btn-primary"
-            >
-              {{ 'UPDATE_STATUS' | translate }}
-            </button>
+              <div class="product-hero__subtitle">
+                {{ 'ORDER_NUMBER' | translate }} #{{ orderProduct.order?.orderNo }}
+              </div>
 
-            <button
-              *ngIf="orderProduct.orderStatus == 4"
-              (click)="openInvoiceModal()"
-              class="btn btn-light-primary"
-            >
-              {{ 'UPLOAD_INVOICE' | translate }}
-            </button>
-
+              <div class="product-hero__price">
+                {{ orderProduct.product?.price?.toFixed(2) }} ₺
+              </div>
+            </div>
           </div>
-
         </div>
-
       </div>
     </div>
   </div>

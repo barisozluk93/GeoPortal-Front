@@ -18,4 +18,5 @@ export enum PermissionEnum {
   "OrganizationScene.Save.Permission" = 62,
   "OrganizationScene.Edit.Permission" = 63,
   "OrganizationScene.Delete.Permission" = 64,
+  "SupportScene.Edit.Permission" = 58,
 }

@@ -13,7 +13,7 @@
       class="svg-icon svg-icon-2 svg-icon-lg-3 svg-icon-gray-800 position-absolute top-50 translate-middle-y ms-5"></span>
     <!--end::Icon-->
     <!--begin::Input-->
-    <input type="text" class="search-input form-control form-control-solid ps-13" name="search"
+    <input type="text" class="search-input form-control ps-13" name="search"
       [ngModel]="searchText | async" (ngModelChange)="updateSearchText($event)" placeholder="Search..."
       data-kt-search-element="input">
     <!--end::Input-->
@@ -524,7 +524,7 @@
         <!--end::Heading-->
         <!--begin::Input group-->
         <div class="mb-5">
-          <input type="text" class="form-control form-control-sm form-control-solid" placeholder="Contains the word"
+          <input type="text" class="form-control form-control-sm" placeholder="Contains the word"
             name="query">
         </div>
         <!--end::Input group-->
@@ -562,13 +562,13 @@
         <!--end::Input group-->
         <!--begin::Input group-->
         <div class="mb-5">
-          <input type="text" name="assignedto" class="form-control form-control-sm form-control-solid"
+          <input type="text" name="assignedto" class="form-control form-control-sm"
             placeholder="Assigned to" value="">
         </div>
         <!--end::Input group-->
         <!--begin::Input group-->
         <div class="mb-5">
-          <input type="text" name="collaborators" class="form-control form-control-sm form-control-solid"
+          <input type="text" name="collaborators" class="form-control form-control-sm"
             placeholder="Collaborators" value="">
         </div>
         <!--end::Input group-->
@@ -617,7 +617,7 @@
         <div class="row mb-8">
           <!--begin::Col-->
           <div class="col-6">
-            <input type="number" name="date_number" class="form-control form-control-sm form-control-solid"
+            <input type="number" name="date_number" class="form-control form-control-sm"
               placeholder="Lenght" value="">
           </div>
           <!--end::Col-->

@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ColumnModel } from 'src/app/models/column-model';
 import { PaginationModel } from 'src/app/models/pagination.model';
+import { PermissionEnum } from 'src/app/enums/permission.enum';
+
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
+import { AuthService } from '../auth';
+
 import { SupportManagementService } from './support-management.service';
-import { TranslateService } from '@ngx-translate/core';
 import { SupportTicketModel } from './models/support-ticket.model';
-import { HttpParams } from '@angular/common/http';
 
 interface DatatableFilterModel {
   [key: string]: any;
@@ -19,13 +24,15 @@ interface DatatableFilterModel {
 })
 export class SupportManagementComponent implements OnInit {
   header = 'SUPPORT_MANAGEMENT.HEADER';
-  isDetailModalOpen = false;
-  isSubmitting = false;
-  replyForm: FormGroup
 
   dataSource: SupportTicketModel[] = [];
-  selectedTicket: SupportTicketModel | null = null;
   totalCount = 0;
+
+  hasEditPermission = false;
+  hasDeletePermission = false;
+  hasNewRecordPermission = false;
+  hasExportPermission = false;
+  hasShowPermission = false;
 
   filterModel: DatatableFilterModel = {};
 
@@ -72,6 +79,7 @@ export class SupportManagementComponent implements OnInit {
     { label: 'SUPPORT_MANAGEMENT.STATUS_CLOSED', value: 'Closed' },
     { label: 'SUPPORT_MANAGEMENT.STATUS_SPAM', value: 'Spam' },
   ];
+
   statusOptionsTemp = [
     { label: 'SUPPORT_MANAGEMENT.STATUS_NEW', value: 'New' },
     { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_ADMIN', value: 'WaitingForAdmin' },
@@ -82,33 +90,58 @@ export class SupportManagementComponent implements OnInit {
   ];
 
   constructor(
-    private fb: FormBuilder,
     private supportManagementService: SupportManagementService,
     private alertService: AlertService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.statusOptions.forEach(item => {
-      item.label = this.translate.instant(item.label);
-    });
+    this.controlPermissions();
+
+    this.statusOptions = this.statusOptions.map((item) => ({
+      ...item,
+      label: this.translate.instant(item.label),
+    }));
 
     this.translate.onLangChange.subscribe(() => {
-      let tempList: any = [];
+      this.statusOptions = this.statusOptionsTemp.map((item) => ({
+        label: this.translate.instant(item.label),
+        value: item.value,
+      }));
 
-      this.statusOptionsTemp.forEach(item => {
-        const tempItem = { label: this.translate.instant(item.label), value: item.value };
-        tempList.push(tempItem);
-      });
-      this.statusOptions = tempList;
+      this.setColumnList();
     });
 
     this.setColumnList();
     this.loadTickets();
-    this.initForm();
+  }
 
-    this.translate.onLangChange.subscribe(() => {
-      this.setColumnList();
+  controlPermissions(): void {
+    this.authService.currentUserSubject.asObservable().subscribe((result) => {
+      if (result?.permissions) {
+        const permissionList = JSON.parse(result.permissions) as number[];
+
+        this.hasEditPermission = permissionList.includes(
+          PermissionEnum['SupportScene.Edit.Permission']
+        );
+
+        this.hasExportPermission = permissionList.includes(
+          PermissionEnum['Table.Export.Permission']
+        );
+
+        // İstersen bunları da backend permissionlarına göre açarsın
+        this.hasDeletePermission = false;
+        this.hasNewRecordPermission = false;
+        this.hasShowPermission = false;
+      } else {
+        this.hasEditPermission = false;
+        this.hasExportPermission = false;
+        this.hasDeletePermission = false;
+        this.hasNewRecordPermission = false;
+        this.hasShowPermission = false;
+      }
     });
   }
 
@@ -116,43 +149,45 @@ export class SupportManagementComponent implements OnInit {
     const currentLang = this.translate.currentLang;
 
     if (currentLang === 'tr') {
-      this.columnList = this.columnListTr.map(item => ({
+      this.columnList = this.columnListTr.map((item) => ({
         ...item,
-        name: this.translate.instant(item.name)
+        name: this.translate.instant(item.name),
       }));
-    } else {
-      this.columnList = this.columnListEn.map(item => ({
-        ...item,
-        name: this.translate.instant(item.name)
-      }));
+      return;
     }
-  }
 
-  initForm() {
-    this.replyForm = this.fb.group({
-      status: ['WaitingForCustomer', Validators.required],
-      adminEmail: ['', [Validators.required, Validators.email]],
-      message: ['', [Validators.required, Validators.minLength(2)]],
-    });
+    this.columnList = this.columnListEn.map((item) => ({
+      ...item,
+      name: this.translate.instant(item.name),
+    }));
   }
-
 
   loadTickets(): void {
     const filterParams = this.buildFilterQueryParams(this.filterModel);
 
-    this.supportManagementService.paging(this.paginationModel.pageNumber, this.paginationModel.pageSize, filterParams)
-      .subscribe(result => {
-        const rawData = result?.data.items || [];
-        const mapped = rawData.map((item: SupportTicketModel) => ({
-          ...item,
-          lastMessageAtDisplay: this.formatDate(item.lastMessageAtUtc),
-        }));
+    this.supportManagementService
+      .paging(this.paginationModel.pageNumber, this.paginationModel.pageSize, filterParams)
+      .subscribe({
+        next: (result) => {
+          const rawData = result?.data?.items || [];
 
-        const filtered = this.applyClientFilters(mapped);
+          const mapped = rawData.map((item: SupportTicketModel) => ({
+            ...item,
+            lastMessageAtDisplay: this.formatDate(item.lastMessageAtUtc),
+          }));
 
-        this.totalCount = filtered.length;
-        this.dataSource = filtered;
-        this.calculateSummary(rawData);
+          const filtered = this.applyClientFilters(mapped);
+
+          this.totalCount = filtered.length;
+          this.dataSource = filtered;
+          this.calculateSummary(rawData);
+        },
+        error: () => {
+          this.alertService.createAlert(
+            'danger',
+            this.translate.instant('SUPPORT_MANAGEMENT.ALERT.LIST_ERROR')
+          );
+        },
       });
   }
 
@@ -167,108 +202,12 @@ export class SupportManagementComponent implements OnInit {
     this.loadTickets();
   }
 
-  openDetailModal(id: number): void {
-    this.supportManagementService.getTicketById(id).subscribe({
-      next: (result) => {
-        this.selectedTicket = result?.data || null;
-
-        if (!this.selectedTicket) {
-          this.alertService.createAlert('warning', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.TICKET_NOT_FOUND'));
-          return;
-        }
-
-        this.replyForm.patchValue({
-          status: this.selectedTicket.status || 'WaitingForCustomer',
-          adminEmail: this.selectedTicket.assignedAdminEmail || '',
-          message: '',
-        });
-
-        this.isDetailModalOpen = true;
-      },
-      error: () => {
-        this.alertService.createAlert('danger', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.TICKET_DETAIL_ERROR'));
-      },
-    });
-  }
-
-  openReplyModal(id: number): void {
-    this.openDetailModal(id);
-  }
-
-  closeDetailModal(): void {
-    this.isDetailModalOpen = false;
-    this.selectedTicket = null;
-    this.replyForm.reset({
-      status: 'WaitingForCustomer',
-      adminEmail: '',
-      message: '',
-    });
-  }
-
-  submitReply(): void {
-    if (!this.selectedTicket || this.replyForm.invalid) {
-      this.replyForm.markAllAsTouched();
+  openDetailPage(id: number): void {
+    if (!id) {
       return;
     }
 
-    this.isSubmitting = true;
-
-    const formValue = this.replyForm.getRawValue();
-
-    this.supportManagementService.replyTicket(this.selectedTicket.id, {
-      adminEmail: formValue.adminEmail,
-      message: formValue.message,
-    }).subscribe({
-      next: () => {
-        this.supportManagementService.updateTicketStatus(this.selectedTicket!.id, {
-          status: formValue.status,
-        }).subscribe({
-          next: () => {
-            this.isSubmitting = false;
-            this.alertService.createAlert('success', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.REPLY_SUCCESS'));
-            this.openDetailModal(this.selectedTicket!.id);
-            this.loadTickets();
-          },
-          error: () => {
-            this.isSubmitting = false;
-            this.alertService.createAlert('warning', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.REPLY_SUCCESS_STATUS_ERROR'));
-            this.loadTickets();
-          },
-        });
-      },
-      error: () => {
-        this.isSubmitting = false;
-        this.alertService.createAlert('danger', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.REPLY_ERROR'));
-      },
-    });
-  }
-
-  updateStatusOnly(): void {
-    if (!this.selectedTicket) {
-      return;
-    }
-
-    const status = this.replyForm.get('status')?.value;
-
-    if (!status) {
-      this.replyForm.get('status')?.markAsTouched();
-      return;
-    }
-
-    this.isSubmitting = true;
-
-    this.supportManagementService.updateTicketStatus(this.selectedTicket.id, { status }).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.alertService.createAlert('success', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.STATUS_UPDATED'));
-        this.openDetailModal(this.selectedTicket!.id);
-        this.loadTickets();
-      },
-      error: () => {
-        this.isSubmitting = false;
-        this.alertService.createAlert('danger', this.translate.instant('SUPPORT_MANAGEMENT.ALERT.STATUS_UPDATE_ERROR'));
-      },
-    });
+    this.router.navigate(['/supportmanagement/', id]);
   }
 
   getStatusLabel(status: string): string {
@@ -311,57 +250,61 @@ export class SupportManagementComponent implements OnInit {
 
   private calculateSummary(list: SupportTicketModel[]): void {
     this.summary = {
-      newCount: list.filter(x => x.status === 'New').length,
-      waitingForAdminCount: list.filter(x => x.status === 'WaitingForAdmin').length,
-      waitingForCustomerCount: list.filter(x => x.status === 'WaitingForCustomer').length,
-      customerRepliedCount: list.filter(x => x.status === 'CustomerReplied').length,
-      closedCount: list.filter(x => x.status === 'Closed').length,
+      newCount: list.filter((x) => x.status === 'New').length,
+      waitingForAdminCount: list.filter((x) => x.status === 'WaitingForAdmin').length,
+      waitingForCustomerCount: list.filter((x) => x.status === 'WaitingForCustomer').length,
+      customerRepliedCount: list.filter((x) => x.status === 'CustomerReplied').length,
+      closedCount: list.filter((x) => x.status === 'Closed').length,
     };
-  }
-
-  private applyPagination(list: any[]): any[] {
-    const start = (this.paginationModel.pageNumber - 1) * this.paginationModel.pageSize;
-    const end = start + this.paginationModel.pageSize;
-    return list.slice(start, end);
   }
 
   private applyClientFilters(list: any[]): any[] {
     let filtered = [...list];
 
     if (this.filterModel?.ticketNo) {
-      filtered = filtered.filter(x =>
-        (x.ticketNo || '').toLowerCase().includes(String(this.filterModel.ticketNo).toLowerCase())
+      filtered = filtered.filter((x) =>
+        (x.ticketNo || '')
+          .toString()
+          .toLowerCase()
+          .includes(String(this.filterModel.ticketNo).toLowerCase())
       );
     }
 
     if (this.filterModel?.customerName) {
-      filtered = filtered.filter(x =>
-        (x.customerName || '').toLowerCase().includes(String(this.filterModel.customerName).toLowerCase())
+      filtered = filtered.filter((x) =>
+        (x.customerName || '')
+          .toLowerCase()
+          .includes(String(this.filterModel.customerName).toLowerCase())
       );
     }
 
     if (this.filterModel?.customerEmail) {
-      filtered = filtered.filter(x =>
-        (x.customerEmail || '').toLowerCase().includes(String(this.filterModel.customerEmail).toLowerCase())
+      filtered = filtered.filter((x) =>
+        (x.customerEmail || '')
+          .toLowerCase()
+          .includes(String(this.filterModel.customerEmail).toLowerCase())
       );
     }
 
     if (this.filterModel?.subject) {
-      filtered = filtered.filter(x =>
-        (x.subject || '').toLowerCase().includes(String(this.filterModel.subject).toLowerCase())
+      filtered = filtered.filter((x) =>
+        (x.subject || '')
+          .toLowerCase()
+          .includes(String(this.filterModel.subject).toLowerCase())
       );
     }
 
     if (this.filterModel?.status) {
-      filtered = filtered.filter(x => x.status === this.filterModel.status);
+      filtered = filtered.filter((x) => x.status === this.filterModel.status);
     }
-
 
     return filtered;
   }
 
   private formatDate(date: string): string {
-    if (!date) return '-';
+    if (!date) {
+      return '-';
+    }
 
     const value = new Date(date);
 
@@ -388,5 +331,52 @@ export class SupportManagementComponent implements OnInit {
     });
 
     return params;
+  }
+
+  exportExcel(event: boolean): void {
+    this.supportManagementService.exportExcel().subscribe({
+      next: (response) => {
+        const blob = response.body;
+
+        if (!blob) {
+          return;
+        }
+
+        const fileName =
+          this.getFileNameFromHeader(response.headers.get('content-disposition')) ||
+          'DestekTalepleri.xlsx';
+
+        this.downloadBlob(blob, fileName);
+      },
+      error: (err) => {
+        console.error('Excel export hatası:', err);
+
+        this.alertService.createAlert(
+          'danger',
+          this.translate.instant('SUPPORT_MANAGEMENT.ALERT.EXPORT_ERROR')
+        );
+      },
+    });
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+  }
+
+  private getFileNameFromHeader(contentDisposition: string | null): string | null {
+    if (!contentDisposition) {
+      return null;
+    }
+
+    const match = /filename="?([^"]+)"?/i.exec(contentDisposition);
+    return match?.[1] ?? null;
   }
 }

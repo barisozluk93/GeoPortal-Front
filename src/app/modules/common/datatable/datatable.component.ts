@@ -100,7 +100,7 @@ export class DataTableComponent implements OnInit, OnDestroy {
     { label: 'SUPPORT_MANAGEMENT.STATUS_SPAM', value: 'Spam' },
   ];
 
-  constructor(private authService: AuthService, private translate: TranslateService) {}
+  constructor(private authService: AuthService, private translate: TranslateService) { }
 
   ngOnInit(): void {
     this.statusFilterOptions.forEach(item => {
@@ -157,7 +157,7 @@ export class DataTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   toggleFilters(): void {
     this.showFilters = !this.showFilters;
@@ -240,17 +240,17 @@ export class DataTableComponent implements OnInit, OnDestroy {
   getSupportStatusLabel(status: string): string {
     switch (status) {
       case 'New':
-        return 'Yeni';
+        return this.translate.currentLang == "tr" ? 'Yeni' : 'New';
       case 'WaitingForAdmin':
-        return 'Admin Bekliyor';
+        return this.translate.currentLang == "tr" ? 'Admin Bekliyor' : 'Waiting for Admin';
       case 'WaitingForCustomer':
-        return 'Müşteri Bekliyor';
+        return this.translate.currentLang == "tr" ? 'Müşteri Bekliyor' : 'Waiting for Customer';
       case 'CustomerReplied':
-        return 'Müşteri Cevapladı';
+        return this.translate.currentLang == "tr" ? 'Müşteri Cevapladı' : 'Customer Replied';
       case 'Closed':
-        return 'Kapalı';
+        return this.translate.currentLang == "tr" ? 'Kapalı' : 'Closed';
       case 'Spam':
-        return 'Spam';
+        return this.translate.currentLang == "tr" ? 'Spam' : 'Spam';
       default:
         return '-';
     }
@@ -267,11 +267,46 @@ export class DataTableComponent implements OnInit, OnDestroy {
       case 'CustomerReplied':
         return 'badge-light-success';
       case 'Closed':
-        return 'badge-light-dark';
+        return 'badge-light-danger';
       case 'Spam':
         return 'badge-light-danger';
       default:
         return 'badge-light';
+    }
+  }
+
+  getOrderStatusBadgeClass(status: string | number): string {
+    switch (status) {
+      case 0:
+      case this.translate.currentLang == "tr" ? 'Onay Bekliyor' : 'Pending Approval':
+        return 'badge-light-warning';
+
+      case 1:
+      case this.translate.currentLang == "tr" ? 'Onaylandı' : 'Approved':
+        return 'badge-light-primary';
+
+      case 2:
+      case this.translate.currentLang == "tr" ? 'Reddedildi' : 'Rejected':
+        return 'badge-light-danger';
+
+      case 3:
+      case this.translate.currentLang == "tr" ? 'Hazırlanıyor' : 'Preparing':
+        return 'badge-light-info';
+
+      case 4:
+      case this.translate.currentLang == "tr" ? 'Tamamlandı' : 'Completed':
+        return 'badge-light-success';
+
+      case 5:
+      case this.translate.currentLang == "tr" ? 'Sipariş Tamamlandı' : 'Order Completed':
+        return 'badge-light-success';
+
+      case 6:
+      case this.translate.currentLang == "tr" ? 'Sipariş Henüz Tamamlanmadı' : 'Order Not Yet Completed':
+        return 'badge-light-danger';
+
+      default:
+        return 'badge-light-dark';
     }
   }
 }

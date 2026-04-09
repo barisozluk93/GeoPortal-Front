@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { LayoutService } from '../../core/layout.service';
 import { MenuComponent } from '../../../kt/components';
 import { AuthService } from 'src/app/modules/auth';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
   selector: 'app-header',
@@ -23,8 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isScrolled: boolean = false;
 
   @ViewChild('ktPageTitle', { static: true }) ktPageTitle!: ElementRef;
-
-  @Input() isAdmin: boolean = false;
+  isAdmin: boolean = false;
   @Input() isUserLoggedIn: boolean = false;
   @Input() isMobile: boolean = false;
 
@@ -39,6 +39,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isAdmin = this.auth.currentUserValue?.roles.includes(RoleEnum.SuperAdmin) ? true : false;
+
     this.headerContainerCssClasses =
       this.layout.getStringCSSClasses('headerContainer');
 

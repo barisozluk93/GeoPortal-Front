@@ -45,10 +45,10 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
   private scrollParents: HTMLElement[] = [];
   private removeScrollListeners: Array<() => void> = [];
   private removeOutsideListeners: Array<() => void> = [];
+  private openDirection: 'up' | 'down' = 'down';
 
-  onChange: any = () => { };
-  onTouched: any = () => { };
-
+  onChange: any = () => {};
+  onTouched: any = () => {};
 
   ngAfterViewInit(): void {
     this.scrollParents = this.getScrollParents(this.triggerRef.nativeElement);
@@ -111,7 +111,7 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
   }
 
   openDropdown(): void {
-    if (this.isOpen) return;
+    if (this.isOpen || this.disabled) return;
 
     this.isOpen = true;
     this.createDropdown();
@@ -187,31 +187,21 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
     }
 
     const dropdown = document.createElement('div');
-    dropdown.className = 'custom-select-dropdown-portal';
+    dropdown.className = 'custom-select-dropdown';
 
     const list = document.createElement('div');
     list.className = 'custom-select-dropdown-list';
 
-    this.items.forEach(item => {
-      const option = document.createElement('div');
-
-      const isActive = this.multiple
-        ? Array.isArray(this.value) && this.value.includes(item[this.bindValue])
-        : item[this.bindValue] == this.value;
-
-      option.className = `custom-select-dropdown-item${isActive ? ' active' : ''}`;
-      option.innerHTML = `
-        <span class="custom-select-dropdown-item__label">${this.escapeHtml(item[this.bindLabel] ?? '')}</span>
-        ${isActive ? '<span class="custom-select-dropdown-item__check">✓</span>' : ''}
-      `;
-
-      option.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.select(item);
+    if (!this.items || this.items.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'custom-select-dropdown-empty';
+      empty.textContent = 'Kayıt bulunamadı';
+      list.appendChild(empty);
+    } else {
+      this.items.forEach(item => {
+        list.appendChild(this.createOptionElement(item));
       });
-
-      list.appendChild(option);
-    });
+    }
 
     dropdown.appendChild(list);
     document.body.appendChild(dropdown);
@@ -226,29 +216,40 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
 
     list.innerHTML = '';
 
-    this.items.forEach(item => {
-      const option = document.createElement('div');
-
-      const isActive = this.multiple
-        ? Array.isArray(this.value) && this.value.includes(item[this.bindValue])
-        : item[this.bindValue] == this.value;
-
-      option.className = `custom-select-dropdown-item${isActive ? ' active' : ''}`;
-      option.innerHTML = `
-        <span class="custom-select-dropdown-item__label">${this.escapeHtml(item[this.bindLabel] ?? '')}</span>
-        ${isActive ? '<span class="custom-select-dropdown-item__check">✓</span>' : ''}
-      `;
-
-      option.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.select(item);
+    if (!this.items || this.items.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'custom-select-dropdown-empty';
+      empty.textContent = 'Kayıt bulunamadı';
+      list.appendChild(empty);
+    } else {
+      this.items.forEach(item => {
+        list.appendChild(this.createOptionElement(item));
       });
-
-      list.appendChild(option);
-    });
+    }
 
     this.positionDropdown();
     requestAnimationFrame(() => this.positionDropdown());
+  }
+
+  private createOptionElement(item: any): HTMLElement {
+    const option = document.createElement('div');
+
+    const isActive = this.multiple
+      ? Array.isArray(this.value) && this.value.includes(item[this.bindValue])
+      : item[this.bindValue] == this.value;
+
+    option.className = `custom-select-dropdown-item${isActive ? ' active' : ''}`;
+    option.innerHTML = `
+      <span class="custom-select-dropdown-item__label">${this.escapeHtml(item[this.bindLabel] ?? '')}</span>
+      ${isActive ? '<span class="custom-select-dropdown-item__check">✓</span>' : ''}
+    `;
+
+    option.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.select(item);
+    });
+
+    return option;
   }
 
   private positionDropdown(): void {
@@ -262,12 +263,15 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
     const gap = 8;
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
-    const dropdownContentHeight = Math.min(Math.max(this.items.length * 44 + 16, 120), 260);
+    const optionHeight = 42;
+    const paddingHeight = 16;
+    const dropdownContentHeight = Math.min(Math.max(this.items.length * optionHeight + paddingHeight, 120), 260);
 
     const spaceBelow = viewportHeight - rect.bottom - gap;
     const spaceAbove = rect.top - gap;
 
     const openUp = spaceBelow < dropdownContentHeight && spaceAbove > spaceBelow;
+    this.openDirection = openUp ? 'up' : 'down';
 
     const availableHeight = Math.max(120, openUp ? spaceAbove : spaceBelow);
     const actualHeight = Math.min(dropdownContentHeight, availableHeight);
@@ -286,6 +290,9 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
     top = Math.max(8, Math.min(top, viewportHeight - actualHeight - 8));
     left = Math.max(8, left);
     width = Math.max(160, Math.min(width, viewportWidth - left - 8));
+
+    this.dropdownEl.classList.remove('is-open-up', 'is-open-down');
+    this.dropdownEl.classList.add(openUp ? 'is-open-up' : 'is-open-down');
 
     this.dropdownEl.style.position = 'fixed';
     this.dropdownEl.style.top = `${top}px`;

@@ -1,4 +1,11 @@
-import { Component } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 interface DocNavItem {
@@ -20,22 +27,35 @@ interface DocEndpoint {
   curlExample?: string;
 }
 
+type SidebarMode = 'static' | 'fixed' | 'bottom';
+
 @Component({
   selector: 'app-documentation',
   templateUrl: './documentation.component.html',
   styleUrls: ['./documentation.component.scss']
 })
-export class DocumentationComponent {
+export class DocumentationComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('sidebarColumn') sidebarColumnRef!: ElementRef<HTMLElement>;
+  @ViewChild('sidebarCard') sidebarCardRef!: ElementRef<HTMLElement>;
+  @ViewChild('mainContent') mainContentRef!: ElementRef<HTMLElement>;
+
   readonly baseUrl = environment.appUrl;
+
+  sidebarMode: SidebarMode = 'static';
+  sidebarStyles: Record<string, string> = {};
+
+  private readonly stickyTop = 90;
+  private readonly mobileBreakpoint = 1199;
+  private resizeObserver?: ResizeObserver;
+  private rafId = 0;
 
   readonly navItems: DocNavItem[] = [
     { id: 'overview', labelKey: 'API_DOC.NAV.OVERVIEW' },
     { id: 'authentication', labelKey: 'API_DOC.NAV.AUTHENTICATION' },
     { id: 'response-format', labelKey: 'API_DOC.NAV.RESPONSE_FORMAT' },
     { id: 'endpoint-1', labelKey: 'API_DOC.NAV.SATELLITE_DATA' },
-    { id: 'endpoint-2', labelKey: 'API_DOC.NAV.START_PROCESSING' },
-    { id: 'endpoint-3', labelKey: 'API_DOC.NAV.PROCESS_STATUS' },
-    { id: 'endpoint-4', labelKey: 'API_DOC.NAV.PROCESSED_RESULT' },
+    { id: 'endpoint-2', labelKey: 'API_DOC.NAV.PROCESS_STATUS' },
+    { id: 'endpoint-3', labelKey: 'API_DOC.NAV.PROCESSED_RESULT' },
     { id: 'product-model', labelKey: 'API_DOC.NAV.PRODUCT_MODEL' },
     { id: 'error-codes', labelKey: 'API_DOC.NAV.ERROR_CODES' }
   ];
@@ -63,35 +83,18 @@ export class DocumentationComponent {
 }`,
       responseBody: `{
   "isSuccess": true,
-  "message": "Satellite data listed successfully.",
-  "data": [
-    {
-      "id": 101,
-      "name": "Istanbul Satellite Image - 2026-03-20",
-      "isDeleted": false,
-      "city": "Istanbul",
-      "district": "Besiktas",
-      "acquisitionDate": "2026-03-20T00:00:00",
-      "provider": "GeoPortal",
-      "resolution": 0.5,
-      "cloudRate": 12,
-      "areaKm2": 18.7,
-      "thumbnailUrl": "https://example.com/thumb.jpg",
-      "previewUrl": "https://example.com/preview.jpg",
-      "description": "Satellite image matched with requested polygon.",
-      "isOrthorectified": true,
-      "isPansharpened": true,
-      "isClassified": false,
-      "classes": []
-    }
-  ]
+  "message": "Satellite data retrieved and processing started successfully.",
+  "data": {
+    "processId": "PROC-20260401-0001",
+    "status": "Queued"
+  }
 }`,
       notesKeys: [
         'API_DOC.ENDPOINTS.SATELLITE_DATA.NOTES.0',
         'API_DOC.ENDPOINTS.SATELLITE_DATA.NOTES.1',
         'API_DOC.ENDPOINTS.SATELLITE_DATA.NOTES.2'
       ],
-      curlExample: `curl -X POST ${this.baseUrl}"/geoPortalApi/map/getSatelliteDatas" \\
+      curlExample: `curl -X POST "${this.baseUrl}/geoportalApi/map/getSatelliteDatas" \\
   -H "Content-Type: application/json" \\
   -H "x-api-key: YOUR_API_KEY" \\
   -d '{
@@ -106,55 +109,9 @@ export class DocumentationComponent {
     },
     {
       id: 'endpoint-2',
-      titleKey: 'API_DOC.ENDPOINTS.START_PROCESSING.TITLE',
-      method: 'POST',
-      path: '/geoportalApi/map/startImageProcessing',
-      descriptionKey: 'API_DOC.ENDPOINTS.START_PROCESSING.DESCRIPTION',
-      authKey: 'API_DOC.COMMON.APIKEY_REQUIRED',
-      requestHeaders: [
-        { key: 'Content-Type', value: 'application/json', required: true },
-        { key: 'x-api-key', value: 'YOUR_API_KEY', required: true }
-      ],
-      requestBody: `{
-  "productId": 101,
-  "operations": {
-    "orthorectification": true,
-    "pansharpen": true,
-    "classification": true
-  }
-}`,
-      responseBody: `{
-  "isSuccess": true,
-  "message": "Image processing started successfully.",
-  "data": {
-    "processId": "PROC-20260401-0001",
-    "productId": 101,
-    "status": "Queued",
-    "createdAt": "2026-04-01T11:25:00"
-  }
-}`,
-      notesKeys: [
-        'API_DOC.ENDPOINTS.START_PROCESSING.NOTES.0',
-        'API_DOC.ENDPOINTS.START_PROCESSING.NOTES.1',
-        'API_DOC.ENDPOINTS.START_PROCESSING.NOTES.2'
-      ],
-      curlExample: `curl -X POST "${this.baseUrl}/geoportalApi/map/startImageProcessing" \\
-  -H "Content-Type: application/json" \\
-  -H "x-api-key: YOUR_API_KEY" \\
-  -d '{
-    "productId": 101,
-    "operations": {
-      "orthorectification": true,
-      "pansharpen": true,
-      "classification": true
-    }
-  }'`
-    },
-    {
-      id: 'endpoint-3',
       titleKey: 'API_DOC.ENDPOINTS.PROCESS_STATUS.TITLE',
       method: 'GET',
-      path: '/geoportalApi/map/getImageProcessingStatus/{processId}',
+      path: '/geoportalApi/map/getStatus/{processId}',
       descriptionKey: 'API_DOC.ENDPOINTS.PROCESS_STATUS.DESCRIPTION',
       authKey: 'API_DOC.COMMON.APIKEY_REQUIRED',
       requestHeaders: [
@@ -165,11 +122,7 @@ export class DocumentationComponent {
   "message": "Processing status retrieved successfully.",
   "data": {
     "processId": "PROC-20260401-0001",
-    "productId": 101,
-    "status": "Processing",
-    "progress": 65,
-    "startedAt": "2026-04-01T11:25:00",
-    "completedAt": null
+    "status": "Processing"
   }
 }`,
       notesKeys: [
@@ -177,11 +130,11 @@ export class DocumentationComponent {
         'API_DOC.ENDPOINTS.PROCESS_STATUS.NOTES.1',
         'API_DOC.ENDPOINTS.PROCESS_STATUS.NOTES.2'
       ],
-      curlExample: `curl -X GET "${this.baseUrl}/geoportalApi/map/getImageProcessingStatus/PROC-20260401-0001" \\
+      curlExample: `curl -X GET "${this.baseUrl}/geoportalApi/map/getStatus/PROC-20260401-0001" \\
   -H "x-api-key: YOUR_API_KEY"`
     },
     {
-      id: 'endpoint-4',
+      id: 'endpoint-3',
       titleKey: 'API_DOC.ENDPOINTS.PROCESSED_RESULT.TITLE',
       method: 'GET',
       path: '/geoportalApi/map/getProcessedSatelliteImage/{processId}',
@@ -195,11 +148,9 @@ export class DocumentationComponent {
   "message": "Processed satellite image retrieved successfully.",
   "data": {
     "processId": "PROC-20260401-0001",
-    "productId": 101,
     "status": "Completed",
     "processedImageUrl": "https://example.com/results/processed-image.tif",
     "previewUrl": "https://example.com/results/processed-preview.jpg",
-    "classificationGeoJsonUrl": "https://example.com/results/classification.geojson",
     "downloadUrl": "https://example.com/results/package.zip"
   }
 }`,
@@ -240,13 +191,42 @@ export class DocumentationComponent {
   ]
 }`;
 
-  scrollTo(id: string): void {
-    const element = document.getElementById(id);
-    if (!element) return;
+  ngAfterViewInit(): void {
+    this.setupObservers();
+    this.queueSidebarUpdate();
+  }
 
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
+  ngOnDestroy(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.queueSidebarUpdate();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.queueSidebarUpdate();
+  }
+
+  scrollTo(id: string): void {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const headerOffset = 100;
+    const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
+    const offsetPosition = elementPosition - headerOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
     });
   }
 
@@ -254,5 +234,81 @@ export class DocumentationComponent {
     return method === 'GET'
       ? 'method-badge method-badge--get'
       : 'method-badge method-badge--post';
+  }
+
+  private setupObservers(): void {
+    if (!this.sidebarColumnRef?.nativeElement || !this.sidebarCardRef?.nativeElement || !this.mainContentRef?.nativeElement) {
+      return;
+    }
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.queueSidebarUpdate();
+    });
+
+    this.resizeObserver.observe(this.sidebarColumnRef.nativeElement);
+    this.resizeObserver.observe(this.sidebarCardRef.nativeElement);
+    this.resizeObserver.observe(this.mainContentRef.nativeElement);
+  }
+
+  private queueSidebarUpdate(): void {
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+
+    this.rafId = requestAnimationFrame(() => {
+      this.updateSidebarPosition();
+    });
+  }
+
+  private updateSidebarPosition(): void {
+    const sidebarColumn = this.sidebarColumnRef?.nativeElement;
+    const sidebarCard = this.sidebarCardRef?.nativeElement;
+    const mainContent = this.mainContentRef?.nativeElement;
+
+    if (!sidebarColumn || !sidebarCard || !mainContent) {
+      return;
+    }
+
+    if (window.innerWidth <= this.mobileBreakpoint) {
+      this.sidebarMode = 'static';
+      this.sidebarStyles = {};
+      return;
+    }
+
+    const columnRect = sidebarColumn.getBoundingClientRect();
+    const mainRect = mainContent.getBoundingClientRect();
+    const cardHeight = sidebarCard.offsetHeight;
+    const topOffset = this.stickyTop;
+    const pageY = window.scrollY || window.pageYOffset;
+
+    const columnTopAbs = columnRect.top + pageY;
+    const mainTopAbs = mainRect.top + pageY;
+    const mainBottomAbs = mainRect.bottom + pageY;
+
+    const startStickY = Math.max(columnTopAbs, mainTopAbs) - topOffset;
+    const stopStickY = mainBottomAbs - cardHeight - topOffset;
+
+    if (pageY < startStickY) {
+      this.sidebarMode = 'static';
+      this.sidebarStyles = {};
+      return;
+    }
+
+    if (pageY >= stopStickY) {
+      this.sidebarMode = 'bottom';
+      this.sidebarStyles = {
+        top: `${Math.max(mainContent.offsetHeight - cardHeight, 0)}px`,
+        left: '0px',
+        width: `${sidebarColumn.offsetWidth}px`
+      };
+      return;
+    }
+
+    this.sidebarMode = 'fixed';
+    this.sidebarStyles = {
+      top: `${topOffset}px`,
+      left: `${columnRect.left}px`,
+      width: `${sidebarColumn.offsetWidth}px`
+    };
   }
 }

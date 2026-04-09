@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ResultModel } from 'src/app/models/result.model';
@@ -36,5 +36,12 @@ export class SupportManagementService {
 
   updateTicketStatus(id: number, data: { status: string }): Observable<ResultModel<any>> {
     return this.http.put<ResultModel<any>>(`${API_SUPPORT_URL}/${id}/status`, data);
+  }
+
+  exportExcel(): Observable<HttpResponse<Blob>> {
+    return this.http.post(`${API_SUPPORT_URL}/Export/Excel`, null, {
+      responseType: 'blob',
+      observe: 'response'
+    });
   }
 }

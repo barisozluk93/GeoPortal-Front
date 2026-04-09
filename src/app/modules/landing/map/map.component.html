@@ -132,7 +132,7 @@
 
                   <div class="search-form-row">
                     <input
-                      class="form-control form-control-lg form-control-solid"
+                      class="form-control form-control-lg form-control-solid form-control-solid"
                       [ngModel]="searchText()"
                       (ngModelChange)="searchText.set($event)"
                       [placeholder]="'MAP.SEARCH.PLACEHOLDER' | translate"
@@ -299,6 +299,8 @@
 
       <!-- MAP -->
       <div class="map-canvas-shell">
+        <div class="map-canvas-glow map-canvas-glow--one"></div>
+        <div class="map-canvas-glow map-canvas-glow--two"></div>
         <div #mapEl class="map-element"></div>
 
         <div class="map-zoom-actions">
@@ -589,7 +591,7 @@
 
                     <input
                       type="text"
-                      class="form-control form-control-lg form-control-solid"
+                      class="form-control form-control-lg form-control-solid form-control-solid"
                       [ngClass]="{ 'is-invalid': filter.invalidValue }"
                       [ngModel]="filter.value"
                       (ngModelChange)="onFilterValueChange(filter, $event)"
@@ -606,7 +608,7 @@
 
                     <input
                       type="text"
-                      class="form-control form-control-lg form-control-solid"
+                      class="form-control form-control-lg form-control-solid form-control-solid"
                       [ngClass]="{ 'is-invalid': filter.invalidValue2 }"
                       [ngModel]="filter.value2"
                       (ngModelChange)="onFilterSecondValueChange(filter, $event)"

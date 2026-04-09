@@ -1,171 +1,20 @@
-<app-datatable [header]="'SUPPORT_MANAGEMENT.PAGE_TITLE' | translate" [columnList]="columnList"
-  [dataSource]="dataSource" [totalCount]="totalCount" [paginationModel]="paginationModel" [hasEditPermission]="true"
-  [hasDeletePermission]="false" [hasNewRecordPermission]="false" [hasShowPermission]="false" [filterModel]="filterModel"
-  (paginationModelChange)="onPaginationChanged($event)" (filterModelChange)="onFilterChanged($event)"
-  (showButtonClick)="openDetailModal($event)" (editButtonClick)="openReplyModal($event)"
-  class="card card-xxl-stretch border-0 mb-5 mb-xl-8">
+<app-datatable
+  [header]="'SUPPORT_MANAGEMENT.PAGE_TITLE' | translate"
+  [columnList]="columnList"
+  [dataSource]="dataSource"
+  [totalCount]="totalCount"
+  [paginationModel]="paginationModel"
+  [hasEditPermission]="hasEditPermission"
+  [hasExportPermission]="hasExportPermission"
+  [hasDeletePermission]="hasDeletePermission"
+  [hasNewRecordPermission]="hasNewRecordPermission"
+  [hasShowPermission]="hasShowPermission"
+  [filterModel]="filterModel"
+  (paginationModelChange)="onPaginationChanged($event)"
+  (filterModelChange)="onFilterChanged($event)"
+  (showButtonClick)="openDetailPage($event)"
+  (editButtonClick)="openDetailPage($event)"
+  (exportExcelClick)="exportExcel($event)"
+  class="card card-xxl-stretch border-0 mb-5 mb-xl-8"
+>
 </app-datatable>
-
-
-<app-custom-modal [isOpen]="isDetailModalOpen"
-  [title]="selectedTicket ? (('SUPPORT_MANAGEMENT.TICKET_TITLE' | translate) + ' #' + selectedTicket.ticketNo) : ('SUPPORT_MANAGEMENT.PAGE_TITLE' | translate)"
-  [subtitle]="selectedTicket?.subject || ''" [width]="'1100px'" variant="center" [showFooter]="false"
-  (closed)="closeDetailModal()">
-  <ng-container *ngIf="selectedTicket">
-    <div class="support-detail">
-      <div class="support-detail__header card card-flush mb-7">
-        <div class="card-body p-7">
-          <div class="row g-6">
-            <div class="col-md-6">
-              <div class="support-info-box">
-                <div class="support-info-box__label">
-                  {{ 'SUPPORT_MANAGEMENT.CUSTOMER' | translate }}
-                </div>
-                <div class="support-info-box__value">{{ selectedTicket.customerName }}</div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="support-info-box">
-                <div class="support-info-box__label">
-                  {{ 'SUPPORT_MANAGEMENT.EMAIL' | translate }}
-                </div>
-                <div class="support-info-box__value">{{ selectedTicket.customerEmail }}</div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="support-info-box">
-                <div class="support-info-box__label">
-                  {{ 'SUPPORT_MANAGEMENT.ORGANIZATION' | translate }}
-                </div>
-                <div class="support-info-box__value">{{ selectedTicket.organization || '-' }}</div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="support-info-box">
-                <div class="support-info-box__label">
-                  {{ 'SUPPORT_MANAGEMENT.STATUS' | translate }}
-                </div>
-                <div class="support-info-box__value">
-                  <span class="badge" [ngClass]="getStatusBadgeClass(selectedTicket.status)">
-                    {{ getStatusLabel(selectedTicket.status) }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card card-flush mb-7">
-        <div class="card-header">
-          <div class="card-title">
-            <h3 class="fw-bold text-gray-900">
-              {{ 'SUPPORT_MANAGEMENT.MESSAGE_THREAD' | translate }}
-            </h3>
-          </div>
-        </div>
-
-        <div class="card-body p-7">
-          <div class="support-thread">
-            <div class="support-thread__item" *ngFor="let item of selectedTicket.messages" [ngClass]="{
-                'support-thread__item--admin': item.senderType === 'Admin',
-                'support-thread__item--customer': item.senderType === 'Customer'
-              }">
-              <div class="support-thread__meta">
-                <div class="support-thread__sender">
-                  {{
-                  item.senderType === 'Admin'
-                  ? ('SUPPORT_MANAGEMENT.ADMIN' | translate)
-                  : ('SUPPORT_MANAGEMENT.CUSTOMER' | translate)
-                  }}
-                </div>
-                <div class="support-thread__channel">
-                  {{ item.channel }}
-                </div>
-                <div class="support-thread__date">
-                  {{ item.createdAtUtc | date:'dd.MM.yyyy HH:mm' }}
-                </div>
-              </div>
-
-              <div class="support-thread__bubble">
-                <div class="support-thread__email" *ngIf="item.senderEmail">
-                  {{ item.senderEmail }}
-                </div>
-                <div class="support-thread__body">
-                  {{ item.body }}
-                </div>
-              </div>
-            </div>
-
-            <div *ngIf="!selectedTicket.messages || selectedTicket.messages.length === 0" class="text-gray-500">
-              {{ 'SUPPORT_MANAGEMENT.NO_MESSAGES' | translate }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card card-flush">
-        <div class="card-header">
-          <div class="card-title">
-            <h3 class="fw-bold text-gray-900">
-              {{ 'SUPPORT_MANAGEMENT.REPLY_AND_STATUS' | translate }}
-            </h3>
-          </div>
-        </div>
-
-        <div class="card-body p-7">
-          <form [formGroup]="replyForm" class="form">
-            <div class="row g-6">
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-gray-800">
-                  {{ 'SUPPORT_MANAGEMENT.STATUS' | translate }}
-                </label>
-                <app-custom-select [size]="'lg'" [items]="statusOptions" bindLabel="label" bindValue="value"
-                  [placeholder]="'SUPPORT_MANAGEMENT.STATUS_PLACEHOLDER' | translate" formControlName="status">
-                </app-custom-select>
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-gray-800">
-                  {{ 'SUPPORT_MANAGEMENT.ADMIN_EMAIL' | translate }}
-                </label>
-                <input type="email" class="form-control form-control-solid form-control-lg" formControlName="adminEmail"
-                  [placeholder]="'SUPPORT_MANAGEMENT.ADMIN_EMAIL_PLACEHOLDER' | translate" />
-              </div>
-
-              <div class="col-12">
-                <label class="form-label fw-semibold text-gray-800">
-                  {{ 'SUPPORT_MANAGEMENT.REPLY' | translate }}
-                </label>
-                <textarea rows="7" class="form-control form-control-solid form-control-lg" formControlName="message"
-                  [placeholder]="'SUPPORT_MANAGEMENT.REPLY_PLACEHOLDER' | translate"></textarea>
-              </div>
-
-              <div class="col-12">
-                <div class="d-flex flex-wrap gap-3 justify-content-end">
-                  <button type="button" class="btn btn-light-primary" [disabled]="isSubmitting || !selectedTicket"
-                    (click)="updateStatusOnly()">
-                    {{ 'SUPPORT_MANAGEMENT.UPDATE_STATUS_ONLY' | translate }}
-                  </button>
-
-                  <button type="button" class="btn btn-primary"
-                    [disabled]="isSubmitting || replyForm.invalid || !selectedTicket" (click)="submitReply()">
-                    <span *ngIf="!isSubmitting">
-                      {{ 'SUPPORT_MANAGEMENT.SEND_REPLY' | translate }}
-                    </span>
-                    <span *ngIf="isSubmitting">
-                      {{ 'SUPPORT_MANAGEMENT.SENDING' | translate }}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </ng-container>
-</app-custom-modal>

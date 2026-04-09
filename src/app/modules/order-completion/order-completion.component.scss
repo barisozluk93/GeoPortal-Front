@@ -4,407 +4,288 @@
   min-height: calc(100vh - 65px);
 }
 
-.order-completion-page,
-.checkout-card,
-.inner-section-card,
-.payment-card-preview,
-form,
-.address-card,
-.checkout-tabs,
-.checkout-tab {
-  min-width: 0;
-}
-
-/* Cards */
 .order-completion-page {
-  .checkout-card,
-  .basket-summary-card,
-  .inner-section-card {
-    overflow: hidden;
-    border-radius: 1rem;
-    border: 1px solid rgba(var(--bs-primary-rgb), 0.15);
-    background-color: var(--bs-body-bg);
+  .card {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    background: linear-gradient(
+      180deg,
+      rgba(20, 30, 50, 0.38) 0%,
+      rgba(10, 20, 36, 0.68) 100%
+    );
+
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
   }
-
-  .row {
-    min-width: 0;
-  }
 }
 
-.basket-summary-card {
-  border-radius: 1rem;
-}
-
-/* Header */
-.checkout-page-title,
-.inner-section-title {
-  font-weight: 700;
-  color: var(--bs-gray-900);
-}
-
+/* HEADER */
 .checkout-page-title {
-  font-size: 1.5rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.6rem, 2vw, 2rem);
+  font-weight: 700;
+  color: #ffffff;
 }
 
-.inner-section-title {
-  font-size: 1.2rem;
-}
-
-.checkout-page-subtitle,
-.inner-section-subtitle,
-.basket-summary-card__subtitle {
-  color: var(--bs-gray-600);
-}
-
-.checkout-page-subtitle,
-.basket-summary-card__subtitle {
+.checkout-page-subtitle {
   font-size: 0.95rem;
-}
-
-.inner-section-subtitle {
-  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.58);
 }
 
 .checkout-page-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 0.9rem;
-  border: 1px solid var(--bs-gray-200);
-  border-radius: 0.75rem;
-  background-color: var(--bs-light);
-  color: var(--bs-gray-800);
-  font-size: 0.95rem;
-  font-weight: 600;
+  gap: 10px;
+
+  padding: 12px 18px;
+  border-radius: 16px;
+
+  font-weight: 700;
+  font-size: 1rem;
+
+  color: #ffffff;
+
+  background: rgba(79, 140, 255, 0.12);
+  border: 1px solid rgba(79, 140, 255, 0.2);
 }
 
-/* Tabs */
+/* TABS */
 .checkout-tabs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  display: flex;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .checkout-tab {
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 1rem 1.1rem;
-  border: 1px solid var(--bs-gray-200);
-  border-radius: 1rem;
-  background-color: var(--bs-body-bg);
-  text-align: left;
-  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 260px;
 
-  &:hover {
-    border-color: var(--bs-gray-300);
-    box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.05);
-  }
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 20px;
+  border-radius: 22px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+
+  transition: all 0.25s ease;
+  cursor: pointer;
 
   &.active {
-    border-color: rgba(var(--bs-primary-rgb), 0.35);
-    background-color: var(--bs-light-primary);
-
-    .checkout-tab__step {
-      border-color: var(--bs-primary);
-      background-color: var(--bs-primary);
-      color: var(--bs-white);
-    }
+    border-color: rgba(79, 140, 255, 0.2);
+    background: rgba(79, 140, 255, 0.08);
   }
 
   &__step {
-    display: inline-flex;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    border-radius: 16px;
+
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    min-width: 42px;
-    height: 42px;
-    border: 1px solid var(--bs-gray-200);
-    border-radius: 0.85rem;
-    background-color: var(--bs-light);
-    color: var(--bs-gray-800);
-    font-size: 0.9rem;
+
     font-weight: 700;
+    color: #fff;
+
+    background: linear-gradient(
+      135deg,
+      #4f8cff 0%,
+      #3b6ee0 100%
+    );
   }
 
   &__content {
     display: flex;
     flex-direction: column;
-    min-width: 0;
   }
 
   &__title {
-    color: var(--bs-gray-900);
-    font-size: 1rem;
     font-weight: 700;
-    word-break: break-word;
+    color: #fff;
   }
 
   &__desc {
-    overflow: hidden;
-    color: var(--bs-gray-600);
+    margin-top: 4px;
     font-size: 0.85rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    word-break: break-word;
+    color: rgba(255,255,255,0.55);
   }
 }
 
-/* Address */
+/* INNER CARD */
+.inner-section-card {
+  background: rgba(255,255,255,0.025) !important;
+}
+
+.inner-section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.inner-section-subtitle {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.55);
+}
+
+/* ADDRESS CARD */
 .address-card {
   position: relative;
-  padding: 1.15rem;
-  border: 1px solid var(--bs-gray-200);
-  border-radius: 1rem;
-  background-color: var(--bs-body-bg);
+
+  padding: 24px;
+  border-radius: 22px;
+
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 
   &:hover {
-    border-color: var(--bs-gray-300);
-    box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
   }
 
   &.selected {
-    border-color: rgba(var(--bs-primary-rgb), 0.4);
-    background-color: rgba(var(--bs-primary-rgb), 0.03);
+    border-color: rgba(79, 140, 255, 0.24);
+    background: rgba(79, 140, 255, 0.08);
   }
 
   &__header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.9rem;
-  }
-
-  &__body {
-    padding-right: 2rem;
-  }
-
-  &__title,
-  &__person,
-  &__line,
-  &__phone {
-    word-break: break-word;
-    overflow-wrap: anywhere;
+    gap: 18px;
+    margin-bottom: 18px;
   }
 
   &__title {
-    color: var(--bs-gray-900);
     font-size: 1rem;
     font-weight: 700;
+    color: #fff;
   }
 
   &__person {
-    margin-top: 0.15rem;
-    color: var(--bs-gray-700);
+    margin-top: 4px;
+    color: rgba(255,255,255,0.55);
     font-size: 0.9rem;
-    font-weight: 600;
   }
 
-  &__line {
-    margin-bottom: 0.25rem;
-    color: var(--bs-gray-600);
-    font-size: 0.88rem;
-  }
-
+  &__line,
   &__phone {
-    margin-top: 0.5rem;
-    color: var(--bs-gray-800);
-    font-size: 0.88rem;
-    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
   }
 
   &__check {
     position: absolute;
-    right: 1rem;
-    bottom: 1rem;
+    top: 20px;
+    right: 20px;
   }
 }
 
-/* Payment card preview */
+/* CREDIT CARD PREVIEW */
 .payment-card-preview {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  min-height: 240px;
-  overflow: hidden;
-  padding: 1.5rem;
-  border-radius: 1.25rem;
-  background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.14), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.08), transparent 30%),
-    linear-gradient(135deg, #1f2937 0%, #111827 100%);
-  color: #fff;
-  box-shadow: 0 1rem 2rem rgba(17, 24, 39, 0.2);
+  min-height: 280px;
+  padding: 28px;
+  border-radius: 28px;
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: -50px;
-    right: -40px;
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.06);
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  &__top {
+  background: linear-gradient(
+    135deg,
+    rgba(79, 140, 255, 0.28) 0%,
+    rgba(20, 30, 50, 0.82) 100%
+  );
+
+  border: 1px solid rgba(255,255,255,0.1);
+
+  box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+
+  &__top,
+  &__bottom {
     display: flex;
-    align-items: flex-start;
     justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    align-items: center;
   }
 
   &__chip {
-    width: 52px;
-    height: 38px;
-    margin-bottom: 2rem;
-    border-radius: 0.7rem;
-    background: linear-gradient(135deg, #f7d46b 0%, #d6a93d 100%);
+    width: 58px;
+    height: 42px;
+    border-radius: 12px;
+
+    background: rgba(255,255,255,0.25);
   }
 
   &__number {
-    min-width: 0;
-    max-width: 100%;
-    margin-bottom: 2rem;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    word-spacing: 0.35rem;
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-  }
+    margin: 28px 0;
 
-  &__bottom {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1rem;
+    font-size: clamp(1.4rem, 2vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #fff;
   }
 
   &__label {
-    margin-bottom: 0.35rem;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    opacity: 0.7;
+    font-size: 0.75rem;
     text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
   }
 
   &__value {
-    min-width: 0;
-    max-width: 100%;
-    word-break: break-word;
-    font-size: 0.95rem;
+    margin-top: 6px;
     font-weight: 700;
-  }
-
-  &__brand-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    min-height: 40px;
-    padding: 0.55rem 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(8px);
-
-    &.is-visa .payment-card-preview__brand-text {
-      letter-spacing: 0.12em;
-      font-weight: 800;
-    }
-
-    &.is-mastercard .payment-card-preview__brand-text {
-      font-weight: 700;
-      text-transform: lowercase;
-    }
-
-    &.is-amex .payment-card-preview__brand-text {
-      letter-spacing: 0.08em;
-      font-weight: 800;
-    }
-
-    &.is-default .payment-card-preview__brand-text {
-      opacity: 0.9;
-      letter-spacing: 0.08em;
-      font-weight: 700;
-    }
+    color: #fff;
   }
 
   &__brand-text {
     color: #fff;
-    font-size: 0.85rem;
-    line-height: 1;
-  }
-
-  &__mc-logo {
-    position: relative;
-    display: inline-block;
-    width: 28px;
-    height: 18px;
-
-    .circle {
-      position: absolute;
-      top: 0;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-    }
-
-    .circle-left {
-      left: 0;
-      background: #eb001b;
-    }
-
-    .circle-right {
-      right: 0;
-      background: #f79e1b;
-      opacity: 0.95;
-    }
+    font-weight: 700;
   }
 }
 
-/* Form */
-.form-control {
-  max-width: 100%;
+/* FORM */
+.form-label {
+  color: rgba(255,255,255,0.72) !important;
 }
 
-.form-select.is-invalid {
-  border-color: var(--bs-danger) !important;
+/* CHECKBOX */
+.form-check-label {
+  color: rgba(255,255,255,0.68) !important;
 }
 
-/* Basket summary */
+/* SUMMARY */
 .basket-summary-card {
   &__eyebrow {
-    margin-bottom: 0.35rem;
-    color: var(--bs-gray-500);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-size: 0.75rem;
     text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.45);
   }
 
   &__title {
-    color: var(--bs-gray-900);
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  &__subtitle {
+    color: rgba(255,255,255,0.55);
   }
 }
 
 .basket-summary-panel {
-  padding: 1.25rem;
-  border: 1px solid var(--bs-gray-200);
-  border-radius: 1rem;
-  background-color: var(--bs-light);
+  border-radius: 22px;
+  padding: 24px;
+
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 .basket-summary-row,
@@ -412,156 +293,72 @@ form,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-}
 
-.basket-summary-row {
   &__label {
-    min-width: 0;
-    color: var(--bs-gray-600);
-    font-size: 0.95rem;
-    font-weight: 500;
-    word-break: break-word;
+    color: rgba(255,255,255,0.6);
   }
 
   &__value {
-    color: var(--bs-gray-900);
-    font-size: 1rem;
     font-weight: 700;
-    white-space: nowrap;
+    color: #fff;
   }
 }
 
 .basket-summary-total {
   &__label {
-    min-width: 0;
-    color: var(--bs-gray-800);
     font-size: 1rem;
     font-weight: 700;
-    word-break: break-word;
+    color: #fff;
   }
 
   &__value {
-    color: var(--bs-primary);
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     font-weight: 800;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
   }
 }
 
+/* CTA */
 .basket-summary-btn {
-  border-radius: 0.85rem;
+  height: 54px;
+  border-radius: 16px;
+
+  font-weight: 700;
+
+  background: linear-gradient(
+    135deg,
+    #4f8cff 0%,
+    #3b6ee0 100%
+  );
+
+  border: none;
+
+  transition: all 0.25s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(79,140,255,0.35);
+  }
 }
 
-/* Sticky */
+/* STICKY */
 .sticky-summary {
   position: sticky;
-  top: 120px;
+  top: 100px;
 }
 
-/* Responsive */
-@media (max-width: 1399.98px) {
+@media (max-width: 1400px) {
   .sticky-summary {
     position: relative;
-    top: 0;
+    top: unset;
   }
 }
 
-@media (max-width: 991.98px) {
-  .checkout-tabs {
-    grid-template-columns: 1fr;
-  }
-
-  .payment-card-preview {
-    margin-bottom: 1rem;
-
-    &__number {
-      font-size: 1.2rem;
-    }
-  }
-
-  .sticky-summary {
-    position: static;
-    top: auto;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .order-completion-page .row {
-    --bs-gutter-x: 1rem;
-    --bs-gutter-y: 1rem;
-  }
-
-  .checkout-tabs {
-    gap: 0.5rem;
-    flex-direction: column;
-  }
-
+@media (max-width: 768px) {
   .checkout-tab {
-    width: 100%;
+    min-width: 100%;
   }
 
   .payment-card-preview {
-    padding: 1rem;
-
-    &__number {
-      font-size: 0.95rem;
-      letter-spacing: 1px;
-    }
-
-    &__label {
-      font-size: 0.7rem;
-    }
-
-    &__value {
-      font-size: 0.85rem;
-    }
-  }
-
-  .inner-section-card .card-body {
-    padding-top: 1rem !important;
-  }
-
-  .form-control-lg {
-    height: auto;
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
-  }
-
-  input {
-    min-width: 0;
-  }
-
-  .address-card {
-    padding: 0.9rem;
-  }
-
-  .basket-summary-row,
-  .basket-summary-total {
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .basket-summary-row__label,
-  .basket-summary-total__label {
-    flex: 1;
-  }
-
-  .basket-summary-row__value,
-  .basket-summary-total__value {
-    flex-shrink: 0;
-  }
-}
-
-@media (max-width: 399.98px) {
-  .payment-card-preview {
-    &__number {
-      font-size: 0.85rem;
-    }
-
-    &__value {
-      font-size: 0.8rem;
-    }
+    min-height: 240px;
   }
 }

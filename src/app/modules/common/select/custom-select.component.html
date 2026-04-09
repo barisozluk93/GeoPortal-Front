@@ -1,39 +1,53 @@
-<div #trigger class="custom-select-container form-control form-control-solid" [ngClass]="{
-  sm: size === 'sm',
-  lg: size === 'lg',
-  'is-invalid': invalid,
-  disabled: disabled,
-  open: isOpen
-}" (click)="toggle($event)">
-  <div class="selected-text">
+<div
+  #trigger
+  class="form-control form-control-solid d-flex align-items-center justify-content-between"
+  [ngClass]="{
+    'form-control-sm': size === 'sm',
+    'form-control-lg': size === 'lg',
+    'is-invalid': invalid,
+    'disabled': disabled,
+    'open': isOpen
+  }"
+  (click)="toggle($event)"
+>
+  <div class="d-flex align-items-center flex-grow-1 text-truncate overflow-hidden">
     <ng-container *ngIf="multiple; else singleTemplate">
       <ng-container *ngIf="selectedItems.length > 0; else multiPlaceholder">
-        <span class="selected-value">
+        <span class="text-gray-800 text-truncate">
           {{ selectedItemsText }}
         </span>
       </ng-container>
 
       <ng-template #multiPlaceholder>
-        <span class="placeholder-text">
+        <span class="text-muted text-truncate">
           {{ placeholder }}
         </span>
       </ng-template>
     </ng-container>
 
     <ng-template #singleTemplate>
-      <span *ngIf="selectedItem; else singlePlaceholder" class="selected-value">
+      <span *ngIf="selectedItem; else singlePlaceholder" class="text-gray-800 text-truncate">
         {{ selectedItem[bindLabel] }}
       </span>
 
       <ng-template #singlePlaceholder>
-        <span class="placeholder-text">
+        <span class="text-muted text-truncate">
           {{ placeholder }}
         </span>
       </ng-template>
     </ng-template>
   </div>
 
-  <div class="arrow">
-    <span [class.rotate]="isOpen">▼</span>
+  <div class="d-flex align-items-center ms-2 flex-shrink-0">
+    <i
+      *ngIf="clearable && !disabled && ((multiple && selectedItems.length > 0) || (!multiple && selectedItem))"
+      class="fa-solid fa-xmark fs-8 text-muted custom-select-action-icon me-2"
+      (click)="clear($event)"
+    ></i>
+
+    <i
+      class="fa-solid fa-chevron-down fs-8 text-muted custom-select-action-icon custom-select-chevron"
+      [style.transform]="isOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
+    ></i>
   </div>
 </div>

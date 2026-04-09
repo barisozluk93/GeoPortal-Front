@@ -10,6 +10,7 @@ import { UserModel } from 'src/app/modules/user-management/models/user.model';
 import { UserManagementService } from 'src/app/modules/user-management/user-management.service';
 import { NotificationSignalrService } from 'src/app/modules/common/signalR.service';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
   selector: 'app-topbar',
@@ -30,7 +31,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   isNotificationAnimating = false;
 
-  @Input() isAdmin!: boolean;
+  isAdmin: boolean;
 
   constructor(
     private notificationService: NotificationService,
@@ -66,6 +67,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         if (result) {
+          this.isAdmin = result.roles.includes(RoleEnum.SuperAdmin) ? true : false;
           this.isCurrentUserExist = true;
 
           this.userManagementService.updateUser(result.id!);
@@ -79,6 +81,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
           this.loadNotifications();
           this.loadUnreadedNotificationCount();
         } else {
+          this.isAdmin = false;
           this.isCurrentUserExist = false;
           this.user = undefined;
           this.notifications = [];

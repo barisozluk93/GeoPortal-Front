@@ -1,0 +1,148 @@
+<div class="support-detail-page" *ngIf="selectedTicket">
+
+    <div class="support-detail-page__grid">
+
+        <!-- LEFT -->
+        <div class="support-side-panel">
+            <div class="card h-100">
+
+                <!-- HEADER -->
+                <div class="card-header border-0 flex-column align-items-start">
+                    <h3 class="card-title mb-1">
+                        {{ 'SUPPORT_MANAGEMENT.TICKET_TITLE' | translate }}
+                    </h3>
+                    <span class="text-muted fw-semibold">
+                        #{{ selectedTicket.ticketNo }}
+                    </span>
+                </div>
+                <!-- BODY -->
+                <div class="card-body">
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="label">
+                                {{ 'SUPPORT_MANAGEMENT.CUSTOMER' | translate }}
+                            </span>
+                            <span class="value">
+                                {{ selectedTicket.customerName || '-' }}
+                            </span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="label">
+                                {{ 'SUPPORT_MANAGEMENT.EMAIL' | translate }}
+                            </span>
+                            <span class="value">
+                                {{ selectedTicket.customerEmail || '-' }}
+                            </span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="label">
+                                {{ 'SUPPORT_MANAGEMENT.ORGANIZATION' | translate }}
+                            </span>
+                            <span class="value">
+                                {{ selectedTicket.organization || '-' }}
+                            </span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="label">
+                                {{ 'SUPPORT_MANAGEMENT.STATUS' | translate }}
+                            </span>
+
+                            <span class="badge fw-bold px-4 py-2"
+                                [ngClass]="getStatusBadgeClass(selectedTicket.status)">
+                                {{ getStatusLabel(selectedTicket.status) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FOOTER -->
+                <div class="card-footer" *ngIf="isClosed">
+                    <button type="button" class="btn btn-light-primary w-100" (click)="backToList()">
+                        <i class="ki-duotone ki-arrow-left fs-4 me-1"></i>
+                        {{ 'SUPPORT_MANAGEMENT.BACK' | translate }}
+                    </button>
+                </div>
+                <div class="card-footer" *ngIf="!isClosed">
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            {{ 'SUPPORT_MANAGEMENT.STATUS' | translate }}
+                        </label>
+
+                        <app-custom-select [items]="statusOptions" bindLabel="label" bindValue="value"
+                            formControlName="status">
+                        </app-custom-select>
+                    </div>
+
+                    <button class="btn btn-primary w-100" (click)="updateStatusOnly()" [disabled]="isSubmitting">
+                        {{ 'SUPPORT_MANAGEMENT.UPDATE_STATUS_ONLY' | translate }}
+                    </button>
+
+                    <button type="button" class="btn btn-light-primary mt-5 w-100" (click)="backToList()">
+                        <i class="ki-duotone ki-arrow-left fs-4 me-1"></i>
+                        {{ 'SUPPORT_MANAGEMENT.BACK' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- RIGHT -->
+        <div class="support-chat-panel">
+            <div class="card h-100">
+                <!-- HEADER -->
+                <div class="card-header border-0 flex-column align-items-start">
+                    <div class="badge badge-light-primary mb-5">
+                        {{ 'SUPPORT_MANAGEMENT.MESSAGE_THREAD' | translate }}
+                    </div>
+
+                    <h3 class="card-title mb-2">
+                        {{ selectedTicket.subject }}
+                    </h3>
+                </div>
+
+                <!-- CHAT BODY -->
+                <div class="card-body support-chat-body" #chatContainer>
+                    <div class="chat-item" *ngFor="let item of selectedTicket.messages" [ngClass]="{
+              'chat-item--admin': item.senderType === 'Admin',
+              'chat-item--customer': item.senderType === 'Customer'
+            }">
+
+                        <div class="chat-bubble">
+
+                            <div class="chat-meta">
+                                <span>
+                                    {{
+                                    item.senderType === 'Admin'
+                                    ? ('SUPPORT_MANAGEMENT.ADMIN' | translate)
+                                    : ('SUPPORT_MANAGEMENT.CUSTOMER' | translate)
+                                    }}
+                                </span>
+
+                                <span>
+                                    {{ formatDate(item.createdAtUtc) }}
+                                </span>
+                            </div>
+                            <div class="chat-text">
+                                {{ item.body }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FOOTER -->
+                <div class="card-footer" *ngIf="!isClosed">
+                    <div class="d-flex gap-2">
+                        <textarea rows="2" class="form-control" formControlName="message"
+                            [placeholder]="'SUPPORT_MANAGEMENT.REPLY_PLACEHOLDER' | translate">
+                        </textarea>
+
+                        <button class="btn btn-primary" (click)="submitReply()"
+                            [disabled]="replyForm.invalid || isSubmitting">
+                            {{ 'SUPPORT_MANAGEMENT.SEND_REPLY' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

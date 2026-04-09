@@ -1,119 +1,185 @@
-<section class="contact-page">
-  <!-- HERO SECTION -->
-  <section class="contact-hero">
-    <div class="contact-hero-overlay"></div>
+<section class="contact-hero">
+  <div class="container-fluid contact-hero__container">
+    <div class="row g-4 g-xl-6 align-items-stretch">
+      <!-- Left Hero -->
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="contact-hero__visual-card w-100">
+          <div class="contact-hero__visual-overlay"></div>
 
-    <div class="container contact-hero-content">
-      <div class="contact-hero-grid">
-        <div class="contact-hero-left">
-          <div class="contact-kicker mb-6">
-            <i class="bi bi-chat-dots"></i>
-            {{ 'CONTACT_PAGE.KICKER' | translate }}
-          </div>
+          <div class="contact-hero__content">
+            <span class="contact-hero__kicker badege badge-light-primary fw-bold">
+              {{ 'CONTACT.HERO.KICKER' | translate }}
+            </span>
 
-          <h1 class="contact-hero-title">
-            {{ 'CONTACT_PAGE.TITLE' | translate }}
-          </h1>
+            <h1 class="contact-hero__title">
+              {{ 'CONTACT.HERO.TITLE' | translate }}
+            </h1>
 
-          <p class="contact-hero-subtitle">
-            {{ 'CONTACT_PAGE.COPY' | translate }}
-          </p>
-        </div>
+            <p class="contact-hero__copy text-muted">
+              {{ 'CONTACT.HERO.COPY' | translate }}
+            </p>
 
-        <div class="contact-hero-right">
-          <div class="card shadow-lg contact-form-card">
-            <div class="card-body p-8 p-lg-10">
-              <div class="contact-form-title mb-6">
-                {{ 'CONTACT_PAGE.FORM_TITLE' | translate }}
+            <div class="contact-hero__highlights">
+              <div class="contact-hero__highlight">
+                <div class="contact-hero__highlight-icon">
+                  <i class="ki-outline ki-message-text-2 fs-2"></i>
+                </div>
+                <div class="contact-hero__highlight-content">
+                  <h5>{{ 'CONTACT.HERO.ITEMS.RESPONSE.TITLE' | translate }}</h5>
+                  <p>{{ 'CONTACT.HERO.ITEMS.RESPONSE.TEXT' | translate }}</p>
+                </div>
               </div>
 
-              <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-                <div class="row g-5">
-                  <div class="col-md-6">
-                    <input
-                      type="text"
-                      class="form-control form-control-lg form-control-solid contact-form-input"
-                      formControlName="fullName"
-                      [placeholder]="'CONTACT_PAGE.FULL_NAME' | translate"
-                      [class.is-invalid]="f['fullName'].invalid && (f['fullName'].touched || isSubmitted)"
-                    />
-                    <div
-                      class="invalid-feedback d-block"
-                      *ngIf="f['fullName'].invalid && (f['fullName'].touched || isSubmitted)"
-                    >
-                      {{ 'CONTACT_PAGE.VALIDATION_FULL_NAME' | translate }}
-                    </div>
-                  </div>
-
-                  <div class="col-md-6">
-                    <input
-                      type="text"
-                      class="form-control form-control-lg form-control-solid contact-form-input"
-                      formControlName="organization"
-                      [placeholder]="'CONTACT_PAGE.ORGANIZATION' | translate"
-                    />
-                  </div>
-
-                  <div class="col-12">
-                    <input
-                      type="email"
-                      class="form-control form-control-lg form-control-solid contact-form-input"
-                      formControlName="businessEmail"
-                      [placeholder]="'CONTACT_PAGE.BUSINESS_EMAIL' | translate"
-                      [class.is-invalid]="f['businessEmail'].invalid && (f['businessEmail'].touched || isSubmitted)"
-                    />
-                    <div
-                      class="invalid-feedback d-block"
-                      *ngIf="f['businessEmail'].invalid && (f['businessEmail'].touched || isSubmitted)"
-                    >
-                      {{ 'CONTACT_PAGE.VALIDATION_EMAIL' | translate }}
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <input
-                      type="text"
-                      class="form-control form-control-lg form-control-solid contact-form-input"
-                      formControlName="subject"
-                      [placeholder]="'CONTACT_PAGE.SUBJECT' | translate"
-                      [class.is-invalid]="f['subject'].invalid && (f['subject'].touched || isSubmitted)"
-                    />
-                    <div
-                      class="invalid-feedback d-block"
-                      *ngIf="f['subject'].invalid && (f['subject'].touched || isSubmitted)"
-                    >
-                      {{ 'CONTACT_PAGE.VALIDATION_SUBJECT' | translate }}
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <textarea
-                      rows="6"
-                      class="form-control form-control-lg form-control-solid contact-form-input contact-form-textarea"
-                      formControlName="message"
-                      [placeholder]="'CONTACT_PAGE.MESSAGE' | translate"
-                      [class.is-invalid]="f['message'].invalid && (f['message'].touched || isSubmitted)"
-                    ></textarea>
-                    <div
-                      class="invalid-feedback d-block"
-                      *ngIf="f['message'].invalid && (f['message'].touched || isSubmitted)"
-                    >
-                      {{ 'CONTACT_PAGE.VALIDATION_MESSAGE' | translate }}
-                    </div>
-                  </div>
-
-                  <div class="col-12">
-                    <button type="submit" class="btn btn-primary contact-submit-btn w-100">
-                      {{ 'CONTACT_PAGE.SEND' | translate }}
-                    </button>
-                  </div>
+              <div class="contact-hero__highlight">
+                <div class="contact-hero__highlight-icon">
+                  <i class="ki-outline ki-code fs-2"></i>
                 </div>
-              </form>
+                <div class="contact-hero__highlight-content">
+                  <h5>{{ 'CONTACT.HERO.ITEMS.API.TITLE' | translate }}</h5>
+                  <p>{{ 'CONTACT.HERO.ITEMS.API.TEXT' | translate }}</p>
+                </div>
+              </div>
 
+              <div class="contact-hero__highlight">
+                <div class="contact-hero__highlight-icon">
+                  <i class="ki-outline ki-geolocation fs-2"></i>
+                </div>
+                <div class="contact-hero__highlight-content">
+                  <h5>{{ 'CONTACT.HERO.ITEMS.CUSTOM.TITLE' | translate }}</h5>
+                  <p>{{ 'CONTACT.HERO.ITEMS.CUSTOM.TEXT' | translate }}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Right Form -->
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="card contact-form-card w-100">
+          <div class="card-header border-0 pb-0">
+            <div class="card-title d-flex flex-column">
+              <span class="contact-form-card__title">
+                {{ 'CONTACT.FORM.TITLE' | translate }}
+              </span>
+              <span class="contact-form-card__subtitle">
+                {{ 'CONTACT.FORM.SUBTITLE' | translate }}
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body pt-6">
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+              <div class="row g-5">
+                <div class="col-12 col-md-6">
+                  <label class="form-label required">
+                    {{ 'CONTACT.FORM.FULL_NAME' | translate }}
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control form-control-solid"
+                    formControlName="fullName"
+                    [placeholder]="'CONTACT.FORM.PLACEHOLDERS.FULL_NAME' | translate"
+                    [ngClass]="{ 'is-invalid': isSubmitted && f['fullName'].invalid }"
+                  />
+                  <div class="invalid-feedback d-block" *ngIf="isSubmitted && f['fullName'].errors">
+                    <span *ngIf="f['fullName'].errors['required']">
+                      {{ 'CONTACT.FORM.ERRORS.FULL_NAME_REQUIRED' | translate }}
+                    </span>
+                    <span *ngIf="f['fullName'].errors['minlength']">
+                      {{ 'CONTACT.FORM.ERRORS.FULL_NAME_MIN' | translate }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label class="form-label">
+                    {{ 'CONTACT.FORM.ORGANIZATION' | translate }}
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control form-control-solid"
+                    formControlName="organization"
+                    [placeholder]="'CONTACT.FORM.PLACEHOLDERS.ORGANIZATION' | translate"
+                  />
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label required">
+                    {{ 'CONTACT.FORM.BUSINESS_EMAIL' | translate }}
+                  </label>
+                  <input
+                    type="email"
+                    class="form-control form-control-solid"
+                    formControlName="businessEmail"
+                    [placeholder]="'CONTACT.FORM.PLACEHOLDERS.BUSINESS_EMAIL' | translate"
+                    [ngClass]="{ 'is-invalid': isSubmitted && f['businessEmail'].invalid }"
+                  />
+                  <div class="invalid-feedback d-block" *ngIf="isSubmitted && f['businessEmail'].errors">
+                    <span *ngIf="f['businessEmail'].errors['required']">
+                      {{ 'CONTACT.FORM.ERRORS.BUSINESS_EMAIL_REQUIRED' | translate }}
+                    </span>
+                    <span *ngIf="f['businessEmail'].errors['email']">
+                      {{ 'CONTACT.FORM.ERRORS.BUSINESS_EMAIL_INVALID' | translate }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label required">
+                    {{ 'CONTACT.FORM.SUBJECT' | translate }}
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control form-control-solid"
+                    formControlName="subject"
+                    [placeholder]="'CONTACT.FORM.PLACEHOLDERS.SUBJECT' | translate"
+                    [ngClass]="{ 'is-invalid': isSubmitted && f['subject'].invalid }"
+                  />
+                  <div class="invalid-feedback d-block" *ngIf="isSubmitted && f['subject'].errors">
+                    <span *ngIf="f['subject'].errors['required']">
+                      {{ 'CONTACT.FORM.ERRORS.SUBJECT_REQUIRED' | translate }}
+                    </span>
+                    <span *ngIf="f['subject'].errors['minlength']">
+                      {{ 'CONTACT.FORM.ERRORS.SUBJECT_MIN' | translate }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label required">
+                    {{ 'CONTACT.FORM.MESSAGE' | translate }}
+                  </label>
+                  <textarea
+                    rows="6"
+                    class="form-control form-control-solid"
+                    formControlName="message"
+                    [placeholder]="'CONTACT.FORM.PLACEHOLDERS.MESSAGE' | translate"
+                    [ngClass]="{ 'is-invalid': isSubmitted && f['message'].invalid }"
+                  ></textarea>
+                  <div class="invalid-feedback d-block" *ngIf="isSubmitted && f['message'].errors">
+                    <span *ngIf="f['message'].errors['required']">
+                      {{ 'CONTACT.FORM.ERRORS.MESSAGE_REQUIRED' | translate }}
+                    </span>
+                    <span *ngIf="f['message'].errors['minlength']">
+                      {{ 'CONTACT.FORM.ERRORS.MESSAGE_MIN' | translate }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="contact-form-card__actions">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="ki-outline ki-send fs-4 me-2"></i>
+                      {{ 'CONTACT.FORM.SUBMIT' | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
 </section>
