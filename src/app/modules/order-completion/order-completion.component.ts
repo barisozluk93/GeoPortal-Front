@@ -5,12 +5,12 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth';
 import { OrderManagementService } from '../order-management/order-management.service';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
-import { OrderModel } from '../order-management/models/order.model';
 import { UserManagementService } from '../user-management/user-management.service';
 import { UserAddressModel } from '../user-management/models/user-address.model';
 import { AddressEditSaveComponent } from '../account/addresses/forms/list/edit-save/edit-save.component';
 import { BasketModel } from '../basket-management/models/basket.model';
 import { TranslateService } from '@ngx-translate/core';
+import { OrderModel } from '../coming-order-management/models/order.model';
 
 export type RegistrationTabsType = 'address' | 'payment';
 
@@ -230,9 +230,8 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
     const data: OrderModel = {
       id: 0,
       basketId: this.basketFromStorage[0].id,
-      userId: this.currentUser.id,
+      userId: Number(this.currentUser.id),
       price: this.totalPrice,
-      deliveryAddressId: this.selectedAddressId,
       invoiceAddressId: this.selectedAddressId
     };
 

@@ -1,4 +1,15 @@
-import { AfterViewInit, Component, computed, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  Renderer2,
+  ViewChild,
+  computed,
+  inject,
+  signal
+} from '@angular/core';
 import { finalize } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -26,13 +37,16 @@ import { ProductModel } from './models/product.model';
   templateUrl: './marketplace.component.html',
   styleUrls: ['./marketplace.component.scss']
 })
-export class MarketplaceComponent implements AfterViewInit {
+export class MarketplaceComponent implements AfterViewInit, OnDestroy {
   private readonly marketplaceService = inject(MarketplaceService);
   readonly basketManagementService = inject(BasketManagementService);
   readonly basketService = inject(BasketService);
   readonly authService = inject(AuthService);
   readonly alertService = inject(AlertService);
   readonly translate = inject(TranslateService);
+
+  @ViewChild('filterSidebar') filterSidebarRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('filterSidebarWrapper') filterSidebarWrapperRef?: ElementRef<HTMLDivElement>;
 
   readonly items = signal<ProductModel[]>([]);
   readonly selectedItem = signal<ProductModel | null>(null);
@@ -55,15 +69,43 @@ export class MarketplaceComponent implements AfterViewInit {
     pageSize: 9
   };
 
+  // Template bindingleri bozulmasın diye bırakıyoruz
+  isFilterFixed = false;
+  filterSidebarWidth: number | null = null;
+  filterSidebarHeight = 0;
+  filterSidebarLeft = 0;
+  filterTopOffset = 90;
+
+  private readonly defaultFilterTopOffset = 90;
+  private readonly footerSafeGap = 24;
+
+  private filterInitialTop = 0;
+
   private map?: Map;
   private markerLayer?: VectorLayer<VectorSource>;
+
+  private readonly renderer = inject(Renderer2);
 
   constructor() {
     this.loadItems();
   }
 
   ngAfterViewInit(): void {
-    // drawer açılınca map initialize ediliyor
+    requestAnimationFrame(() => {
+      this.calculateFilterStickyStart();
+      this.updateFilterStickyState();
+    });
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.updateFilterStickyState();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.calculateFilterStickyStart();
+    this.updateFilterStickyState();
   }
 
   readonly filteredItems = computed(() => {
@@ -93,6 +135,189 @@ export class MarketplaceComponent implements AfterViewInit {
 
   readonly resultCount = computed(() => this.filteredItems().length);
 
+  private calculateFilterStickyStart(): void {
+    const wrapper = this.filterSidebarWrapperRef?.nativeElement;
+    const sidebar = this.filterSidebarRef?.nativeElement;
+    if (!wrapper || !sidebar) return;
+
+    const wrapperRect = wrapper.getBoundingClientRect();
+
+    this.filterInitialTop = window.scrollY + wrapperRect.top;
+    this.filterSidebarWidth = wrapperRect.width;
+    this.filterSidebarLeft = wrapperRect.left;
+    this.filterSidebarHeight = sidebar.offsetHeight;
+  }
+
+  private getFooterElement(): HTMLElement | null {
+    const selectors = ['#kt_app_footer', 'app-footer', '.app-footer', '.footer', 'footer'];
+
+    for (const selector of selectors) {
+      const element = document.querySelector(selector) as HTMLElement | null;
+      if (element) {
+        return element;
+      }
+    }
+
+    return null;
+  }
+
+  private getRightColumnElement(): HTMLElement | null {
+    const wrapper = this.filterSidebarWrapperRef?.nativeElement;
+    if (!wrapper) return null;
+
+    const row = wrapper.closest('.row');
+    if (!row) return null;
+
+    const columns = Array.from(row.children) as HTMLElement[];
+    const rightCol = columns.find((col) => col !== wrapper.parentElement);
+
+    return rightCol ?? null;
+  }
+
+  private clearSidebarInlineStyles(): void {
+    const wrapper = this.filterSidebarWrapperRef?.nativeElement;
+    const sidebar = this.filterSidebarRef?.nativeElement;
+    if (!wrapper || !sidebar) return;
+
+    this.renderer.removeStyle(wrapper, 'position');
+    this.renderer.removeStyle(wrapper, 'min-height');
+
+    this.renderer.removeStyle(sidebar, 'position');
+    this.renderer.removeStyle(sidebar, 'top');
+    this.renderer.removeStyle(sidebar, 'bottom');
+    this.renderer.removeStyle(sidebar, 'left');
+    this.renderer.removeStyle(sidebar, 'right');
+    this.renderer.removeStyle(sidebar, 'width');
+    this.renderer.removeStyle(sidebar, 'z-index');
+  }
+
+  private applySidebarStatic(): void {
+    this.isFilterFixed = false;
+    this.filterSidebarWidth = null;
+    this.filterSidebarLeft = 0;
+    this.filterSidebarHeight = 0;
+    this.filterTopOffset = this.defaultFilterTopOffset;
+    this.clearSidebarInlineStyles();
+  }
+
+  private applySidebarFixed(): void {
+    const wrapper = this.filterSidebarWrapperRef?.nativeElement;
+    const sidebar = this.filterSidebarRef?.nativeElement;
+    if (!wrapper || !sidebar) return;
+
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const sidebarHeight = sidebar.offsetHeight;
+
+    this.isFilterFixed = true;
+    this.filterSidebarWidth = wrapperRect.width;
+    this.filterSidebarLeft = wrapperRect.left;
+    this.filterSidebarHeight = sidebarHeight;
+    this.filterTopOffset = this.defaultFilterTopOffset;
+
+    this.renderer.setStyle(wrapper, 'position', 'relative');
+    this.renderer.setStyle(wrapper, 'min-height', `${sidebarHeight}px`);
+
+    this.renderer.setStyle(sidebar, 'position', 'fixed');
+    this.renderer.setStyle(sidebar, 'top', `${this.defaultFilterTopOffset}px`);
+    this.renderer.setStyle(sidebar, 'left', `${wrapperRect.left}px`);
+    this.renderer.setStyle(sidebar, 'width', `${wrapperRect.width}px`);
+    this.renderer.setStyle(sidebar, 'bottom', 'auto');
+    this.renderer.setStyle(sidebar, 'right', 'auto');
+    this.renderer.setStyle(sidebar, 'z-index', '110');
+  }
+
+  private applySidebarLocked(absoluteTop: number, lockHeight: number): void {
+    const wrapper = this.filterSidebarWrapperRef?.nativeElement;
+    const sidebar = this.filterSidebarRef?.nativeElement;
+    if (!wrapper || !sidebar) return;
+
+    const sidebarHeight = sidebar.offsetHeight;
+
+    this.isFilterFixed = false;
+    this.filterSidebarWidth = null;
+    this.filterSidebarLeft = 0;
+    this.filterSidebarHeight = sidebarHeight;
+    this.filterTopOffset = this.defaultFilterTopOffset;
+
+    this.renderer.setStyle(wrapper, 'position', 'relative');
+    this.renderer.setStyle(wrapper, 'min-height', `${Math.max(lockHeight, sidebarHeight)}px`);
+
+    this.renderer.setStyle(sidebar, 'position', 'absolute');
+    this.renderer.setStyle(sidebar, 'top', `${Math.max(0, absoluteTop)}px`);
+    this.renderer.setStyle(sidebar, 'left', '0');
+    this.renderer.setStyle(sidebar, 'right', '0');
+    this.renderer.setStyle(sidebar, 'bottom', 'auto');
+    this.renderer.setStyle(sidebar, 'width', '100%');
+    this.renderer.setStyle(sidebar, 'z-index', '10');
+  }
+
+  private updateFilterStickyState(): void {
+    const wrapper = this.filterSidebarWrapperRef?.nativeElement;
+    const sidebar = this.filterSidebarRef?.nativeElement;
+    if (!wrapper || !sidebar) return;
+
+    if (window.innerWidth < 1200) {
+      this.applySidebarStatic();
+      return;
+    }
+
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const wrapperTopAbsolute = window.scrollY + wrapperRect.top;
+    const sidebarHeight = sidebar.offsetHeight;
+
+    this.filterInitialTop = wrapperTopAbsolute;
+    this.filterSidebarWidth = wrapperRect.width;
+    this.filterSidebarLeft = wrapperRect.left;
+    this.filterSidebarHeight = sidebarHeight;
+
+    const shouldFix = window.scrollY + this.defaultFilterTopOffset >= this.filterInitialTop;
+
+    if (!shouldFix) {
+      this.applySidebarStatic();
+      return;
+    }
+
+    const rightColumn = this.getRightColumnElement();
+    const footerElement = this.getFooterElement();
+
+    /**
+     * Alt sınır için önce sağ kolon bitişini kullan.
+     * Yoksa footer'ı fallback olarak kullan.
+     */
+    let bottomBoundaryAbsolute: number | null = null;
+
+    if (rightColumn) {
+      const rightRect = rightColumn.getBoundingClientRect();
+      bottomBoundaryAbsolute = window.scrollY + rightRect.bottom;
+    } else if (footerElement) {
+      const footerRect = footerElement.getBoundingClientRect();
+      bottomBoundaryAbsolute = window.scrollY + footerRect.top - this.footerSafeGap;
+    }
+
+    if (!bottomBoundaryAbsolute) {
+      this.applySidebarFixed();
+      return;
+    }
+
+    const fixedBottomAbsolute =
+      window.scrollY + this.defaultFilterTopOffset + sidebarHeight;
+
+    const shouldLock = fixedBottomAbsolute >= bottomBoundaryAbsolute;
+
+    if (!shouldLock) {
+      this.applySidebarFixed();
+      return;
+    }
+
+    /**
+     * Sidebar'ı sağ kolonun sonuna kilitle.
+     */
+    const absoluteTop = bottomBoundaryAbsolute - sidebarHeight - wrapperTopAbsolute;
+    const lockHeight = bottomBoundaryAbsolute - wrapperTopAbsolute;
+
+    this.applySidebarLocked(absoluteTop, lockHeight);
+  }
+
   loadItems(): void {
     this.loading.set(true);
     this.errorMessage.set('');
@@ -110,6 +335,11 @@ export class MarketplaceComponent implements AfterViewInit {
         next: (response) => {
           this.items.set(response.data.items ?? []);
           this.totalCount = response.data.totalCount ?? 0;
+
+          setTimeout(() => {
+            this.calculateFilterStickyStart();
+            this.updateFilterStickyState();
+          }, 0);
         },
         error: (error) => {
           console.error('Marketplace list data could not be loaded.', error);
@@ -152,6 +382,7 @@ export class MarketplaceComponent implements AfterViewInit {
     this.selectedItem.set(item);
     this.detailLoading.set(true);
     this.detailErrorMessage.set('');
+    this.renderer.addClass(document.body, 'overflow-hidden');
 
     this.marketplaceService
       .getById(item.id)
@@ -171,6 +402,7 @@ export class MarketplaceComponent implements AfterViewInit {
     this.selectedItem.set(null);
     this.detailLoading.set(false);
     this.detailErrorMessage.set('');
+    this.renderer.removeClass(document.body, 'overflow-hidden');
   }
 
   openMapPreview(item: ProductModel): void {
@@ -287,7 +519,7 @@ export class MarketplaceComponent implements AfterViewInit {
     if (currentUser) {
       const data: BasketModel = {
         id: 0,
-        userId: currentUser.id,
+        userId: Number(currentUser.id),
         productId: item.id,
         isDeleted: false,
         product: undefined,
@@ -399,7 +631,18 @@ export class MarketplaceComponent implements AfterViewInit {
       return 'class-tag--urban';
     }
 
-    // DEFAULT
     return 'class-tag--default';
+  }
+
+  ngOnDestroy(): void {
+    this.renderer.removeClass(document.body, 'overflow-hidden');
+    this.clearSidebarInlineStyles();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapePressed(): void {
+    if (this.selectedItem()) {
+      this.closeDetail();
+    }
   }
 }

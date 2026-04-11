@@ -1,6 +1,6 @@
 <div
   #trigger
-  class="form-control form-control-solid d-flex align-items-center justify-content-between"
+  class="custom-select-trigger form-control d-flex align-items-center justify-content-between"
   [ngClass]="{
     'form-control-sm': size === 'sm',
     'form-control-lg': size === 'lg',
@@ -10,44 +10,52 @@
   }"
   (click)="toggle($event)"
 >
-  <div class="d-flex align-items-center flex-grow-1 text-truncate overflow-hidden">
+  <div class="d-flex align-items-center flex-grow-1 min-w-0 overflow-hidden">
     <ng-container *ngIf="multiple; else singleTemplate">
       <ng-container *ngIf="selectedItems.length > 0; else multiPlaceholder">
-        <span class="text-gray-800 text-truncate">
+        <span class="custom-select-value text-truncate">
           {{ selectedItemsText }}
         </span>
       </ng-container>
 
       <ng-template #multiPlaceholder>
-        <span class="text-muted text-truncate">
+        <span class="custom-select-placeholder text-truncate">
           {{ placeholder }}
         </span>
       </ng-template>
     </ng-container>
 
     <ng-template #singleTemplate>
-      <span *ngIf="selectedItem; else singlePlaceholder" class="text-gray-800 text-truncate">
+      <span *ngIf="selectedItem; else singlePlaceholder" class="custom-select-value text-truncate">
         {{ selectedItem[bindLabel] }}
       </span>
 
       <ng-template #singlePlaceholder>
-        <span class="text-muted text-truncate">
+        <span class="custom-select-placeholder text-truncate">
           {{ placeholder }}
         </span>
       </ng-template>
     </ng-template>
   </div>
 
-  <div class="d-flex align-items-center ms-2 flex-shrink-0">
-    <i
+  <div class="custom-select-actions d-flex align-items-center ms-2 flex-shrink-0">
+    <button
       *ngIf="clearable && !disabled && ((multiple && selectedItems.length > 0) || (!multiple && selectedItem))"
-      class="fa-solid fa-xmark fs-8 text-muted custom-select-action-icon me-2"
+      type="button"
+      class="custom-select-icon-btn"
       (click)="clear($event)"
-    ></i>
+      tabindex="-1"
+    >
+      <i class="fa-solid fa-xmark fs-8"></i>
+    </button>
 
-    <i
-      class="fa-solid fa-chevron-down fs-8 text-muted custom-select-action-icon custom-select-chevron"
-      [style.transform]="isOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
-    ></i>
+    <span class="custom-select-divider"></span>
+
+    <span class="custom-select-chevron-wrap">
+      <i
+        class="fa-solid fa-chevron-down fs-8 custom-select-chevron"
+        [style.transform]="isOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
+      ></i>
+    </span>
   </div>
 </div>

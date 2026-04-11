@@ -28,6 +28,7 @@ import Draw from 'ol/interaction/Draw';
 import Modify from 'ol/interaction/Modify';
 import Snap from 'ol/interaction/Snap';
 import shp from 'shpjs';
+import WKT from 'ol/format/WKT.js';
 
 import { BasketService } from 'src/app/_metronic/partials/layout/basket/basket.service';
 import { BasketManagementService } from '../../basket-management/basket-management.service';
@@ -39,6 +40,16 @@ import { LayerModel } from '../../map-management/models/layer.model';
 import { LayerType } from '../../map-management/models/layertype.model';
 import { MapSearchService } from '../map-search.service';
 import { MapService } from './map.service';
+import { BasketModel } from '../../basket-management/models/basket.model';
+import { ProductModel } from '../marketplace/models/product.model';
+
+type PurchaseOptionKey = 'orthorectified' | 'pansharpened' | 'classified';
+
+type PurchaseOptions = {
+  orthorectified: boolean;
+  pansharpened: boolean;
+  classified: boolean;
+};
 
 type SearchResult = {
   display_name: string;
@@ -113,6 +124,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   private readonly mapReady = signal(false);
   private lastHandledTargetNonce: number | null = null;
+  private suppressMapClickUntil = 0;
 
   private readonly vectorSource = new VectorSource<Feature<Geometry>>();
   private readonly vectorLayer = new VectorLayer({
@@ -172,6 +184,15 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   readonly featurePopupTitle = signal('');
   readonly featurePopupSubtitle = signal('');
   readonly featurePopupEntries = signal<FeaturePopupEntry[]>([]);
+
+  readonly purchaseDrawerOpen = signal(false);
+  readonly selectedPurchaseProduct = signal<ProductModel | null>(null);
+
+  readonly purchaseOptions = signal<PurchaseOptions>({
+    orthorectified: false,
+    pansharpened: false,
+    classified: false
+  });
 
   readonly LayerType = LayerType;
 
@@ -262,13 +283,22 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.mapReady.set(false);
     this.closeFeatureInfoDrawer();
+    this.closePurchaseDrawer();
     this.map?.setTarget(undefined);
+  }
+
+  private suppressMapClicks(durationMs = 350): void {
+    this.suppressMapClickUntil = Date.now() + durationMs;
+  }
+
+  private shouldIgnoreMapClick(): boolean {
+    return Date.now() < this.suppressMapClickUntil;
   }
 
   openSearchPanel(): void {
     this.searchPanelOpen.set(true);
     this.layerManagerOpen.set(false);
-    this.closeAllDrawers();
+    this.closeRightDrawersOnly();
   }
 
   closeSearchPanel(): void {
@@ -282,7 +312,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
       if (next) {
         this.layerManagerOpen.set(false);
-        this.closeAllDrawers();
+        this.closeRightDrawersOnly();
       }
 
       if (!next) {
@@ -299,7 +329,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
       if (next) {
         this.closeSearchPanel();
-        this.closeAllDrawers();
+        this.closeRightDrawersOnly();
       }
 
       return next;
@@ -314,6 +344,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.closeInfo();
     this.closeFilterDrawer();
     this.closeFeatureInfoDrawer();
+    this.closePurchaseDrawer();
     this.selectedLegendLayer.set(layer);
     this.legendPanelOpen.set(true);
   }
@@ -348,6 +379,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.closeLegend();
     this.closeFilterDrawer();
     this.closeFeatureInfoDrawer();
+    this.closePurchaseDrawer();
     this.selectedInfoLayer.set(layer);
     this.infoPanelOpen.set(true);
   }
@@ -357,12 +389,16 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.selectedInfoLayer.set(null);
   }
 
-  closeAllDrawers(): void {
+  closeRightDrawersOnly(): void {
     this.closeLegend();
     this.closeInfo();
     this.closeFilterDrawer();
     this.closeFeatureInfoDrawer();
+    this.closePurchaseDrawer();
+  }
 
+  closeAllDrawers(): void {
+    this.closeRightDrawersOnly();
     this.layerManagerOpen.set(false);
     this.searchPanelOpen.set(false);
   }
@@ -392,6 +428,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.closeLegend();
     this.closeInfo();
     this.closeFeatureInfoDrawer();
+    this.closePurchaseDrawer();
 
     if (!layer.filters?.length) {
       layer.filters = [this.createEmptyFilterRule()];
@@ -717,23 +754,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     this.layerGroups.set([...groups]);
-  }
-  private activateFirstBasemap(): void {
-    const groups = this.layerGroups();
-
-    for (const group of groups) {
-      const baseLayer = group.layers.find((x) => x.type == LayerType.BaseMap);
-
-      if (baseLayer) {
-        this.closeOtherBaseMaps(baseLayer.id);
-        baseLayer.isVisible = true;
-        this.ensureLayerExists(baseLayer);
-        this.setLayerVisible(baseLayer, true);
-        this.setLayerOpacity(baseLayer, baseLayer.opacity);
-        this.layerGroups.set([...groups]);
-        return;
-      }
-    }
   }
 
   toggleGroup(group: UiLayerGroupModel): void {
@@ -1298,7 +1318,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     if (!this.map) return;
 
     this.map.on('singleclick', async (event) => {
-      if (this.polygonMode() || this.drawInteraction) {
+      if (this.shouldIgnoreMapClick()) {
+        return;
+      }
+
+      if (this.polygonMode() || this.drawInteraction || this.purchaseDrawerOpen()) {
         return;
       }
 
@@ -1491,7 +1515,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.closeLegend();
     this.closeInfo();
     this.closeFilterDrawer();
+    this.closePurchaseDrawer();
     this.closeSearchPanel();
+    this.layerManagerOpen.set(false);
+
     this.featurePopupTitle.set(title);
     this.featurePopupSubtitle.set(subtitle);
     this.featurePopupEntries.set(entries);
@@ -1552,11 +1579,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   resetView(): void {
     this.clearOverlaySource();
     this.stopPolygonDrawing();
-    this.closeFeatureInfoDrawer();
+    this.closeAllDrawers();
     this.uploadedFileName.set('');
     this.searchResults.set([]);
     this.searchText.set('');
-    this.searchPanelOpen.set(false);
 
     this.view?.animate({
       center: this.defaultCenter,
@@ -1568,25 +1594,28 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   togglePolygonDraw(): void {
     if (!this.map) return;
 
-    if (this.drawInteraction) {
+    if (this.polygonMode()) {
       this.stopPolygonDrawing();
       return;
     }
 
     this.closeAllDrawers();
-    this.clearOverlaySource();
-    this.closeFeatureInfoDrawer();
-    this.uploadedFileName.set('');
-    this.searchResults.set([]);
+    this.vectorSource.clear();
 
     this.drawInteraction = new Draw({
       source: this.vectorSource,
       type: 'Polygon'
     });
 
-    this.drawInteraction.on('drawend', () => {
+    this.drawInteraction.on('drawend', async (event) => {
+      this.suppressMapClicks();
       this.stopPolygonDrawing();
       this.fitToOverlay();
+
+      const geometry = this.toGeoJsonGeometry(event.feature);
+      if (!geometry) return;
+
+      await this.openPurchaseDrawerForGeometry(geometry, 'draw', 'Drawn Area');
     });
 
     this.map.addInteraction(this.drawInteraction);
@@ -1659,11 +1688,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     if (!file) return;
 
-    this.stopPolygonDrawing();
-    this.clearOverlaySource();
-    this.closeFeatureInfoDrawer();
-    this.searchResults.set([]);
     this.uploadedFileName.set(file.name);
+    this.vectorSource.clear();
+    this.closeAllDrawers();
 
     try {
       const lower = file.name.toLowerCase();
@@ -1677,13 +1704,20 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         const polygonFeatures = this.validatePolygonFeatures(features);
 
         if (!polygonFeatures.length) {
-          alert('Yüklenen dosyada polygon veya multipolygon bulunamadı.');
+          alert('Yüklenen GeoJSON içinde polygon veya multipolygon bulunamadı.');
           input.value = '';
           return;
         }
 
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
+
+        const mergedGeometry = this.buildMultiPolygonGeometryFromFeatures(polygonFeatures);
+        if (mergedGeometry) {
+          this.suppressMapClicks();
+          await this.openPurchaseDrawerForGeometry(mergedGeometry, 'upload', file.name);
+        }
+
         input.value = '';
         return;
       }
@@ -1704,6 +1738,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
+
+        const mergedGeometry = this.buildMultiPolygonGeometryFromFeatures(polygonFeatures);
+        if (mergedGeometry) {
+          this.suppressMapClicks();
+          await this.openPurchaseDrawerForGeometry(mergedGeometry, 'upload', file.name);
+        }
+
         input.value = '';
         return;
       }
@@ -1726,6 +1767,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
+
+        const mergedGeometry = this.buildMultiPolygonGeometryFromFeatures(polygonFeatures);
+        if (mergedGeometry) {
+          this.suppressMapClicks();
+          await this.openPurchaseDrawerForGeometry(mergedGeometry, 'upload', file.name);
+        }
+
         input.value = '';
         return;
       }
@@ -1776,7 +1824,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-  flyToResult(item: SearchResult): void {
+  async flyToResult(item: SearchResult): Promise<void> {
     const geoType = item?.geojson?.type;
 
     if (geoType !== 'Polygon' && geoType !== 'MultiPolygon') {
@@ -1784,8 +1832,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       return;
     }
 
+    this.suppressMapClicks();
     this.focusTarget(Number(item.lat), Number(item.lon), item.geojson);
     this.searchResults.set([]);
+
+    await this.openPurchaseDrawerForGeometry(item.geojson, 'search', item.display_name);
   }
 
   private fitToOverlay(): void {
@@ -1823,10 +1874,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   refreshMap(): void {
     if (!this.map) return;
 
-    this.closeLegend();
-    this.closeInfo();
-    this.closeFilterDrawer();
-    this.closeFeatureInfoDrawer();
+    this.closeAllDrawers();
 
     this.mapLayerRegistry.forEach((layer) => {
       this.map?.removeLayer(layer);
@@ -1841,5 +1889,316 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       this.map?.updateSize();
       this.map?.render();
     }, 250);
+  }
+
+  closePurchaseDrawer(): void {
+    this.purchaseDrawerOpen.set(false);
+    this.selectedPurchaseProduct.set(null);
+  }
+
+  onPurchaseOptionChange(key: PurchaseOptionKey, checked: boolean): void {
+    this.purchaseOptions.update((current) => ({
+      ...current,
+      [key]: checked
+    }));
+
+    const currentProduct = this.selectedPurchaseProduct();
+    if (!currentProduct) return;
+
+    const options = this.purchaseOptions();
+    const nextPrice = this.calculatePrice(currentProduct.areaKm2 ?? 0, options);
+
+    this.selectedPurchaseProduct.set({
+      ...currentProduct,
+      isOrthorectified: options.orthorectified,
+      isPansharpened: options.pansharpened,
+      isClassified: options.classified,
+      price: nextPrice,
+      priceStr: nextPrice.toFixed(2)
+    });
+  }
+
+  private resetPurchaseOptions(): void {
+    this.purchaseOptions.set({
+      orthorectified: false,
+      pansharpened: false,
+      classified: false
+    });
+  }
+
+  private async openPurchaseDrawerForGeometry(
+    geometry: any,
+    sourceType: 'draw' | 'upload' | 'search',
+    sourceLabel?: string
+  ): Promise<void> {
+    this.closeAllDrawers();
+    this.resetPurchaseOptions();
+    this.purchaseDrawerOpen.set(true);
+
+    const product = await this.createProductFromSelection(geometry, sourceType, sourceLabel);
+    this.selectedPurchaseProduct.set(product);
+  }
+
+  public geoJsonObjectToWkt(geomObj: any): string {
+    const geoJsonFormat = new GeoJSON();
+    const wktFormat = new WKT();
+
+    const geometry = geoJsonFormat.readGeometry(geomObj, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:4326'
+    });
+
+    return wktFormat.writeGeometry(geometry);
+  }
+
+  private async createProductFromSelection(
+    geometry: any,
+    sourceType: 'draw' | 'upload' | 'search',
+    sourceLabel?: string
+  ): Promise<ProductModel> {
+    const options = this.purchaseOptions();
+    const areaKm2 = this.calculateAreaKm2(geometry);
+    const bbox = this.calculateBBox(geometry);
+    const wkt = this.geoJsonObjectToWkt(geometry)
+
+    return {
+      id: 0,
+      name: sourceLabel || this.getDefaultAreaName(sourceType),
+      downloadLink: undefined,
+      price: this.calculatePrice(areaKm2, options),
+      priceStr: this.calculatePrice(areaKm2, options).toFixed(2),
+      userId: 0,
+      isDeleted: false,
+      categoryId: 3,
+      city: undefined,
+      district: undefined,
+      acquisitionDate: new Date().toISOString(),
+      provider: 'Custom Request',
+      resolution: 0.5,
+      cloudRate: 0,
+      areaKm2,
+      currency: 'TRY',
+      description: `${areaKm2.toFixed(2)} km² selected area`,
+      isOrthorectified: options.orthorectified,
+      isPansharpened: options.pansharpened,
+      isClassified: options.classified,
+      classes: [],
+      wkt,
+      bbox,
+      sourceType: sourceType == 'draw' ? 1 : (sourceType == 'upload' ? 2 : 3), 
+      sourceLabel,
+      requestHash: this.hashGeometry(geometry),
+      isCustomArea: true
+    };
+  }
+
+  private calculateAreaKm2(geometry: any): number {
+    if (!geometry) return 0;
+    return Number(this.estimateAreaFromBbox(geometry).toFixed(2));
+  }
+
+  private estimateAreaFromBbox(geometry: any): number {
+    const bbox = this.calculateBBox(geometry);
+    if (!bbox || bbox.length < 4) return 0;
+
+    const [minLon, minLat, maxLon, maxLat] = bbox;
+    const avgLat = (minLat + maxLat) / 2;
+
+    const kmPerDegLat = 111.32;
+    const kmPerDegLon = 111.32 * Math.cos((avgLat * Math.PI) / 180);
+
+    const widthKm = Math.max(0, (maxLon - minLon) * kmPerDegLon);
+    const heightKm = Math.max(0, (maxLat - minLat) * kmPerDegLat);
+
+    return widthKm * heightKm * 0.65;
+  }
+
+  private calculateBBox(geometry: any): number[] {
+    if (!geometry) return [];
+
+    let coords: number[][] = [];
+
+    if (geometry.type === 'Polygon') {
+      coords = geometry.coordinates?.[0] ?? [];
+    } else if (geometry.type === 'MultiPolygon') {
+      coords = (geometry.coordinates ?? []).flatMap((polygon: number[][][]) => polygon[0] ?? []);
+    } else if (geometry.type === 'Feature') {
+      return this.calculateBBox(geometry.geometry);
+    }
+
+    if (!coords.length) return [];
+
+    const lons = coords.map((c) => c[0]);
+    const lats = coords.map((c) => c[1]);
+
+    return [
+      Math.min(...lons),
+      Math.min(...lats),
+      Math.max(...lons),
+      Math.max(...lats)
+    ];
+  }
+
+  private calculatePrice(areaKm2: number, options: PurchaseOptions): number {
+    let total = areaKm2 * 10;
+
+    if (options.orthorectified) total += areaKm2 * 2;
+    if (options.pansharpened) total += areaKm2 * 3;
+    if (options.classified) total += areaKm2 * 5;
+
+    return Number(total.toFixed(2));
+  }
+
+  private getDefaultAreaName(sourceType: 'draw' | 'upload' | 'search'): string {
+    switch (sourceType) {
+      case 'draw':
+        return this.translateService.instant('MAP.CUSTOM_AREA.DEFAULT_NAME_DRAW');
+      case 'upload':
+        return this.translateService.instant('MAP.CUSTOM_AREA.DEFAULT_NAME_UPLOAD');
+      case 'search':
+        return this.translateService.instant('MAP.CUSTOM_AREA.DEFAULT_NAME_SEARCH');
+      default:
+        return this.translateService.instant('MAP.CUSTOM_AREA.DEFAULT_NAME');
+    }
+  }
+
+  private hashGeometry(geometry: any): string {
+    try {
+      return btoa(unescape(encodeURIComponent(JSON.stringify(geometry)))).slice(0, 48);
+    } catch {
+      return `${Date.now()}`;
+    }
+  }
+
+  private toGeoJsonGeometry(feature: Feature<Geometry>): any | null {
+    const geometry = feature.getGeometry();
+    if (!geometry) return null;
+
+    return new GeoJSON().writeGeometryObject(geometry, {
+      featureProjection: 'EPSG:3857',
+      dataProjection: 'EPSG:4326'
+    });
+  }
+
+  private buildMultiPolygonGeometryFromFeatures(features: Feature<Geometry>[]): any | null {
+    const polygons: number[][][][] = [];
+
+    for (const feature of features) {
+      const geo = this.toGeoJsonGeometry(feature);
+      if (!geo) continue;
+
+      if (geo.type === 'Polygon') {
+        polygons.push(geo.coordinates);
+      } else if (geo.type === 'MultiPolygon') {
+        for (const item of geo.coordinates) {
+          polygons.push(item);
+        }
+      }
+    }
+
+    if (!polygons.length) return null;
+
+    if (polygons.length === 1) {
+      return {
+        type: 'Polygon',
+        coordinates: polygons[0]
+      };
+    }
+
+    return {
+      type: 'MultiPolygon',
+      coordinates: polygons
+    };
+  }
+
+  addCustomProductToCart(): void {
+    const item = this.selectedPurchaseProduct();
+    if (!item) return;
+
+    const currentUser = this.authService.currentUserValue;
+
+    if (currentUser) {
+      const data: BasketModel = {
+        id: 0,
+        userId: Number(currentUser.id),
+        productId: item.id,
+        isDeleted: false,
+        product: item,
+        totalPrice: item.price ?? 0,
+        numberOf: 1
+      };
+
+      this.basketManagementService.save(data).subscribe((result: any) => {
+        if (result?.isSuccess) {
+          this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+          this.basketService.loadBasketFromDb();
+          this.closePurchaseDrawer();
+        } else {
+          this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+        }
+      });
+
+      return;
+    }
+
+    const product: ProductModel = {
+      ...item,
+      categoryId: item.categoryId ?? 1,
+      id: item.id,
+      name: item.name,
+      price: item.price ?? 0,
+      isDeleted: false,
+      userId: 0
+    };
+
+    let basket = JSON.parse(localStorage.getItem('basket') as string) as BasketModel[] | null;
+
+    const alreadyExists = !!basket?.some(
+      (basketItem) =>
+        basketItem.product?.requestHash &&
+        product.requestHash &&
+        basketItem.product.requestHash === product.requestHash
+    );
+
+    if (alreadyExists) {
+      this.alertService.createAlert('warning', this.translateService.instant('MAP.CUSTOM_AREA.ALREADY_IN_CART'));
+      return;
+    }
+
+    if (basket?.length) {
+      if (basket.length < 15) {
+        basket.push({
+          id: 0,
+          userId: 0,
+          product,
+          productId: product.id,
+          isDeleted: false,
+          numberOf: 1,
+          totalPrice: product.price ?? 0
+        });
+      } else {
+        this.alertService.createAlert(
+          'warning',
+          this.translateService.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS')
+        );
+        return;
+      }
+    } else {
+      basket = [
+        {
+          id: 0,
+          userId: 0,
+          product,
+          productId: product.id,
+          isDeleted: false,
+          numberOf: 1,
+          totalPrice: product.price ?? 0
+        }
+      ];
+    }
+
+    this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+    this.basketService.setBasket(basket);
+    this.closePurchaseDrawer();
   }
 }

@@ -4,10 +4,12 @@ import {
   AfterViewChecked,
   ViewChild,
   ElementRef,
+  OnDestroy,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Subject, takeUntil } from 'rxjs';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 import { SupportManagementService } from '../support-management.service';
 import { SupportTicketModel } from '../models/support-ticket.model';
@@ -17,7 +19,8 @@ import { SupportTicketModel } from '../models/support-ticket.model';
   templateUrl: './support-management-detail.component.html',
   styleUrls: ['./support-management-detail.component.scss'],
 })
-export class SupportManagementDetailComponent implements OnInit, AfterViewChecked {
+export class SupportManagementDetailComponent
+  implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('chatContainer') chatContainer?: ElementRef<HTMLDivElement>;
 
   selectedTicket: SupportTicketModel | null = null;
@@ -28,14 +31,7 @@ export class SupportManagementDetailComponent implements OnInit, AfterViewChecke
   statusForm!: FormGroup;
   replyForm!: FormGroup;
 
-  statusOptions = [
-    { label: 'SUPPORT_MANAGEMENT.STATUS_NEW', value: 'New' },
-    { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_ADMIN', value: 'WaitingForAdmin' },
-    { label: 'SUPPORT_MANAGEMENT.STATUS_WAITING_FOR_CUSTOMER', value: 'WaitingForCustomer' },
-    { label: 'SUPPORT_MANAGEMENT.STATUS_CUSTOMER_REPLIED', value: 'CustomerReplied' },
-    { label: 'SUPPORT_MANAGEMENT.STATUS_CLOSED', value: 'Closed' },
-    { label: 'SUPPORT_MANAGEMENT.STATUS_SPAM', value: 'Spam' },
-  ];
+  statusOptions: Array<{ label: string; value: string }> = [];
 
   private rawStatusOptions = [
     { label: 'SUPPORT_MANAGEMENT.STATUS_NEW', value: 'New' },
@@ -48,6 +44,7 @@ export class SupportManagementDetailComponent implements OnInit, AfterViewChecke
 
   private shouldScrollChatToBottom = false;
   private ticketId = 0;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -56,31 +53,35 @@ export class SupportManagementDetailComponent implements OnInit, AfterViewChecke
     private supportManagementService: SupportManagementService,
     private alertService: AlertService,
     private translate: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForms();
     this.prepareStatusOptions();
 
-    this.translate.onLangChange.subscribe(() => {
-      this.prepareStatusOptions();
-    });
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.prepareStatusOptions();
+      });
 
-    this.route.paramMap.subscribe((params) => {
-      const id = Number(params.get('id'));
+    this.route.paramMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        const id = Number(params.get('id'));
 
-      if (!id || isNaN(id)) {
-        this.alertService.createAlert(
-          'warning',
-          this.translate.instant('SUPPORT_MANAGEMENT.ALERT.TICKET_NOT_FOUND')
-        );
-        this.backToList();
-        return;
-      }
+        if (!id || isNaN(id)) {
+          this.alertService.createAlert(
+            'warning',
+            this.translate.instant('SUPPORT_MANAGEMENT.ALERT.TICKET_NOT_FOUND')
+          );
+          this.backToList();
+          return;
+        }
 
-      this.ticketId = id;
-      this.loadTicket();
-    });
+        this.ticketId = id;
+        this.loadTicket();
+      });
   }
 
   ngAfterViewChecked(): void {
@@ -88,6 +89,11 @@ export class SupportManagementDetailComponent implements OnInit, AfterViewChecke
       this.scrollChatToBottom();
       this.shouldScrollChatToBottom = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   get isClosed(): boolean {
@@ -100,10 +106,6 @@ export class SupportManagementDetailComponent implements OnInit, AfterViewChecke
 
   get canUpdateStatus(): boolean {
     return !!this.selectedTicket && !this.isClosed && !this.isSubmitting;
-  }
-
-  get ticketStatus(): string {
-    return this.selectedTicket?.status || '';
   }
 
   private initForms(): void {
@@ -310,6 +312,7 @@ export class SupportManagementDetailComponent implements OnInit, AfterViewChecke
     }
   }
 
+
   getSenderLabel(senderType: string): string {
     if (senderType === 'Admin') {
       return this.translate.instant('SUPPORT_MANAGEMENT.ADMIN');
@@ -353,5 +356,42 @@ export class SupportManagementDetailComponent implements OnInit, AfterViewChecke
 
     const el = this.chatContainer.nativeElement;
     el.scrollTop = el.scrollHeight;
+  }
+
+  getStatusIconClass(status: string): string {
+    switch (status) {
+      case 'New':
+        return 'fa-regular fa-circle';
+      case 'WaitingForAdmin':
+        return 'fa-regular fa-clock';
+      case 'WaitingForCustomer':
+        return 'fa-regular fa-user';
+      case 'CustomerReplied':
+        return 'fa-solid fa-reply';
+      case 'Closed':
+        return 'fa-solid fa-circle-xmark';
+      case 'Spam':
+        return 'fa-solid fa-ban';
+      default:
+        return 'fa-solid fa-circle-info';
+    }
+  }
+
+  getStatusTheme(status: string): string {
+    switch (status) {
+      case 'New':
+        return 'primary';
+      case 'WaitingForAdmin':
+        return 'warning';
+      case 'WaitingForCustomer':
+        return 'info';
+      case 'CustomerReplied':
+        return 'success';
+      case 'Closed':
+      case 'Spam':
+        return 'danger';
+      default:
+        return 'secondary';
+    }
   }
 }

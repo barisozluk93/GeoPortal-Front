@@ -1,59 +1,75 @@
-<div class="satdash container-fluid">
+<div class="container-fluid py-6 py-lg-8 satdash">
   <app-filter-bar
     [filters]="filters"
     (filter)="loadDashboard()"
     (reset)="resetFilters()"
     (quickRange)="applyQuickRange($event)"
+    class="d-block mb-8"
   ></app-filter-bar>
 
   <ng-container *ngIf="!loading && overview; else loadingTemplate">
-    <div class="satdash__hero card mb-8">
+    <div class="card mb-8 satdash-hero">
       <div class="card-body p-5 p-lg-7 p-xl-10">
-        <div class="row align-items-center g-6 g-xl-8">
+        <div class="row g-6 align-items-center">
           <div class="col-12 col-xl-8">
-            <div class="satdash__eyebrow">
-              <span class="satdash__eyebrow-dot"></span>
-              SATELLITE DATA COMMERCE & OPERATIONS
+            <div class="d-inline-flex align-items-center gap-3 satdash-hero__eyebrow mb-4">
+              <span class="satdash-hero__dot"></span>
+              <span>{{ 'DASHBOARD.HERO.EYEBROW' | translate }}</span>
             </div>
 
-            <h1 class="satdash__hero-title mt-4 mb-4">
-              Uydu veri satış, API kullanımı ve sipariş operasyonlarını
-              <span>tek ekranda yönetin</span>
+            <h1 class="satdash-hero__title mb-4">
+              {{ 'DASHBOARD.HERO.TITLE_1' | translate }}
+              <span class="d-inline-block">{{ 'DASHBOARD.HERO.TITLE_2' | translate }}</span>
             </h1>
 
-            <p class="satdash__hero-text mb-0">
-              Marketplace gelirleri, API abonelikleri, bölgesel talepler, sipariş yaşam döngüsü
-              ve entegrasyon sağlığını anlık izleyin.
+            <p class="satdash-hero__text text-muted mb-0">
+              {{ 'DASHBOARD.HERO.DESCRIPTION' | translate }}
             </p>
           </div>
 
           <div class="col-12 col-xl-4">
-            <div class="satdash__hero-metrics">
-              <div class="satdash__hero-metric">
-                <div class="satdash__hero-metric-label">Bugünkü API Çağrısı</div>
-                <div class="satdash__hero-metric-value">
-                  {{ formatNumber(overview.kpis.totalApiCallsToday) }}
+            <div class="row g-4">
+              <div class="col-6">
+                <div class="satdash-metric h-100">
+                  <div class="satdash-metric__label">
+                    {{ 'DASHBOARD.KPI.TODAY_API_CALLS' | translate }}
+                  </div>
+                  <div class="satdash-metric__value">
+                    {{ formatNumber(overview.kpis.totalApiCallsToday) }}
+                  </div>
                 </div>
               </div>
 
-              <div class="satdash__hero-metric">
-                <div class="satdash__hero-metric-label">Bölgesel Talep</div>
-                <div class="satdash__hero-metric-value">
-                  {{ formatNumber(overview.kpis.regionalDemandCount) }}
+              <div class="col-6">
+                <div class="satdash-metric h-100">
+                  <div class="satdash-metric__label">
+                    {{ 'DASHBOARD.KPI.REGIONAL_DEMAND' | translate }}
+                  </div>
+                  <div class="satdash-metric__value">
+                    {{ formatNumber(overview.kpis.regionalDemandCount) }}
+                  </div>
                 </div>
               </div>
 
-              <div class="satdash__hero-metric">
-                <div class="satdash__hero-metric-label">Bireysel Üye</div>
-                <div class="satdash__hero-metric-value">
-                  {{ formatNumber(overview.kpis.individualMembers) }}
+              <div class="col-6">
+                <div class="satdash-metric h-100">
+                  <div class="satdash-metric__label">
+                    {{ 'DASHBOARD.KPI.INDIVIDUAL_MEMBER' | translate }}
+                  </div>
+                  <div class="satdash-metric__value">
+                    {{ formatNumber(overview.kpis.individualMembers) }}
+                  </div>
                 </div>
               </div>
 
-              <div class="satdash__hero-metric">
-                <div class="satdash__hero-metric-label">Kurumsal Üye</div>
-                <div class="satdash__hero-metric-value">
-                  {{ formatNumber(overview.kpis.corporateMembers) }}
+              <div class="col-6">
+                <div class="satdash-metric h-100">
+                  <div class="satdash-metric__label">
+                    {{ 'DASHBOARD.KPI.CORPORATE_MEMBER' | translate }}
+                  </div>
+                  <div class="satdash-metric__value">
+                    {{ formatNumber(overview.kpis.corporateMembers) }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -62,14 +78,17 @@
       </div>
     </div>
 
-    <app-kpi-card [kpis]="overview.kpis"></app-kpi-card>
+    <app-kpi-card [kpis]="overview.kpis" class="d-block mb-8"></app-kpi-card>
 
-    <div class="row g-4 g-xl-7 mb-8">
+    <div class="row g-5 g-xl-8 mb-8">
       <div class="col-12 col-xl-8">
         <app-chart-card
-          title="Gelir Trendi"
-          subtitle="Marketplace + API + toplam gelir"
-          chip="Live"
+          [title]="'DASHBOARD.CHART.REVENUE_TREND_TITLE' | translate"
+          [subtitle]="'DASHBOARD.CHART.REVENUE_TREND_SUB' | translate"
+          [chip]="'DASHBOARD.CHIPS.LIVE' | translate"
+          chipClass="badge-light-primary"
+          chipIcon="ki-duotone ki-chart-line-up fs-7"
+          chipDotClass="dot-primary"
         >
           <apx-chart
             [series]="revenueChart.series!"
@@ -90,10 +109,12 @@
 
       <div class="col-12 col-xl-4">
         <app-chart-card
-          title="Gelir Kırılımı"
-          subtitle="Kaynağa göre gelir dağılımı"
-          chip="Revenue"
-          chipClass="satdash__panel-chip--soft"
+          [title]="'DASHBOARD.CHART.REVENUE_BREAKDOWN_TITLE' | translate"
+          [subtitle]="'DASHBOARD.CHART.REVENUE_BREAKDOWN_SUB' | translate"
+          [chip]="'DASHBOARD.CHIPS.REVENUE' | translate"
+          chipClass="badge-light-primary"
+          chipIcon="ki-duotone ki-wallet fs-7"
+          chipDotClass="dot-primary"
         >
           <apx-chart
             [series]="revenueBreakdownChart.series!"
@@ -111,13 +132,15 @@
       </div>
     </div>
 
-    <div class="row g-4 g-xl-7 mb-8">
+    <div class="row g-5 g-xl-8 mb-8">
       <div class="col-12 col-xl-6">
         <app-chart-card
-          title="Sipariş Yaşam Döngüsü"
-          subtitle="Operasyon hattındaki siparişler"
-          chip="Pipeline"
-          chipClass="satdash__panel-chip--warn"
+          [title]="'DASHBOARD.CHART.ORDER_PIPELINE_TITLE' | translate"
+          [subtitle]="'DASHBOARD.CHART.ORDER_PIPELINE_SUB' | translate"
+          [chip]="'DASHBOARD.CHIPS.PIPELINE' | translate"
+          chipClass="badge-light-warning"
+          chipIcon="ki-duotone ki-arrows-circle fs-7"
+          chipDotClass="dot-warning"
         >
           <apx-chart
             [series]="orderPipelineChart.series!"
@@ -135,10 +158,12 @@
 
       <div class="col-12 col-xl-6">
         <app-chart-card
-          title="API Kullanımı"
-          subtitle="Günlük çağrı trendi"
-          chip="API"
-          chipClass="satdash__panel-chip--info"
+          [title]="'DASHBOARD.CHART.API_USAGE_TITLE' | translate"
+          [subtitle]="'DASHBOARD.CHART.API_USAGE_SUB' | translate"
+          [chip]="'DASHBOARD.CHIPS.API' | translate"
+          chipClass="badge-light-info"
+          chipIcon="ki-duotone ki-code fs-7"
+          chipDotClass="dot-info"
         >
           <apx-chart
             [series]="apiUsageChart.series!"
@@ -158,13 +183,15 @@
       </div>
     </div>
 
-    <div class="row g-4 g-xl-7 mb-8">
+    <div class="row g-5 g-xl-8 mb-8">
       <div class="col-12 col-xl-8">
         <app-chart-card
-          title="Son Siparişler"
-          subtitle="En son oluşturulan siparişler ve operasyon durumları"
-          chip="Orders"
-          chipClass="satdash__panel-chip--soft"
+          [title]="'DASHBOARD.CHART.RECENT_ORDERS_TITLE' | translate"
+          [subtitle]="'DASHBOARD.CHART.RECENT_ORDERS_SUB' | translate"
+          [chip]="'DASHBOARD.CHIPS.ORDERS' | translate"
+          chipClass="badge-light-primary"
+          chipIcon="ki-duotone ki-basket fs-7"
+          chipDotClass="dot-primary"
         >
           <app-orders-table [orders]="overview.recentOrders"></app-orders-table>
         </app-chart-card>
@@ -172,23 +199,27 @@
 
       <div class="col-12 col-xl-4">
         <app-chart-card
-          title="Bölgesel Talepler"
-          subtitle="Harita üzerinden gelen aktif talepler"
-          chip="Demand"
-          chipClass="satdash__panel-chip--soft"
+          [title]="'DASHBOARD.CHART.REGIONAL_DEMAND_TITLE' | translate"
+          [subtitle]="'DASHBOARD.CHART.REGIONAL_DEMAND_SUB' | translate"
+          [chip]="'DASHBOARD.CHIPS.DEMAND' | translate"
+          chipClass="badge-light-primary"
+          chipIcon="ki-duotone ki-geolocation fs-7"
+          chipDotClass="dot-primary"
         >
           <app-regional-demands [demands]="overview.regionalDemands"></app-regional-demands>
         </app-chart-card>
       </div>
     </div>
 
-    <div class="row g-4 g-xl-7">
+    <div class="row g-5 g-xl-8">
       <div class="col-12 col-xl-4">
         <app-chart-card
-          title="Üyelik Dağılımı"
-          subtitle="Bireysel ve kurumsal kullanıcılar"
-          chip="Members"
-          chipClass="satdash__panel-chip--soft"
+          [title]="'DASHBOARD.CHART.MEMBERSHIP_TITLE' | translate"
+          [subtitle]="'DASHBOARD.CHART.MEMBERSHIP_SUB' | translate"
+          [chip]="'DASHBOARD.CHIPS.MEMBERS' | translate"
+          chipClass="badge-light-primary"
+          chipIcon="ki-duotone ki-profile-user fs-7"
+          chipDotClass="dot-primary"
         >
           <apx-chart
             [series]="membershipChart.series!"
@@ -204,25 +235,16 @@
           ></apx-chart>
         </app-chart-card>
       </div>
-
-      <div class="col-12 col-xl-8">
-        <app-chart-card
-          title="Sistem Sağlığı"
-          subtitle="Temel servis ve entegrasyon durumları"
-          chip="Healthy"
-          chipClass="satdash__panel-chip--success"
-        >
-          <app-system-health [items]="overview.systemHealth"></app-system-health>
-        </app-chart-card>
-      </div>
     </div>
   </ng-container>
 
   <ng-template #loadingTemplate>
-    <div class="satdash__loading card">
+    <div class="card satdash-loading">
       <div class="card-body text-center py-20">
         <div class="spinner-border text-primary mb-4"></div>
-        <div class="satdash__muted">Dashboard yükleniyor...</div>
+        <div class="text-muted fw-semibold">
+          {{ 'DASHBOARD.LOADING' | translate }}
+        </div>
       </div>
     </div>
   </ng-template>

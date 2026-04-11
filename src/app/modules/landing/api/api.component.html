@@ -1,87 +1,120 @@
 <div class="api-page">
   <section class="api-hero">
     <div class="container-fluid">
-      <div class="api-hero__grid">
-        <div class="api-hero__content">
-          <div class="api-hero__kicker badge badge-light-primary " style="text-transform: uppercase;">
-            {{ 'API_PAGE.KICKER' | translate }}
-          </div>
+      <div class="row g-7 align-items-stretch">
+        <div class="col-12 col-xl-8">
+          <div class="card h-100 border-0 hero-main-card position-relative overflow-hidden">
+            <div class="hero-bg"></div>
+            <div class="hero-overlay"></div>
 
-          <h1 class="api-hero__title">
-            {{ 'API_PAGE.TITLE' | translate }}
-          </h1>
+            <div class="card-body p-6 p-lg-10 position-relative z-index-1">
+              <div class="hero-content-wrap">
+                <div class="badge badge-light-primary mb-5">
+                  {{ 'API_PAGE.KICKER' | translate }}
+                </div>
 
-          <p class="api-hero__copy text-muted fs-6">
-            {{ 'API_PAGE.COPY' | translate }}
-          </p>
+                <h1 class="text-white fw-bolder lh-sm fs-1 fs-lg-4x mb-5 hero-title">
+                  {{ 'API_PAGE.TITLE' | translate }}
+                </h1>
 
-          <div class="api-hero__actions">
-            <button type="button" class="btn btn-primary" (click)="onBuyNow()">
-              {{ 'API_PAGE.BUY_API_KEY' | translate }}
-            </button>
+                <p class="text-muted fs-5 mb-6 hero-copy">
+                  {{ 'API_PAGE.COPY' | translate }}
+                </p>
 
-            <a routerLink="/landing/documentation" class="btn btn-light">
-              {{ 'API_PAGE.DOCUMENTATION' | translate }}
-            </a>
+                <!-- <div class="card bg-transparent border border-white border-opacity-10 shadow-none hero-search-card"> -->
+                  <div class="card-body p-4 p-lg-5">
+                    <div class="d-flex flex-column flex-sm-row gap-3">
+                      <button type="button" class="btn btn-primary px-8" (click)="onBuyNow()">
+                        {{ 'API_PAGE.BUY_API_KEY' | translate }}
+                      </button>
+
+                      <a routerLink="/landing/documentation" class="btn btn-light">
+                        {{ 'API_PAGE.DOCUMENTATION' | translate }}
+                      </a>
+                    </div>
+                  </div>
+                <!-- </div> -->
+
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="api-hero__visual">
-          <div class="api-summary-card">
-            <div class="api-summary-card__header">
-              <div class="api-summary-card__eyebrow">
-                {{ 'API_PAGE.ENDPOINTS_KICKER' | translate }}
-              </div>
-              <h3 class="api-summary-card__title">
-                {{ 'API_PAGE.ENDPOINTS_TITLE' | translate }}
-              </h3>
-            </div>
+        <div class="col-12 col-xl-4">
+          <div class="card h-100 border-0 hero-side-card">
+            <div class="card-body p-6 p-lg-8">
+              <div class="mb-6">
+                <div class="text-primary fw-bold fs-8 mb-2 text-uppercase">
+                  {{ 'API_PAGE.ENDPOINTS_KICKER' | translate }}
+                </div>
 
-            <div class="api-summary-card__list">
-              <div class="api-summary-item">
-                <div class="api-summary-item__step">01</div>
-                <div class="api-summary-item__body">
-                  <div class="api-summary-item__title">
-                    {{ 'API_PAGE.ENDPOINT_1_TITLE' | translate }}
+                <h3 class="text-white fw-bolder fs-2 mb-0">
+                  {{ 'API_PAGE.ENDPOINTS_TITLE' | translate }}
+                </h3>
+              </div>
+
+              <div class="d-flex flex-column gap-4">
+                <div class="rounded-4 border border-white border-opacity-10 p-4 summary-item">
+                  <div class="d-flex align-items-start gap-4">
+                    <div class="symbol symbol-45px flex-shrink-0">
+                      <span class="symbol-label bg-light-primary text-primary fw-bolder">
+                        01
+                      </span>
+                    </div>
+
+                    <div class="flex-grow-1 min-w-0">
+                      <div class="text-white fw-bold fs-5 mb-2">
+                        {{ 'API_PAGE.ENDPOINT_1_TITLE' | translate }}
+                      </div>
+
+                      <div class="endpoint-code rounded-3 px-3 py-2">
+                        <code>{{baseUrl}}/geoportalApi/map/getSatelliteDatas</code>
+                      </div>
+                    </div>
                   </div>
-                  <div class="api-summary-item__endpoint">
-                    {{baseUrl}}/geoportalApi/map/getSatelliteDatas
+                </div>
+
+                <div class="rounded-4 border border-white border-opacity-10 p-4 summary-item">
+                  <div class="d-flex align-items-start gap-4">
+                    <div class="symbol symbol-45px flex-shrink-0">
+                      <span class="symbol-label bg-light-primary text-primary fw-bolder">
+                        02
+                      </span>
+                    </div>
+
+                    <div class="flex-grow-1 min-w-0">
+                      <div class="text-white fw-bold fs-5 mb-2">
+                        {{ 'API_PAGE.ENDPOINT_2_TITLE' | translate }}
+                      </div>
+
+                      <div class="endpoint-code rounded-3 px-3 py-2">
+                        <code>{{baseUrl}}/geoportalApi/map/getStatus/&#123;processId&#125;</code>
+                      </div>
+                    </div>
                   </div>
-                  <div class="api-summary-item__text">
-                    {{ 'API_PAGE.ENDPOINT_1_DESC' | translate }}
+                </div>
+
+                <div class="rounded-4 border border-white border-opacity-10 p-4 summary-item">
+                  <div class="d-flex align-items-start gap-4">
+                    <div class="symbol symbol-45px flex-shrink-0">
+                      <span class="symbol-label bg-light-primary text-primary fw-bolder">
+                        03
+                      </span>
+                    </div>
+
+                    <div class="flex-grow-1 min-w-0">
+                      <div class="text-white fw-bold fs-5 mb-2">
+                        {{ 'API_PAGE.ENDPOINT_3_TITLE' | translate }}
+                      </div>
+
+                      <div class="endpoint-code rounded-3 px-3 py-2">
+                        <code>{{baseUrl}}/geoportalApi/map/getProcessedSatelliteImage/&#123;processId&#125;</code>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div class="api-summary-item">
-                <div class="api-summary-item__step">02</div>
-                <div class="api-summary-item__body">
-                  <div class="api-summary-item__title">
-                    {{ 'API_PAGE.ENDPOINT_2_TITLE' | translate }}
-                  </div>
-                  <div class="api-summary-item__endpoint">
-                    {{baseUrl}}/geoportalApi/map/getStatus/&#123;processId&#125;
-                  </div>
-                  <div class="api-summary-item__text">
-                    {{ 'API_PAGE.ENDPOINT_2_DESC' | translate }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="api-summary-item">
-                <div class="api-summary-item__step">03</div>
-                <div class="api-summary-item__body">
-                  <div class="api-summary-item__title">
-                    {{ 'API_PAGE.ENDPOINT_3_TITLE' | translate }}
-                  </div>
-                  <div class="api-summary-item__endpoint">
-                    {{baseUrl}}/geoportalApi/map/getProcessedSatelliteImage/&#123;processId&#125;
-                  </div>
-                  <div class="api-summary-item__text">
-                    {{ 'API_PAGE.ENDPOINT_3_DESC' | translate }}
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -91,112 +124,261 @@
 
   <section class="api-section">
     <div class="container-fluid">
-      <div class="api-section__header">
-        <div class="api-section__kicker badge badge-light-primary" style="text-transform: uppercase;">
+      <div class="text-center mb-8">
+        <div class="badge badge-light-primary mb-4">
           {{ 'API_PAGE.SECTION2_KICKER' | translate }}
         </div>
-        <h2 class="api-section__title">
+
+        <h2 class="text-white fw-bolder fs-2hx mb-4">
           {{ 'API_PAGE.SECTION2_TITLE' | translate }}
         </h2>
-        <p class="api-section__copy text-muted">
+
+        <p class="text-muted fs-6 section-copy mx-auto">
           {{ 'API_PAGE.SECTION2_COPY' | translate }}
         </p>
       </div>
 
-      <div class="api-access-grid">
-        <div class="card api-access-card">
-          <div class="card-body p-7">
-            <div class="api-access-card__icon">
-              <i class="ki-outline ki-key fs-2x"></i>
+      <div class="row g-7">
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="card h-100 border-0 feature-card">
+            <div class="card-body p-6 d-flex flex-column h-100">
+              <div class="symbol symbol-60px mb-5">
+                <span class="symbol-label bg-light-primary">
+                  <i class="ki-outline ki-key fs-2x text-primary"></i>
+                </span>
+              </div>
+
+              <div class="text-white fw-bolder fs-3 mb-3">
+                {{ 'API_PAGE.ACCESS_1_TITLE' | translate }}
+              </div>
+
+              <div class="text-muted fs-6 fw-semibold lh-lg mb-5">
+                {{ 'API_PAGE.ACCESS_1_DESC' | translate }}
+              </div>
+
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_1_ITEM_1' | translate }}
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_1_ITEM_2' | translate }}
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_1_ITEM_3' | translate }}
+                  </span>
+                </div>
+              </div>
             </div>
-
-            <h3 class="api-access-card__title">
-              {{ 'API_PAGE.ACCESS_1_TITLE' | translate }}
-            </h3>
-
-            <p class="api-access-card__text">
-              {{ 'API_PAGE.ACCESS_1_DESC' | translate }}
-            </p>
-
-            <ul class="api-access-card__list">
-              <li>{{ 'API_PAGE.ACCESS_1_ITEM_1' | translate }}</li>
-              <li>{{ 'API_PAGE.ACCESS_1_ITEM_2' | translate }}</li>
-              <li>{{ 'API_PAGE.ACCESS_1_ITEM_3' | translate }}</li>
-            </ul>
           </div>
         </div>
 
-        <div class="card api-access-card">
-          <div class="card-body p-7">
-            <div class="api-access-card__icon">
-              <i class="ki-outline ki-satellite fs-2x"></i>
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="card h-100 border-0 feature-card">
+            <div class="card-body p-6 d-flex flex-column h-100">
+              <div class="symbol symbol-60px mb-5">
+                <span class="symbol-label bg-light-primary">
+                  <i class="ki-outline ki-satellite fs-2x text-primary"></i>
+                </span>
+              </div>
+
+              <div class="text-white fw-bolder fs-3 mb-3">
+                {{ 'API_PAGE.ACCESS_2_TITLE' | translate }}
+              </div>
+
+              <div class="text-muted fs-6 fw-semibold lh-lg mb-5">
+                {{ 'API_PAGE.ACCESS_2_DESC' | translate }}
+              </div>
+
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_2_ITEM_1' | translate }}
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_2_ITEM_2' | translate }}
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_2_ITEM_3' | translate }}
+                  </span>
+                </div>
+              </div>
             </div>
-
-            <h3 class="api-access-card__title">
-              {{ 'API_PAGE.ACCESS_2_TITLE' | translate }}
-            </h3>
-
-            <p class="api-access-card__text">
-              {{ 'API_PAGE.ACCESS_2_DESC' | translate }}
-            </p>
-
-            <ul class="api-access-card__list">
-              <li>{{ 'API_PAGE.ACCESS_2_ITEM_1' | translate }}</li>
-              <li>{{ 'API_PAGE.ACCESS_2_ITEM_2' | translate }}</li>
-              <li>{{ 'API_PAGE.ACCESS_2_ITEM_3' | translate }}</li>
-            </ul>
           </div>
         </div>
 
-        <div class="card api-access-card">
-          <div class="card-body p-7">
-            <div class="api-access-card__icon">
-              <i class="ki-outline ki-time fs-2x"></i>
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="card h-100 border-0 feature-card">
+            <div class="card-body p-6 d-flex flex-column h-100">
+              <div class="symbol symbol-60px mb-5">
+                <span class="symbol-label bg-light-primary">
+                  <i class="ki-outline ki-time fs-2x text-primary"></i>
+                </span>
+              </div>
+
+              <div class="text-white fw-bolder fs-3 mb-3">
+                {{ 'API_PAGE.ACCESS_3_TITLE' | translate }}
+              </div>
+
+              <div class="text-muted fs-6 fw-semibold lh-lg mb-5">
+                {{ 'API_PAGE.ACCESS_3_DESC' | translate }}
+              </div>
+
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_3_ITEM_1' | translate }}
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_3_ITEM_2' | translate }}
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
+                  <span class="text-muted fs-7 fw-semibold">
+                    {{ 'API_PAGE.ACCESS_3_ITEM_3' | translate }}
+                  </span>
+                </div>
+              </div>
             </div>
-
-            <h3 class="api-access-card__title">
-              {{ 'API_PAGE.ACCESS_3_TITLE' | translate }}
-            </h3>
-
-            <p class="api-access-card__text">
-              {{ 'API_PAGE.ACCESS_3_DESC' | translate }}
-            </p>
-
-            <ul class="api-access-card__list">
-              <li>{{ 'API_PAGE.ACCESS_3_ITEM_1' | translate }}</li>
-              <li>{{ 'API_PAGE.ACCESS_3_ITEM_2' | translate }}</li>
-              <li>{{ 'API_PAGE.ACCESS_3_ITEM_3' | translate }}</li>
-            </ul>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section class="api-section api-section--compact">
-    <div class="container-fluid">
-      <div class="api-flow-band">
-        <div class="api-flow-band__item">
-          <span class="api-flow-band__step">01</span>
-          <div>
-            <h4>{{ 'API_PAGE.FLOW_1_TITLE' | translate }}</h4>
-            <p>{{ 'API_PAGE.FLOW_1_DESC' | translate }}</p>
+      <div class="row g-7 mt-1">
+        <div class="col-12">
+          <div class="card border-0 flow-card">
+            <div class="card-body p-6 p-lg-8">
+              <div class="d-flex flex-column gap-5">
+                <div class="rounded-4 border border-white border-opacity-10 p-5 flow-item">
+                  <div class="d-flex flex-column flex-lg-row align-items-lg-start gap-4">
+                    <div class="symbol symbol-50px flex-shrink-0">
+                      <span class="symbol-label bg-light-primary text-primary fw-bolder">01</span>
+                    </div>
+
+                    <div class="flex-grow-1 min-w-0">
+                      <div class="text-white fw-bolder fs-3 mb-2">
+                        {{ 'API_PAGE.ENDPOINT_1_TITLE' | translate }}
+                      </div>
+
+                      <div class="endpoint-code rounded-3 px-3 py-2 mb-3">
+                        <code>{{baseUrl}}/geoportalApi/map/getSatelliteDatas</code>
+                      </div>
+
+                      <div class="text-muted fs-6 lh-lg">
+                        {{ 'API_PAGE.ENDPOINT_1_DESC' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rounded-4 border border-white border-opacity-10 p-5 flow-item">
+                  <div class="d-flex flex-column flex-lg-row align-items-lg-start gap-4">
+                    <div class="symbol symbol-50px flex-shrink-0">
+                      <span class="symbol-label bg-light-primary text-primary fw-bolder">02</span>
+                    </div>
+
+                    <div class="flex-grow-1 min-w-0">
+                      <div class="text-white fw-bolder fs-3 mb-2">
+                        {{ 'API_PAGE.ENDPOINT_2_TITLE' | translate }}
+                      </div>
+
+                      <div class="endpoint-code rounded-3 px-3 py-2 mb-3">
+                        <code>{{baseUrl}}/geoportalApi/map/getStatus/&#123;processId&#125;</code>
+                      </div>
+
+                      <div class="text-muted fs-6 lh-lg">
+                        {{ 'API_PAGE.ENDPOINT_2_DESC' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rounded-4 border border-white border-opacity-10 p-5 flow-item">
+                  <div class="d-flex flex-column flex-lg-row align-items-lg-start gap-4">
+                    <div class="symbol symbol-50px flex-shrink-0">
+                      <span class="symbol-label bg-light-primary text-primary fw-bolder">03</span>
+                    </div>
+
+                    <div class="flex-grow-1 min-w-0">
+                      <div class="text-white fw-bolder fs-3 mb-2">
+                        {{ 'API_PAGE.ENDPOINT_3_TITLE' | translate }}
+                      </div>
+
+                      <div class="endpoint-code rounded-3 px-3 py-2 mb-3">
+                        <code>{{baseUrl}}/geoportalApi/map/getProcessedSatelliteImage/&#123;processId&#125;</code>
+                      </div>
+
+                      <div class="text-muted fs-6 lh-lg">
+                        {{ 'API_PAGE.ENDPOINT_3_DESC' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-5 mt-1">
+        <div class="col-12 col-lg-4">
+          <div class="rounded-4 border border-white border-opacity-10 p-5 h-100 flow-item">
+            <div class="badge badge-light-primary mb-4">01</div>
+            <div class="text-white fw-bolder fs-4 mb-2">
+              {{ 'API_PAGE.FLOW_1_TITLE' | translate }}
+            </div>
+            <div class="text-muted fs-6 lh-lg">
+              {{ 'API_PAGE.FLOW_1_DESC' | translate }}
+            </div>
           </div>
         </div>
 
-        <div class="api-flow-band__item">
-          <span class="api-flow-band__step">02</span>
-          <div>
-            <h4>{{ 'API_PAGE.FLOW_2_TITLE' | translate }}</h4>
-            <p>{{ 'API_PAGE.FLOW_2_DESC' | translate }}</p>
+        <div class="col-12 col-lg-4">
+          <div class="rounded-4 border border-white border-opacity-10 p-5 h-100 flow-item">
+            <div class="badge badge-light-primary mb-4">02</div>
+            <div class="text-white fw-bolder fs-4 mb-2">
+              {{ 'API_PAGE.FLOW_2_TITLE' | translate }}
+            </div>
+            <div class="text-muted fs-6 lh-lg">
+              {{ 'API_PAGE.FLOW_2_DESC' | translate }}
+            </div>
           </div>
         </div>
 
-        <div class="api-flow-band__item">
-          <span class="api-flow-band__step">03</span>
-          <div>
-            <h4>{{ 'API_PAGE.FLOW_3_TITLE' | translate }}</h4>
-            <p>{{ 'API_PAGE.FLOW_3_DESC' | translate }}</p>
+        <div class="col-12 col-lg-4">
+          <div class="rounded-4 border border-white border-opacity-10 p-5 h-100 flow-item">
+            <div class="badge badge-light-primary mb-4">03</div>
+            <div class="text-white fw-bolder fs-4 mb-2">
+              {{ 'API_PAGE.FLOW_3_TITLE' | translate }}
+            </div>
+            <div class="text-muted fs-6 lh-lg">
+              {{ 'API_PAGE.FLOW_3_DESC' | translate }}
+            </div>
           </div>
         </div>
       </div>

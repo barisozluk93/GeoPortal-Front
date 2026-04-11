@@ -1,263 +1,384 @@
-<!-- HEADER -->
-<div class="card-header border-0 pt-6 d-flex align-items-center">
-  <!-- LEFT -->
-  <div class="d-flex flex-column">
-    <h3 class="fw-bold text-gray-900 mb-1">
-      {{ header }}
-    </h3>
+<div class="card card-flush h-100">
+  <!-- HEADER -->
+  <div class="card-header border-0 pt-5 pb-3">
+    <div class="card-title d-flex flex-column">
+      <h3 class="fw-bold text-gray-900 mb-1">
+        {{ header }}
+      </h3>
 
-    <div class="d-flex align-items-center gap-2 text-muted fs-7">
-      <i class="fa-solid fa-layer-group"></i>
-      <span>{{ totalCount || 0 }} {{ 'RECORDS' | translate }}</span>
+      <div class="d-flex align-items-center text-muted fs-7 fw-semibold gap-2">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>{{ totalCount || 0 }} {{ 'RECORDS' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="card-toolbar d-flex align-items-center gap-2 flex-wrap">
+      <button
+        *ngIf="hasMapPreviewPermission"
+        type="button"
+        class="btn btn-icon btn-sm btn-light-info"
+        (click)="onMapPreviewClick()"
+        title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}"
+      >
+        <i class="fa-solid fa-map"></i>
+      </button>
+
+      <button
+        *ngIf="hasExportPermission"
+        type="button"
+        class="btn btn-icon btn-sm btn-light-success"
+        (click)="onExportExcelClick()"
+        title="{{ 'EXPORT' | translate }}"
+      >
+        <i class="fa-solid fa-file-excel"></i>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-icon btn-sm"
+        [ngClass]="showFilters ? 'btn-light-primary active' : 'btn-light'"
+        (click)="toggleFilters()"
+        title="{{ 'FILTERS' | translate }}"
+      >
+        <i class="fa-solid fa-filter"></i>
+      </button>
+
+      <button
+        *ngIf="showFilters"
+        type="button"
+        class="btn btn-sm btn-light"
+        (click)="clearAllFilters()"
+      >
+        <i class="fa-solid fa-xmark me-2"></i>
+        {{ 'CLEAR_FILTERS' | translate }}
+      </button>
+
+      <button
+        *ngIf="hasNewRecordPermission"
+        type="button"
+        class="btn btn-sm btn-primary"
+        (click)="openSaveModal()"
+      >
+        <i class="fa-solid fa-plus me-2"></i>
+        {{ 'MENU.NEW' | translate }}
+      </button>
     </div>
   </div>
 
-  <!-- RIGHT -->
-  <div class="d-flex align-items-center gap-2 ms-auto">
-    <button *ngIf="hasMapPreviewPermission" type="button" class="btn btn-icon btn-sm btn-light-info"
-      (click)="onMapPreviewClick()" title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}">
-      <i class="fa-solid fa-map"></i>
-    </button>
+  <!-- BODY -->
+  <div class="card-body pt-0 pb-4">
+    <div class="table-responsive">
+      <table class="table table-row-dashed table-hover align-middle gs-0 gy-0 mb-0 datatable-table">
+        <thead>
+          <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+            <ng-container *ngFor="let column of columnList">
+              <th
+                *ngIf="column.visibility && column.index != null"
+                class="min-w-125px"
+              >
+                {{ column.name | translate }}
+              </th>
 
-    <button *ngIf="hasExportPermission" type="button" class="btn btn-icon btn-sm btn-light-success"
-      (click)="onExportExcelClick()" title="{{ 'EXPORT' | translate }}">
-      <i class="fa-solid fa-file-excel"></i>
-    </button>
+              <th
+                *ngIf="column.visibility && column.index == null"
+                class="text-end min-w-125px"
+              >
+                {{ column.name | translate }}
+              </th>
+            </ng-container>
+          </tr>
 
-    <button type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="toggleFilters()"
-      title="{{ 'FILTERS' | translate }}">
-      <i class="fa-solid fa-filter"></i>
-    </button>
+          <tr *ngIf="showFilters" class="datatable-filter-row">
+            <ng-container *ngFor="let column of columnList">
+              <th *ngIf="column.visibility && column.index != null">
+                <ng-container [ngSwitch]="column.index">
+                  <ng-container *ngSwitchCase="'orderStatusStr'">
+                    <app-custom-select
+                      size="sm"
+                      [items]="orderStatusFilterOptions"
+                      bindLabel="label"
+                      bindValue="value"
+                      [placeholder]="'ALL' | translate"
+                      [clearable]="true"
+                      [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
+                    >
+                    </app-custom-select>
+                  </ng-container>
 
-    <button *ngIf="showFilters" type="button" class="btn btn-sm btn-light" (click)="clearAllFilters()">
-      <i class="fa-solid fa-xmark me-2"></i>
-      {{ 'CLEAR_FILTERS' | translate }}
-    </button>
+                  <ng-container *ngSwitchCase="'type'">
+                    <app-custom-select
+                      size="sm"
+                      [items]="typeFilterOptions"
+                      bindLabel="label"
+                      bindValue="value"
+                      [placeholder]="'ALL' | translate"
+                      [clearable]="true"
+                      [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
+                    >
+                    </app-custom-select>
+                  </ng-container>
 
-    <button *ngIf="hasNewRecordPermission" type="button" class="btn btn-sm btn-primary" (click)="openSaveModal()">
-      <i class="fa-solid fa-plus me-2"></i>
-      {{ 'MENU.NEW' | translate }}
-    </button>
-  </div>
-</div>
+                  <ng-container *ngSwitchCase="'isVisible'">
+                    <app-custom-select
+                      size="sm"
+                      [items]="booleanFilterOptions"
+                      bindLabel="label"
+                      bindValue="value"
+                      [placeholder]="'ALL' | translate"
+                      [clearable]="true"
+                      [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
+                    >
+                    </app-custom-select>
+                  </ng-container>
 
-<!-- BODY -->
-<div class="card-body py-4">
-  <div class="table-responsive">
-    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0">
-      <thead>
-        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-          <ng-container *ngFor="let column of columnList">
-            <th *ngIf="column.visibility && column.index != null">
-              {{ column.name | translate }}
-            </th>
+                  <ng-container *ngSwitchCase="'isDeleted'">
+                    <app-custom-select
+                      size="sm"
+                      [items]="statusFilterOptions"
+                      bindLabel="label"
+                      bindValue="value"
+                      [placeholder]="'ALL' | translate"
+                      [clearable]="true"
+                      [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
+                    >
+                    </app-custom-select>
+                  </ng-container>
 
-            <th *ngIf="column.visibility && column.index == null" class="text-end min-w-125px">
-              {{ column.name | translate }}
-            </th>
-          </ng-container>
-        </tr>
+                  <ng-container *ngSwitchCase="'status'">
+                    <app-custom-select
+                      size="sm"
+                      [items]="supportStatusFilterOptions"
+                      bindLabel="label"
+                      bindValue="value"
+                      [placeholder]="'ALL' | translate"
+                      [clearable]="true"
+                      [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
+                    >
+                    </app-custom-select>
+                  </ng-container>
 
-        <tr *ngIf="showFilters">
-          <ng-container *ngFor="let column of columnList">
-            <th *ngIf="column.visibility && column.index != null">
-              <ng-container [ngSwitch]="column.index">
-                <ng-container *ngSwitchCase="'orderStatusStr'">
-                  <app-custom-select size="sm" [items]="orderStatusFilterOptions" bindLabel="label" bindValue="value"
-                    [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
-                    (ngModelChange)="onColumnFilterChange(column.index, $event)">
-                  </app-custom-select>
+                  <ng-container *ngSwitchCase="'lastMessageAtDisplay'">
+                    <div class="d-flex flex-column gap-2">
+                      <input
+                        type="datetime-local"
+                        class="form-control form-control-sm"
+                        [value]="getFilterValue('lastMessageAtUtcFrom')"
+                        (change)="onColumnFilterChange('lastMessageAtUtcFrom', $any($event.target).value)"
+                        [placeholder]="'START_DATE' | translate"
+                      />
+
+                      <input
+                        type="datetime-local"
+                        class="form-control form-control-sm"
+                        [value]="getFilterValue('lastMessageAtUtcTo')"
+                        (change)="onColumnFilterChange('lastMessageAtUtcTo', $any($event.target).value)"
+                        [placeholder]="'END_DATE' | translate"
+                      />
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'orderDate'">
+                    <div class="d-flex flex-column gap-2">
+                      <input
+                        type="datetime-local"
+                        class="form-control form-control-sm"
+                        [value]="getFilterValue('orderDateFrom')"
+                        (change)="onColumnFilterChange('orderDateFrom', $any($event.target).value)"
+                        [placeholder]="'START_DATE' | translate"
+                      />
+
+                      <input
+                        type="datetime-local"
+                        class="form-control form-control-sm"
+                        [value]="getFilterValue('orderDateTo')"
+                        (change)="onColumnFilterChange('orderDateTo', $any($event.target).value)"
+                        [placeholder]="'END_DATE' | translate"
+                      />
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'priceStr'">
+                    <div class="d-flex flex-column gap-2">
+                      <input
+                        type="number"
+                        class="form-control form-control-sm"
+                        [value]="getFilterValue('priceMin')"
+                        (input)="onColumnFilterChange('priceMin', toNumberOrNull($any($event.target).value))"
+                        placeholder="{{ 'MIN_PRICE' | translate }}"
+                        min="0"
+                        step="0.01"
+                      />
+
+                      <input
+                        type="number"
+                        class="form-control form-control-sm"
+                        [value]="getFilterValue('priceMax')"
+                        (input)="onColumnFilterChange('priceMax', toNumberOrNull($any($event.target).value))"
+                        placeholder="{{ 'MAX_PRICE' | translate }}"
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'fileResult'">
+                    <div class="datatable-filter-empty"></div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      [value]="getFilterValue(column.index)"
+                      (input)="onColumnFilterChange(column.index, $any($event.target).value)"
+                      [placeholder]="column.name | translate"
+                    />
+                  </ng-container>
                 </ng-container>
+              </th>
 
-                <ng-container *ngSwitchCase="'type'">
-                  <app-custom-select size="sm" [items]="typeFilterOptions" bindLabel="label" bindValue="value"
-                    [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
-                    (ngModelChange)="onColumnFilterChange(column.index, $event)">
-                  </app-custom-select>
-                </ng-container>
+              <th
+                *ngIf="column.visibility && column.index == null"
+                class="text-end min-w-125px"
+              >
+                <div class="datatable-filter-empty"></div>
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
 
-                <ng-container *ngSwitchCase="'isVisible'">
-                  <app-custom-select size="sm" [items]="booleanFilterOptions" bindLabel="label" bindValue="value"
-                    [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
-                    (ngModelChange)="onColumnFilterChange(column.index, $event)">
-                  </app-custom-select>
-                </ng-container>
+        <tbody class="fw-semibold text-gray-700">
+          <tr *ngFor="let data of dataSource">
+            <ng-container *ngFor="let column of columnList">
+              <td *ngIf="column.visibility && column.index == 'fileResult'">
+                <div class="symbol symbol-40px symbol-circle overflow-hidden">
+                  <img [src]="data[column.index].fileContents" alt="" />
+                </div>
+              </td>
 
-                <ng-container *ngSwitchCase="'isDeleted'">
-                  <app-custom-select size="sm" [items]="statusFilterOptions" bindLabel="label" bindValue="value"
-                    [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
-                    (ngModelChange)="onColumnFilterChange(column.index, $event)">
-                  </app-custom-select>
-                </ng-container>
+              <td *ngIf="column.visibility && column.index == 'type'">
+                <span class="badge badge-light-primary">
+                  {{ getLayerTypeLabel(data[column.index]) }}
+                </span>
+              </td>
 
-                <ng-container *ngSwitchCase="'status'">
-                  <app-custom-select size="sm" [items]="supportStatusFilterOptions" bindLabel="label" bindValue="value"
-                    [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
-                    (ngModelChange)="onColumnFilterChange(column.index, $event)">
-                  </app-custom-select>
-                </ng-container>
+              <td *ngIf="column.visibility && column.index == 'isVisible'">
+                <span *ngIf="data[column.index]" class="badge badge-light-success">
+                  {{ 'YES' | translate }}
+                </span>
+                <span *ngIf="!data[column.index]" class="badge badge-light-danger">
+                  {{ 'NO' | translate }}
+                </span>
+              </td>
 
-                <ng-container *ngSwitchCase="'lastMessageAtDisplay'">
-                  <div class="d-flex flex-column gap-2">
-                    <input type="datetime-local" class="form-control form-control-solid form-control-sm"
-                      [value]="getFilterValue('lastMessageAtUtcFrom')"
-                      (change)="onColumnFilterChange('lastMessageAtUtcFrom', $any($event.target).value)"
-                      [placeholder]="'START_DATE' | translate" />
+              <td *ngIf="column.visibility && column.index == 'status'">
+                <span class="badge" [ngClass]="getSupportStatusBadgeClass(data[column.index])">
+                  {{ getSupportStatusLabel(data[column.index]) }}
+                </span>
+              </td>
 
-                    <input type="datetime-local" class="form-control form-control-solid form-control-sm"
-                      [value]="getFilterValue('lastMessageAtUtcTo')"
-                      (change)="onColumnFilterChange('lastMessageAtUtcTo', $any($event.target).value)"
-                      [placeholder]="'END_DATE' | translate" />
-                  </div>
-                </ng-container>
+              <td *ngIf="column.visibility && column.index == 'orderStatusStr'">
+                <span class="badge" [ngClass]="getOrderStatusBadgeClass(data[column.index])">
+                  {{ data[column.index] }}
+                </span>
+              </td>
 
-                <ng-container *ngSwitchCase="'orderDate'">
-                  <div class="d-flex flex-column gap-2">
-                    <input type="datetime-local" class="form-control form-control-solid form-control-sm"
-                      [value]="getFilterValue('orderDateFrom')"
-                      (change)="onColumnFilterChange('orderDateFrom', $any($event.target).value)"
-                      [placeholder]="'START_DATE' | translate" />
+              <td
+                *ngIf="
+                  column.visibility &&
+                  column.index != null &&
+                  column.index != 'fileResult' &&
+                  column.index != 'type' &&
+                  column.index != 'isVisible' &&
+                  column.index != 'isDeleted' &&
+                  column.index != 'status' &&
+                  column.index != 'orderStatusStr'
+                "
+              >
+                <span class="text-gray-800 fw-bolder">
+                  {{ data[column.index] }}
+                </span>
+              </td>
 
-                    <input type="datetime-local" class="form-control form-control-solid form-control-sm"
-                      [value]="getFilterValue('orderDateTo')"
-                      (change)="onColumnFilterChange('orderDateTo', $any($event.target).value)"
-                      [placeholder]="'END_DATE' | translate" />
-                  </div>
-                </ng-container>
+              <td *ngIf="column.visibility && column.index == 'isDeleted'">
+                <span *ngIf="!data[column.index]" class="badge badge-light-success">
+                  {{ 'ACTIVE' | translate }}
+                </span>
+                <span *ngIf="data[column.index]" class="badge badge-light-danger">
+                  {{ 'PASSIVE' | translate }}
+                </span>
+              </td>
 
-                <ng-container *ngSwitchCase="'priceStr'">
-                  <div class="d-flex flex-column gap-2">
-                    <input type="number" class="form-control form-control-solid form-control-sm"
-                      [value]="getFilterValue('priceMin')"
-                      (input)="onColumnFilterChange('priceMin', toNumberOrNull($any($event.target).value))"
-                      placeholder="{{ 'MIN_PRICE' | translate }}" min="0" step="0.01" />
+              <td *ngIf="column.visibility && column.index == null" class="text-end">
+                <div
+                  *ngIf="!data['isSystemData'] && !data['isDeleted'] && (hasEditPermission || hasDeletePermission || hasShowPermission)"
+                  class="d-inline-flex align-items-center justify-content-end gap-1"
+                >
+                  <button
+                    *ngIf="hasShowPermission"
+                    (click)="onRowClick(data['id'])"
+                    class="btn btn-icon btn-light btn-sm"
+                    type="button"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
 
-                    <input type="number" class="form-control form-control-solid form-control-sm"
-                      [value]="getFilterValue('priceMax')"
-                      (input)="onColumnFilterChange('priceMax', toNumberOrNull($any($event.target).value))"
-                      placeholder="{{ 'MAX_PRICE' | translate }}" min="0" step="0.01" />
-                  </div>
-                </ng-container>
+                  <button
+                    *ngIf="hasEditPermission"
+                    (click)="openEditModal(data['id'])"
+                    class="btn btn-icon btn-light btn-sm"
+                    type="button"
+                  >
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
 
-                <ng-container *ngSwitchCase="'fileResult'">
-                  <div class="h-40px"></div>
-                </ng-container>
+                  <button
+                    *ngIf="hasDeletePermission"
+                    (click)="openDeleteModal(data['id'])"
+                    class="btn btn-icon btn-light-danger btn-sm"
+                    type="button"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+          </tr>
 
-                <ng-container *ngSwitchDefault>
-                  <input type="text" class="form-control form-control-solid form-control-sm"
-                    [value]="getFilterValue(column.index)"
-                    (input)="onColumnFilterChange(column.index, $any($event.target).value)"
-                    [placeholder]="column.name | translate" />
-                </ng-container>
-              </ng-container>
-            </th>
-
-            <th *ngIf="column.visibility && column.index == null" class="text-end min-w-125px">
-              <div class="h-40px"></div>
-            </th>
-          </ng-container>
-        </tr>
-      </thead>
-
-      <tbody class="fw-semibold text-gray-600">
-        <tr *ngFor="let data of dataSource">
-          <ng-container *ngFor="let column of columnList">
-            <td *ngIf="column.visibility && column.index == 'fileResult'">
-              <div class="symbol symbol-45px">
-                <img [src]="data[column.index].fileContents" alt="" />
+          <tr *ngIf="!dataSource || dataSource.length == 0">
+            <td [attr.colspan]="columnList.length" class="text-center py-10">
+              <div class="d-flex flex-column align-items-center justify-content-center">
+                <i class="fa-solid fa-inbox fs-2x text-gray-400 mb-3"></i>
+                <div class="text-gray-600 fw-semibold">
+                  {{ 'NO_DATA_AVAILABLE' | translate }}
+                </div>
               </div>
             </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-            <td *ngIf="column.visibility && column.index == 'type'">
-              <span class="badge badge-light-primary">
-                {{ getLayerTypeLabel(data[column.index]) }}
-              </span>
-            </td>
-
-            <td *ngIf="column.visibility && column.index == 'isVisible'">
-              <span *ngIf="data[column.index]" class="badge badge-light-success">
-                {{ 'YES' | translate }}
-              </span>
-              <span *ngIf="!data[column.index]" class="badge badge-light-danger">
-                {{ 'NO' | translate }}
-              </span>
-            </td>
-
-            <td *ngIf="column.visibility && column.index == 'status'">
-              <span class="badge" [ngClass]="getSupportStatusBadgeClass(data[column.index])">
-                {{ getSupportStatusLabel(data[column.index]) }}
-              </span>
-            </td>
-
-            <td *ngIf="column.visibility && column.index == 'orderStatusStr'">
-              <span class="badge" [ngClass]="getOrderStatusBadgeClass(data[column.index])">
-                {{ data[column.index] }}
-              </span>
-            </td>
-
-            <td *ngIf="
-          column.visibility &&
-          column.index != null &&
-          column.index != 'fileResult' &&
-          column.index != 'type' &&
-          column.index != 'isVisible' &&
-          column.index != 'isDeleted' &&
-          column.index != 'status' &&
-          column.index != 'orderStatusStr'
-        ">
-              <span class="text-white fw-bold">
-                {{ data[column.index] }}
-              </span>
-            </td>
-
-            <td *ngIf="column.visibility && column.index == 'isDeleted'">
-              <span *ngIf="!data[column.index]" class="badge badge-light-success">
-                {{ 'ACTIVE' | translate }}
-              </span>
-              <span *ngIf="data[column.index]" class="badge badge-light-danger">
-                {{ 'PASSIVE' | translate }}
-              </span>
-            </td>
-
-            <td *ngIf="column.visibility && column.index == null" class="text-end">
-              <div
-                *ngIf="!data['isSystemData'] && !data['isDeleted'] && (hasEditPermission || hasDeletePermission || hasShowPermission)"
-                class="d-flex justify-content-end flex-shrink-0 gap-1">
-                <button *ngIf="hasShowPermission" (click)="onRowClick(data['id'])"
-                  class="btn btn-icon btn-bg-light btn-sm" type="button">
-                  <i class="fa-solid fa-eye"></i>
-                </button>
-
-                <button *ngIf="hasEditPermission" (click)="openEditModal(data['id'])"
-                  class="btn btn-icon btn-bg-light btn-sm" type="button">
-                  <i class="fa-solid fa-pen"></i>
-                </button>
-
-                <button *ngIf="hasDeletePermission" (click)="openDeleteModal(data['id'])"
-                  class="btn btn-icon btn-bg-light btn-sm" type="button">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            </td>
-          </ng-container>
-        </tr>
-
-        <tr *ngIf="!dataSource || dataSource.length == 0">
-          <td [attr.colspan]="columnList.length" class="text-center py-10">
-            <i class="fa-solid fa-inbox fs-2x text-gray-400 mb-3"></i>
-            <div class="text-gray-600 fw-semibold">
-              {{ 'NO_DATA_AVAILABLE' | translate }}
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div *ngIf="totalCount > 0" class="d-flex flex-column flex-md-row justify-content-end align-items-center pt-5 gap-3">
-    <ngb-pagination [collectionSize]="totalCount" [(page)]="paginationModel.pageNumber" [maxSize]="5"
-      [pageSize]="paginationModel.pageSize" [rotate]="true" [ellipses]="true" [boundaryLinks]="true"
-      (pageChange)="onPageChanges()">
-    </ngb-pagination>
+    <div
+      *ngIf="totalCount > 0"
+      class="d-flex flex-column flex-md-row justify-content-end align-items-center pt-5"
+    >
+      <ngb-pagination
+        [collectionSize]="totalCount"
+        [(page)]="paginationModel.pageNumber"
+        [maxSize]="5"
+        [pageSize]="paginationModel.pageSize"
+        [rotate]="true"
+        [ellipses]="true"
+        [boundaryLinks]="true"
+        (pageChange)="onPageChanges()"
+      >
+      </ngb-pagination>
+    </div>
   </div>
 </div>

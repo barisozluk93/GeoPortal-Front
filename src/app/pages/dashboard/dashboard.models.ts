@@ -38,7 +38,7 @@ export type DemandStatus =
   | 'Başarısız';
 
 export type HealthStatus = 'Healthy' | 'Warning' | 'Critical';
-export type QuickRangeType = '7d' | '30d' | 'month' | 'today';
+export type QuickRangeType = '7d' | '30d' | '3m' | '6m';
 
 export interface DashboardFilters {
   startDate: string | null;

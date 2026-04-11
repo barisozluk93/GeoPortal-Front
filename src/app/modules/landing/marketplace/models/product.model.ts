@@ -24,4 +24,13 @@ export class ProductModel {
   isPansharpened?: boolean;
   isClassified?: boolean;
   classes?: ProductClassModel[];
+
+  geometry?: any;
+  wkt?: string;
+  bbox?: number[];
+  sourceType?: number;
+  sourceLabel?: string;
+  requestHash?: string;
+  isCustomArea?: boolean;
+  isInMarket?: boolean;
 }

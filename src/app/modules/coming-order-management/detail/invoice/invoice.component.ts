@@ -5,6 +5,7 @@ import { ConfirmationComponent } from "src/app/modules/confirmation/confirmation
 import { TranslateService } from "@ngx-translate/core";
 import { AlertService } from "src/app/_metronic/partials/layout/alert/alert.service";
 import { forkJoin } from "rxjs";
+import { OrderModel } from "../../models/order.model";
 
 @Component({
   selector: 'app-orderinvoice-edit',
@@ -24,7 +25,7 @@ export class InvoiceComponent implements OnInit {
   fileId: number;
   pdfSrc: any;
 
-  orderProduct: OrderProductModel;
+  order: OrderModel;
 
   constructor(
     private comingOrderManagementService: ComingOrderManagementService,
@@ -35,11 +36,11 @@ export class InvoiceComponent implements OnInit {
   ngOnInit(): void { }
 
   delete(event: number) {
-    this.comingOrderManagementService.deleteInvoice(this.orderProduct.id).subscribe(result => {
+    this.comingOrderManagementService.deleteInvoice(this.order.id).subscribe(result => {
       if (result.isSuccess) {
         this.fileName = undefined;
         this.pdfSrc = undefined;
-        this.orderProduct = result.data;
+        this.order = result.data;
         this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
         this.isSuccess.emit(true);
       } else {
@@ -59,10 +60,9 @@ export class InvoiceComponent implements OnInit {
 
       this.comingOrderManagementService.upload(formData).subscribe(result => {
         if (result.isSuccess) {
-          this.orderProduct.fileId = result.data.id;
-          this.orderProduct.product = undefined;
+          this.order.fileId = result.data.id;
 
-          this.comingOrderManagementService.addInvoice(this.orderProduct).subscribe(saveResult => {
+          this.comingOrderManagementService.addInvoice(this.order).subscribe(saveResult => {
             if (saveResult.isSuccess) {
               this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
               this.isSuccess.emit(true);
@@ -84,10 +84,10 @@ export class InvoiceComponent implements OnInit {
       deleteText = translation;
     });
 
-    this.deleteConfirmationComponent.openModal(deleteText, this.orderProduct.id);
+    this.deleteConfirmationComponent.openModal(deleteText, this.order.id);
   }
 
-  openModal(orderProduct: OrderProductModel) {
+  openModal(order: OrderModel) {
     const keys = ['INVOICE'];
 
     const translations: any = {};
@@ -101,26 +101,26 @@ export class InvoiceComponent implements OnInit {
       this.modalTitle = translations['INVOICE'];
     });
 
-    this.orderProduct = orderProduct;
+    this.order = order;
 
     this.fileName = undefined;
     this.pdfSrc = undefined;
 
-    if (this.orderProduct.fileResult) {
+    if (this.order.fileResult) {
       if (
-        !this.orderProduct.fileResult.fileContents.includes(
-          "data:" + this.orderProduct.fileResult.contentType + ";base64,"
+        !this.order.fileResult.fileContents.includes(
+          "data:" + this.order.fileResult.contentType + ";base64,"
         )
       ) {
-        this.orderProduct.fileResult.fileContents =
+        this.order.fileResult.fileContents =
           "data:" +
-          this.orderProduct.fileResult.contentType +
+          this.order.fileResult.contentType +
           ";base64," +
-          this.orderProduct.fileResult.fileContents;
+          this.order.fileResult.fileContents;
       }
 
-      this.pdfSrc = this.orderProduct.fileResult.fileContents;
-      this.fileName = this.orderProduct.fileName!;
+      this.pdfSrc = this.order.fileResult.fileContents;
+      this.fileName = this.order.fileName!;
     }
 
     this.isModalOpen = true;

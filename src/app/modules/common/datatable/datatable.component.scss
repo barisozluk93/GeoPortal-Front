@@ -2,95 +2,139 @@
   display: block;
 }
 
-.card-header {
-  .btn.btn-icon.btn-sm {
-    width: 2.25rem;
-    height: 2.25rem;
+.datatable-table {
+  thead th {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-bottom-width: 1px;
+  }
+
+  tbody td {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    transition: background-color 0.15s ease;
   }
 }
 
-.table-responsive {
-  overflow-x: auto;
-  overflow-y: hidden;
+.datatable-filter-row {
+  th {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.75rem !important;
+    vertical-align: top;
+  }
 }
 
-.table {
-  margin-bottom: 0;
+.datatable-filter-empty {
+  height: 34px;
+}
 
-  thead {
-    th {
-      white-space: nowrap;
-      vertical-align: middle;
-    }
+.badge {
+  font-weight: 600;
+}
+
+.btn.btn-icon.btn-sm {
+  width: 34px;
+  height: 34px;
+}
+
+.card-header .card-toolbar {
+  row-gap: 0.5rem;
+}
+
+:host ::ng-deep {
+  .form-control.form-control-sm,
+  .form-select.form-select-sm {
+    min-height: 34px;
+    font-size: 0.825rem;
   }
 
-  tbody {
-    td {
-      vertical-align: middle;
-    }
+  .form-control.form-control-solid,
+  .form-select.form-select-solid {
+    background-color: var(--kt-input-solid-bg, #f5f8fa);
+    border-color: transparent;
   }
 
-  .symbol img {
-    object-fit: cover;
+  .form-control.form-control-solid:focus,
+  .form-select.form-select-solid:focus {
+    background-color: var(--kt-input-solid-bg, #f5f8fa);
+    border-color: var(--kt-primary-light, #cfe8ff);
+    box-shadow: none;
+  }
+
+  .ng-select.ng-select-single .ng-select-container {
+    min-height: 34px;
+    height: 34px;
     border-radius: 0.475rem;
+    background-color: var(--kt-input-solid-bg, #f5f8fa);
+    border: 1px solid transparent;
+    box-shadow: none;
   }
-}
 
-tbody tr:last-child td {
-  border-bottom-width: 0;
-}
+  .ng-select.ng-select-single .ng-select-container:hover {
+    border-color: transparent;
+  }
 
-app-custom-select {
-  display: block;
-  min-width: 140px;
-  text-transform: none;
-}
+  .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    border-color: var(--kt-primary-light, #cfe8ff);
+    box-shadow: none;
+  }
 
-.form-control.form-control-sm,
-app-custom-select {
-  width: 100%;
-}
+  .ng-select.ng-select-single .ng-select-container .ng-value-container {
+    padding-left: 0.75rem;
+    padding-right: 0.5rem;
+  }
 
-.ngb-pagination,
-ngb-pagination {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
+  .ng-select.ng-select-single .ng-select-container .ng-placeholder,
+  .ng-select.ng-select-single .ng-select-container .ng-value {
+    font-size: 0.825rem;
+  }
 
-.pagination {
-  margin-bottom: 0;
+  .ng-select .ng-arrow-wrapper {
+    padding-right: 0.65rem;
+  }
+
+  .page-link {
+    min-width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 991.98px) {
-  .card-header {
-    padding-top: 1.5rem !important;
-  }
-
-  .table {
+  .datatable-table {
     thead th,
     tbody td {
-      min-width: 120px;
-    }
-
-    thead th.text-end,
-    tbody td.text-end {
-      min-width: 140px;
+      padding-left: 0.625rem;
+      padding-right: 0.625rem;
     }
   }
 }
 
 @media (max-width: 767.98px) {
-  .card-header .btn,
-  .card-header .btn.btn-sm {
-    min-height: calc(1.5em + 1.1rem + 2px);
+  .card-header {
+    padding-bottom: 1rem !important;
   }
 
-  .table {
-    thead th,
+  .datatable-table {
+    thead th {
+      font-size: 0.675rem;
+    }
+
     tbody td {
-      padding-top: 0.85rem;
-      padding-bottom: 0.85rem;
+      padding-top: 0.7rem;
+      padding-bottom: 0.7rem;
     }
   }
 }

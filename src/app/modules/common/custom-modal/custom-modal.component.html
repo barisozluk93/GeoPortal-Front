@@ -1,5 +1,5 @@
 <div
-  class="modal fade show d-block"
+  class="glass-modal-backdrop"
   tabindex="-1"
   *ngIf="isOpen"
   (click)="onBackdropClick($event)"
@@ -8,16 +8,17 @@
     class="modal-dialog"
     [ngClass]="{
       'modal-dialog-centered': variant === 'center',
-      'modal-dialog-end': variant === 'right'
+      'modal-dialog-end': variant === 'right',
+      'glass-modal-dialog-right': variant === 'right'
     }"
     [style.maxWidth]="variant === 'center' ? width : null"
     (click)="$event.stopPropagation()"
   >
-    <div class="modal-content">
+    <div class="modal-content glass-modal-content">
 
-      <div class="modal-header border-0">
+      <div class="modal-header glass-modal-header">
         <div class="d-flex align-items-center gap-3 min-w-0">
-          <div class="symbol symbol-48px">
+          <div class="symbol symbol-40px glass-modal-symbol">
             <span class="symbol-label">
               <i class="ki-duotone ki-abstract-28">
                 <span class="path1"></span>
@@ -50,14 +51,14 @@
         </button>
       </div>
 
-      <div class="modal-body">
+      <div class="modal-body glass-modal-body">
         <ng-content></ng-content>
       </div>
 
-      <div class="modal-footer border-0" *ngIf="showFooter">
+      <div class="modal-footer glass-modal-footer" *ngIf="showFooter">
         <button
           type="button"
-          class="btn btn-light"
+          class="btn btn-light me-2"
           (click)="close()"
         >
           {{ cancelText | translate }}

@@ -1,14 +1,37 @@
-<div class="satdash__panel card h-100">
-  <div class="satdash__panel-header card-header border-0">
-    <div>
-      <div class="satdash__panel-title">{{ title }}</div>
-      <div class="satdash__panel-subtitle">{{ subtitle }}</div>
+<div class="card h-100">
+  <div class="card-header border-0 pt-5">
+    <div class="d-flex flex-column">
+      <h3 class="card-title fw-bold text-white mb-1">
+        {{ title }}
+      </h3>
+
+      <span class="text-muted fw-semibold fs-7">
+        {{ subtitle }}
+      </span>
     </div>
 
-    <span class="satdash__panel-chip" [ngClass]="chipClass">{{ chip }}</span>
+    <div *ngIf="chip" class="card-toolbar">
+      <span
+        class="badge fw-semibold px-3 py-2 d-inline-flex align-items-center gap-2 chart-chip"
+        [ngClass]="chipClass || 'badge-light-primary'"
+      >
+        <span
+          *ngIf="chipDot"
+          class="chart-chip__dot"
+          [ngClass]="chipDotClass"
+        ></span>
+
+        <i
+          *ngIf="chipIcon"
+          [class]="chipIcon"
+        ></i>
+
+        <span>{{ chip }}</span>
+      </span>
+    </div>
   </div>
 
-  <div class="card-body" [ngClass]="bodyClass">
+  <div class="card-body pt-2" [ngClass]="bodyClass">
     <ng-content></ng-content>
   </div>
 </div>

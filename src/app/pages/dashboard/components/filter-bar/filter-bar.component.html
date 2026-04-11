@@ -1,64 +1,103 @@
-<div class="satdash__quickbar mb-6">
-  <div class="satdash__quickbar-left">
-    <button class="satdash__quickchip" (click)="onQuickRange('7d')">Son 7 Gün</button>
-    <button class="satdash__quickchip" (click)="onQuickRange('30d')">Son 30 Gün</button>
-    <button class="satdash__quickchip" (click)="onQuickRange('month')">Bu Ay</button>
-    <button class="satdash__quickchip" (click)="onQuickRange('today')">Bugün</button>
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-6">
+  <div class="d-flex flex-wrap gap-2">
+    <span
+      class="badge badge-light-primary cursor-pointer px-4 py-2"
+      [class.active]="activeRange === '7d'"
+      (click)="onQuickRange('7d')"
+    >
+      {{ 'DASHBOARD.FILTER.QUICK_LAST_7_DAYS' | translate }}
+    </span>
+
+    <span
+      class="badge badge-light-primary cursor-pointer px-4 py-2"
+      [class.active]="activeRange === '30d'"
+      (click)="onQuickRange('30d')"
+    >
+      {{ 'DASHBOARD.FILTER.QUICK_LAST_30_DAYS' | translate }}
+    </span>
+
+    <span
+      class="badge badge-light-primary cursor-pointer px-4 py-2"
+      [class.active]="activeRange === '3m'"
+      (click)="onQuickRange('3m')"
+    >
+      {{ 'DASHBOARD.FILTER.QUICK_LAST_3_MONTHS' | translate }}
+    </span>
+
+    <span
+      class="badge badge-light-primary cursor-pointer px-4 py-2"
+      [class.active]="activeRange === '6m'"
+      (click)="onQuickRange('6m')"
+    >
+      {{ 'DASHBOARD.FILTER.QUICK_LAST_6_MONTHS' | translate }}
+    </span>
   </div>
 
-  <div class="satdash__quickbar-right">
-    <span class="satdash__live-dot"></span>
-    <span class="satdash__quickbar-text">Canlı görünüm</span>
+  <div class="d-flex align-items-center gap-2 text-muted fw-semibold">
+    <span class="live-dot"></span>
+    {{ 'DASHBOARD.FILTER.LIVE_VIEW' | translate }}
   </div>
 </div>
 
-<div class="satdash__filter card mb-8">
-  <div class="card-body p-6">
+<div class="card mb-8">
+  <div class="card-body p-5 p-lg-6">
     <div class="row g-4 align-items-end">
       <div class="col-12 col-md-6 col-xl-3">
-        <label class="form-label satdash__label">Başlangıç Tarihi</label>
+        <label class="form-label">{{ 'DASHBOARD.FILTER.START_DATE' | translate }}</label>
         <input
           type="date"
-          class="form-control satdash__control"
+          class="form-control"
           [(ngModel)]="filters.startDate"
+          (ngModelChange)="clearActiveRange()"
         />
       </div>
 
       <div class="col-12 col-md-6 col-xl-3">
-        <label class="form-label satdash__label">Bitiş Tarihi</label>
+        <label class="form-label">{{ 'DASHBOARD.FILTER.END_DATE' | translate }}</label>
         <input
           type="date"
-          class="form-control satdash__control"
+          class="form-control"
           [(ngModel)]="filters.endDate"
+          (ngModelChange)="clearActiveRange()"
         />
       </div>
 
       <div class="col-12 col-md-6 col-xl-2">
-        <label class="form-label satdash__label">Üyelik Tipi</label>
-        <select class="form-select satdash__control" [(ngModel)]="filters.customerType">
-          <option [ngValue]="'Tümü'">Tümü</option>
-          <option [ngValue]="'Bireysel'">Bireysel</option>
-          <option [ngValue]="'Kurumsal'">Kurumsal</option>
-        </select>
+        <label class="form-label">{{ 'DASHBOARD.FILTER.CUSTOMER_TYPE' | translate }}</label>
+
+        <app-custom-select
+          [size]="'lg'"
+          [items]="customerTypeItems"
+          bindLabel="label"
+          bindValue="value"
+          [placeholder]="'DASHBOARD.FILTER.SELECT' | translate"
+          [(ngModel)]="filters.customerType"
+        >
+        </app-custom-select>
       </div>
 
       <div class="col-12 col-md-6 col-xl-2">
-        <label class="form-label satdash__label">Kanal</label>
-        <select class="form-select satdash__control" [(ngModel)]="filters.channel">
-          <option [ngValue]="'Tümü'">Tümü</option>
-          <option [ngValue]="'Marketplace'">Marketplace</option>
-          <option [ngValue]="'API'">API</option>
-          <option [ngValue]="'Özel Talep'">Özel Talep</option>
-        </select>
+        <label class="form-label">{{ 'DASHBOARD.FILTER.CHANNEL' | translate }}</label>
+
+        <app-custom-select
+          [size]="'lg'"
+          [items]="channelItems"
+          bindLabel="label"
+          bindValue="value"
+          [placeholder]="'DASHBOARD.FILTER.SELECT' | translate"
+          [(ngModel)]="filters.channel"
+        >
+        </app-custom-select>
       </div>
 
       <div class="col-12 col-xl-2">
-        <div class="satdash__filter-actions d-grid d-md-flex gap-3">
-          <button type="button" class="btn satdash__btn satdash__btn--primary flex-fill" (click)="onFilter()">
-            Filtrele
+        <div class="d-grid d-md-flex gap-3">
+          <button class="btn btn-primary flex-fill" type="button" (click)="onFilter()">
+            {{ 'DASHBOARD.FILTER.APPLY' | translate }}
           </button>
-          <button type="button" class="btn satdash__btn satdash__btn--ghost flex-fill" (click)="onReset()">
-            Sıfırla
+
+          <button class="btn btn-light flex-fill" type="button" (click)="onReset()">
+            {{ 'DASHBOARD.FILTER.RESET' | translate }}
           </button>
         </div>
       </div>

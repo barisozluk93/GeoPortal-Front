@@ -1,10 +1,8 @@
 <ng-container *ngIf="user">
-  <!-- USER HEADER -->
   <div class="user-menu__header px-5 py-4">
     <div class="user-menu__profile-card d-flex align-items-center rounded-3 p-3">
       <div class="symbol symbol-45px me-4 flex-shrink-0">
         <img *ngIf="user?.fileId == undefined" src="./assets/media/avatars/blank.png" alt="user-avatar" />
-
         <img *ngIf="user?.fileId != undefined" [src]="user?.fileResult?.fileContents" alt="user-avatar" />
       </div>
 
@@ -22,7 +20,6 @@
 
   <div class="separator mx-5 my-2 user-menu__separator"></div>
 
-  <!-- PROFILE -->
   <div class="menu-item px-3">
     <a routerLink="/profile/settings" class="menu-link px-3 rounded-3">
       <span class="menu-icon">
@@ -34,7 +31,6 @@
     </a>
   </div>
 
-  <!-- ORDERS -->
   <div class="menu-item px-3" *ngIf="!isAdmin">
     <a routerLink="/ordermanagement" class="menu-link px-3 rounded-3">
       <span class="menu-icon">
@@ -46,9 +42,12 @@
     </a>
   </div>
 
-  <!-- LANGUAGE -->
-  <div class="menu-item px-3" data-kt-menu-trigger="hover" data-kt-menu-placement="left-start"
-    data-kt-menu-flip="bottom">
+  <div
+    class="menu-item px-3 user-menu__lang-item"
+    data-kt-menu-trigger="hover"
+    data-kt-menu-placement="left-start"
+    data-kt-menu-flip="bottom"
+  >
     <a class="menu-link px-3 rounded-3 cursor-pointer">
       <span class="menu-icon">
         <i class="fa-solid fa-language fs-5"></i>
@@ -66,9 +65,12 @@
       </span>
     </a>
 
-    <div class="menu-sub menu-sub-dropdown menu-column menu-rounded fw-semibold py-2 w-200px user-menu__subdropdown">
+    <div class="user-menu__subdropdown menu-sub menu-sub-dropdown menu-column menu-rounded fw-semibold py-2 w-200px">
       <div *ngFor="let l of langs" class="menu-item px-3" (click)="selectLanguage(l.lang)">
-        <a class="menu-link px-3 rounded-3 d-flex align-items-center" [ngClass]="{ active: l.lang === language.lang }">
+        <a
+          class="menu-link px-3 rounded-3 d-flex align-items-center"
+          [ngClass]="{ active: l.lang === language.lang }"
+        >
           <span class="symbol symbol-20px me-3">
             <img class="rounded-1" [src]="l.flag" alt="language-flag" />
           </span>
@@ -87,11 +89,10 @@
 
   <div class="separator mx-5 my-2 user-menu__separator"></div>
 
-  <!-- LOGOUT -->
   <div class="menu-item px-3">
     <a (click)="logout()" class="menu-link px-3 rounded-3 cursor-pointer user-menu__logout">
-      <span class="menu-icon ">
-        <i class="ki-duotone ki-exit-right fs-2 text-danger">
+      <span class="menu-icon me-5">
+        <i class="ki-duotone ki-exit-right fs-5 text-danger">
           <span class="path1"></span>
           <span class="path2"></span>
         </i>

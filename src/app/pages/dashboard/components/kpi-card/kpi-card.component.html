@@ -1,90 +1,30 @@
 <div class="row g-4 g-xl-7 mb-8">
-  <div class="col-12 col-sm-6 col-xl-2">
-    <div class="satdash__kpi card h-100">
-      <div class="card-body">
-        <div class="satdash__kpi-top">
-          <div class="satdash__kpi-icon satdash__kpi-icon--blue">
-            <i class="ki-duotone ki-wallet fs-2x"></i>
-          </div>
-          <div class="satdash__kpi-title">Toplam Gelir</div>
-        </div>
-        <div class="satdash__kpi-value">{{ formatCurrency(kpis.totalRevenue) }}</div>
-        <div class="satdash__kpi-sub">Platform genel toplam gelir</div>
-      </div>
-    </div>
-  </div>
+  <div class="col-12 col-sm-6 col-xl-2" *ngFor="let item of kpiItems">
+    <div class="card h-100 kpi-card" [ngClass]="item.color">
+      <!-- TOP ACCENT -->
+      <span class="kpi-accent"></span>
 
-  <div class="col-12 col-sm-6 col-xl-2">
-    <div class="satdash__kpi card h-100">
       <div class="card-body">
-        <div class="satdash__kpi-top">
-          <div class="satdash__kpi-icon satdash__kpi-icon--purple">
-            <i class="ki-duotone ki-shop fs-2x"></i>
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="kpi-icon">
+            <i [class]="item.icon + ' fs-2x'"></i>
           </div>
-          <div class="satdash__kpi-title">Marketplace</div>
-        </div>
-        <div class="satdash__kpi-value">{{ formatCurrency(kpis.marketplaceRevenue) }}</div>
-        <div class="satdash__kpi-sub">Market satış geliri</div>
-      </div>
-    </div>
-  </div>
 
-  <div class="col-12 col-sm-6 col-xl-2">
-    <div class="satdash__kpi card h-100">
-      <div class="card-body">
-        <div class="satdash__kpi-top">
-          <div class="satdash__kpi-icon satdash__kpi-icon--cyan">
-            <i class="ki-duotone ki-code fs-2x"></i>
+          <div class="fw-semibold text-muted">
+            {{ item.title | translate }}
           </div>
-          <div class="satdash__kpi-title">API Geliri</div>
         </div>
-        <div class="satdash__kpi-value">{{ formatCurrency(kpis.apiRevenue) }}</div>
-        <div class="satdash__kpi-sub">API paket ve kullanım geliri</div>
-      </div>
-    </div>
-  </div>
 
-  <div class="col-12 col-sm-6 col-xl-2">
-    <div class="satdash__kpi card h-100">
-      <div class="card-body">
-        <div class="satdash__kpi-top">
-          <div class="satdash__kpi-icon satdash__kpi-icon--green">
-            <i class="ki-duotone ki-technology-2 fs-2x"></i>
-          </div>
-          <div class="satdash__kpi-title">API Abonelikleri</div>
+        <div class="fs-2 fw-bold text-white mb-1">
+          {{ item.format === 'currency'
+            ? formatCurrency(item.value)
+            : formatNumber(item.value)
+          }}
         </div>
-        <div class="satdash__kpi-value">{{ formatNumber(kpis.activeApiSubscriptions) }}</div>
-        <div class="satdash__kpi-sub">Aktif kullanım yapan müşteri</div>
-      </div>
-    </div>
-  </div>
 
-  <div class="col-12 col-sm-6 col-xl-2">
-    <div class="satdash__kpi card h-100">
-      <div class="card-body">
-        <div class="satdash__kpi-top">
-          <div class="satdash__kpi-icon satdash__kpi-icon--orange">
-            <i class="ki-duotone ki-time fs-2x"></i>
-          </div>
-          <div class="satdash__kpi-title">Bekleyen Sipariş</div>
+        <div class="text-muted fs-7">
+          {{ item.sub | translate }}
         </div>
-        <div class="satdash__kpi-value">{{ formatNumber(kpis.pendingOrders) }}</div>
-        <div class="satdash__kpi-sub">İşlem hattında devam edenler</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-12 col-sm-6 col-xl-2">
-    <div class="satdash__kpi card h-100">
-      <div class="card-body">
-        <div class="satdash__kpi-top">
-          <div class="satdash__kpi-icon satdash__kpi-icon--success">
-            <i class="ki-duotone ki-check-circle fs-2x"></i>
-          </div>
-          <div class="satdash__kpi-title">Hazır Sipariş</div>
-        </div>
-        <div class="satdash__kpi-value">{{ formatNumber(kpis.readyOrders) }}</div>
-        <div class="satdash__kpi-sub">Teslime hazır görüntüler</div>
       </div>
     </div>
   </div>

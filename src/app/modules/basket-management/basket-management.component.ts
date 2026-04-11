@@ -6,8 +6,6 @@ import { BasketModel } from './models/basket.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth';
 import { OrderManagementService } from '../order-management/order-management.service';
-import { OrderModel } from '../order-management/models/order.model';
-import { NotificationService } from 'src/app/_metronic/partials/layout/extras/dropdown-inner/notifications-inner/notification.service';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 

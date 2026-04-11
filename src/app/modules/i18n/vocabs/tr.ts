@@ -267,14 +267,16 @@ export const locale = {
         ORDER_DATE: 'Sipariş Tarihi',
         AMOUNT_TL: 'Tutar (₺)',
         UPDATE_STATUS: 'Durum Güncelle',
-        UPLOAD_INVOICE: 'Fatura Yükle',
+        UPLOAD_INVOICE: 'Yükle',
         RATE_PRODUCT: 'Ürünü Değerlendir',
         PRODUCT_QUALITY: 'Ürün Kalitesi',
         SHIPMENT_TRACKING: 'Kargo Takibi',
-        VIEW_INVOICE: 'Fatura Görüntüle',
+        VIEW_INVOICE: 'Görüntüle',
         TRACKING_NO: 'Takip Numarası',
         MYADDRESSES: "Adresler",
-
+        "PRODUCT_INFORMATION": "Ürün Bilgileri",
+        "ORDER_INFORMATION": "Sipariş Bilgileri",
+        "TOTAL_PRODUCT": "Toplam Ürün",
         PROFILE_DETAILS: "Profil Detayları",
         NAME: "Adınız",
         FULL_NAME: "Adınız Soyadınız",
@@ -415,6 +417,7 @@ export const locale = {
             }
         },
         "DATA_PAGE": {
+            "LOADING": "Veriler yükleniyor...",
             "KICKER": "Veri Erişimi",
             "TITLE": "Uydu verisine ihtiyacınıza uygun yöntemle erişin",
             "COPY": "Platformumuzda veriye üç farklı şekilde erişebilirsiniz: Marketplace üzerinden hazır veri satın alabilir, harita üzerinden bölge bazlı sorgulama yaparak veriyi keşfedip satın alabilir veya API key satın alarak endpointler üzerinden sisteminize entegre edebilirsiniz.",
@@ -503,7 +506,7 @@ export const locale = {
         },
         "CONTACT": {
             "HERO": {
-                "KICKER": "İLETİŞİM",
+                "KICKER": "İletişim",
                 "TITLE": "Uydu Verisi, API ve Marketplace ihtiyaçlarınız için bizimle iletişime geçin",
                 "COPY": "Veri satın almak, API’mizi iş akışınıza entegre etmek ya da bölgesel talep ve kurumsal çözümler hakkında görüşmek istiyorsanız ekibimiz size yardımcı olmaya hazır. İhtiyacınızı paylaşın, en kısa sürede sizinle iletişime geçelim.",
                 "ITEMS": {
@@ -526,7 +529,7 @@ export const locale = {
                 "SUBTITLE": "Formu doldurun, ekibimiz kısa süre içinde sizinle iletişime geçsin.",
                 "FULL_NAME": "Ad Soyad",
                 "ORGANIZATION": "Kurum / Şirket",
-                "BUSINESS_EMAIL": "Kurumsal E-posta",
+                "BUSINESS_EMAIL": "E-posta",
                 "SUBJECT": "Konu",
                 "MESSAGE": "Mesaj",
                 "SUBMIT": "Mesaj Gönder",
@@ -765,6 +768,35 @@ export const locale = {
                 "TITLE": "Öznitelik Detayları",
                 "SELECTED": "Seçili Öznitelik",
                 "EMPTY": "Gösterilecek veri bulunamadı"
+            },
+            "CUSTOM_AREA": {
+                "KICKER": "ÖZEL ALAN",
+                "TITLE": "Seçilen Alan",
+                "SUBTITLE": "Satın alma isteği oluştur ve sepete ekle",
+                "INFO_TITLE": "Alan Bilgileri",
+                "PROCESSING_TITLE": "İşlem Seçenekleri",
+                "FIELD_NAME": "Ad",
+                "FIELD_SOURCE": "Kaynak",
+                "FIELD_AREA": "Alan",
+                "FIELD_PROVIDER": "Sağlayıcı",
+                "TOTAL_PRICE": "Toplam Fiyat",
+                "ADD_TO_CART": "Sepete Ekle",
+                "ALREADY_IN_CART": "Bu özel alan zaten sepette mevcut.",
+                "DEFAULT_NAME": "Özel Alan",
+                "DEFAULT_NAME_DRAW": "Çizilen Alan",
+                "DEFAULT_NAME_UPLOAD": "Yüklenen Alan",
+                "DEFAULT_NAME_SEARCH": "Seçilen Alan",
+                "SOURCE_DRAW": "Çizim",
+                "SOURCE_UPLOAD": "Dosya",
+                "SOURCE_SEARCH": "Arama",
+                "OPTIONS": {
+                    "ORTHORECTIFIED_TITLE": "Ortorektifikasyon",
+                    "ORTHORECTIFIED_DESC": "Görüntü konumsal olarak düzeltilsin mi?",
+                    "PANSHARPENED_TITLE": "Pansharpen",
+                    "PANSHARPENED_DESC": "Daha keskin ve detaylı görüntü üretilsin mi?",
+                    "CLASSIFIED_TITLE": "Sınıflandırma",
+                    "CLASSIFIED_DESC": "Seçilen alan için sınıflandırma yapılsın mı?"
+                }
             }
         },
         "CARD_HOLDER": "Kart Üzerindeki İsim",
@@ -804,6 +836,7 @@ export const locale = {
         "ORDER_APPROVED_MESSAGE": "Siparişiniz onaylandı.",
         "ORDER_PREPARING": "Sipariş Hazırlanıyor",
         "ORDER_PREPARING_MESSAGE": "siparişiniz hazırlanıyor.",
+        "ADD_INVOICE_MESSAGE": "Siparişinize ait fatura yüklendi.",
         "CLEAR": "Temizle",
         "LAYER_GROUPS": "Katman Grupları",
         "LAYERS": "Katmanlar",
@@ -925,17 +958,20 @@ export const locale = {
             "TITLE": "Adres bilgilerini buradan ekleyebilir veya düzenleyebilirsiniz."
         },
         "FOOTER": {
-            "DESCRIPTION": "Coğrafi verilerinizi keşfedin, yönetin ve analiz edin.",
+            "PRODUCT_LABEL": "Platform",
+            "STATUS": "Enterprise Ready",
+            "DESCRIPTION": "Uydu verisi, haritalama ve veri servislerini tek platformda birleştiren modern operasyon altyapısı.",
+            "LEGAL": "Yasal",
+            "PRIVACY": "Gizlilik",
+            "TERMS": "Şartlar",
+            "COOKIES": "Çerez Politikası",
             "PLATFORM": "Platform",
-            "MARKETPLACE": "Pazar Yeri",
+            "MARKETPLACE": "Pazaryeri",
             "DATA": "Veri",
             "API": "API",
             "MAP": "Harita",
             "CONTACT": "İletişim",
-            "LEGAL": "Yasal",
-            "TERMS_OF_SERVICE": "Kullanım Şartları",
-            "PRIVACY_POLICY": "Gizlilik Politikası",
-            "COOKIES": "Çerez Politikası"
+            "RIGHTS": "Tüm hakları saklıdır."
         },
         "COPYRIGHT": "© 2026 GeoPortal. Tüm hakları saklıdır.",
         "TERMS_SHORT": "Şartlar",
@@ -982,7 +1018,7 @@ export const locale = {
             "ADMIN_EMAIL": "Admin Email",
             "ADMIN_EMAIL_PLACEHOLDER": "admin@domain.com",
 
-            "UPDATE_STATUS_ONLY": "Sadece Durumu Güncelle",
+            "UPDATE_STATUS_ONLY": "Durumu Güncelle",
             "SEND_REPLY": "Yanıt Gönder",
             "SENDING": "Gönderiliyor...",
 
@@ -1002,6 +1038,10 @@ export const locale = {
             "STATUS_SPAM": "Spam",
             "LOADING": "Yükleniyor...",
             "BACK": "Geri Dön",
+            "TICKET_INFORMATION": "Talep Bilgileri",
+            "MESSAGE_COUNT": "Mesaj",
+            "CUSTOMER_LABEL": "Müşteri",
+            "CANNOT_UPDATE_CLOSED_TICKET": "Kapalı taleplerde durum güncellenemez ve yeni mesaj gönderilemez.",
             "ALERT": {
                 "TICKET_NOT_FOUND": "Ticket bulunamadı.",
                 "TICKET_DETAIL_ERROR": "Ticket detayı alınamadı.",
@@ -1009,7 +1049,57 @@ export const locale = {
                 "REPLY_SUCCESS_STATUS_ERROR": "Yanıt gönderildi ancak durum güncellenemedi.",
                 "REPLY_ERROR": "Yanıt gönderilemedi.",
                 "STATUS_UPDATED": "Durum güncellendi.",
-                "STATUS_UPDATE_ERROR": "Durum güncellenemedi."
+                "STATUS_UPDATE_ERROR": "Durum güncellenemedi.",
+            }
+        },
+        COMING_ORDER_DETAIL: {
+            TITLE: 'Sipariş Detayı',
+            ORDER_AND_PRODUCT_INFORMATION: 'Sipariş ve Ürün Bilgileri',
+            ORDER_NO_LABEL: 'Sipariş No',
+            ORDER_DATE_LABEL: 'Sipariş Tarihi',
+            STATUS_CAN_BE_UPDATED: 'Sipariş durumu güncellenebilir.',
+            STATUS_LOCKED: 'Sipariş tamamlandığı için durum değiştirilemez.',
+            STATUS_LOCKED_TITLE: 'Durum güncellemesi kapalı',
+            STATUS_HELP: 'Sipariş tamamlanana kadar durum güncellenebilir.',
+            INVOICE_UPLOAD_LOCKED_TITLE: 'Fatura yükleme kapalı',
+            INVOICE_UPLOAD_LOCKED_TEXT: 'Fatura yalnızca tamamlanan siparişlerde yüklenebilir.',
+            INVOICE_UPLOADED_INFO: 'Fatura sisteme eklendi',
+            UPLOADED_INVOICE: 'Yüklenen fatura',
+            INVOICE_PREVIEW_TITLE: 'Fatura Önizleme',
+            INVOICE_PREVIEW_SUBTITLE: 'Yüklenen fatura dosyası',
+            INVOICE_PREVIEW_EMPTY: 'Önizleme bulunamadı.',
+            NO_INVOICE_ADDRESS: 'Bu sipariş için fatura adresi bilgisi bulunamadı.',
+            PRODUCT_ID: 'Ürün ID',
+            PROVIDER_LABEL: 'Sağlayıcı',
+            CLOUD_LABEL: 'Bulut',
+            LOCATION_LABEL: 'Konum',
+            ACQUISITION_DATE_LABEL: 'Alım Tarihi',
+            AREA_LABEL: 'Alan',
+            PROCESS_DATE_LABEL: 'İşlem Tarihi',
+            COMPLETION_DATE_LABEL: 'Tamamlanma Tarihi',
+            AMOUNT_LABEL: 'Tutar',
+            UPDATING: 'Kaydediliyor...',
+            UPLOADING: 'Yükleniyor...',
+            STATUS_SELECT_PLACEHOLDER: 'Durum seçiniz',
+            UPLOAD_INVOICE_BOX_TITLE: 'Fatura dosyası seçin',
+            UPLOAD_INVOICE_BOX_TEXT: 'PDF veya desteklenen fatura dosyasını seçip yükleyin.',
+            FILE_READY_TO_UPLOAD: 'Dosya seçildi, yüklemeye hazır.',
+            SELECT_FILE: 'Dosya Seç',
+            ORDER_FLOW_TITLE: 'Sipariş Akışı',
+            NO_FILES_TITLE: 'Dosya bulunamadı',
+            NO_FILES_TEXT: 'Bu siparişe ait indirilebilir veya görüntülenebilir dosya bulunmuyor.',
+            "NO_INVOICE_UPLOADED": "Yüklenmiş fatura bulunmuyor",
+            "CLICK_TO_UPLOAD_INVOICE": "Fatura yüklemek için tıklayın",
+            "STATUS_CAN_NOT_BE_UPDATED": "Bu ürün için durum güncellenemez",
+            ALERTS: {
+                GET_ORDER_ERROR: 'Sipariş detayı alınırken bir hata oluştu.',
+                STATUS_UPDATED: 'Sipariş durumu başarıyla güncellendi.',
+                STATUS_UPDATE_ERROR: 'Sipariş durumu güncellenirken bir hata oluştu.',
+                INVOICE_UPLOADED: 'Fatura başarıyla yüklendi.',
+                INVOICE_UPLOAD_ERROR: 'Fatura dosyası yüklenirken bir hata oluştu.',
+                INVOICE_ATTACH_ERROR: 'Fatura siparişe eklenirken bir hata oluştu.',
+                INVOICE_DELETED: 'Fatura başarıyla silindi.',
+                INVOICE_DELETE_ERROR: 'Fatura silinirken bir hata oluştu.'
             }
         },
         "ALERT": {
@@ -1018,7 +1108,122 @@ export const locale = {
             "WARNING": "Uyarı",
             "INFO": "Bilgi",
             "NOTIFICATION": "Bildirim"
+        },
+        "DASHBOARD": {
+            "LOADING": "Dashboard yükleniyor...",
+            "FILTER": {
+                "QUICK_LAST_7_DAYS": "Son 7 Gün",
+                "QUICK_LAST_30_DAYS": "Son 30 Gün",
+                "QUICK_LAST_3_MONTHS": "Son 3 Ay",
+                "QUICK_LAST_6_MONTHS": "Son 6 Ay",
+                "LIVE_VIEW": "Canlı görünüm",
+                "START_DATE": "Başlangıç Tarihi",
+                "END_DATE": "Bitiş Tarihi",
+                "CUSTOMER_TYPE": "Üyelik Tipi",
+                "CHANNEL": "Kanal",
+                "SELECT": "Seçiniz",
+                "APPLY": "Filtrele",
+                "RESET": "Sıfırla",
+                "OPTIONS": {
+                    "ALL": "Tümü",
+                    "INDIVIDUAL": "Bireysel",
+                    "CORPORATE": "Kurumsal",
+                    "MARKETPLACE": "Marketplace",
+                    "API": "API",
+                    "SPECIAL_REQUEST": "Özel Talep"
+                }
+            },
+            "HERO": {
+                "EYEBROW": "UYDU VERİ TİCARETİ & OPERASYONLARI",
+                "TITLE_1": "Uydu veri satış, API kullanımı ve sipariş operasyonlarını",
+                "TITLE_2": "tek ekranda yönetin",
+                "DESCRIPTION": "Marketplace gelirleri, API abonelikleri, bölgesel talepler, sipariş yaşam döngüsü ve entegrasyon sağlığını anlık izleyin."
+            },
+
+            "KPI": {
+                "TODAY_API_CALLS": "Bugünkü API Çağrısı",
+                "REGIONAL_DEMAND": "Bölgesel Talep",
+                "INDIVIDUAL_MEMBER": "Bireysel Üye",
+                "CORPORATE_MEMBER": "Kurumsal Üye",
+                "TOTAL_REVENUE": "Toplam Gelir",
+                "TOTAL_REVENUE_SUB": "Platform genel toplam gelir",
+
+                "MARKETPLACE": "Marketplace",
+                "MARKETPLACE_SUB": "Market satış geliri",
+
+                "API_REVENUE": "API Geliri",
+                "API_REVENUE_SUB": "API paket ve kullanım geliri",
+
+                "API_SUBSCRIPTIONS": "API Abonelikleri",
+                "API_SUBSCRIPTIONS_SUB": "Aktif kullanım yapan müşteri",
+
+                "PENDING_ORDERS": "Bekleyen Sipariş",
+                "PENDING_ORDERS_SUB": "İşlem hattında devam edenler",
+
+                "READY_ORDERS": "Hazır Sipariş",
+                "READY_ORDERS_SUB": "Teslime hazır görüntüler"
+            },
+
+            "CARDS": {
+                "REVENUE_TREND": {
+                    "TITLE": "Gelir Trendi",
+                    "SUBTITLE": "Marketplace + API + toplam gelir"
+                },
+                "REVENUE_BREAKDOWN": {
+                    "TITLE": "Gelir Kırılımı",
+                    "SUBTITLE": "Kaynağa göre gelir dağılımı"
+                },
+                "ORDER_PIPELINE": {
+                    "TITLE": "Sipariş Yaşam Döngüsü",
+                    "SUBTITLE": "Operasyon hattındaki siparişler"
+                },
+                "API_USAGE": {
+                    "TITLE": "API Kullanımı",
+                    "SUBTITLE": "Günlük çağrı trendi"
+                },
+                "RECENT_ORDERS": {
+                    "TITLE": "Son Siparişler",
+                    "SUBTITLE": "En son oluşturulan siparişler ve operasyon durumları"
+                },
+                "REGIONAL_DEMANDS": {
+                    "TITLE": "Bölgesel Talepler",
+                    "SUBTITLE": "Harita üzerinden gelen aktif talepler"
+                },
+                "MEMBERSHIP": {
+                    "TITLE": "Üyelik Dağılımı",
+                    "SUBTITLE": "Bireysel ve kurumsal kullanıcılar"
+                },
+                "SYSTEM_HEALTH": {
+                    "TITLE": "Sistem Sağlığı",
+                    "SUBTITLE": "Temel servis ve entegrasyon durumları"
+                }
+            },
+
+            "CHIPS": {
+                "LIVE": "Canlı",
+                "REVENUE": "Gelir",
+                "PIPELINE": "Pipeline",
+                "API": "API",
+                "ORDERS": "Siparişler",
+                "DEMAND": "Talep",
+                "MEMBERS": "Üyeler",
+                "HEALTHY": "Sağlıklı"
+            },
+            "TABLE": {
+                "ORDER_NO": "Sipariş No",
+                "CUSTOMER": "Müşteri",
+                "TYPE": "Tip",
+                "CHANNEL": "Kanal",
+                "REGION": "Bölge",
+                "AMOUNT": "Tutar",
+                "STATUS": "Durum"
+            },
+            "DEMAND": {
+                "CUSTOMER": "Müşteri",
+                "AREA": "Alan"
+            }
         }
+
         // END (TR-EN-LANGUAGE-BRANCH)
     }
 };

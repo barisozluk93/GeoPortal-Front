@@ -1,32 +1,96 @@
 <footer class="app-footer">
-  <div class="container d-flex align-items-center justify-content-between flex-wrap">
+  <div class="container app-footer__container">
+    <div class="app-footer__surface">
+      <div class="app-footer__top">
+        <div class="app-footer__brand">
+          <div class="app-footer__brand-badge">
+            <span class="app-footer__brand-icon">G</span>
+          </div>
 
-    <!-- Left -->
-    <div class="footer-left d-flex align-items-center">
-      <span class="text-muted fw-semibold me-3">
-        © 2026 GeoPortal
-      </span>
-      <a href="#" class="footer-link">Privacy</a>
-      <a href="#" class="footer-link">Terms</a>
-      <a href="#" class="footer-link">Contact</a>
+          <div class="app-footer__brand-content">
+            <div class="app-footer__eyebrow">
+              {{ 'FOOTER.PRODUCT_LABEL' | translate }}
+            </div>
+
+            <div class="app-footer__title-row">
+              <h3 class="app-footer__title">GeoPortal</h3>
+              <span class="app-footer__status">
+                {{ 'FOOTER.STATUS' | translate }}
+              </span>
+            </div>
+
+            <p class="app-footer__description">
+              {{ 'FOOTER.DESCRIPTION' | translate }}
+            </p>
+          </div>
+        </div>
+
+        <div class="app-footer__nav">
+          <div class="app-footer__group">
+            <div class="app-footer__heading">
+              {{ 'FOOTER.LEGAL' | translate }}
+            </div>
+
+            <a routerLink="/privacy" class="app-footer__link">
+              {{ 'FOOTER.PRIVACY' | translate }}
+            </a>
+
+            <a routerLink="/terms" class="app-footer__link">
+              {{ 'FOOTER.TERMS' | translate }}
+            </a>
+
+            <a routerLink="/cookies" class="app-footer__link">
+              {{ 'FOOTER.COOKIES' | translate }}
+            </a>
+          </div>
+
+          <div class="app-footer__group">
+            <div class="app-footer__heading">
+              {{ 'FOOTER.PLATFORM' | translate }}
+            </div>
+
+            <a routerLink="/landing/marketplace" class="app-footer__link">
+              {{ 'FOOTER.MARKETPLACE' | translate }}
+            </a>
+
+            <a routerLink="/landing/data" class="app-footer__link">
+              {{ 'FOOTER.DATA' | translate }}
+            </a>
+
+            <a routerLink="/landing/data" class="app-footer__link">
+              {{ 'FOOTER.API' | translate }}
+            </a>
+
+            <a routerLink="/landing/map" class="app-footer__link">
+              {{ 'FOOTER.MAP' | translate }}
+            </a>
+
+            <a routerLink="/landing/contact" class="app-footer__link">
+              {{ 'FOOTER.CONTACT' | translate }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-footer__divider"></div>
+
+      <div class="app-footer__bottom">
+        <div class="app-footer__copyright">
+          © 2026 GeoPortal. {{ 'FOOTER.RIGHTS' | translate }}
+        </div>
+
+        <div class="app-footer__bottom-links">
+          <a routerLink="/privacy" class="app-footer__bottom-link">
+            {{ 'FOOTER.PRIVACY' | translate }}
+          </a>
+          <a routerLink="/terms" class="app-footer__bottom-link">
+            {{ 'FOOTER.TERMS' | translate }}
+          </a>
+          <a routerLink="/cookies" class="app-footer__bottom-link">
+            {{ 'FOOTER.COOKIES' | translate }}
+          </a>
+        </div>
+      </div>
     </div>
-
-    <!-- Right -->
-    <!-- <div class="footer-right d-flex align-items-center">
-      <span class="text-muted me-3">Follow</span>
-
-      <a href="#" class="footer-icon">
-        <i class="fab fa-github"></i>
-      </a>
-
-      <a href="#" class="footer-icon">
-        <i class="fab fa-twitter"></i>
-      </a>
-
-      <a href="#" class="footer-icon">
-        <i class="fab fa-linkedin"></i>
-      </a>
-    </div> -->
-
   </div>
 </footer>

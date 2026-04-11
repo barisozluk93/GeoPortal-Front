@@ -1,86 +1,46 @@
 <section class="map-page">
   <div class="map-shell">
     <div class="map-stage">
-      <div
-        class="drawer-overlay"
-        *ngIf="layerManagerOpen() || searchPanelOpen() || legendPanelOpen() || infoPanelOpen() || filterDrawerOpen() || featureInfoDrawerOpen()"
-        (click)="closeAllDrawers()"
-      ></div>
+      <div class="drawer-overlay"
+        *ngIf="layerManagerOpen() || searchPanelOpen() || legendPanelOpen() || infoPanelOpen() || filterDrawerOpen() || featureInfoDrawerOpen() || purchaseDrawerOpen()"
+        (click)="closeAllDrawers()"></div>
 
       <!-- LEFT ACTION RAIL -->
       <div class="left-actions-shell">
         <div class="left-actions-bar">
-          <button
-            type="button"
-            class="left-action-btn btn btn-icon btn-active-light-primary"
-            [class.active]="layerManagerOpen()"
-            (click)="toggleLayerManager()"
+          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
+            [class.active]="layerManagerOpen()" (click)="toggleLayerManager()"
             [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
-          >
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/general/gen009.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+            [attr.aria-label]="'MAP.ACTIONS.LAYER_MANAGER' | translate">
+            <span [inlineSVG]="'./assets/media/icons/duotune/general/gen009.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
 
-          <button
-            type="button"
-            class="left-action-btn btn btn-icon btn-active-light-primary"
-            [class.active]="searchPanelOpen()"
-            (click)="toggleSearchPanel()"
-            [title]="'MAP.ACTIONS.SEARCH' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.SEARCH' | translate"
-          >
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
+            [class.active]="searchPanelOpen()" (click)="toggleSearchPanel()" [title]="'MAP.ACTIONS.SEARCH' | translate"
+            [attr.aria-label]="'MAP.ACTIONS.SEARCH' | translate">
+            <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
 
-          <button
-            type="button"
-            class="left-action-btn btn btn-icon btn-active-light-primary"
-            [class.active]="polygonMode()"
-            (click)="togglePolygonDraw()"
-            [title]="'MAP.ACTIONS.POLYGON' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.POLYGON' | translate"
-          >
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/general/gen032.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
+            [class.active]="polygonMode()" (click)="togglePolygonDraw()" [title]="'MAP.ACTIONS.POLYGON' | translate"
+            [attr.aria-label]="'MAP.ACTIONS.POLYGON' | translate">
+            <span [inlineSVG]="'./assets/media/icons/duotune/general/gen032.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
 
-          <button
-            type="button"
-            class="left-action-btn btn btn-icon btn-active-light-primary"
-            (click)="triggerFileUpload()"
-            [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.UPLOAD_FILE' | translate"
-          >
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/files/fil005.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
+            (click)="triggerFileUpload()" [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate"
+            [attr.aria-label]="'MAP.ACTIONS.UPLOAD_FILE' | translate">
+            <span [inlineSVG]="'./assets/media/icons/duotune/files/fil005.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
 
-          <button
-            type="button"
-            class="left-action-btn btn btn-icon btn-active-light-primary"
-            (click)="resetView()"
-            [title]="'MAP.ACTIONS.RESET' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.RESET' | translate"
-          >
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr029.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary" (click)="resetView()"
+            [title]="'MAP.ACTIONS.RESET' | translate" [attr.aria-label]="'MAP.ACTIONS.RESET' | translate">
+            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr029.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
         </div>
       </div>
@@ -100,25 +60,18 @@
 
               <div class="map-side-panel__subtitle">
                 {{
-                  searchPanelOpen()
-                    ? ('MAP.SEARCH.PLACEHOLDER' | translate)
-                    : ('MAP.PANEL.SUBTITLE' | translate)
+                searchPanelOpen()
+                ? ('MAP.SEARCH.PLACEHOLDER' | translate)
+                : ('MAP.PANEL.SUBTITLE' | translate)
                 }}
               </div>
             </div>
 
-            <button
-              class="drawer-close-btn btn btn-sm btn-icon btn-light"
-              type="button"
+            <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button"
               (click)="searchPanelOpen() ? closeSearchPanel() : toggleLayerManager()"
-              [title]="'MAP.PANEL.COLLAPSE' | translate"
-              [attr.aria-label]="'MAP.PANEL.COLLAPSE' | translate"
-            >
-              <span
-                [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-                class="svg-icon svg-icon-2"
-                aria-hidden="true"
-              ></span>
+              [title]="'MAP.PANEL.COLLAPSE' | translate" [attr.aria-label]="'MAP.PANEL.COLLAPSE' | translate">
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
+                aria-hidden="true"></span>
             </button>
           </div>
 
@@ -131,13 +84,9 @@
                   </label>
 
                   <div class="search-form-row">
-                    <input
-                      class="form-control form-control-lg form-control-solid form-control-solid"
-                      [ngModel]="searchText()"
-                      (ngModelChange)="searchText.set($event)"
-                      [placeholder]="'MAP.SEARCH.PLACEHOLDER' | translate"
-                      (keyup.enter)="searchPlace()"
-                    />
+                    <input class="form-control form-control-lg" [ngModel]="searchText()"
+                      (ngModelChange)="searchText.set($event)" [placeholder]="'MAP.SEARCH.PLACEHOLDER' | translate"
+                      (keyup.enter)="searchPlace()" />
 
                     <button class="btn btn-primary" type="button" (click)="searchPlace()">
                       {{ 'MAP.SEARCH.BUTTON' | translate }}
@@ -175,23 +124,16 @@
                       <div class="group-card-title">{{ group.name }}</div>
                       <div class="group-card-subtitle">
                         {{ group.layers.length }}
-                        {{ group.layers.length > 1 ? ('MAP.COMMON.LAYERS' | translate) : ('MAP.COMMON.LAYER' | translate) }}
+                        {{ group.layers.length > 1 ? ('MAP.COMMON.LAYERS' | translate) : ('MAP.COMMON.LAYER' |
+                        translate) }}
                       </div>
                     </div>
 
                     <div class="group-toggle-indicator">
-                      <span
-                        *ngIf="group.expanded"
-                        [inlineSVG]="'./assets/media/icons/duotune/arrows/arr010.svg'"
-                        class="svg-icon svg-icon-2"
-                        aria-hidden="true"
-                      ></span>
-                      <span
-                        *ngIf="!group.expanded"
-                        [inlineSVG]="'./assets/media/icons/duotune/arrows/arr009.svg'"
-                        class="svg-icon svg-icon-2"
-                        aria-hidden="true"
-                      ></span>
+                      <span *ngIf="group.expanded" [inlineSVG]="'./assets/media/icons/duotune/arrows/arr010.svg'"
+                        class="svg-icon svg-icon-2" aria-hidden="true"></span>
+                      <span *ngIf="!group.expanded" [inlineSVG]="'./assets/media/icons/duotune/arrows/arr009.svg'"
+                        class="svg-icon svg-icon-2" aria-hidden="true"></span>
                     </div>
                   </button>
 
@@ -200,72 +142,38 @@
                       <div class="layer-item-card" *ngFor="let layer of group.layers; trackBy: trackByLayer">
                         <div class="layer-single-row">
                           <label class="layer-check form-check form-check-custom form-check-solid">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              [ngModel]="layer.visible"
-                              (ngModelChange)="onLayerVisibilityChange(layer, $event)"
-                            />
+                            <input class="form-check-input" type="checkbox" [ngModel]="layer.visible"
+                              (ngModelChange)="onLayerVisibilityChange(layer, $event)" />
                             <span class="layer-name">{{ layer.name }}</span>
                           </label>
 
                           <div class="layer-item-actions">
-                            <button
-                              *ngIf="layer.type === LayerType.Wms"
-                              type="button"
-                              class="layer-mini-btn"
-                              [class.active]="isLegendLayer(layer)"
-                              (click)="toggleLegend(layer)"
+                            <button *ngIf="layer.type === LayerType.Wms" type="button" class="layer-mini-btn"
+                              [class.active]="isLegendLayer(layer)" (click)="toggleLegend(layer)"
                               [title]="'MAP.LEGEND.TITLE' | translate"
-                              [attr.aria-label]="'MAP.LEGEND.TITLE' | translate"
-                            >
-                              <span
-                                [inlineSVG]="'./assets/media/icons/duotune/general/gen008.svg'"
-                                class="svg-icon svg-icon-2"
-                                aria-hidden="true"
-                              ></span>
+                              [attr.aria-label]="'MAP.LEGEND.TITLE' | translate">
+                              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen008.svg'"
+                                class="svg-icon svg-icon-2" aria-hidden="true"></span>
                             </button>
 
-                            <button
-                              *ngIf="canOpenInfo(layer)"
-                              type="button"
-                              class="layer-mini-btn"
-                              [class.active]="isInfoLayer(layer)"
-                              (click)="toggleInfo(layer)"
-                              [title]="'MAP.INFO.TITLE' | translate"
-                              [attr.aria-label]="'MAP.INFO.TITLE' | translate"
-                            >
-                              <span
-                                [inlineSVG]="'./assets/media/icons/duotune/general/gen045.svg'"
-                                class="svg-icon svg-icon-2"
-                                aria-hidden="true"
-                              ></span>
+                            <button *ngIf="canOpenInfo(layer)" type="button" class="layer-mini-btn"
+                              [class.active]="isInfoLayer(layer)" (click)="toggleInfo(layer)"
+                              [title]="'MAP.INFO.TITLE' | translate" [attr.aria-label]="'MAP.INFO.TITLE' | translate">
+                              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen045.svg'"
+                                class="svg-icon svg-icon-2" aria-hidden="true"></span>
                             </button>
 
-                            <button
-                              *ngIf="canOpenFilter(layer)"
-                              type="button"
-                              class="layer-mini-btn"
-                              [class.active]="isFilterLayer(layer)"
-                              (click)="toggleFilterDrawer(layer)"
+                            <button *ngIf="canOpenFilter(layer)" type="button" class="layer-mini-btn"
+                              [class.active]="isFilterLayer(layer)" (click)="toggleFilterDrawer(layer)"
                               [title]="'MAP.FILTER.TITLE' | translate"
-                              [attr.aria-label]="'MAP.FILTER.TITLE' | translate"
-                            >
-                              <span
-                                [inlineSVG]="'./assets/media/icons/duotune/general/gen031.svg'"
-                                class="svg-icon svg-icon-2"
-                                aria-hidden="true"
-                              ></span>
+                              [attr.aria-label]="'MAP.FILTER.TITLE' | translate">
+                              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen031.svg'"
+                                class="svg-icon svg-icon-2" aria-hidden="true"></span>
                             </button>
 
                             <div class="opacity-mini">
-                              <input
-                                type="range"
-                                min="0"
-                                max="100"
-                                [ngModel]="layer.opacity"
-                                (ngModelChange)="onOpacityChange(layer, $event)"
-                              />
+                              <input type="range" min="0" max="100" [ngModel]="layer.opacity"
+                                (ngModelChange)="onOpacityChange(layer, $event)" />
                               <span>{{ layer.opacity }}%</span>
                             </div>
                           </div>
@@ -304,34 +212,18 @@
         <div #mapEl class="map-element"></div>
 
         <div class="map-zoom-actions">
-          <button
-            class="map-zoom-btn btn btn-icon btn-light"
-            type="button"
-            (click)="zoomIn()"
-            [title]="'MAP.ACTIONS.ZOOM_IN' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.ZOOM_IN' | translate"
-          >
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+          <button class="map-zoom-btn btn btn-icon btn-light" type="button" (click)="zoomIn()"
+            [title]="'MAP.ACTIONS.ZOOM_IN' | translate" [attr.aria-label]="'MAP.ACTIONS.ZOOM_IN' | translate">
+            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
 
           <div class="map-zoom-divider" aria-hidden="true"></div>
 
-          <button
-            class="map-zoom-btn btn btn-icon btn-light"
-            type="button"
-            (click)="zoomOut()"
-            [title]="'MAP.ACTIONS.ZOOM_OUT' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.ZOOM_OUT' | translate"
-          >
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr010.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+          <button class="map-zoom-btn btn btn-icon btn-light" type="button" (click)="zoomOut()"
+            [title]="'MAP.ACTIONS.ZOOM_OUT' | translate" [attr.aria-label]="'MAP.ACTIONS.ZOOM_OUT' | translate">
+            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr010.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
         </div>
 
@@ -356,11 +248,8 @@
           </div>
 
           <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closeLegend()">
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
         </div>
 
@@ -409,11 +298,8 @@
           </div>
 
           <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closeInfo()">
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
         </div>
 
@@ -429,7 +315,8 @@
 
               <div class="detail-grid__item">
                 <span>{{ 'MAP.COMMON.VISIBILITY' | translate }}</span>
-                <strong>{{ infoLayer.visible ? ('MAP.COMMON.OPEN' | translate) : ('MAP.COMMON.CLOSED' | translate) }}</strong>
+                <strong>{{ infoLayer.visible ? ('MAP.COMMON.OPEN' | translate) : ('MAP.COMMON.CLOSED' | translate)
+                  }}</strong>
               </div>
 
               <div class="detail-grid__item">
@@ -498,11 +385,8 @@
           </div>
 
           <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closeFilterDrawer()">
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
         </div>
 
@@ -531,24 +415,18 @@
                     <div class="filter-field-head">
                       <label class="filter-label-mini">{{ 'MAP.FILTER.FIELD' | translate }}</label>
 
-                      <button class="btn btn-sm btn-light-primary" type="button" (click)="loadFilterFieldOptions(filterLayer, true)">
+                      <button class="btn btn-sm btn-light-primary" type="button"
+                        (click)="loadFilterFieldOptions(filterLayer, true)">
                         {{ 'MAP.FILTER.REFRESH_FIELDS' | translate }}
                       </button>
                     </div>
 
-                    <app-custom-select
-                      [size]="'lg'"
-                      class="map-custom-select"
-                      [invalid]="!!filter.invalidField"
+                    <app-custom-select [size]="'lg'" class="map-custom-select" [invalid]="!!filter.invalidField"
                       [disabled]="filterLayer.fieldsLoading || !getFieldSelectItems(filterLayer).length"
-                      [items]="getFieldSelectItems(filterLayer)"
-                      bindLabel="label"
-                      bindValue="value"
+                      [items]="getFieldSelectItems(filterLayer)" bindLabel="label" bindValue="value"
                       [placeholder]="filterLayer.fieldsLoading ? ('MAP.STATE.LOADING' | translate) : ('MAP.FILTER.SELECT_FIELD' | translate)"
-                      [ngModel]="filter.field"
-                      [ngModelOptions]="{ standalone: true }"
-                      (ngModelChange)="onFilterFieldChange(filter, $event)"
-                    >
+                      [ngModel]="filter.field" [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="onFilterFieldChange(filter, $event)">
                     </app-custom-select>
 
                     <div class="invalid-feedback d-block" *ngIf="filter.invalidField">
@@ -559,7 +437,8 @@
                       {{ 'MAP.FILTER.ATTRIBUTES_LOADING' | translate }}
                     </div>
 
-                    <div class="invalid-feedback d-block" *ngIf="!filterLayer.fieldsLoading && filterLayer.fieldLoadError">
+                    <div class="invalid-feedback d-block"
+                      *ngIf="!filterLayer.fieldsLoading && filterLayer.fieldLoadError">
                       {{ filterLayer.fieldLoadError }}
                     </div>
                   </div>
@@ -567,18 +446,10 @@
                   <div>
                     <label class="filter-label-mini">{{ 'MAP.FILTER.OPERATOR' | translate }}</label>
 
-                    <app-custom-select
-                      [size]="'lg'"
-                      class="map-custom-select"
-                      [invalid]="!!filter.invalidOperator"
-                      [items]="operatorSelectItems"
-                      bindLabel="label"
-                      bindValue="value"
-                      [placeholder]="'MAP.COMMON.SELECT_AN_OPERATOR' | translate"
-                      [ngModel]="filter.operator"
-                      [ngModelOptions]="{ standalone: true }"
-                      (ngModelChange)="onFilterOperatorChange(filter, $event)"
-                    >
+                    <app-custom-select [size]="'lg'" class="map-custom-select" [invalid]="!!filter.invalidOperator"
+                      [items]="operatorSelectItems" bindLabel="label" bindValue="value"
+                      [placeholder]="'MAP.COMMON.SELECT_AN_OPERATOR' | translate" [ngModel]="filter.operator"
+                      [ngModelOptions]="{ standalone: true }" (ngModelChange)="onFilterOperatorChange(filter, $event)">
                     </app-custom-select>
 
                     <div class="invalid-feedback d-block" *ngIf="filter.invalidOperator">
@@ -589,14 +460,10 @@
                   <div>
                     <label class="filter-label-mini">{{ 'MAP.FILTER.VALUE' | translate }}</label>
 
-                    <input
-                      type="text"
-                      class="form-control form-control-lg form-control-solid form-control-solid"
-                      [ngClass]="{ 'is-invalid': filter.invalidValue }"
-                      [ngModel]="filter.value"
+                    <input type="text" class="form-control form-control-lg"
+                      [ngClass]="{ 'is-invalid': filter.invalidValue }" [ngModel]="filter.value"
                       (ngModelChange)="onFilterValueChange(filter, $event)"
-                      [placeholder]="'MAP.FILTER.VALUE' | translate"
-                    />
+                      [placeholder]="'MAP.FILTER.VALUE' | translate" />
 
                     <div class="invalid-feedback" *ngIf="filter.invalidValue">
                       {{ 'MAP.COMMON.REQUIRED' | translate }}
@@ -606,14 +473,10 @@
                   <div *ngIf="filter.operator === 'between'">
                     <label class="filter-label-mini">{{ 'MAP.FILTER.SECOND_VALUE' | translate }}</label>
 
-                    <input
-                      type="text"
-                      class="form-control form-control-lg form-control-solid form-control-solid"
-                      [ngClass]="{ 'is-invalid': filter.invalidValue2 }"
-                      [ngModel]="filter.value2"
+                    <input type="text" class="form-control form-control-lg"
+                      [ngClass]="{ 'is-invalid': filter.invalidValue2 }" [ngModel]="filter.value2"
                       (ngModelChange)="onFilterSecondValueChange(filter, $event)"
-                      [placeholder]="'MAP.FILTER.SECOND_VALUE' | translate"
-                    />
+                      [placeholder]="'MAP.FILTER.SECOND_VALUE' | translate" />
 
                     <div class="invalid-feedback" *ngIf="filter.invalidValue2">
                       {{ 'MAP.COMMON.REQUIRED' | translate }}
@@ -646,12 +509,10 @@
             <div class="detail-drawer__subtitle">{{ featurePopupSubtitle() }}</div>
           </div>
 
-          <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closeFeatureInfoDrawer()">
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-              class="svg-icon svg-icon-2"
-              aria-hidden="true"
-            ></span>
+          <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button"
+            (click)="closeFeatureInfoDrawer()">
+            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
           </button>
         </div>
 
@@ -671,6 +532,123 @@
                 {{ 'MAP.FEATURE.EMPTY' | translate }}
               </div>
             </ng-template>
+          </div>
+        </div>
+      </aside>
+
+      <!-- PURCHASE DRAWER -->
+      <aside class="detail-drawer detail-drawer--sticky-footer" [class.open]="purchaseDrawerOpen()">
+        <div class="detail-drawer__header">
+          <div>
+            <div class="detail-drawer__kicker">
+              {{ 'MAP.CUSTOM_AREA.KICKER' | translate }}
+            </div>
+            <div class="detail-drawer__title">
+              {{ selectedPurchaseProduct()?.name || ('MAP.CUSTOM_AREA.TITLE' | translate) }}
+            </div>
+            <div class="detail-drawer__subtitle">
+              {{ 'MAP.CUSTOM_AREA.SUBTITLE' | translate }}
+            </div>
+          </div>
+
+          <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closePurchaseDrawer()">
+            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
+              aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="detail-drawer__body" *ngIf="selectedPurchaseProduct() as product">
+          <div class="detail-section">
+            <div class="detail-section__title">
+              {{ 'MAP.CUSTOM_AREA.INFO_TITLE' | translate }}
+            </div>
+
+            <div class="detail-grid detail-grid--single">
+              <div class="detail-grid__item">
+                <span>{{ 'MAP.CUSTOM_AREA.FIELD_NAME' | translate }}</span>
+                <strong>{{ product.name || '-' }}</strong>
+              </div>
+
+              <div class="detail-grid__item">
+                <span>{{ 'MAP.CUSTOM_AREA.FIELD_AREA' | translate }}</span>
+                <strong>{{ product.areaKm2 ?? 0 | number:'1.2-2' }} km²</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section__title">
+              {{ 'MAP.CUSTOM_AREA.PROCESSING_TITLE' | translate }}
+            </div>
+
+            <div class="d-flex flex-column gap-5">
+              <label class="d-flex align-items-start justify-content-between gap-4">
+                <div>
+                  <div class="text-white fw-bold fs-6 mb-1">
+                    {{ 'MAP.CUSTOM_AREA.OPTIONS.ORTHORECTIFIED_TITLE' | translate }}
+                  </div>
+                  <div class="text-muted fs-7">
+                    {{ 'MAP.CUSTOM_AREA.OPTIONS.ORTHORECTIFIED_DESC' | translate }}
+                  </div>
+                </div>
+
+                <div class="form-check form-check-custom form-check-solid m-0">
+                  <input class="form-check-input" type="checkbox" [checked]="purchaseOptions().orthorectified"
+                    (change)="onPurchaseOptionChange('orthorectified', $any($event.target).checked)" />
+                </div>
+              </label>
+
+              <label class="d-flex align-items-start justify-content-between gap-4">
+                <div>
+                  <div class="text-white fw-bold fs-6 mb-1">
+                    {{ 'MAP.CUSTOM_AREA.OPTIONS.PANSHARPENED_TITLE' | translate }}
+                  </div>
+                  <div class="text-muted fs-7">
+                    {{ 'MAP.CUSTOM_AREA.OPTIONS.PANSHARPENED_DESC' | translate }}
+                  </div>
+                </div>
+
+                <div class="form-check form-check-custom form-check-solid m-0">
+                  <input class="form-check-input" type="checkbox" [checked]="purchaseOptions().pansharpened"
+                    (change)="onPurchaseOptionChange('pansharpened', $any($event.target).checked)" />
+                </div>
+              </label>
+
+              <label class="d-flex align-items-start justify-content-between gap-4">
+                <div>
+                  <div class="text-white fw-bold fs-6 mb-1">
+                    {{ 'MAP.CUSTOM_AREA.OPTIONS.CLASSIFIED_TITLE' | translate }}
+                  </div>
+                  <div class="text-muted fs-7">
+                    {{ 'MAP.CUSTOM_AREA.OPTIONS.CLASSIFIED_DESC' | translate }}
+                  </div>
+                </div>
+
+                <div class="form-check form-check-custom form-check-solid m-0">
+                  <input class="form-check-input" type="checkbox" [checked]="purchaseOptions().classified"
+                    (change)="onPurchaseOptionChange('classified', $any($event.target).checked)" />
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-drawer__footer detail-drawer__footer--sticky" *ngIf="selectedPurchaseProduct() as product">
+          <div class="d-flex align-items-center justify-content-between gap-4 flex-wrap w-100">
+            <div>
+              <div class="fs-7 fw-semibold text-muted mb-1">
+                {{ 'MAP.CUSTOM_AREA.TOTAL_PRICE' | translate }}
+              </div>
+              <div class="fs-2 fw-bolder text-white">
+                {{ product.price ?? 0 | currency:(product.currency || 'TRY'):'symbol':'1.2-2' }}
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary fw-bold px-6 d-inline-flex align-items-center gap-2"
+              (click)="addCustomProductToCart()">
+              <i class="ki-outline ki-basket fs-2"></i>
+              {{ 'MAP.CUSTOM_AREA.ADD_TO_CART' | translate }}
+            </button>
           </div>
         </div>
       </aside>

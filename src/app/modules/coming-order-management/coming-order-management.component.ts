@@ -11,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { RoleEnum } from 'src/app/enums/role.enum';
+import { OrderModel } from './models/order.model';
 
 @Component({
   selector: 'app-coming-order-management',
@@ -51,7 +52,7 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
 
   private langChangeSubscription: any;
 
-  dataSource: OrderProductModel[];
+  dataSource: OrderModel[];
   totalCount: number;
   paginationModel: PaginationModel;
 
@@ -88,7 +89,7 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
         .subscribe(result => {
           if (result.isSuccess) {
             result.data.items.forEach(item => {
-              item.orderDate = formatDate(item.order?.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
+              item.orderDate = formatDate(item?.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
 
               if (item.orderStatus == OrderStatusEnum['Onay Bekliyor']) {
                 item.orderStatusStr = pendingApprovalText;
@@ -106,8 +107,8 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
                 item.orderStatusStr = completedText;
               }
 
-              item.priceStr = item.product?.price.toFixed(2) + " ₺";
-              item.orderNo = item.order?.orderNo!;
+              item.priceStr = item?.price.toFixed(2) + " ₺";
+              item.orderNo = item?.orderNo!;
             })
             this.dataSource = result.data.items;
             this.totalCount = result.data.totalCount;

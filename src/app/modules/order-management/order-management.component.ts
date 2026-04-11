@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, LOCALE_ID, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, UserType } from '../auth';
 import { ColumnModel } from 'src/app/models/column-model';
-import { OrderModel } from './models/order.model';
 import { PaginationModel } from 'src/app/models/pagination.model';
 import { OrderManagementService } from './order-management.service';
 import { formatDate } from '@angular/common';
@@ -10,6 +9,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { OrderStatusEnum } from 'src/app/enums/order-status.enum';
+import { OrderModel } from '../coming-order-management/models/order.model';
+import { Location } from '@angular/common';
+import { OrderProductModel } from '../coming-order-management/models/orderproduct.model';
 
 @Component({
   selector: 'app-order-management',
@@ -53,7 +55,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   paginationModel: PaginationModel;
 
   constructor(private authService: AuthService, private router: Router, private orderManagementService: OrderManagementService,
-    private translate: TranslateService, @Inject(LOCALE_ID) public locale: string) { }
+    private translate: TranslateService, @Inject(LOCALE_ID) public locale: string, private location: Location) { }
 
   loadData() {
     const keys = ["ORDER_COMPLETED", "ORDER_NOT_YET_COMPLETED"];

@@ -4,8 +4,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ResultModel } from 'src/app/models/result.model';
 import { PagingResult } from 'src/app/models/paging-result.model';
-import { OrderModel } from './models/order.model';
-import { OrderProductModel } from './models/orderproduct.model';
+import { OrderModel } from '../coming-order-management/models/order.model';
+
 
 const API_ORDER_URL = `${environment.apiUrl}/Order`;
 

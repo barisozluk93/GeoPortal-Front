@@ -6,7 +6,8 @@ import {
   HostListener,
   Input,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -17,6 +18,7 @@ import {
   selector: 'app-custom-select',
   templateUrl: './custom-select.component.html',
   styleUrls: ['./custom-select.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

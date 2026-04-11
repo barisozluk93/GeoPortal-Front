@@ -137,9 +137,6 @@ export class StatusComponent implements OnInit {
       );
     }
 
-    this.orderProduct.trackingDate = this.orderProduct.trackingDate
-      ? this.formatJSDate(this.orderProduct.trackingDate)
-      : this.orderProduct.trackingDate;
 
     this.orderProduct.completionDate = this.orderProduct.completionDate
       ? this.formatJSDate(this.orderProduct.completionDate)

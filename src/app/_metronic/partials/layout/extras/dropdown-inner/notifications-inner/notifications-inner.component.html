@@ -1,6 +1,5 @@
 <div class="notification-menu">
-  <!-- Header -->
-  <div class="notification-menu__header">
+  <div class="notification-menu__header px-5 py-4">
     <div class="notification-menu__header-left">
       <div class="notification-menu__icon">
         <i class="fa-solid fa-bell"></i>
@@ -25,7 +24,8 @@
     </div>
   </div>
 
-  <!-- Body -->
+  <div class="separator mx-5 my-0 notification-menu__separator"></div>
+
   <div class="notification-menu__body">
     <ng-container *ngIf="notifications.length > 0; else emptyState">
       <div class="scroll-y mh-375px px-4 py-4">

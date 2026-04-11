@@ -105,8 +105,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           const data = JSON.parse(localStorage.getItem('basket') as string) as BasketModel[];
           if (data && data.length > 0) {
             data.forEach(item => {
-              item.userId = user.id;
-              item.product = undefined;
+              item.userId = Number(user.id);
             })
 
             this.basketManagementService.saveAll(data).subscribe(result => {

@@ -82,13 +82,6 @@ export class DashboardComponent implements OnInit {
     const today = new Date();
 
     switch (type) {
-      case 'today': {
-        const value = this.formatDateInput(today);
-        this.filters.startDate = value;
-        this.filters.endDate = value;
-        break;
-      }
-
       case '7d': {
         const start = new Date(today);
         start.setDate(today.getDate() - 6);
@@ -105,8 +98,19 @@ export class DashboardComponent implements OnInit {
         break;
       }
 
-      case 'month': {
-        const start = new Date(today.getFullYear(), today.getMonth(), 1);
+      case '3m': {
+        const start = new Date(today);
+        start.setMonth(today.getMonth() - 3);
+        start.setDate(start.getDate() + 1);
+        this.filters.startDate = this.formatDateInput(start);
+        this.filters.endDate = this.formatDateInput(today);
+        break;
+      }
+
+      case '6m': {
+        const start = new Date(today);
+        start.setMonth(today.getMonth() - 6);
+        start.setDate(start.getDate() + 1);
         this.filters.startDate = this.formatDateInput(start);
         this.filters.endDate = this.formatDateInput(today);
         break;

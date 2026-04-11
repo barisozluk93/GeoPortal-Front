@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/modules/auth';
 import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '../../../alert/alert.service';
+import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
   selector: 'app-notifications-inner',
@@ -14,7 +15,7 @@ import { AlertService } from '../../../alert/alert.service';
 export class NotificationsInnerComponent implements OnInit, OnChanges {
   @HostBinding('class')
   class =
-    'menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-375px border border-gray-200 bg-body shadow-sm overflow-hidden';
+    'menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-375px border border-gray-200 bg-body shadow-sm notification-menu-dropdown';
 
   @HostBinding('attr.data-kt-menu')
   dataKtMenu = 'true';
@@ -42,11 +43,13 @@ export class NotificationsInnerComponent implements OnInit, OnChanges {
           } else if (notification.type == 'ORDER_APPROVED') {
             notification.body = this.translate.instant('ORDER_APPROVED_MESSAGE');
           } else if (notification.type == 'ORDER_REJECTED') {
-            notification.body =  this.translate.instant('ORDER_REJECTED_MESSAGE');
+            notification.body = this.translate.instant('ORDER_REJECTED_MESSAGE');
           } else if (notification.type == 'ORDER_COMPLETED') {
             notification.body = this.translate.instant('ORDER_COMPLETED_MESSAGE');
           } else if (notification.type == 'ORDER_PREPARING') {
-            notification.body =  this.translate.instant('ORDER_PREPARING_MESSAGE');
+            notification.body = this.translate.instant('ORDER_PREPARING_MESSAGE');
+          } else if (notification.type == 'ADD_INVOICE') {
+            notification.body = this.translate.instant('ADD_INVOICE_MESSAGE');
           }
         });
       }
@@ -75,8 +78,7 @@ export class NotificationsInnerComponent implements OnInit, OnChanges {
           }
 
           this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
-        }
-        else{
+        } else {
           this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       },
@@ -95,7 +97,7 @@ export class NotificationsInnerComponent implements OnInit, OnChanges {
     const currentUser = this.authService.currentUserValue;
     let screen = 'ordermanagement';
 
-    if (currentUser?.roles?.includes('1')) {
+    if (currentUser?.roles?.includes(RoleEnum.SuperAdmin)) {
       screen = 'incomingordermanagement';
     }
 

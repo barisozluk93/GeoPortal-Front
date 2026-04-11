@@ -33,7 +33,7 @@ export class ApiComponent {
     var currentUser = this.authService.currentUserValue;
 
     if (currentUser) {
-      let data: BasketModel = { id: 0, userId: currentUser.id, productId: 1, isDeleted: false, product: undefined, totalPrice: undefined, numberOf: undefined };
+      let data: BasketModel = { id: 0, userId: Number(currentUser.id), productId: 1, isDeleted: false, product: undefined, totalPrice: undefined, numberOf: undefined };
 
       this.basketManagementService.save(data).subscribe(result => {
         if (result.isSuccess) {

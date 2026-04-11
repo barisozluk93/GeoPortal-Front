@@ -5,6 +5,7 @@ export class OrderProductModel {
     id: number;
     productId: number;
     product?: ProductModel;
+    productValue?: string;
     orderId: number;
     order?: OrderModel;
     proccessDate?: string;
@@ -14,11 +15,6 @@ export class OrderProductModel {
     orderDate?: string;
     priceStr?: string;
     orderNo?: string;
-    trackingNo?: string;
-    fileId?: number;
-    fileResult?: any;
-    fileName?: string;
-    trackingDate?: string;
     completionDate?: string;
   }
   

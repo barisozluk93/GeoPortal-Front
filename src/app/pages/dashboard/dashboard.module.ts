@@ -8,9 +8,10 @@ import { KpiCardComponent } from './components/kpi-card/kpi-card.component';
 import { ChartCardComponent } from './components/chart-card/chart-card.component';
 import { OrdersTableComponent } from './components/orders-table/orders-table.component';
 import { RegionalDemandsComponent } from './components/regional-demands/regional-demands.component';
-import { SystemHealthComponent } from './components/system-health/system-health.component';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
+import { CustomSelectModule } from 'src/app/modules/common/select/custom-select.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -20,13 +21,14 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
     ChartCardComponent,
     OrdersTableComponent,
     RegionalDemandsComponent,
-    SystemHealthComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     NgApexchartsModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    CustomSelectModule,
+    TranslateModule
   ],
   exports: [DashboardComponent],
 })

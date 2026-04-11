@@ -10,5 +10,8 @@ export class ChartCardComponent {
   @Input() subtitle = '';
   @Input() chip = '';
   @Input() chipClass = '';
+  @Input() chipIcon = '';
+  @Input() chipDot = true;
+  @Input() chipDotClass = '';
   @Input() bodyClass = 'pt-2';
 }

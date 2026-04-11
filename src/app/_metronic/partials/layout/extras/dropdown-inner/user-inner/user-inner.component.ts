@@ -13,7 +13,7 @@ import { RoleEnum } from 'src/app/enums/role.enum';
 export class UserInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class')
   class =
-    'menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-3 fs-6 w-300px border border-gray-200 bg-body shadow-sm';
+    'menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 fw-semibold py-3 fs-6 w-300px border border-gray-200 bg-body shadow-sm';
 
   @HostBinding('attr.data-kt-menu')
   dataKtMenu = 'true';

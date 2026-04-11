@@ -214,7 +214,7 @@
                           {{ 'CARD_HOLDER' | translate }}
                         </label>
 
-                        <input type="text" class="form-control form-control-lg form-control-solid"
+                        <input type="text" class="form-control form-control-lg"
                           formControlName="cardHolder" [placeholder]="'CARD_HOLDER_PLACEHOLDER' | translate" [ngClass]="{
           'is-invalid': isFieldInvalid('cardHolder')
         }" />
@@ -230,7 +230,7 @@
                           {{ 'CARD_NUMBER' | translate }}
                         </label>
 
-                        <input type="text" class="form-control form-control-lg form-control-solid"
+                        <input type="text" class="form-control form-control-lg"
                           formControlName="cardNumber" [placeholder]="'CARD_NUMBER_PLACEHOLDER' | translate"
                           maxlength="19" (input)="onCardNumberInput()" [ngClass]="{
           'is-invalid': isFieldInvalid('cardNumber')
@@ -247,7 +247,7 @@
                           {{ 'EXPIRY_DATE' | translate }}
                         </label>
 
-                        <input type="text" class="form-control form-control-lg form-control-solid"
+                        <input type="text" class="form-control form-control-lg"
                           formControlName="expiry" [placeholder]="'EXPIRY_DATE_PLACEHOLDER' | translate" maxlength="5"
                           (input)="onExpiryInput()" [ngClass]="{
           'is-invalid': isFieldInvalid('expiry')
@@ -264,7 +264,7 @@
                           {{ 'CVV' | translate }}
                         </label>
 
-                        <input type="password" class="form-control form-control-lg form-control-solid"
+                        <input type="password" class="form-control form-control-lg"
                           formControlName="cvv" [placeholder]="'CVV_PLACEHOLDER' | translate" maxlength="4"
                           (input)="onCvvInput()" [ngClass]="{
           'is-invalid': isFieldInvalid('cvv')

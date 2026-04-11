@@ -9,8 +9,6 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ComingOrderManagementRoutingModule } from './coming-order-management-routing.module';
 import { ComingOrderManagementComponent } from './coming-order-management.component';
 import { ComingOrderDetailComponent } from './detail/coming-order-detail.component';
-import { StatusComponent } from './detail/status/status.component';
-import { InvoiceComponent } from './detail/invoice/invoice.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { DataTableModule } from '../common/datatable/datatable.module';
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
@@ -20,8 +18,6 @@ import { CustomSelectModule } from '../common/select/custom-select.module';
   declarations: [
     ComingOrderManagementComponent,
     ComingOrderDetailComponent,
-    StatusComponent,
-    InvoiceComponent
   ],
   imports: [
     DataTableModule,

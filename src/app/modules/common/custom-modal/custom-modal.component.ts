@@ -40,7 +40,7 @@ export class CustomModalComponent {
 
   onBackdropClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    if (target.classList.contains('panel-backdrop')) {
+    if (target.classList.contains('glass-modal-backdrop')) {
       this.close();
     }
   }

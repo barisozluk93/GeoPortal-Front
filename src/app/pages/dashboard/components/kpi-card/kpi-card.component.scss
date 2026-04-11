@@ -1,133 +1,78 @@
-:host {
-  display: block;
+.kpi-card {
+  position: relative;
+  overflow: hidden;
 }
 
-.satdash {
-  &__kpi {
-    position: relative;
-    overflow: hidden;
-    border-radius: 20px;
-    border: 1px solid rgba(86, 126, 198, 0.14);
-    background:
-      radial-gradient(circle at top, rgba(39, 76, 164, 0.07) 0%, rgba(8, 12, 22, 0) 42%),
-      linear-gradient(180deg, rgba(13, 24, 42, 0.96) 0%, rgba(10, 20, 36, 0.98) 100%);
-    box-shadow:
-      0 12px 28px rgba(0, 0, 0, 0.22),
-      inset 0 1px 0 rgba(255, 255, 255, 0.025);
-    transition: all 0.22s ease;
+/* SOL BORDER */
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+}
 
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 4px;
-      background: linear-gradient(180deg, #4da3ff 0%, #6c8dff 100%);
-      opacity: 0.95;
-    }
+/* ÜST DÖRTGEN */
+.kpi-accent {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
 
-    &:hover {
-      transform: translateY(-3px);
-      border-color: rgba(92, 137, 255, 0.24);
-      box-shadow:
-        0 18px 36px rgba(0, 0, 0, 0.28),
-        0 0 0 1px rgba(77, 163, 255, 0.04) inset;
-    }
+/* ICON */
+.kpi-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    .card-body {
-      padding: 1.25rem 1.2rem 1.15rem 1.3rem;
-      min-height: 170px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+/* COLORS */
+.kpi-blue::before { background: #4da3ff; }
+.kpi-blue .kpi-accent { background: #4da3ff; }
+.kpi-blue .kpi-icon {
+  background: rgba(77, 163, 255, 0.12);
+  color: #4da3ff;
+}
 
-    @media (max-width: 575.98px) {
-      .card-body {
-        min-height: 148px;
-        padding: 1rem 1rem 0.95rem 1.1rem;
-      }
-    }
-  }
+.kpi-purple::before { background: #6c5dd3; }
+.kpi-purple .kpi-accent { background: #6c5dd3; }
+.kpi-purple .kpi-icon {
+  background: rgba(108, 93, 211, 0.12);
+  color: #6c5dd3;
+}
 
-  &__kpi-top {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+.kpi-cyan::before { background: #35d6ec; }
+.kpi-cyan .kpi-accent { background: #35d6ec; }
+.kpi-cyan .kpi-icon {
+  background: rgba(53, 214, 236, 0.12);
+  color: #35d6ec;
+}
 
-    @media (max-width: 575.98px) {
-      gap: 10px;
-    }
-  }
+.kpi-green::before { background: #67dd9a; }
+.kpi-green .kpi-accent { background: #67dd9a; }
+.kpi-green .kpi-icon {
+  background: rgba(103, 221, 154, 0.12);
+  color: #67dd9a;
+}
 
-  &__kpi-icon {
-    width: 52px;
-    height: 52px;
-    min-width: 52px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+.kpi-orange::before { background: #ff9f43; }
+.kpi-orange .kpi-accent { background: #ff9f43; }
+.kpi-orange .kpi-icon {
+  background: rgba(255, 159, 67, 0.12);
+  color: #ff9f43;
+}
 
-    @media (max-width: 575.98px) {
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      border-radius: 14px;
-    }
-
-    &--blue {
-      background: rgba(77, 163, 255, 0.12);
-      color: #7db7ff;
-    }
-
-    &--purple {
-      background: rgba(108, 141, 255, 0.12);
-      color: #9daeff;
-    }
-
-    &--cyan {
-      background: rgba(53, 214, 236, 0.12);
-      color: #66e1f1;
-    }
-
-    &--green {
-      background: rgba(103, 221, 154, 0.12);
-      color: #7ee3aa;
-    }
-
-    &--orange {
-      background: rgba(255, 184, 77, 0.12);
-      color: #ffc76d;
-    }
-
-    &--success {
-      background: rgba(103, 221, 154, 0.12);
-      color: #7ee3aa;
-    }
-  }
-
-  &__kpi-title {
-    color: #f7fbff;
-    font-size: 0.9rem;
-    font-weight: 800;
-    line-height: 1.35;
-  }
-
-  &__kpi-value {
-    margin-top: 1.25rem;
-    color: #ffffff;
-    font-size: 1.85rem;
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.04em;
-    word-break: break-word;
-  }
-
-  &__kpi-sub {
-    margin-top: 0.75rem;
-    color: #8193b2;
-    font-size: 0.78rem;
-    line-height: 1.55;
-  }
+.kpi-success::before { background: #50cd89; }
+.kpi-success .kpi-accent { background: #50cd89; }
+.kpi-success .kpi-icon {
+  background: rgba(80, 205, 137, 0.12);
+  color: #50cd89;
 }

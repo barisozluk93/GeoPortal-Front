@@ -14,7 +14,7 @@ export class OrdersTableComponent {
       case 'Hazır':
       case 'Teslim Edildi':
       case 'Healthy':
-        return 'badge text-success bg-success bg-opacity-10 border border-success border-opacity-25';
+        return 'badge badge-light-success fw-semibold';
 
       case 'İşleniyor':
       case 'Dış Sisteme İletildi':
@@ -22,14 +22,14 @@ export class OrdersTableComponent {
       case 'Uydu Bekleniyor':
       case 'Görüntü Geldi':
       case 'Warning':
-        return 'badge text-warning bg-warning bg-opacity-10 border border-warning border-opacity-25';
+        return 'badge badge-light-warning fw-semibold';
 
       case 'Başarısız':
       case 'Critical':
-        return 'badge text-danger bg-danger bg-opacity-10 border border-danger border-opacity-25';
+        return 'badge badge-light-danger fw-semibold';
 
       default:
-        return 'badge text-info bg-info bg-opacity-10 border border-info border-opacity-25';
+        return 'badge badge-light-info fw-semibold';
     }
   }
 }

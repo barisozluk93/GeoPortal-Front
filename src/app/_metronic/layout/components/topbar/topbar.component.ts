@@ -155,6 +155,9 @@ export class TopbarComponent implements OnInit, OnDestroy {
       case 'ORDER_PREPARING':
         message = `(${notification.body}) ${this.translate.instant('ORDER_PREPARING_MESSAGE')}`;
         break;
+      case 'ADD_INVOICE':
+        message = `(${notification.body}) ${this.translate.instant('ADD_INVOICE_MESSAGE')}`;
+        break;
       default:
         message = notification.body ?? '';
         break;

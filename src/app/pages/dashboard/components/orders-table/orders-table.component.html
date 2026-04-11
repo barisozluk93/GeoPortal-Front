@@ -1,68 +1,114 @@
+<!-- DESKTOP -->
 <div class="table-responsive d-none d-lg-block">
-  <table class="table satdash__table align-middle gs-0 gy-4">
+  <table class="table table-row-dashed align-middle gs-0 gy-4">
     <thead>
-      <tr>
-        <th>Sipariş No</th>
-        <th>Müşteri</th>
-        <th>Tip</th>
-        <th>Kanal</th>
-        <th>Bölge</th>
-        <th>Tutar</th>
-        <th>Durum</th>
+      <tr class="fw-semibold text-muted">
+        <th>{{ 'DASHBOARD.TABLE.ORDER_NO' | translate }}</th>
+        <th>{{ 'DASHBOARD.TABLE.CUSTOMER' | translate }}</th>
+        <th>{{ 'DASHBOARD.TABLE.TYPE' | translate }}</th>
+        <th>{{ 'DASHBOARD.TABLE.CHANNEL' | translate }}</th>
+        <th>{{ 'DASHBOARD.TABLE.REGION' | translate }}</th>
+        <th>{{ 'DASHBOARD.TABLE.AMOUNT' | translate }}</th>
+        <th>{{ 'DASHBOARD.TABLE.STATUS' | translate }}</th>
       </tr>
     </thead>
+
     <tbody>
       <tr *ngFor="let order of orders">
         <td class="fw-bold text-white">{{ order.id }}</td>
+
         <td>
           <div class="d-flex flex-column">
-            <span class="fw-bold text-white">{{ order.customerName }}</span>
-            <span class="satdash__muted fs-8">{{ order.createdAt }}</span>
+            <span class="fw-bold text-white">
+              {{ order.customerName }}
+            </span>
+            <span class="text-muted fs-8">
+              {{ order.createdAt }}
+            </span>
           </div>
         </td>
+
         <td>{{ order.customerType }}</td>
         <td>{{ order.sourceType }}</td>
         <td>{{ order.region }}</td>
-        <td class="fw-bold text-white">₺{{ order.amount | number:'1.0-0':'tr' }}</td>
+
+        <td class="fw-bold text-white">
+          ₺{{ order.amount | number:'1.0-0':'tr' }}
+        </td>
+
         <td>
-          <span [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+          <span [ngClass]="getStatusClass(order.status)">
+            {{ order.status }}
+          </span>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<div class="satdash__mobile-order-list d-lg-none">
-  <div class="satdash__mobile-order-card" *ngFor="let order of orders">
-    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-      <div>
-        <div class="satdash__mobile-order-title">{{ order.id }}</div>
-        <div class="satdash__muted fs-8 mt-1">{{ order.createdAt }}</div>
-      </div>
-      <span [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
-    </div>
+<!-- MOBILE -->
+<div class="d-lg-none">
+  <div class="card mb-3" *ngFor="let order of orders">
+    <div class="card-body p-4">
 
-    <div class="satdash__mobile-order-grid">
-      <div class="satdash__mobile-order-item">
-        <span class="label">Müşteri</span>
-        <span class="value">{{ order.customerName }}</span>
+      <!-- HEADER -->
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <div class="fw-bold text-white">
+            {{ order.id }}
+          </div>
+          <div class="text-muted fs-8 mt-1">
+            {{ order.createdAt }}
+          </div>
+        </div>
+
+        <span [ngClass]="getStatusClass(order.status)">
+          {{ order.status }}
+        </span>
       </div>
-      <div class="satdash__mobile-order-item">
-        <span class="label">Tip</span>
-        <span class="value">{{ order.customerType }}</span>
+
+      <!-- GRID -->
+      <div class="row g-3 fs-7">
+        <div class="col-6">
+          <div class="text-muted">
+            {{ 'DASHBOARD.TABLE.CUSTOMER' | translate }}
+          </div>
+          <div class="fw-semibold text-white">
+            {{ order.customerName }}
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="text-muted">
+            {{ 'DASHBOARD.TABLE.TYPE' | translate }}
+          </div>
+          <div>{{ order.customerType }}</div>
+        </div>
+
+        <div class="col-6">
+          <div class="text-muted">
+            {{ 'DASHBOARD.TABLE.CHANNEL' | translate }}
+          </div>
+          <div>{{ order.sourceType }}</div>
+        </div>
+
+        <div class="col-6">
+          <div class="text-muted">
+            {{ 'DASHBOARD.TABLE.REGION' | translate }}
+          </div>
+          <div>{{ order.region }}</div>
+        </div>
+
+        <div class="col-12">
+          <div class="text-muted">
+            {{ 'DASHBOARD.TABLE.AMOUNT' | translate }}
+          </div>
+          <div class="fw-bold text-white">
+            ₺{{ order.amount | number:'1.0-0':'tr' }}
+          </div>
+        </div>
       </div>
-      <div class="satdash__mobile-order-item">
-        <span class="label">Kanal</span>
-        <span class="value">{{ order.sourceType }}</span>
-      </div>
-      <div class="satdash__mobile-order-item">
-        <span class="label">Bölge</span>
-        <span class="value">{{ order.region }}</span>
-      </div>
-      <div class="satdash__mobile-order-item satdash__mobile-order-item--full">
-        <span class="label">Tutar</span>
-        <span class="value value--price">₺{{ order.amount | number:'1.0-0':'tr' }}</span>
-      </div>
+
     </div>
   </div>
 </div>

@@ -265,13 +265,16 @@ export const locale = {
     ORDER_DATE: 'Order Date',
     AMOUNT_TL: 'Amount (₺)',
     UPDATE_STATUS: 'Update Status',
-    UPLOAD_INVOICE: 'Upload Invoice',
+    UPLOAD_INVOICE: 'Upload',
     RATE_PRODUCT: 'Rate Product',
     PRODUCT_QUALITY: 'Product Quality',
     SHIPMENT_TRACKING: 'Shipment Tracking',
-    VIEW_INVOICE: 'View Invoice',
+    VIEW_INVOICE: 'View',
     TRACKING_NO: 'Tracking No',
     MYADDRESSES: "Addresses",
+    "PRODUCT_INFORMATION": "Product Information",
+    "ORDER_INFORMATION": "Order Information",
+    "TOTAL_PRODUCT": "Total Product",
 
     PROFILE_DETAILS: "Profile Details",
     NAME: "Name",
@@ -414,6 +417,7 @@ export const locale = {
       }
     },
     "DATA_PAGE": {
+      "LOADING": "Loading data...",
       "KICKER": "Data Access",
       "TITLE": "Access satellite data with the method that fits your needs",
       "COPY": "Our platform offers three different ways to access data: you can purchase ready-made data through the Marketplace, query and purchase data through the Map with region-based search, or buy an API key and integrate data into your own systems through API endpoints.",
@@ -502,7 +506,7 @@ export const locale = {
     },
     "CONTACT": {
       "HERO": {
-        "KICKER": "CONTACT",
+        "KICKER": "Contact",
         "TITLE": "Let’s talk about your Satellite Data, API and Marketplace Needs",
         "COPY": "Whether you want to purchase data, integrate our API into your workflow, or discuss regional demand and enterprise solutions, our team is ready to help. Share your needs with us and we’ll get back to you as soon as possible.",
         "ITEMS": {
@@ -525,7 +529,7 @@ export const locale = {
         "SUBTITLE": "Fill out the form and our team will contact you shortly.",
         "FULL_NAME": "Full Name",
         "ORGANIZATION": "Organization",
-        "BUSINESS_EMAIL": "Business Email",
+        "BUSINESS_EMAIL": "E-mail",
         "SUBJECT": "Subject",
         "MESSAGE": "Message",
         "SUBMIT": "Send Message",
@@ -763,6 +767,35 @@ export const locale = {
         "TITLE": "Feature Details",
         "SELECTED": "Selected Feature",
         "EMPTY": "No data available to display"
+      },
+      "CUSTOM_AREA": {
+        "KICKER": "CUSTOM AREA",
+        "TITLE": "Selected Area",
+        "SUBTITLE": "Create purchase request and add to cart",
+        "INFO_TITLE": "Area Information",
+        "PROCESSING_TITLE": "Processing Options",
+        "FIELD_NAME": "Name",
+        "FIELD_SOURCE": "Source",
+        "FIELD_AREA": "Area",
+        "FIELD_PROVIDER": "Provider",
+        "TOTAL_PRICE": "Total Price",
+        "ADD_TO_CART": "Add To Cart",
+        "ALREADY_IN_CART": "This custom area is already in the cart.",
+        "DEFAULT_NAME": "Custom Area",
+        "DEFAULT_NAME_DRAW": "Drawn Area",
+        "DEFAULT_NAME_UPLOAD": "Uploaded Area",
+        "DEFAULT_NAME_SEARCH": "Selected Area",
+        "SOURCE_DRAW": "Draw",
+        "SOURCE_UPLOAD": "Upload",
+        "SOURCE_SEARCH": "Search",
+        "OPTIONS": {
+          "ORTHORECTIFIED_TITLE": "Orthorectification",
+          "ORTHORECTIFIED_DESC": "Should geometric correction be applied?",
+          "PANSHARPENED_TITLE": "Pansharpen",
+          "PANSHARPENED_DESC": "Should a sharper and more detailed image be produced?",
+          "CLASSIFIED_TITLE": "Classification",
+          "CLASSIFIED_DESC": "Should classification be performed for the selected area?"
+        }
       }
     },
 
@@ -803,6 +836,7 @@ export const locale = {
     "ORDER_APPROVED_MESSAGE": "Your order has been approved.",
     "ORDER_PREPARING": "Order Preparing",
     "ORDER_PREPARING_MESSAGE": "Your order is being prepared.",
+    "ADD_INVOICE_MESSAGE": "The invoice for your order has been uploaded.",
     "CLEAR": "Clear",
     "LAYER_GROUPS": "Layer Groups",
     "LAYERS": "Layers",
@@ -927,16 +961,19 @@ export const locale = {
       "TITLE": "You can add or edit address information here."
     },
     "FOOTER": {
-      "DESCRIPTION": "Explore, manage and analyze your geospatial data.",
+      "PRODUCT_LABEL": "Platform",
+      "STATUS": "Enterprise Ready",
+      "DESCRIPTION": "A modern operations layer that brings satellite data, mapping and data services together in one platform.",
+      "LEGAL": "Legal",
+      "PRIVACY": "Privacy",
+      "TERMS": "Terms",
       "PLATFORM": "Platform",
       "MARKETPLACE": "Marketplace",
       "DATA": "Data",
       "API": "API",
       "MAP": "Map",
       "CONTACT": "Contact",
-      "LEGAL": "Legal",
-      "TERMS_OF_SERVICE": "Terms of Service",
-      "PRIVACY_POLICY": "Privacy Policy",
+      "RIGHTS": "All rights reserved.",
       "COOKIES": "Cookies Policy"
     },
     "COPYRIGHT": "© 2026 GeoPortal. All rights reserved.",
@@ -984,7 +1021,7 @@ export const locale = {
       "ADMIN_EMAIL": "Admin Email",
       "ADMIN_EMAIL_PLACEHOLDER": "admin@domain.com",
 
-      "UPDATE_STATUS_ONLY": "Update Status Only",
+      "UPDATE_STATUS_ONLY": "Update Status",
       "SEND_REPLY": "Send Reply",
       "SENDING": "Sending...",
 
@@ -1005,6 +1042,10 @@ export const locale = {
 
       "LOADING": "Loading...",
       "BACK": "Back",
+      "TICKET_INFORMATION": "Ticket Information",
+      "MESSAGE_COUNT": "Messages",
+      "CUSTOMER_LABEL": "Customer",
+      "CANNOT_UPDATE_CLOSED_TICKET": "Closed tickets cannot be updated and no new reply can be sent.",
       "ALERT": {
         "TICKET_NOT_FOUND": "Ticket not found.",
         "TICKET_DETAIL_ERROR": "Ticket detail could not be retrieved.",
@@ -1015,13 +1056,215 @@ export const locale = {
         "STATUS_UPDATE_ERROR": "Status could not be updated."
       }
     },
+    COMING_ORDER_DETAIL: {
+      TITLE: 'Order Detail',
+      ORDER_AND_PRODUCT_INFORMATION: 'Order and Product Information',
+
+      ORDER_NO_LABEL: 'Order No',
+      ORDER_DATE_LABEL: 'Order Date',
+      PRODUCT_ID: 'Product ID',
+
+      STATUS_CAN_BE_UPDATED: 'Order status can be updated.',
+      STATUS_LOCKED: 'Order status cannot be changed because it is completed.',
+      STATUS_LOCKED_TITLE: 'Status update is disabled',
+      STATUS_HELP: 'Status can be updated until the order is completed.',
+
+      STATUS_SELECT_PLACEHOLDER: 'Select status',
+
+      INVOICE_UPLOAD_LOCKED_TITLE: 'Invoice upload is disabled',
+      INVOICE_UPLOAD_LOCKED_TEXT: 'Invoice can only be uploaded for completed orders.',
+
+      INVOICE_UPLOADED_INFO: 'Invoice has been added to the system',
+      UPLOADED_INVOICE: 'Uploaded invoice',
+
+      INVOICE_PREVIEW_TITLE: 'Invoice Preview',
+      INVOICE_PREVIEW_SUBTITLE: 'Uploaded invoice file',
+      INVOICE_PREVIEW_EMPTY: 'No preview available.',
+
+      NO_INVOICE_ADDRESS: 'No invoice address information found for this order.',
+
+      PROVIDER_LABEL: 'Provider',
+      CLOUD_LABEL: 'Cloud',
+      LOCATION_LABEL: 'Location',
+      ACQUISITION_DATE_LABEL: 'Acquisition Date',
+      AREA_LABEL: 'Area',
+      PROCESS_DATE_LABEL: 'Process Date',
+      COMPLETION_DATE_LABEL: 'Completion Date',
+      AMOUNT_LABEL: 'Amount',
+
+      UPDATING: 'Saving...',
+      UPLOADING: 'Uploading...',
+      UPLOAD_INVOICE_BOX_TITLE: 'Select invoice file',
+      UPLOAD_INVOICE_BOX_TEXT: 'Choose and upload a PDF or supported invoice file.',
+      FILE_READY_TO_UPLOAD: 'File selected and ready to upload.',
+      SELECT_FILE: 'Select File',
+      ORDER_FLOW_TITLE: 'Order Flow',
+      NO_FILES_TITLE: 'No File Found',
+      NO_FILES_TEXT: 'There are no downloadable or viewable files for this order.',
+      "NO_INVOICE_UPLOADED": "No invoice uploaded",
+      "CLICK_TO_UPLOAD_INVOICE": "Click to upload an invoice",
+      "STATUS_CAN_NOT_BE_UPDATED": "Status cannot be updated for this product",
+      ALERTS: {
+        GET_ORDER_ERROR: 'An error occurred while fetching order details.',
+        STATUS_UPDATED: 'Order status has been updated successfully.',
+        STATUS_UPDATE_ERROR: 'An error occurred while updating order status.',
+
+        INVOICE_UPLOADED: 'Invoice uploaded successfully.',
+        INVOICE_UPLOAD_ERROR: 'An error occurred while uploading the invoice file.',
+        INVOICE_ATTACH_ERROR: 'An error occurred while attaching the invoice to the order.',
+
+        INVOICE_DELETED: 'Invoice deleted successfully.',
+        INVOICE_DELETE_ERROR: 'An error occurred while deleting the invoice.'
+      }
+    },
     "ALERT": {
-      "SUCCESS": "Başarılı",
-      "ERROR": "Hata",
-      "WARNING": "Uyarı",
-      "INFO": "Bilgi",
-      "NOTIFICATION": "Bildirim"
-    }
+      "SUCCESS": "Success",
+      "ERROR": "Error",
+      "WARNING": "Warning",
+      "INFO": "Info",
+      "NOTIFICATION": "Notification"
+    },
+    "DASHBOARD": {
+      "LOADING": "Loading dashboard...",
+      "FILTER": {
+        "QUICK_LAST_7_DAYS": "Last 7 Days",
+        "QUICK_LAST_30_DAYS": "Last 30 Days",
+        "QUICK_LAST_3_MONTHS": "Last 3 Months",
+        "QUICK_LAST_6_MONTHS": "Last 6 Months",
+        "LIVE_VIEW": "Live view",
+        "START_DATE": "Start Date",
+        "END_DATE": "End Date",
+        "CUSTOMER_TYPE": "Membership Type",
+        "CHANNEL": "Channel",
+        "SELECT": "Select",
+        "APPLY": "Filter",
+        "RESET": "Reset",
+        "OPTIONS": {
+          "ALL": "All",
+          "INDIVIDUAL": "Individual",
+          "CORPORATE": "Corporate",
+          "MARKETPLACE": "Marketplace",
+          "API": "API",
+          "SPECIAL_REQUEST": "Special Request"
+        },
+      },
+      "HERO": {
+        "EYEBROW": "SATELLITE DATA COMMERCE & OPERATIONS",
+        "TITLE_1": "Manage satellite data sales, API usage and order operations",
+        "TITLE_2": "from a single dashboard",
+        "DESCRIPTION": "Monitor marketplace revenues, API subscriptions, regional demands, order lifecycle and integration health in real time."
+      },
+
+      "KPI": {
+        "TODAY_API_CALLS": "Today's API Calls",
+        "REGIONAL_DEMAND": "Regional Demand",
+        "INDIVIDUAL_MEMBER": "Individual Members",
+        "CORPORATE_MEMBER": "Corporate Members",
+        "TOTAL_REVENUE": "Total Revenue",
+        "TOTAL_REVENUE_SUB": "Total platform revenue",
+
+        "MARKETPLACE": "Marketplace",
+        "MARKETPLACE_SUB": "Marketplace sales revenue",
+
+        "API_REVENUE": "API Revenue",
+        "API_REVENUE_SUB": "API packages and usage revenue",
+
+        "API_SUBSCRIPTIONS": "API Subscriptions",
+        "API_SUBSCRIPTIONS_SUB": "Active customers",
+
+        "PENDING_ORDERS": "Pending Orders",
+        "PENDING_ORDERS_SUB": "Orders in pipeline",
+
+        "READY_ORDERS": "Ready Orders",
+        "READY_ORDERS_SUB": "Ready for delivery"
+      },
+      "CHART": {
+        "REVENUE_TREND_TITLE": "Gelir Trendi",
+        "REVENUE_TREND_SUB": "Marketplace + API + toplam gelir",
+
+        "REVENUE_BREAKDOWN_TITLE": "Gelir Kırılımı",
+        "REVENUE_BREAKDOWN_SUB": "Kaynağa göre gelir dağılımı",
+
+        "ORDER_PIPELINE_TITLE": "Sipariş Yaşam Döngüsü",
+        "ORDER_PIPELINE_SUB": "Operasyon hattındaki siparişler",
+
+        "API_USAGE_TITLE": "API Kullanımı",
+        "API_USAGE_SUB": "Günlük çağrı trendi",
+
+        "RECENT_ORDERS_TITLE": "Son Siparişler",
+        "RECENT_ORDERS_SUB": "En son siparişler",
+
+        "REGIONAL_DEMAND_TITLE": "Bölgesel Talepler",
+        "REGIONAL_DEMAND_SUB": "Harita üzerinden talepler",
+
+        "MEMBERSHIP_TITLE": "Üyelik Dağılımı",
+        "MEMBERSHIP_SUB": "Bireysel ve kurumsal",
+
+        "SYSTEM_HEALTH_TITLE": "Sistem Sağlığı",
+        "SYSTEM_HEALTH_SUB": "Servis durumları",
+      },
+
+      "CARDS": {
+        "REVENUE_TREND": {
+          "TITLE": "Revenue Trend",
+          "SUBTITLE": "Marketplace + API + total revenue"
+        },
+        "REVENUE_BREAKDOWN": {
+          "TITLE": "Revenue Breakdown",
+          "SUBTITLE": "Revenue distribution by source"
+        },
+        "ORDER_PIPELINE": {
+          "TITLE": "Order Pipeline",
+          "SUBTITLE": "Orders in operation flow"
+        },
+        "API_USAGE": {
+          "TITLE": "API Usage",
+          "SUBTITLE": "Daily call trend"
+        },
+        "RECENT_ORDERS": {
+          "TITLE": "Recent Orders",
+          "SUBTITLE": "Latest orders and their statuses"
+        },
+        "REGIONAL_DEMANDS": {
+          "TITLE": "Regional Demands",
+          "SUBTITLE": "Active demands from map"
+        },
+        "MEMBERSHIP": {
+          "TITLE": "Membership Distribution",
+          "SUBTITLE": "Individual vs corporate users"
+        },
+        "SYSTEM_HEALTH": {
+          "TITLE": "System Health",
+          "SUBTITLE": "Core services and integrations"
+        }
+      },
+
+      "CHIPS": {
+        "LIVE": "Live",
+        "REVENUE": "Revenue",
+        "PIPELINE": "Pipeline",
+        "API": "API",
+        "ORDERS": "Orders",
+        "DEMAND": "Demand",
+        "MEMBERS": "Members",
+        "HEALTHY": "Healthy",
+      },
+      "TABLE": {
+        "ORDER_NO": "Order No",
+        "CUSTOMER": "Customer",
+        "TYPE": "Type",
+        "CHANNEL": "Channel",
+        "REGION": "Region",
+        "AMOUNT": "Amount",
+        "STATUS": "Status"
+      },
+      "DEMAND": {
+        "CUSTOMER": "Customer",
+        "AREA": "Area"
+      }
+    },
+
+
     // END (TR-EN-LANGUAGE-BRANCH)
   },
 };
