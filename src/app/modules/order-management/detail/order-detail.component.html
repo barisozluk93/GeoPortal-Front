@@ -260,12 +260,12 @@
                           {{ item.orderStatusStr || getOrderStatusText(item.orderStatus) }}
                         </span>
 
-                        <span class="badge badge-primary" *ngIf="item.proccessDate">
+                        <span class="badge badge-light-primary" *ngIf="item.proccessDate">
                           {{ item.proccessDate }}
                         </span>
                       </div>
 
-                      <div class="d-flex flex-wrap gap-2">
+                      <div class="d-flex flex-wrap gap-2" *ngIf="item.product?.isOrthorectified || item.product?.isPansharpened || item.product?.isClassified">
                         <span *ngIf="item.product?.isOrthorectified" class="badge badge-light-success">
                           {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
                         </span>
@@ -296,8 +296,7 @@
                         </span>
                       </div>
 
-                      <div class="api-key-box" *ngIf="item.productValue || item.product?.downloadLink"
-                      >
+                      <div class="api-key-box" *ngIf="item.productValue || item.product?.downloadLink">
                         <div *ngIf="item.product?.categoryId === 1 && item.product?.downloadLink" class="api-key-box__value">
                           {{ item.product?.downloadLink }}
                         </div>
@@ -305,6 +304,7 @@
                         <div *ngIf="item.product?.categoryId === 2" class="api-key-box__value">
                           {{ item.productValue }}
                         </div>
+
                         <button
                           *ngIf="item.productValue || item.product?.downloadLink"
                           type="button"
@@ -323,7 +323,7 @@
                         </button>
                       </div>
 
-                      <div class="product-description" *ngIf="item.product?.description">
+                      <div class="product-description text-muted" *ngIf="item.product?.description">
                         {{ item.product?.description }}
                       </div>
                     </div>
@@ -433,38 +433,12 @@
       </div>
     </div>
 
-    <app-custom-modal
+    <app-invoice-preview-modal
       [isOpen]="previewModalOpen"
-      [title]="'COMING_ORDER_DETAIL.INVOICE_PREVIEW_TITLE' | translate"
-      [subtitle]="previewFileName"
-      width="1100px"
-      variant="center"
-      [showFooter]="false"
+      [previewUrl]="previewUrl"
+      [fileName]="previewFileName"
       (closed)="closePreviewModal()"
-    >
-      <div class="invoice-modal-content">
-        <ng-container *ngIf="previewUrl; else noPreview">
-          <img
-            *ngIf="isImageFile(previewFileName)"
-            [src]="previewUrl"
-            [alt]="previewFileName"
-            class="invoice-preview-image"
-          />
-
-          <iframe
-            *ngIf="!isImageFile(previewFileName)"
-            [src]="previewUrl"
-            class="invoice-preview-frame"
-          ></iframe>
-        </ng-container>
-
-        <ng-template #noPreview>
-          <div class="invoice-empty-preview">
-            {{ 'COMING_ORDER_DETAIL.INVOICE_PREVIEW_EMPTY' | translate }}
-          </div>
-        </ng-template>
-      </div>
-    </app-custom-modal>
+    ></app-invoice-preview-modal>
   </div>
 </div>
 

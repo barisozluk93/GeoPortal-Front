@@ -23,7 +23,7 @@
 
 <div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-3" id="kt_header_user_menu_toggle">
   <!--begin::Menu wrapper-->
-  <div class="cursor-pointer symbol symbol-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+  <div class="cursor-pointer symbol symbol-40px" data-kt-menu-trigger="{default: 'hover'}"
     data-kt-menu-placement="bottom-end" title="{{'USER_PROFILE' | translate}}"  >
     <img *ngIf="user?.fileId == undefined" src="./assets/media/avatars/blank.png" />
     <img *ngIf="user?.fileId != undefined" [src]="user?.fileResult?.fileContents" alt="image" />

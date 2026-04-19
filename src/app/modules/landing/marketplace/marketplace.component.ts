@@ -69,7 +69,6 @@ export class MarketplaceComponent implements AfterViewInit, OnDestroy {
     pageSize: 9
   };
 
-  // Template bindingleri bozulmasın diye bırakıyoruz
   isFilterFixed = false;
   filterSidebarWidth: number | null = null;
   filterSidebarHeight = 0;
@@ -280,10 +279,6 @@ export class MarketplaceComponent implements AfterViewInit, OnDestroy {
     const rightColumn = this.getRightColumnElement();
     const footerElement = this.getFooterElement();
 
-    /**
-     * Alt sınır için önce sağ kolon bitişini kullan.
-     * Yoksa footer'ı fallback olarak kullan.
-     */
     let bottomBoundaryAbsolute: number | null = null;
 
     if (rightColumn) {
@@ -309,9 +304,6 @@ export class MarketplaceComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    /**
-     * Sidebar'ı sağ kolonun sonuna kilitle.
-     */
     const absoluteTop = bottomBoundaryAbsolute - sidebarHeight - wrapperTopAbsolute;
     const lockHeight = bottomBoundaryAbsolute - wrapperTopAbsolute;
 
@@ -511,6 +503,16 @@ export class MarketplaceComponent implements AfterViewInit, OnDestroy {
 
   trackByItem(_: number, item: ProductModel): number {
     return item.id;
+  }
+
+  canViewAddToCart(item: ProductModel): boolean {
+    const basket = this.basketService.basket;
+
+    if (basket) {
+      return !basket.some((f) => f.productId === item.id);
+    }
+
+    return true;
   }
 
   addToCart(item: ProductModel): void {

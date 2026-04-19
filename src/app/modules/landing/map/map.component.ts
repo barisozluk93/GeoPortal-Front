@@ -2,8 +2,11 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewChild,
   effect,
   inject,
@@ -42,6 +45,8 @@ import { MapSearchService } from '../map-search.service';
 import { MapService } from './map.service';
 import { BasketModel } from '../../basket-management/models/basket.model';
 import { ProductModel } from '../marketplace/models/product.model';
+import { LangChangeEvent } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 type PurchaseOptionKey = 'orthorectified' | 'pansharpened' | 'classified';
 
@@ -97,14 +102,24 @@ type LayerAttributeField = {
   type: string;
 };
 
+type FeatureInfoContext =
+  | { type: 'feature'; feature: Feature<Geometry>; layer: BaseLayer | null }
+  | { type: 'wmsPayload'; layer: UiLayerModel; payload: any }
+  | { type: 'wmsText'; layer: UiLayerModel; responseText: string }
+  | null;
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
-export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
+export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges {
   @ViewChild('mapEl', { static: true }) mapEl!: ElementRef<HTMLDivElement>;
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
+
+  @Input() previewWkt: string | null = null;
+  @Input() previewMode = false;
+  @Input() refreshKey = 0;
 
   operatorSelectItems: Array<{ label: string; value: LayerFilterOperator }> = [];
 
@@ -115,6 +130,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   readonly basketService = inject(BasketService);
   readonly authService = inject(AuthService);
   readonly alertService = inject(AlertService);
+
+  private langChangeSubscription?: Subscription;
+  private featureInfoContext: FeatureInfoContext = null;
 
   private map?: OlMap;
   private view?: View;
@@ -214,23 +232,114 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       queueMicrotask(() => {
         setTimeout(() => {
           this.map?.updateSize();
-          this.focusTarget(target.lat, target.lon, target.geojson);
-          this.mapSearch.clear();
+          void this.handleMapSearchTarget(target);
         }, 150);
       });
     });
   }
 
+  private async handleMapSearchTarget(target: any): Promise<void> {
+    this.suppressMapClicks();
+    this.focusTarget(target.lat, target.lon, target.geojson);
+
+    const geoType = target?.geojson?.type;
+
+    if (geoType === 'Polygon' || geoType === 'MultiPolygon') {
+      await this.openPurchaseDrawerForGeometry(
+        target.geojson,
+        'search',
+        target.display_name || target.label || target.name || 'Selected Area'
+      );
+    }
+
+    this.mapSearch.clear();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['previewWkt'] && this.previewWkt && this.mapReady()) {
+      this.renderPreviewWkt(this.previewWkt);
+    }
+
+    if (changes['previewWkt'] && this.previewWkt && this.mapReady()) {
+      this.renderPreviewWkt(this.previewWkt);
+    }
+
+    if (changes['refreshKey'] && !changes['refreshKey'].firstChange && this.mapReady()) {
+      this.reloadMapLayers();
+    }
+  }
+
   ngOnInit(): void {
+    this.updateOperatorSelectItems();
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.handleLanguageChange(event.lang);
+    });
+  }
+
+  private t(key: string): string {
+    return this.translateService.instant(key);
+  }
+
+  private updateOperatorSelectItems(): void {
     this.operatorSelectItems = [
       { label: '=', value: 'eq' },
-      { label: this.translateService.instant('MAP.FILTER.OPERATORS.CONTAINS'), value: 'like' },
+      { label: this.t('MAP.FILTER.OPERATORS.CONTAINS'), value: 'like' },
       { label: '>', value: 'gt' },
       { label: '>=', value: 'gte' },
       { label: '<', value: 'lt' },
       { label: '<=', value: 'lte' },
-      { label: this.translateService.instant('MAP.FILTER.OPERATORS.BETWEEN'), value: 'between' }
+      { label: this.t('MAP.FILTER.OPERATORS.BETWEEN'), value: 'between' }
     ];
+  }
+
+  private handleLanguageChange(_lang: string): void {
+    this.updateOperatorSelectItems();
+    this.refreshFilterFieldErrors();
+    this.refreshOpenFeatureInfoDrawer();
+    this.syncSelectedFilterLayer();
+  }
+
+  private refreshFilterFieldErrors(): void {
+    const groups = this.layerGroups();
+
+    for (const group of groups) {
+      for (const layer of group.layers ?? []) {
+        if (layer.fieldsLoading) continue;
+
+        if (layer.fieldsLoaded && !layer.availableFields.length) {
+          layer.fieldLoadError = this.t('MAP.FILTER.NO_ATTRIBUTES_FOUND');
+        } else if (!layer.fieldsLoaded && layer.fieldLoadError) {
+          layer.fieldLoadError = this.t('MAP.FILTER.ATTRIBUTE_LOAD_ERROR');
+        }
+      }
+    }
+
+    this.layerGroups.set([...groups]);
+  }
+
+  private refreshOpenFeatureInfoDrawer(): void {
+    if (!this.featureInfoDrawerOpen() || !this.featureInfoContext) return;
+
+    switch (this.featureInfoContext.type) {
+      case 'feature':
+        this.renderFeatureInfoFromFeature(this.featureInfoContext.feature, this.featureInfoContext.layer);
+        return;
+      case 'wmsPayload':
+        this.renderFeatureInfoFromWmsPayload(this.featureInfoContext.layer, this.featureInfoContext.payload);
+        return;
+      case 'wmsText':
+        this.renderFeatureInfoFromWmsText(this.featureInfoContext.layer, this.featureInfoContext.responseText);
+        return;
+      default:
+        return;
+    }
+  }
+
+  private syncSelectedFilterLayer(): void {
+    const selectedLayer = this.selectedFilterLayer();
+    if (!selectedLayer) return;
+
+    this.selectedFilterLayer.set({ ...selectedLayer });
   }
 
   initializeMap() {
@@ -278,9 +387,16 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngAfterViewInit(): void {
     this.initializeMap();
+
+    if (this.previewWkt) {
+      setTimeout(() => {
+        this.renderPreviewWkt(this.previewWkt!);
+      }, 0);
+    }
   }
 
   ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
     this.mapReady.set(false);
     this.closeFeatureInfoDrawer();
     this.closePurchaseDrawer();
@@ -499,7 +615,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       const fields = await this.fetchLayerAttributeFields(layer);
       layer.availableFields = fields;
       layer.fieldsLoaded = true;
-      layer.fieldLoadError = fields.length ? '' : this.translateService.instant('MAP.FILTER.NO_ATTRIBUTES_FOUND');
+      layer.fieldLoadError = fields.length ? '' : this.t('MAP.FILTER.NO_ATTRIBUTES_FOUND');
 
       const availableNames = new Set(fields.map((item) => item.name));
       for (const filter of layer.filters ?? []) {
@@ -511,7 +627,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       console.error('Öznitelik alanları alınamadı:', error);
       layer.availableFields = [];
       layer.fieldsLoaded = false;
-      layer.fieldLoadError = this.translateService.instant('MAP.FILTER.ATTRIBUTE_LOAD_ERROR');
+      layer.fieldLoadError = this.t('MAP.FILTER.ATTRIBUTE_LOAD_ERROR');
     } finally {
       layer.fieldsLoading = false;
       this.updateFieldOptionsForLayer(layer);
@@ -1411,19 +1527,24 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   private openFeatureInfoFromFeature(feature: Feature<Geometry>, layer: BaseLayer | null): void {
+    this.featureInfoContext = { type: 'feature', feature, layer };
+    this.renderFeatureInfoFromFeature(feature, layer);
+  }
+
+  private renderFeatureInfoFromFeature(feature: Feature<Geometry>, layer: BaseLayer | null): void {
     const geometryType = feature.getGeometry()?.getType() || '-';
-    const layerName = String(layer?.get('gpLayerName') || this.translateService.instant('SELECTED_FEATURE'));
+    const layerName = String(layer?.get('gpLayerName') || this.t('SELECTED_FEATURE'));
     const featureId = feature.getId();
     const rawProps = { ...(feature.getProperties() || {}) } as Record<string, unknown>;
     delete rawProps.geometry;
 
     const entries: FeaturePopupEntry[] = [
-      { label: this.translateService.instant('LAYER_NAME_LABEL'), value: layerName },
-      { label: this.translateService.instant('GEOMETRY_TYPE'), value: geometryType }
+      { label: this.t('LAYER_NAME_LABEL'), value: layerName },
+      { label: this.t('GEOMETRY_TYPE'), value: geometryType }
     ];
 
     if (featureId !== undefined && featureId !== null && `${featureId}`.trim()) {
-      entries.push({ label: this.translateService.instant('FEATURE_ID'), value: String(featureId) });
+      entries.push({ label: this.t('FEATURE_ID'), value: String(featureId) });
     }
 
     for (const [key, value] of Object.entries(rawProps)) {
@@ -1436,10 +1557,15 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       });
     }
 
-    this.openFeatureInfoDrawer(layerName, `${this.translateService.instant('FEATURE_DETAILS')} • ${geometryType}`, entries);
+    this.openFeatureInfoDrawer(layerName, `${this.t('FEATURE_DETAILS')} • ${geometryType}`, entries);
   }
 
   private openFeatureInfoFromWmsPayload(layer: UiLayerModel, payload: any): boolean {
+    this.featureInfoContext = { type: 'wmsPayload', layer, payload };
+    return this.renderFeatureInfoFromWmsPayload(layer, payload);
+  }
+
+  private renderFeatureInfoFromWmsPayload(layer: UiLayerModel, payload: any): boolean {
     const features = Array.isArray(payload?.features) ? payload.features : [];
     if (!features.length) return false;
 
@@ -1451,17 +1577,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       : {};
 
     const entries: FeaturePopupEntry[] = [
-      { label: this.translateService.instant('LAYER_NAME_LABEL'), value: layer.name || layer.layerName || '-' },
-      { label: this.translateService.instant('SERVICE_TYPE'), value: 'WMS' },
-      { label: this.translateService.instant('GEOMETRY_TYPE'), value: String(geometryType || '-') }
+      { label: this.t('LAYER_NAME_LABEL'), value: layer.name || layer.layerName || '-' },
+      { label: this.t('SERVICE_TYPE'), value: 'WMS' },
+      { label: this.t('GEOMETRY_TYPE'), value: String(geometryType || '-') }
     ];
 
     if (featureId !== undefined && featureId !== null && `${featureId}`.trim()) {
-      entries.push({ label: this.translateService.instant('FEATURE_ID'), value: String(featureId) });
+      entries.push({ label: this.t('FEATURE_ID'), value: String(featureId) });
     }
 
     entries.push({
-      label: this.translateService.instant('RESULT_COUNT'),
+      label: this.t('RESULT_COUNT'),
       value: String(features.length)
     });
 
@@ -1476,8 +1602,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     this.openFeatureInfoDrawer(
-      layer.name || layer.layerName || this.translateService.instant('SELECTED_FEATURE'),
-      `${this.translateService.instant('FEATURE_DETAILS')} • WMS`,
+      layer.name || layer.layerName || this.t('SELECTED_FEATURE'),
+      `${this.t('FEATURE_DETAILS')} • WMS`,
       entries
     );
 
@@ -1485,6 +1611,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   private openFeatureInfoFromWmsText(layer: UiLayerModel, responseText: string): boolean {
+    this.featureInfoContext = { type: 'wmsText', layer, responseText };
+    return this.renderFeatureInfoFromWmsText(layer, responseText);
+  }
+
+  private renderFeatureInfoFromWmsText(layer: UiLayerModel, responseText: string): boolean {
     const normalizedText = responseText?.trim();
     if (!normalizedText) return false;
 
@@ -1494,17 +1625,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     const entries: FeaturePopupEntry[] = [
-      { label: this.translateService.instant('LAYER_NAME_LABEL'), value: layer.name || layer.layerName || '-' },
-      { label: this.translateService.instant('SERVICE_TYPE'), value: 'WMS' },
+      { label: this.t('LAYER_NAME_LABEL'), value: layer.name || layer.layerName || '-' },
+      { label: this.t('SERVICE_TYPE'), value: 'WMS' },
       {
-        label: this.translateService.instant('RESPONSE'),
+        label: this.t('RESPONSE'),
         value: sanitized.length > 1200 ? `${sanitized.slice(0, 1197)}...` : sanitized
       }
     ];
 
     this.openFeatureInfoDrawer(
-      layer.name || layer.layerName || this.translateService.instant('SELECTED_FEATURE'),
-      `${this.translateService.instant('FEATURE_DETAILS')} • WMS`,
+      layer.name || layer.layerName || this.t('SELECTED_FEATURE'),
+      `${this.t('FEATURE_DETAILS')} • WMS`,
       entries
     );
 
@@ -1526,6 +1657,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   closeFeatureInfoDrawer(): void {
+    this.featureInfoContext = null;
     this.featureInfoDrawerOpen.set(false);
     this.featurePopupTitle.set('');
     this.featurePopupSubtitle.set('');
@@ -1985,7 +2117,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       classes: [],
       wkt,
       bbox,
-      sourceType: sourceType == 'draw' ? 1 : (sourceType == 'upload' ? 2 : 3), 
+      sourceType: sourceType == 'draw' ? 1 : (sourceType == 'upload' ? 2 : 3),
       sourceLabel,
       requestHash: this.hashGeometry(geometry),
       isCustomArea: true
@@ -2052,13 +2184,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   private getDefaultAreaName(sourceType: 'draw' | 'upload' | 'search'): string {
     switch (sourceType) {
       case 'draw':
-        return this.translateService.instant('MAP.CUSTOM_AREA.DEFAULT_NAME_DRAW');
+        return this.t('MAP.CUSTOM_AREA.DEFAULT_NAME_DRAW');
       case 'upload':
-        return this.translateService.instant('MAP.CUSTOM_AREA.DEFAULT_NAME_UPLOAD');
+        return this.t('MAP.CUSTOM_AREA.DEFAULT_NAME_UPLOAD');
       case 'search':
-        return this.translateService.instant('MAP.CUSTOM_AREA.DEFAULT_NAME_SEARCH');
+        return this.t('MAP.CUSTOM_AREA.DEFAULT_NAME_SEARCH');
       default:
-        return this.translateService.instant('MAP.CUSTOM_AREA.DEFAULT_NAME');
+        return this.t('MAP.CUSTOM_AREA.DEFAULT_NAME');
     }
   }
 
@@ -2130,11 +2262,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
       this.basketManagementService.save(data).subscribe((result: any) => {
         if (result?.isSuccess) {
-          this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+          this.alertService.createAlert('success', this.t('MESSAGES.SUCCESS'));
           this.basketService.loadBasketFromDb();
           this.closePurchaseDrawer();
         } else {
-          this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+          this.alertService.createAlert('danger', this.t('MESSAGES.ERROR'));
         }
       });
 
@@ -2161,7 +2293,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     );
 
     if (alreadyExists) {
-      this.alertService.createAlert('warning', this.translateService.instant('MAP.CUSTOM_AREA.ALREADY_IN_CART'));
+      this.alertService.createAlert('warning', this.t('MAP.CUSTOM_AREA.ALREADY_IN_CART'));
       return;
     }
 
@@ -2179,7 +2311,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       } else {
         this.alertService.createAlert(
           'warning',
-          this.translateService.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS')
+          this.t('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS')
         );
         return;
       }
@@ -2197,8 +2329,60 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       ];
     }
 
-    this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+    this.alertService.createAlert('success', this.t('MESSAGES.SUCCESS'));
     this.basketService.setBasket(basket);
     this.closePurchaseDrawer();
+  }
+
+  private renderPreviewWkt(wkt: string): void {
+    if (!wkt || !this.map || !this.view) {
+      return;
+    }
+
+    try {
+      this.clearOverlaySource();
+      this.closeAllDrawers();
+
+      const feature = new WKT().readFeature(wkt, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+      }) as Feature<Geometry>;
+
+      const geometry = feature.getGeometry();
+      const geometryType = geometry?.getType();
+
+      if (!geometry || (geometryType !== 'Polygon' && geometryType !== 'MultiPolygon')) {
+        console.warn('Preview için sadece Polygon veya MultiPolygon WKT desteklenir.');
+        return;
+      }
+
+      this.vectorSource.addFeature(feature);
+      this.fitToOverlay();
+
+      setTimeout(() => {
+        this.map?.updateSize();
+      }, 50);
+    } catch (error) {
+      console.error('WKT preview çizimi başarısız:', error);
+    }
+  }
+
+  private reloadMapLayers(): void {
+    for (const [, olLayer] of this.mapLayerRegistry.entries()) {
+      this.map?.removeLayer(olLayer);
+    }
+
+    this.mapLayerRegistry.clear();
+
+    this.layerGroups.set([]);
+    this.loadingLayers.set(false);
+    this.layerLoadError.set('');
+    this.closeAllDrawers();
+
+    this.loadLayerGroups();
+
+    setTimeout(() => {
+      this.map?.updateSize();
+    }, 0);
   }
 }

@@ -11,7 +11,6 @@
     ]"
     class="modern-header-container"
   >
-    <!-- LEFT -->
     <div class="modern-header-left">
       <div class="d-flex d-lg-none align-items-center me-3">
         <button
@@ -26,25 +25,28 @@
         </button>
       </div>
 
-      <!-- BRAND -->
       <a
-        routerLink="/landing/marketplace"
-        class="brand-wrapper d-flex align-items-center text-decoration-none me-6"
+        (click)="onBrandClick()"
+        class="app-header__brand text-decoration-none me-3"
       >
-        <div class="brand-modern">
-          <span class="brand-mark">G</span>
+        <div class="app-header__brand-badge">
+          <span class="app-header__brand-icon">T</span>
+        </div>
 
-          <span class="brand-text" *ngIf="!isMobile">
-            <span class="brand-title">{{ 'BRANDTITLE' | translate }}</span>
-            <span class="brand-subtitle">{{ 'BRANDSUBTITLE' | translate }}</span>
-          </span>
+        <div class="app-header__brand-content mt-2" *ngIf="!isMobile">
+          <div class="app-header__eyebrow text-primary">
+            {{ 'FOOTER.PRODUCT_LABEL' | translate }}
+          </div>
+
+          <div class="app-header__title-row">
+            <h3 class="app-header__title">TaiEarth</h3>
+          </div>
         </div>
       </a>
 
       <app-header-menu *ngIf="!isMobile"></app-header-menu>
     </div>
 
-    <!-- RIGHT -->
     <div class="modern-header-right">
       <app-topbar
         class="d-flex align-items-center flex-shrink-0"

@@ -344,7 +344,7 @@ export const locale = {
     ORDER: 'Order',
     IN_BASKET: "In Basket",
 
-    "BRANDTITLE": 'GeoPortal',
+    "BRANDTITLE": 'TaiEarth',
     "BRANDSUBTITLE": 'Satellite Data Platform',
     "MARKETPLACE": {
       "COMMON": {
@@ -555,7 +555,7 @@ export const locale = {
     "API_DOC": {
       "SIDEBAR": {
         "KICKER": "API Documentation",
-        "TITLE": "GeoPortal API Key Usage",
+        "TITLE": "TaiEarth API Key Usage",
         "SUBTITLE": "This document explains how to use the authorized endpoints with the purchased API key."
       },
       "NAV": {
@@ -572,7 +572,7 @@ export const locale = {
       "HERO": {
         "KICKER": "API Documentation",
         "VERSION": "Version 1.0",
-        "TITLE": "GeoPortal API Documentation",
+        "TITLE": "TaiEarth API Documentation",
         "DESCRIPTION": "This document is prepared for listing satellite data, starting the image processing workflow, tracking the processing status, and retrieving the processed result by using API-key authorized endpoints.",
         "BASE_URL": "Base URL",
         "AUTHENTICATION": "Authentication",
@@ -976,7 +976,7 @@ export const locale = {
       "RIGHTS": "All rights reserved.",
       "COOKIES": "Cookies Policy"
     },
-    "COPYRIGHT": "© 2026 GeoPortal. All rights reserved.",
+    "COPYRIGHT": "© 2026 TaiEarth. All rights reserved.",
     "TERMS_SHORT": "Terms",
     "PRIVACY_SHORT": "Privacy",
     "MESSAGES": {
@@ -1261,8 +1261,12 @@ export const locale = {
       "DEMAND": {
         "CUSTOMER": "Customer",
         "AREA": "Area"
-      }
+      },
     },
+    "SELECTED_FEATURE": "Selected Feature",
+    "LAYER_NAME_LABEL": "Layer Name",
+    "GEOMETRY_TYPE": "Geometry Type",
+    "FEATURE_DETAILS": "Feature Details"
 
 
     // END (TR-EN-LANGUAGE-BRANCH)

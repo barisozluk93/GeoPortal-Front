@@ -13,7 +13,7 @@
             [ngClass]="{ active: isMenuActive(menu) }"
           >
             <span class="app-header-menu__link-text">
-              {{ ("LANG" | translate) === 'tr' ? menu.name : menu.nameEn }}
+              {{ ('LANG' | translate) === 'tr' ? menu.name : menu.nameEn }}
             </span>
           </a>
         </div>
@@ -32,7 +32,7 @@
             (click)="toggleMenu(i, $event)"
           >
             <span class="app-header-menu__link-text">
-              {{ ("LANG" | translate) === 'tr' ? menu.name : menu.nameEn }}
+              {{ ('LANG' | translate) === 'tr' ? menu.name : menu.nameEn }}
             </span>
 
             <span class="app-header-menu__link-arrow">
@@ -43,7 +43,7 @@
             </span>
           </button>
 
-          <div class="app-header-menu__submenu" *ngIf="menu.open">
+          <div class="app-header-menu__submenu" [class.show]="menu.open">
             <ng-container *ngFor="let child of menu.childMenus">
               <a
                 *ngIf="!child.isForbid"
@@ -54,7 +54,7 @@
                 (click)="closeAll()"
               >
                 <span class="app-header-menu__submenu-text">
-                  {{ ("LANG" | translate) === 'tr' ? child.name : child.nameEn }}
+                  {{ ('LANG' | translate) === 'tr' ? child.name : child.nameEn }}
                 </span>
               </a>
             </ng-container>

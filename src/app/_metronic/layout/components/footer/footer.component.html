@@ -2,18 +2,18 @@
   <div class="container app-footer__container">
     <div class="app-footer__surface">
       <div class="app-footer__top">
-        <div class="app-footer__brand">
+        <div class="app-footer__brand" (click)="onBrandClick()">
           <div class="app-footer__brand-badge">
-            <span class="app-footer__brand-icon">G</span>
+            <span class="app-footer__brand-icon">T</span>
           </div>
 
           <div class="app-footer__brand-content">
-            <div class="app-footer__eyebrow">
+            <div class="app-footer__eyebrow text-primary">
               {{ 'FOOTER.PRODUCT_LABEL' | translate }}
             </div>
 
             <div class="app-footer__title-row">
-              <h3 class="app-footer__title">GeoPortal</h3>
+              <h3 class="app-footer__title">TaiEarth</h3>
               <span class="app-footer__status">
                 {{ 'FOOTER.STATUS' | translate }}
               </span>
@@ -27,7 +27,7 @@
 
         <div class="app-footer__nav">
           <div class="app-footer__group">
-            <div class="app-footer__heading">
+            <div class="app-footer__heading text-primary">
               {{ 'FOOTER.LEGAL' | translate }}
             </div>
 
@@ -45,7 +45,7 @@
           </div>
 
           <div class="app-footer__group">
-            <div class="app-footer__heading">
+            <div class="app-footer__heading text-primary">
               {{ 'FOOTER.PLATFORM' | translate }}
             </div>
 
@@ -76,7 +76,7 @@
 
       <div class="app-footer__bottom">
         <div class="app-footer__copyright">
-          © 2026 GeoPortal. {{ 'FOOTER.RIGHTS' | translate }}
+          © 2026 TaiEarth. {{ 'FOOTER.RIGHTS' | translate }}
         </div>
 
         <div class="app-footer__bottom-links">

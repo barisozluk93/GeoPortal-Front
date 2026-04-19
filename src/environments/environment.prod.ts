@@ -7,9 +7,9 @@ export const environment = {
   appVersion: 'v8.2.3',
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
-  appUrl: 'http://178.251.42.243:8080',
-  apiUrl: 'http://178.251.42.243:8080/geoPortalApi',
-  signalRUrl: 'http://178.251.42.243:8080/NotificationHubForGeoPortal',
+  appUrl: 'https://taiearth.com',
+  apiUrl: 'taiearthApi',
+  signalRUrl: 'https://taiearth.com/NotificationHubForTaiEarth',
   appThemeName: 'Metronic',
   appPurchaseUrl: 'https://1.envato.market/EA4JP',
   appHTMLIntegration:
@@ -63,8 +63,8 @@ export const environment = {
       thumbnail: './assets/media/demos/demo6.png',
     },
 
-    geoportal: {
-      title: 'GeoPortal',
+    taiearth: {
+      title: 'TaiEarth',
       description: 'CRM Dashboard',
       published: true,
       thumbnail: './assets/media/demos/demo7.png',

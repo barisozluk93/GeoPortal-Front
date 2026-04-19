@@ -1,0 +1,156 @@
+:host {
+  display: block;
+}
+
+.modern-menu {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.modern-menu-wrapper {
+  padding: 0.1rem 0 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.modern-menu .menu-item {
+  margin-bottom: 0.3rem;
+}
+
+.modern-menu .menu-link {
+  min-height: 46px;
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+
+  background: transparent;
+  color: #a1a5b7;
+  border: 0;
+  box-shadow: none;
+}
+
+.modern-menu .menu-link:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+.modern-menu .menu-link .menu-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+.modern-menu .menu-link .menu-icon {
+  width: 2rem;
+  margin-right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-menu .menu-link .menu-icon .svg-icon {
+  color: #7e8299;
+  transition: all 0.2s ease;
+}
+
+.modern-menu .menu-link:hover .menu-icon .svg-icon {
+  color: #3e97ff;
+}
+
+.modern-menu .menu-link.active,
+.modern-menu .menu-link.router-link-active,
+.modern-menu .menu-item.show > .menu-link,
+.modern-menu .menu-item.here > .menu-link,
+.modern-menu .menu-accordion.show > .menu-link {
+  background: rgba(62, 151, 255, 0.12);
+  color: #ffffff;
+  border: 0;
+  box-shadow: none;
+}
+
+.modern-menu .menu-link.active .menu-icon .svg-icon,
+.modern-menu .menu-link.router-link-active .menu-icon .svg-icon,
+.modern-menu .menu-item.show > .menu-link .menu-icon .svg-icon,
+.modern-menu .menu-item.here > .menu-link .menu-icon .svg-icon,
+.modern-menu .menu-accordion.show > .menu-link .menu-icon .svg-icon {
+  color: #3e97ff;
+}
+
+.modern-menu .menu-arrow {
+  color: #6d7285;
+}
+
+.modern-menu .menu-item.show > .menu-link .menu-arrow,
+.modern-menu .menu-accordion.show > .menu-link .menu-arrow {
+  color: #3e97ff;
+}
+
+.modern-menu .menu-sub {
+  margin-top: 0.35rem;
+  margin-left: 0.75rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+}
+
+.modern-menu .menu-sub .menu-item {
+  margin-bottom: 0.2rem;
+}
+
+.modern-menu .menu-sub .menu-link {
+  min-height: 40px;
+  padding: 0.62rem 0.75rem;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.modern-menu .menu-sub .menu-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.modern-menu .menu-bullet {
+  width: 1rem;
+  margin-right: 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-menu .bullet.bullet-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #5e6278;
+  transition: all 0.2s ease;
+}
+
+.modern-menu .menu-sub .menu-link:hover .bullet.bullet-dot,
+.modern-menu .menu-sub .menu-link.active .bullet.bullet-dot,
+.modern-menu .menu-sub .menu-link.router-link-active .bullet.bullet-dot {
+  background-color: #3e97ff;
+}
+
+.modern-menu .separator {
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+@media (max-width: 991.98px) {
+  .modern-menu .menu-link {
+    min-height: 44px;
+    padding: 0.7rem 0.8rem;
+    border-radius: 10px;
+  }
+
+  .modern-menu .menu-link .menu-title {
+    font-size: 0.92rem;
+  }
+
+  .modern-menu .menu-sub {
+    margin-left: 0.55rem;
+    padding-left: 0.7rem;
+  }
+}

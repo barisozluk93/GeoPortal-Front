@@ -12,11 +12,13 @@ import { OrderDetailComponent } from './detail/order-detail.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { DataTableModule } from '../common/datatable/datatable.module';
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
+import { InvoicePreviewModalComponent } from './detail/invoice-preview/invoice-preview-modal.component';
 
 @NgModule({
   declarations: [
     OrderManagementComponent,
     OrderDetailComponent,
+    InvoicePreviewModalComponent
   ],
   imports: [
     DataTableModule,

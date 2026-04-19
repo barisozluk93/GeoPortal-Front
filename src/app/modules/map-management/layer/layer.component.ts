@@ -10,7 +10,6 @@ import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.serv
 import { TranslateService } from '@ngx-translate/core';
 import { MapManagementService } from '../map-management.service';
 import { HttpParams } from '@angular/common/http';
-import { MapComponent } from '../../landing/map/map.component';
 import { RoleEnum } from 'src/app/enums/role.enum';
 
 @Component({
@@ -21,7 +20,6 @@ import { RoleEnum } from 'src/app/enums/role.enum';
 export class LayerComponent implements OnInit, OnDestroy {
   @ViewChild('editSaveComponent') private editSaveComponent: LayerEditSaveComponent;
   @ViewChild('confirmationComponent') private confirmationComponent: ConfirmationComponent;
-  @ViewChild('map') private mapComponent: MapComponent;
 
   hasEditPermission = true;
   hasDeletePermission = true;
@@ -31,13 +29,14 @@ export class LayerComponent implements OnInit, OnDestroy {
 
   filterModel: Record<string, any> = {};
   isMapPreviewDrawerOpen = false;
+  mapRefreshKey = 0;
 
   constructor(
     private mapManagementService: MapManagementService,
     private authService: AuthService,
     private alertService: AlertService,
     private translate: TranslateService
-  ) { }
+  ) {}
 
   tableName = '';
   columnList: ColumnModel[] = [];
@@ -83,12 +82,16 @@ export class LayerComponent implements OnInit, OnDestroy {
     });
   }
 
+  private refreshMapPreview(): void {
+    this.mapRefreshKey++;
+  }
+
   delete(event: number) {
     this.mapManagementService.layerDelete(event).subscribe(result => {
       if (result.isSuccess) {
         this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
         this.loadData();
-        this.mapComponent.refreshMap();
+        this.refreshMapPreview();
       } else {
         this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
       }
@@ -97,11 +100,11 @@ export class LayerComponent implements OnInit, OnDestroy {
 
   isSuccess(_: boolean) {
     this.loadData();
-    this.mapComponent.refreshMap();
+    this.refreshMapPreview();
   }
 
   loadData() {
-    var filterParams = this.buildFilterQueryParams(this.filterModel);
+    const filterParams = this.buildFilterQueryParams(this.filterModel);
 
     this.mapManagementService
       .layerPaging(this.paginationModel.pageNumber, this.paginationModel.pageSize, filterParams)
@@ -144,8 +147,10 @@ export class LayerComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() { }
-  
+  ngOnDestroy() {
+    document.body.style.overflow = '';
+  }
+
   openDeleteModal(event: number) {
     let deleteText = '';
     this.translate.get('DELETE').subscribe((translation) => {
@@ -172,7 +177,7 @@ export class LayerComponent implements OnInit, OnDestroy {
     document.body.style.overflow = '';
   }
 
-  toggleMapPreviewDrawer(event: boolean) {
+  toggleMapPreviewDrawer(_: boolean) {
     if (this.isMapPreviewDrawerOpen) {
       this.closeMapPreviewDrawer();
       return;
@@ -211,7 +216,7 @@ export class LayerComponent implements OnInit, OnDestroy {
     return params;
   }
 
-  exportExcel(event: boolean) {
+  exportExcel(_: boolean) {
     this.mapManagementService.exportLayerExcel().subscribe({
       next: (response) => {
         const blob = response.body;

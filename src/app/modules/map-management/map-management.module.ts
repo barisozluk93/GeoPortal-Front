@@ -16,6 +16,7 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
 import { MapComponent } from '../landing/map/map.component';
 import { CustomSelectModule } from '../common/select/custom-select.module';
+import { LayerMapDrawerComponent } from './layer/map-drawer/layer-map-drawer.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { CustomSelectModule } from '../common/select/custom-select.module';
     LayerGroupComponent,
     LayerEditSaveComponent,
     LayerGroupEditSaveComponent,
+    LayerMapDrawerComponent
   ],
   imports: [
     DataTableModule,

@@ -1,0 +1,32 @@
+<app-custom-modal
+  [isOpen]="isOpen"
+  [title]="'COMING_ORDER_DETAIL.INVOICE_PREVIEW_TITLE' | translate"
+  [subtitle]="fileName"
+  width="1100px"
+  variant="center"
+  [showFooter]="false"
+  (closed)="close()"
+>
+  <div class="invoice-modal-content">
+    <ng-container *ngIf="previewUrl; else noPreview">
+      <img
+        *ngIf="isImageFile(fileName)"
+        [src]="previewUrl"
+        [alt]="fileName"
+        class="invoice-preview-image"
+      />
+
+      <iframe
+        *ngIf="!isImageFile(fileName)"
+        [src]="previewUrl"
+        class="invoice-preview-frame"
+      ></iframe>
+    </ng-container>
+
+    <ng-template #noPreview>
+      <div class="invoice-empty-preview">
+        {{ 'COMING_ORDER_DETAIL.INVOICE_PREVIEW_EMPTY' | translate }}
+      </div>
+    </ng-template>
+  </div>
+</app-custom-modal>

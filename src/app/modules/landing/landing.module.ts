@@ -14,16 +14,30 @@ import { DocumentationComponent } from './documentation/documentation.component'
 import { MapComponent } from './map/map.component';
 import { CustomSelectModule } from '../common/select/custom-select.module';
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
+import { MarketplaceDetailDrawerComponent } from './marketplace/detail/marketplace-detail-drawer.component';
+import { MapLeftPanelComponent } from './map/left-panel/map-left-panel.component';
+import { MapLegendDrawerComponent } from './map/legend/map-legend-drawer.component';
+import { MapInfoDrawerComponent } from './map/info/map-info-drawer.component';
+import { MapFilterDrawerComponent } from './map/layer-filter/map-filter-drawer.component';
+import { MapFeatureInfoDrawerComponent } from './map/feature-info/map-feature-info-drawer.component';
+import { MapPurchaseDrawerComponent } from './map/purchase/map-purchase-drawer.component';
 
 @NgModule({
   declarations: [
     LandingComponent,
     MarketplaceComponent,
+    MarketplaceDetailDrawerComponent,
     DataComponent,
     ApiComponent,
     ContactComponent,
     DocumentationComponent,
-    MapComponent
+    MapComponent,
+    MapLeftPanelComponent,
+    MapLegendDrawerComponent,
+    MapInfoDrawerComponent,
+    MapFilterDrawerComponent,
+    MapFeatureInfoDrawerComponent,
+    MapPurchaseDrawerComponent
   ],
   imports: [
     CommonModule, 

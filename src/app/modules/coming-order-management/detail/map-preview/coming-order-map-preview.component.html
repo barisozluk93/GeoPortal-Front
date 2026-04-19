@@ -1,0 +1,28 @@
+<div
+  class="map-preview-drawer-backdrop"
+  *ngIf="isOpen"
+  (click)="close()"
+></div>
+
+<aside class="map-preview-drawer" [class.open]="isOpen">
+  <div class="map-preview-drawer__header">
+    <div class="min-w-0">
+      <div class="map-preview-drawer__kicker text-primary">Preview</div>
+      <div class="map-preview-drawer__title text-truncate">
+        {{ title || '-' }}
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-icon btn-light" (click)="close()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="map-preview-drawer__body" *ngIf="isOpen">
+    <app-map
+      class="detail-map-preview"
+      [previewWkt]="previewWkt"
+      [previewMode]="true"
+    ></app-map>
+  </div>
+</aside>

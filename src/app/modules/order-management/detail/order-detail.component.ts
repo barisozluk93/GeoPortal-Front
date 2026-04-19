@@ -259,23 +259,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  isImageFile(fileName?: string): boolean {
-    if (!fileName) {
-      return false;
-    }
-
-    const lower = fileName.toLowerCase();
-
-    return (
-      lower.endsWith('.png') ||
-      lower.endsWith('.jpg') ||
-      lower.endsWith('.jpeg') ||
-      lower.endsWith('.webp') ||
-      lower.endsWith('.gif') ||
-      lower.endsWith('.bmp')
-    );
-  }
-
   openFileModal(item: OrderModel): void {
     const safeUrl = this.buildFilePreviewUrl(item);
 
@@ -354,20 +337,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     }
 
     return null;
-  }
-
-  isStepCompleted(stepValue: number): boolean {
-    const current = this.order?.orderStatus ?? -1;
-    return current > stepValue;
-  }
-
-  isStepActive(stepValue: number): boolean {
-    const current = this.order?.orderStatus ?? -1;
-    return current === stepValue;
-  }
-
-  showOrderFlow(): boolean {
-    return !!this.order;
   }
 
   copyToClipboard(value: string | undefined | null, itemId: number): void {

@@ -19,7 +19,11 @@ const API_ORDER_URL = `${environment.apiUrl}/Basket`;
 
     constructor(private http: HttpClient, private authService: AuthService) {
         this._localStorage = localStorage;
-     }
+    }
+
+    get basket(): BasketModel[] {
+        return this._basket$.value;
+    }
 
     allBasket(userId: number): Observable<ResultModel<BasketModel[]>> {
         return this.http.get<ResultModel<BasketModel[]>>(`${API_ORDER_URL}/BasketList/${userId}`);

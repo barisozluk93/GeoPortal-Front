@@ -2,11 +2,11 @@
   <div class="map-shell">
     <div class="map-stage">
       <div class="drawer-overlay"
-        *ngIf="layerManagerOpen() || searchPanelOpen() || legendPanelOpen() || infoPanelOpen() || filterDrawerOpen() || featureInfoDrawerOpen() || purchaseDrawerOpen()"
+        *ngIf="!previewMode && (layerManagerOpen() || searchPanelOpen() || legendPanelOpen() || infoPanelOpen() || filterDrawerOpen() || featureInfoDrawerOpen() || purchaseDrawerOpen())"
         (click)="closeAllDrawers()"></div>
 
       <!-- LEFT ACTION RAIL -->
-      <div class="left-actions-shell">
+      <div class="left-actions-shell" *ngIf="!previewMode">
         <div class="left-actions-bar">
           <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
             [class.active]="layerManagerOpen()" (click)="toggleLayerManager()"
@@ -46,164 +46,38 @@
       </div>
 
       <!-- LEFT PANEL -->
-      <aside class="map-side-panel map-side-panel--left" [class.open]="layerManagerOpen() || searchPanelOpen()">
-        <div class="map-side-panel__panel">
-          <div class="map-side-panel__header">
-            <div>
-              <div class="map-side-panel__kicker">
-                {{ searchPanelOpen() ? ('MAP.SEARCH.KICKER' | translate) : ('MAP.PANEL.KICKER' | translate) }}
-              </div>
+      <app-map-left-panel
+        *ngIf="!previewMode"
+        [searchOpen]="searchPanelOpen()"
+        [layerManagerOpen]="layerManagerOpen()"
+        [loading]="loadingLayers()"
+        [error]="layerLoadError()"
+        [layerGroups]="layerGroups()"
+        [searchText]="searchText()"
+        [searchResults]="searchResults()"
+        [uploadedFileName]="uploadedFileName()"
+        [layerType]="LayerType"
+        [legendOpen]="legendPanelOpen()"
+        [infoOpen]="infoPanelOpen()"
+        [filterOpen]="filterDrawerOpen()"
+        [selectedLegendLayerId]="selectedLegendLayer()?.id ?? null"
+        [selectedInfoLayerId]="selectedInfoLayer()?.id ?? null"
+        [selectedFilterLayerId]="selectedFilterLayer()?.id ?? null"
+        (closeSearch)="closeSearchPanel()"
+        (toggleLayerManager)="toggleLayerManager()"
+        (searchTextChange)="searchText.set($event)"
+        (search)="searchPlace()"
+        (selectResult)="flyToResult($event)"
+        (toggleGroup)="toggleGroup($event)"
+        (toggleLayerVisibility)="onLayerVisibilityChange($event.layer, $event.value)"
+        (changeOpacity)="onOpacityChange($event.layer, $event.value)"
+        (openLegend)="toggleLegend($event)"
+        (openInfo)="toggleInfo($event)"
+        (openFilter)="toggleFilterDrawer($event)">
+      </app-map-left-panel>
 
-              <div class="map-side-panel__title">
-                {{ searchPanelOpen() ? ('MAP.SEARCH.TITLE' | translate) : ('MAP.PANEL.TITLE' | translate) }}
-              </div>
-
-              <div class="map-side-panel__subtitle">
-                {{
-                searchPanelOpen()
-                ? ('MAP.SEARCH.PLACEHOLDER' | translate)
-                : ('MAP.PANEL.SUBTITLE' | translate)
-                }}
-              </div>
-            </div>
-
-            <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button"
-              (click)="searchPanelOpen() ? closeSearchPanel() : toggleLayerManager()"
-              [title]="'MAP.PANEL.COLLAPSE' | translate" [attr.aria-label]="'MAP.PANEL.COLLAPSE' | translate">
-              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
-                aria-hidden="true"></span>
-            </button>
-          </div>
-
-          <div class="map-side-panel__body">
-            <ng-container *ngIf="searchPanelOpen(); else layerManagerContent">
-              <div class="sidebar-card">
-                <div class="filter-group">
-                  <label class="filter-label">
-                    {{ 'MAP.SEARCH.TITLE' | translate }}
-                  </label>
-
-                  <div class="search-form-row">
-                    <input class="form-control form-control-lg" [ngModel]="searchText()"
-                      (ngModelChange)="searchText.set($event)" [placeholder]="'MAP.SEARCH.PLACEHOLDER' | translate"
-                      (keyup.enter)="searchPlace()" />
-
-                    <button class="btn btn-primary" type="button" (click)="searchPlace()">
-                      {{ 'MAP.SEARCH.BUTTON' | translate }}
-                    </button>
-                  </div>
-                </div>
-
-                <div class="search-results-card" *ngIf="searchResults().length">
-                  <div class="search-results-title">
-                    {{ 'MAP.SEARCH.RESULTS' | translate }}
-                  </div>
-
-                  <div class="search-results-list">
-                    <button class="result-btn" *ngFor="let item of searchResults()" (click)="flyToResult(item)">
-                      {{ item.display_name }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-
-            <ng-template #layerManagerContent>
-              <div class="state-box" *ngIf="loadingLayers()">
-                {{ 'MAP.STATE.LOADING' | translate }}
-              </div>
-
-              <div class="state-box error" *ngIf="layerLoadError()">
-                {{ layerLoadError() }}
-              </div>
-
-              <ng-container *ngFor="let group of layerGroups(); trackBy: trackByGroup">
-                <div class="group-card">
-                  <button class="group-card-header" type="button" (click)="toggleGroup(group)">
-                    <div>
-                      <div class="group-card-title">{{ group.name }}</div>
-                      <div class="group-card-subtitle">
-                        {{ group.layers.length }}
-                        {{ group.layers.length > 1 ? ('MAP.COMMON.LAYERS' | translate) : ('MAP.COMMON.LAYER' |
-                        translate) }}
-                      </div>
-                    </div>
-
-                    <div class="group-toggle-indicator">
-                      <span *ngIf="group.expanded" [inlineSVG]="'./assets/media/icons/duotune/arrows/arr010.svg'"
-                        class="svg-icon svg-icon-2" aria-hidden="true"></span>
-                      <span *ngIf="!group.expanded" [inlineSVG]="'./assets/media/icons/duotune/arrows/arr009.svg'"
-                        class="svg-icon svg-icon-2" aria-hidden="true"></span>
-                    </div>
-                  </button>
-
-                  <div class="group-card-body" *ngIf="group.expanded">
-                    <div class="group-card-layers">
-                      <div class="layer-item-card" *ngFor="let layer of group.layers; trackBy: trackByLayer">
-                        <div class="layer-single-row">
-                          <label class="layer-check form-check form-check-custom form-check-solid">
-                            <input class="form-check-input" type="checkbox" [ngModel]="layer.visible"
-                              (ngModelChange)="onLayerVisibilityChange(layer, $event)" />
-                            <span class="layer-name">{{ layer.name }}</span>
-                          </label>
-
-                          <div class="layer-item-actions">
-                            <button *ngIf="layer.type === LayerType.Wms" type="button" class="layer-mini-btn"
-                              [class.active]="isLegendLayer(layer)" (click)="toggleLegend(layer)"
-                              [title]="'MAP.LEGEND.TITLE' | translate"
-                              [attr.aria-label]="'MAP.LEGEND.TITLE' | translate">
-                              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen008.svg'"
-                                class="svg-icon svg-icon-2" aria-hidden="true"></span>
-                            </button>
-
-                            <button *ngIf="canOpenInfo(layer)" type="button" class="layer-mini-btn"
-                              [class.active]="isInfoLayer(layer)" (click)="toggleInfo(layer)"
-                              [title]="'MAP.INFO.TITLE' | translate" [attr.aria-label]="'MAP.INFO.TITLE' | translate">
-                              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen045.svg'"
-                                class="svg-icon svg-icon-2" aria-hidden="true"></span>
-                            </button>
-
-                            <button *ngIf="canOpenFilter(layer)" type="button" class="layer-mini-btn"
-                              [class.active]="isFilterLayer(layer)" (click)="toggleFilterDrawer(layer)"
-                              [title]="'MAP.FILTER.TITLE' | translate"
-                              [attr.aria-label]="'MAP.FILTER.TITLE' | translate">
-                              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen031.svg'"
-                                class="svg-icon svg-icon-2" aria-hidden="true"></span>
-                            </button>
-
-                            <div class="opacity-mini">
-                              <input type="range" min="0" max="100" [ngModel]="layer.opacity"
-                                (ngModelChange)="onOpacityChange(layer, $event)" />
-                              <span>{{ layer.opacity }}%</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="layer-active-filter" *ngIf="layer.activeCqlFilter">
-                          <span class="layer-active-filter__label">{{ 'MAP.COMMON.ACTIVE_FILTER' | translate }}</span>
-                          <span class="layer-active-filter__value">{{ layer.activeCqlFilter }}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-
-              <div class="data-bundle-box">
-                <div class="data-bundle-box__title">{{ 'MAP.UPLOAD.TITLE' | translate }}</div>
-                <ul class="data-bundle-list">
-                  <li>{{ 'MAP.UPLOAD.HINT' | translate }}</li>
-                  <li *ngIf="uploadedFileName()">
-                    {{ 'MAP.UPLOAD.LOADED_FILE' | translate }}: {{ uploadedFileName() }}
-                  </li>
-                </ul>
-              </div>
-            </ng-template>
-
-            <input #fileInput type="file" hidden accept=".geojson,.json,.kml,.zip" (change)="onFileSelected($event)" />
-          </div>
-        </div>
-      </aside>
+      <!-- hidden file input parent'ta kalıyor -->
+      <input #fileInput type="file" hidden accept=".geojson,.json,.kml,.zip" (change)="onFileSelected($event)" />
 
       <!-- MAP -->
       <div class="map-canvas-shell">
@@ -228,7 +102,7 @@
         </div>
 
         <div class="map-status">
-          <div class="map-status-title">{{ 'MAP.STATUS.TITLE' | translate }}</div>
+          <div class="map-status-title text-primary">{{ 'MAP.STATUS.TITLE' | translate }}</div>
 
           <div class="map-status-text map-status-text--inline">
             <span>{{ 'MAP.STATUS.COORDINATE' | translate }}: {{ currentCoords() }}</span>
@@ -239,419 +113,59 @@
       </div>
 
       <!-- LEGEND DRAWER -->
-      <aside class="detail-drawer" [class.open]="legendPanelOpen()" *ngIf="selectedLegendLayer() as legendLayer">
-        <div class="detail-drawer__header">
-          <div>
-            <div class="detail-drawer__kicker">{{ 'MAP.LEGEND.TITLE' | translate }}</div>
-            <div class="detail-drawer__title">{{ legendLayer.name }}</div>
-            <div class="detail-drawer__subtitle">{{ 'MAP.LEGEND.SUBTITLE' | translate }}</div>
-          </div>
-
-          <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closeLegend()">
-            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-        </div>
-
-        <div class="detail-drawer__body">
-          <div class="detail-section">
-            <div class="detail-section__title">{{ 'MAP.LEGEND.SUMMARY' | translate }}</div>
-
-            <div class="detail-grid detail-grid--single">
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.SERVICE_TYPE' | translate }}</span>
-                <strong>{{ getLayerTypeText(legendLayer) }}</strong>
-              </div>
-
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.LAYER_NAME' | translate }}</span>
-                <strong>{{ legendLayer.layerName || '-' }}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="detail-section">
-            <div class="detail-section__title">{{ 'MAP.LEGEND.IMAGE' | translate }}</div>
-
-            <div class="legend-image-wrap legend-image-white-bg" *ngIf="hasLegend(legendLayer); else noLegendBlock">
-              <img class="legend-image" [src]="getLegendUrl(legendLayer)" [alt]="legendLayer.name + ' legend'" />
-            </div>
-
-            <ng-template #noLegendBlock>
-              <div class="legend-empty">
-                {{ 'MAP.LEGEND.EMPTY' | translate }}
-              </div>
-            </ng-template>
-          </div>
-        </div>
-      </aside>
+      <app-map-legend-drawer
+        [open]="legendPanelOpen()"
+        [layer]="selectedLegendLayer()"
+        [getLayerTypeText]="getLayerTypeText.bind(this)"
+        [hasLegend]="hasLegend.bind(this)"
+        [getLegendUrl]="getLegendUrl.bind(this)"
+        (close)="closeLegend()">
+      </app-map-legend-drawer>
 
       <!-- INFO DRAWER -->
-      <aside class="detail-drawer" [class.open]="infoPanelOpen()" *ngIf="selectedInfoLayer() as infoLayer">
-        <div class="detail-drawer__header">
-          <div>
-            <div class="detail-drawer__kicker">{{ 'MAP.INFO.TITLE' | translate }}</div>
-            <div class="detail-drawer__title">{{ infoLayer.name }}</div>
-            <div class="detail-drawer__subtitle">
-              {{ getLayerTypeText(infoLayer) }} {{ 'MAP.INFO.SUBTITLE' | translate }}
-            </div>
-          </div>
-
-          <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closeInfo()">
-            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-        </div>
-
-        <div class="detail-drawer__body">
-          <div class="detail-section">
-            <div class="detail-section__title">{{ 'MAP.COMMON.GENERAL_INFO' | translate }}</div>
-
-            <div class="detail-grid">
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.SERVICE_TYPE' | translate }}</span>
-                <strong>{{ getLayerTypeText(infoLayer) }}</strong>
-              </div>
-
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.VISIBILITY' | translate }}</span>
-                <strong>{{ infoLayer.visible ? ('MAP.COMMON.OPEN' | translate) : ('MAP.COMMON.CLOSED' | translate)
-                  }}</strong>
-              </div>
-
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.OPACITY' | translate }}</span>
-                <strong>%{{ infoLayer.opacity }}</strong>
-              </div>
-
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.ORDER_NO' | translate }}</span>
-                <strong>{{ infoLayer.orderNo ?? '-' }}</strong>
-              </div>
-
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.LAYER_NAME' | translate }}</span>
-                <strong>{{ infoLayer.layerName || '-' }}</strong>
-              </div>
-
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.VERSION' | translate }}</span>
-                <strong>{{ infoLayer.version || getDefaultVersion(infoLayer) }}</strong>
-              </div>
-
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.COMMON.FORMAT' | translate }}</span>
-                <strong>{{ infoLayer.format || getDefaultFormat(infoLayer) }}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="detail-section">
-            <div class="detail-section__title">{{ 'MAP.COMMON.SERVICE_ENDPOINT' | translate }}</div>
-            <div class="service-endpoint-box">{{ infoLayer.url || '-' }}</div>
-          </div>
-
-          <div class="detail-section" *ngIf="infoLayer.type === LayerType.Wms">
-            <div class="detail-section__title">{{ 'MAP.INFO.WMS_NOTES' | translate }}</div>
-            <div class="package-list">
-              <span class="package-chip">GetMap</span>
-              <span class="package-chip">GetLegendGraphic</span>
-              <span class="package-chip">Transparent</span>
-              <span class="package-chip">Tiled</span>
-            </div>
-          </div>
-
-          <div class="detail-section" *ngIf="infoLayer.type === LayerType.Wfs">
-            <div class="detail-section__title">{{ 'MAP.INFO.WFS_NOTES' | translate }}</div>
-            <div class="package-list">
-              <span class="package-chip">GetFeature</span>
-              <span class="package-chip">GeoJSON</span>
-              <span class="package-chip">BBox Strategy</span>
-              <span class="package-chip">EPSG:3857</span>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <app-map-info-drawer
+        [open]="infoPanelOpen()"
+        [layer]="selectedInfoLayer()"
+        [layerType]="LayerType"
+        [getLayerTypeText]="getLayerTypeText.bind(this)"
+        [getDefaultVersion]="getDefaultVersion.bind(this)"
+        [getDefaultFormat]="getDefaultFormat.bind(this)"
+        (close)="closeInfo()">
+      </app-map-info-drawer>
 
       <!-- FILTER DRAWER -->
-      <aside class="detail-drawer" [class.open]="filterDrawerOpen()" *ngIf="selectedFilterLayer() as filterLayer">
-        <div class="detail-drawer__header">
-          <div>
-            <div class="detail-drawer__kicker">{{ 'MAP.FILTER.TITLE' | translate }}</div>
-            <div class="detail-drawer__title">{{ filterLayer.name }}</div>
-            <div class="detail-drawer__subtitle">
-              {{ getLayerTypeText(filterLayer) }} {{ 'MAP.FILTER.SUBTITLE' | translate }}
-            </div>
-          </div>
-
-          <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closeFilterDrawer()">
-            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-        </div>
-
-        <div class="detail-drawer__body">
-          <div class="filter-drawer-toolbar">
-            <button class="btn btn-light-primary" type="button" (click)="addFilterRow()">
-              {{ 'MAP.FILTER.ADD_RULE' | translate }}
-            </button>
-
-            <button class="btn btn-light" type="button" (click)="clearFilterForLayer(filterLayer)">
-              {{ 'MAP.FILTER.CLEAR' | translate }}
-            </button>
-
-            <button class="btn btn-primary" type="button" (click)="applyFilterToLayerWithValidation(filterLayer)">
-              {{ 'MAP.FILTER.APPLY' | translate }}
-            </button>
-          </div>
-
-          <div class="detail-section">
-            <div class="detail-section__title">{{ 'MAP.FILTER.RULES' | translate }}</div>
-
-            <div class="filter-rule-list">
-              <div class="filter-rule-card" *ngFor="let filter of filterLayer.filters; let i = index">
-                <div class="filter-rule-grid">
-                  <div class="filter-field-full">
-                    <div class="filter-field-head">
-                      <label class="filter-label-mini">{{ 'MAP.FILTER.FIELD' | translate }}</label>
-
-                      <button class="btn btn-sm btn-light-primary" type="button"
-                        (click)="loadFilterFieldOptions(filterLayer, true)">
-                        {{ 'MAP.FILTER.REFRESH_FIELDS' | translate }}
-                      </button>
-                    </div>
-
-                    <app-custom-select [size]="'lg'" class="map-custom-select" [invalid]="!!filter.invalidField"
-                      [disabled]="filterLayer.fieldsLoading || !getFieldSelectItems(filterLayer).length"
-                      [items]="getFieldSelectItems(filterLayer)" bindLabel="label" bindValue="value"
-                      [placeholder]="filterLayer.fieldsLoading ? ('MAP.STATE.LOADING' | translate) : ('MAP.FILTER.SELECT_FIELD' | translate)"
-                      [ngModel]="filter.field" [ngModelOptions]="{ standalone: true }"
-                      (ngModelChange)="onFilterFieldChange(filter, $event)">
-                    </app-custom-select>
-
-                    <div class="invalid-feedback d-block" *ngIf="filter.invalidField">
-                      {{ 'MAP.COMMON.REQUIRED' | translate }}
-                    </div>
-
-                    <div class="filter-helper-text" *ngIf="filterLayer.fieldsLoading">
-                      {{ 'MAP.FILTER.ATTRIBUTES_LOADING' | translate }}
-                    </div>
-
-                    <div class="invalid-feedback d-block"
-                      *ngIf="!filterLayer.fieldsLoading && filterLayer.fieldLoadError">
-                      {{ filterLayer.fieldLoadError }}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label class="filter-label-mini">{{ 'MAP.FILTER.OPERATOR' | translate }}</label>
-
-                    <app-custom-select [size]="'lg'" class="map-custom-select" [invalid]="!!filter.invalidOperator"
-                      [items]="operatorSelectItems" bindLabel="label" bindValue="value"
-                      [placeholder]="'MAP.COMMON.SELECT_AN_OPERATOR' | translate" [ngModel]="filter.operator"
-                      [ngModelOptions]="{ standalone: true }" (ngModelChange)="onFilterOperatorChange(filter, $event)">
-                    </app-custom-select>
-
-                    <div class="invalid-feedback d-block" *ngIf="filter.invalidOperator">
-                      {{ 'MAP.COMMON.REQUIRED' | translate }}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label class="filter-label-mini">{{ 'MAP.FILTER.VALUE' | translate }}</label>
-
-                    <input type="text" class="form-control form-control-lg"
-                      [ngClass]="{ 'is-invalid': filter.invalidValue }" [ngModel]="filter.value"
-                      (ngModelChange)="onFilterValueChange(filter, $event)"
-                      [placeholder]="'MAP.FILTER.VALUE' | translate" />
-
-                    <div class="invalid-feedback" *ngIf="filter.invalidValue">
-                      {{ 'MAP.COMMON.REQUIRED' | translate }}
-                    </div>
-                  </div>
-
-                  <div *ngIf="filter.operator === 'between'">
-                    <label class="filter-label-mini">{{ 'MAP.FILTER.SECOND_VALUE' | translate }}</label>
-
-                    <input type="text" class="form-control form-control-lg"
-                      [ngClass]="{ 'is-invalid': filter.invalidValue2 }" [ngModel]="filter.value2"
-                      (ngModelChange)="onFilterSecondValueChange(filter, $event)"
-                      [placeholder]="'MAP.FILTER.SECOND_VALUE' | translate" />
-
-                    <div class="invalid-feedback" *ngIf="filter.invalidValue2">
-                      {{ 'MAP.COMMON.REQUIRED' | translate }}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="filter-rule-actions" *ngIf="filterLayer.filters.length > 1">
-                  <button class="btn btn-sm btn-light-danger" type="button" (click)="removeFilterRow(i)">
-                    {{ 'MAP.FILTER.REMOVE_RULE' | translate }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="detail-section">
-            <div class="detail-section__title">{{ 'MAP.FILTER.PREVIEW' | translate }}</div>
-            <div class="service-endpoint-box">{{ buildLayerCqlFilter(filterLayer) || '-' }}</div>
-          </div>
-        </div>
-      </aside>
+      <app-map-filter-drawer
+        [open]="filterDrawerOpen()"
+        [layer]="selectedFilterLayer()"
+        [operatorSelectItems]="operatorSelectItems"
+        [buildLayerCqlFilter]="buildLayerCqlFilter.bind(this)"
+        [loadFilterFieldOptionsFn]="loadFilterFieldOptions.bind(this)"
+        (close)="closeFilterDrawer()"
+        (addRule)="addFilterRow()"
+        (removeRule)="removeFilterRow($event)"
+        (apply)="applyFilterToLayerWithValidation($event)"
+        (clear)="clearFilterForLayer($event)">
+      </app-map-filter-drawer>
 
       <!-- FEATURE INFO DRAWER -->
-      <aside class="detail-drawer" [class.open]="featureInfoDrawerOpen()">
-        <div class="detail-drawer__header">
-          <div>
-            <div class="detail-drawer__kicker">{{ 'MAP.FEATURE.TITLE' | translate }}</div>
-            <div class="detail-drawer__title">{{ featurePopupTitle() || ('MAP.FEATURE.SELECTED' | translate) }}</div>
-            <div class="detail-drawer__subtitle">{{ featurePopupSubtitle() }}</div>
-          </div>
-
-          <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button"
-            (click)="closeFeatureInfoDrawer()">
-            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-        </div>
-
-        <div class="detail-drawer__body">
-          <div class="detail-section">
-            <div class="detail-section__title">{{ 'MAP.COMMON.GENERAL_INFO' | translate }}</div>
-
-            <div class="feature-info-grid" *ngIf="featurePopupEntries().length; else featureInfoEmpty">
-              <div class="feature-info-grid__item" *ngFor="let entry of featurePopupEntries()">
-                <span>{{ entry.label }}</span>
-                <strong>{{ entry.value }}</strong>
-              </div>
-            </div>
-
-            <ng-template #featureInfoEmpty>
-              <div class="feature-empty">
-                {{ 'MAP.FEATURE.EMPTY' | translate }}
-              </div>
-            </ng-template>
-          </div>
-        </div>
-      </aside>
+      <app-map-feature-info-drawer
+        [open]="featureInfoDrawerOpen()"
+        [title]="featurePopupTitle()"
+        [subtitle]="featurePopupSubtitle()"
+        [entries]="featurePopupEntries()"
+        (close)="closeFeatureInfoDrawer()">
+      </app-map-feature-info-drawer>
 
       <!-- PURCHASE DRAWER -->
-      <aside class="detail-drawer detail-drawer--sticky-footer" [class.open]="purchaseDrawerOpen()">
-        <div class="detail-drawer__header">
-          <div>
-            <div class="detail-drawer__kicker">
-              {{ 'MAP.CUSTOM_AREA.KICKER' | translate }}
-            </div>
-            <div class="detail-drawer__title">
-              {{ selectedPurchaseProduct()?.name || ('MAP.CUSTOM_AREA.TITLE' | translate) }}
-            </div>
-            <div class="detail-drawer__subtitle">
-              {{ 'MAP.CUSTOM_AREA.SUBTITLE' | translate }}
-            </div>
-          </div>
-
-          <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="closePurchaseDrawer()">
-            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-        </div>
-
-        <div class="detail-drawer__body" *ngIf="selectedPurchaseProduct() as product">
-          <div class="detail-section">
-            <div class="detail-section__title">
-              {{ 'MAP.CUSTOM_AREA.INFO_TITLE' | translate }}
-            </div>
-
-            <div class="detail-grid detail-grid--single">
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.CUSTOM_AREA.FIELD_NAME' | translate }}</span>
-                <strong>{{ product.name || '-' }}</strong>
-              </div>
-
-              <div class="detail-grid__item">
-                <span>{{ 'MAP.CUSTOM_AREA.FIELD_AREA' | translate }}</span>
-                <strong>{{ product.areaKm2 ?? 0 | number:'1.2-2' }} km²</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="detail-section">
-            <div class="detail-section__title">
-              {{ 'MAP.CUSTOM_AREA.PROCESSING_TITLE' | translate }}
-            </div>
-
-            <div class="d-flex flex-column gap-5">
-              <label class="d-flex align-items-start justify-content-between gap-4">
-                <div>
-                  <div class="text-white fw-bold fs-6 mb-1">
-                    {{ 'MAP.CUSTOM_AREA.OPTIONS.ORTHORECTIFIED_TITLE' | translate }}
-                  </div>
-                  <div class="text-muted fs-7">
-                    {{ 'MAP.CUSTOM_AREA.OPTIONS.ORTHORECTIFIED_DESC' | translate }}
-                  </div>
-                </div>
-
-                <div class="form-check form-check-custom form-check-solid m-0">
-                  <input class="form-check-input" type="checkbox" [checked]="purchaseOptions().orthorectified"
-                    (change)="onPurchaseOptionChange('orthorectified', $any($event.target).checked)" />
-                </div>
-              </label>
-
-              <label class="d-flex align-items-start justify-content-between gap-4">
-                <div>
-                  <div class="text-white fw-bold fs-6 mb-1">
-                    {{ 'MAP.CUSTOM_AREA.OPTIONS.PANSHARPENED_TITLE' | translate }}
-                  </div>
-                  <div class="text-muted fs-7">
-                    {{ 'MAP.CUSTOM_AREA.OPTIONS.PANSHARPENED_DESC' | translate }}
-                  </div>
-                </div>
-
-                <div class="form-check form-check-custom form-check-solid m-0">
-                  <input class="form-check-input" type="checkbox" [checked]="purchaseOptions().pansharpened"
-                    (change)="onPurchaseOptionChange('pansharpened', $any($event.target).checked)" />
-                </div>
-              </label>
-
-              <label class="d-flex align-items-start justify-content-between gap-4">
-                <div>
-                  <div class="text-white fw-bold fs-6 mb-1">
-                    {{ 'MAP.CUSTOM_AREA.OPTIONS.CLASSIFIED_TITLE' | translate }}
-                  </div>
-                  <div class="text-muted fs-7">
-                    {{ 'MAP.CUSTOM_AREA.OPTIONS.CLASSIFIED_DESC' | translate }}
-                  </div>
-                </div>
-
-                <div class="form-check form-check-custom form-check-solid m-0">
-                  <input class="form-check-input" type="checkbox" [checked]="purchaseOptions().classified"
-                    (change)="onPurchaseOptionChange('classified', $any($event.target).checked)" />
-                </div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="detail-drawer__footer detail-drawer__footer--sticky" *ngIf="selectedPurchaseProduct() as product">
-          <div class="d-flex align-items-center justify-content-between gap-4 flex-wrap w-100">
-            <div>
-              <div class="fs-7 fw-semibold text-muted mb-1">
-                {{ 'MAP.CUSTOM_AREA.TOTAL_PRICE' | translate }}
-              </div>
-              <div class="fs-2 fw-bolder text-white">
-                {{ product.price ?? 0 | currency:(product.currency || 'TRY'):'symbol':'1.2-2' }}
-              </div>
-            </div>
-
-            <button type="button" class="btn btn-primary fw-bold px-6 d-inline-flex align-items-center gap-2"
-              (click)="addCustomProductToCart()">
-              <i class="ki-outline ki-basket fs-2"></i>
-              {{ 'MAP.CUSTOM_AREA.ADD_TO_CART' | translate }}
-            </button>
-          </div>
-        </div>
-      </aside>
+      <app-map-purchase-drawer
+        *ngIf="!previewMode"
+        [open]="purchaseDrawerOpen()"
+        [product]="selectedPurchaseProduct()"
+        [options]="purchaseOptions()"
+        (close)="closePurchaseDrawer()"
+        (optionChange)="onPurchaseOptionChange($event.key, $event.checked)"
+        (addToCart)="addCustomProductToCart()">
+      </app-map-purchase-drawer>
     </div>
   </div>
 </section>

@@ -159,3 +159,32 @@
     padding: 1.5rem !important;
   }
 }
+
+.search-input-container {
+  min-width: 0;
+}
+
+.search-input-container .search-icon {
+  position: absolute;
+  top: 50%;
+  left: 1.25rem;
+  transform: translateY(-50%);
+  z-index: 2;
+  pointer-events: none;
+  margin: 0 !important;
+  line-height: 1;
+}
+
+.search-input-container .form-control {
+  min-height: 52px;
+}
+
+@media (max-width: 575.98px) {
+  .search-input-container .search-icon {
+    left: 1rem;
+  }
+
+  .search-input-container .form-control {
+    padding-left: 3rem !important;
+  }
+}

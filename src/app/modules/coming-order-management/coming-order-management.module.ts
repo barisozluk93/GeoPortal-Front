@@ -13,11 +13,14 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { DataTableModule } from '../common/datatable/datatable.module';
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
 import { CustomSelectModule } from '../common/select/custom-select.module';
+import { LandingModule } from '../landing/landing.module';
+import { ComingOrderMapPreviewComponent } from './detail/map-preview/coming-order-map-preview.component';
 
 @NgModule({
   declarations: [
     ComingOrderManagementComponent,
     ComingOrderDetailComponent,
+    ComingOrderMapPreviewComponent
   ],
   imports: [
     DataTableModule,
@@ -32,7 +35,8 @@ import { CustomSelectModule } from '../common/select/custom-select.module';
     NgbPaginationModule,
     PdfViewerModule,
     CustomModalModule,
-    CustomSelectModule
+    CustomSelectModule,
+    LandingModule
   ]
 })
 export class ComingOrderManagementModule { }

@@ -38,7 +38,9 @@
                 </label>
 
                 <div class="position-relative">
-                  <i class="ki-duotone ki-magnifier fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-5">
+                  <i
+                    class="ki-duotone ki-magnifier fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-5"
+                  >
                     <span class="path1"></span>
                     <span class="path2"></span>
                   </i>
@@ -147,10 +149,7 @@
 
       <div class="row g-7">
         <ng-container *ngIf="filteredItems()?.length; else emptyState">
-          <div
-            class="col-12 col-md-6 col-xxl-4"
-            *ngFor="let item of filteredItems(); trackBy: trackByItem"
-          >
+          <div class="col-12 col-md-6 col-xxl-4" *ngFor="let item of filteredItems(); trackBy: trackByItem">
             <div class="card marketplace-product-card h-100">
               <div class="card-img-top position-relative overflow-hidden marketplace-thumb-wrap">
                 <img
@@ -177,24 +176,15 @@
 
                 <div class="position-absolute bottom-0 start-0 w-100 p-5 z-index-2">
                   <div class="d-flex flex-wrap gap-3">
-                    <span
-                      *ngIf="item.isOrthorectified"
-                      class="badge badge-light-success px-4 py-2 fw-semibold"
-                    >
+                    <span *ngIf="item.isOrthorectified" class="badge badge-light-success px-4 py-2 fw-semibold">
                       {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
                     </span>
 
-                    <span
-                      *ngIf="item.isPansharpened"
-                      class="badge badge-light-info px-4 py-2 fw-semibold"
-                    >
+                    <span *ngIf="item.isPansharpened" class="badge badge-light-info px-4 py-2 fw-semibold">
                       {{ 'MARKETPLACE.BUNDLE.SHORT_2' | translate }}
                     </span>
 
-                    <span
-                      *ngIf="item.isClassified"
-                      class="badge badge-light-warning px-4 py-2 fw-semibold"
-                    >
+                    <span *ngIf="item.isClassified" class="badge badge-light-warning px-4 py-2 fw-semibold">
                       {{ 'MARKETPLACE.BUNDLE.SHORT_3' | translate }}
                     </span>
                   </div>
@@ -232,10 +222,7 @@
                         class="badge marketplace-class-badge px-4 py-3 fs-7 fw-semibold"
                         [ngClass]="getClassTagClass(classItem.className)"
                       >
-                        <span
-                          class="marketplace-class-dot"
-                          [style.background]="classItem.colorHex || null"
-                        ></span>
+                        <span class="marketplace-class-dot" [style.background]="classItem.colorHex || null"></span>
                         {{ classItem.className }}
                       </span>
                     </ng-container>
@@ -258,11 +245,12 @@
                   </div>
 
                   <div class="d-flex align-items-center justify-content-between gap-4">
-                    <div class="fs-3 fw-bolder text-muted">
-                      {{ item.price ?? 0 | currency:(item.currency || 'TRY'):'symbol':'1.2-2' }}
+                    <div class="fw-bolder text-primary fs-2">
+                      {{ item.price ?? 0 | currency:'₺':'symbol':'1.2-2' }}
                     </div>
 
                     <button
+                      *ngIf="canViewAddToCart(item)"
                       type="button"
                       class="btn btn-primary fw-bold px-6 d-inline-flex align-items-center gap-2"
                       (click)="addToCart(item)"
@@ -314,298 +302,12 @@
   </div>
 </div>
 
-<!-- DETAIL BACKDROP -->
-<div
-  class="marketplace-detail-backdrop"
-  *ngIf="selectedItem()"
-  (click)="closeDetail()"
-></div>
-
-<!-- DETAIL DRAWER -->
-<div
-  class="marketplace-detail-drawer"
-  [class.is-open]="!!selectedItem()"
->
-  <div class="marketplace-detail-drawer__header">
-    <div>
-      <div class="fs-7 fw-semibold text-muted mb-2">
-        {{ 'MARKETPLACE.DETAIL.KICKER' | translate }}
-      </div>
-
-      <h2 class="fs-2 fw-bolder text-white mb-0">
-        {{ selectedItem()?.name || '-' }}
-      </h2>
-    </div>
-
-    <button
-      type="button"
-      class="btn btn-icon btn-sm btn-active-light-primary"
-      (click)="closeDetail()"
-    >
-      <i class="ki-outline ki-cross fs-2"></i>
-    </button>
-  </div>
-
-  <div class="marketplace-detail-drawer__body">
-    <ng-container *ngIf="!detailLoading(); else detailLoadingTpl">
-      <ng-container *ngIf="!detailErrorMessage(); else detailErrorTpl">
-        <ng-container *ngIf="selectedItem() as detailItem">
-
-          <!-- IMAGE -->
-          <div class="marketplace-detail-section mb-7 overflow-hidden p-0">
-            <div class="position-relative">
-              <img
-                [src]="detailItem.thumbnailUrl || detailItem.previewUrl || 'assets/media/stock/900x600/1.jpg'"
-                [alt]="detailItem.name"
-                class="w-100 h-250px object-fit-cover"
-              />
-
-              <div class="marketplace-image-overlay"></div>
-
-              <div class="position-absolute top-0 start-0 w-100 p-5 d-flex flex-wrap gap-3">
-                <span class="badge badge-light-primary fs-8 fw-bold px-4 py-3">
-                  {{ 'MARKETPLACE.CARD.CLOUD' | translate }} {{ detailItem.cloudRate ?? 0 }}%
-                </span>
-
-                <span class="badge badge-light-info fs-8 fw-bold px-4 py-3">
-                  {{ detailItem.resolution ?? 0 }} m
-                </span>
-
-                <span class="badge badge-light-warning fs-8 fw-bold px-4 py-3">
-                  {{ detailItem.areaKm2 ?? 0 }} km²
-                </span>
-              </div>
-
-              <div class="position-absolute bottom-0 start-0 w-100 p-5">
-                <div class="d-flex flex-wrap gap-3">
-                  <span
-                    *ngIf="detailItem.isOrthorectified"
-                    class="badge badge-light-success px-4 py-3 fw-semibold"
-                  >
-                    {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
-                  </span>
-
-                  <span
-                    *ngIf="detailItem.isPansharpened"
-                    class="badge badge-light-info px-4 py-3 fw-semibold"
-                  >
-                    {{ 'MARKETPLACE.BUNDLE.SHORT_2' | translate }}
-                  </span>
-
-                  <span
-                    *ngIf="detailItem.isClassified"
-                    class="badge badge-light-warning px-4 py-3 fw-semibold"
-                  >
-                    {{ 'MARKETPLACE.BUNDLE.SHORT_3' | translate }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- DESCRIPTION -->
-          <div class="marketplace-detail-section mb-7">
-            <div class="fs-5 fw-bold text-white mb-4">
-              {{ 'MARKETPLACE.DETAIL.DESCRIPTION' | translate }}
-            </div>
-
-            <div class="text-muted fs-6 lh-lg">
-              {{ detailItem.description || '-' }}
-            </div>
-          </div>
-
-          <!-- TECHNICAL INFO -->
-          <div class="marketplace-detail-section mb-7">
-            <div class="fs-5 fw-bold text-white mb-5">
-              {{ 'MARKETPLACE.DETAIL.TECHNICAL_INFO' | translate }}
-            </div>
-
-            <div class="row g-5">
-              <div class="col-12 col-sm-6">
-                <div class="marketplace-detail-mini-box">
-                  <div class="text-muted fs-7 mb-2">
-                    {{ 'MARKETPLACE.DETAIL.CITY' | translate }}
-                  </div>
-                  <div class="text-white fw-semibold">
-                    {{ detailItem.city || '-' }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12 col-sm-6">
-                <div class="marketplace-detail-mini-box">
-                  <div class="text-muted fs-7 mb-2">
-                    {{ 'MARKETPLACE.DETAIL.DISTRICT' | translate }}
-                  </div>
-                  <div class="text-white fw-semibold">
-                    {{ detailItem.district || '-' }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12 col-sm-6">
-                <div class="marketplace-detail-mini-box">
-                  <div class="text-muted fs-7 mb-2">
-                    {{ 'MARKETPLACE.DETAIL.DATE' | translate }}
-                  </div>
-                  <div class="text-white fw-semibold">
-                    {{ detailItem.acquisitionDate | date:'dd.MM.yyyy' }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12 col-sm-6">
-                <div class="marketplace-detail-mini-box">
-                  <div class="text-muted fs-7 mb-2">
-                    {{ 'MARKETPLACE.DETAIL.PROVIDER' | translate }}
-                  </div>
-                  <div class="text-white fw-semibold">
-                    {{ detailItem.provider || '-' }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12 col-sm-6">
-                <div class="marketplace-detail-mini-box">
-                  <div class="text-muted fs-7 mb-2">
-                    {{ 'MARKETPLACE.DETAIL.RESOLUTION' | translate }}
-                  </div>
-                  <div class="text-white fw-semibold">
-                    {{ detailItem.resolution ?? 0 }} m
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12 col-sm-6">
-                <div class="marketplace-detail-mini-box">
-                  <div class="text-muted fs-7 mb-2">
-                    {{ 'MARKETPLACE.DETAIL.CLOUD_RATE' | translate }}
-                  </div>
-                  <div class="text-white fw-semibold">
-                    {{ detailItem.cloudRate ?? 0 }}%
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12 col-sm-6">
-                <div class="marketplace-detail-mini-box">
-                  <div class="text-muted fs-7 mb-2">
-                    {{ 'MARKETPLACE.DETAIL.AREA' | translate }}
-                  </div>
-                  <div class="text-white fw-semibold">
-                    {{ detailItem.areaKm2 ?? 0 }} km²
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12 col-sm-6">
-                <div class="marketplace-detail-mini-box">
-                  <div class="text-muted fs-7 mb-2">
-                    {{ 'MARKETPLACE.CARD.PRICE' | translate }}
-                  </div>
-                  <div class="text-white fw-semibold">
-                    {{ detailItem.price ?? 0 | currency:(detailItem.currency || 'TRY'):'symbol':'1.2-2' }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PACKAGE CONTENT -->
-          <div class="marketplace-detail-section mb-7">
-            <div class="fs-5 fw-bold text-white mb-4">
-              {{ 'MARKETPLACE.DETAIL.PACKAGE_CONTENT' | translate }}
-            </div>
-
-            <div class="d-flex flex-wrap gap-3">
-              <span
-                *ngIf="detailItem.isOrthorectified"
-                class="badge badge-light-success px-4 py-3 fw-semibold"
-              >
-                {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
-              </span>
-
-              <span
-                *ngIf="detailItem.isPansharpened"
-                class="badge badge-light-info px-4 py-3 fw-semibold"
-              >
-                {{ 'MARKETPLACE.BUNDLE.SHORT_2' | translate }}
-              </span>
-
-              <span
-                *ngIf="detailItem.isClassified"
-                class="badge badge-light-warning px-4 py-3 fw-semibold"
-              >
-                {{ 'MARKETPLACE.BUNDLE.SHORT_3' | translate }}
-              </span>
-            </div>
-          </div>
-
-          <!-- CLASS OUTPUTS -->
-          <div class="marketplace-detail-section mb-7">
-            <div class="fs-5 fw-bold text-white mb-4">
-              {{ 'MARKETPLACE.DETAIL.CLASS_OUTPUTS' | translate }}
-            </div>
-
-            <div class="d-flex flex-wrap gap-3">
-              <ng-container *ngIf="detailItem.classes?.length; else noClassOutput">
-                <span
-                  *ngFor="let classItem of detailItem.classes"
-                  class="badge marketplace-class-badge px-4 py-3 fs-7 fw-semibold"
-                  [ngClass]="getClassTagClass(classItem.className)"
-                >
-                  <span
-                    class="marketplace-class-dot"
-                    [style.background]="classItem.colorHex || null"
-                  ></span>
-                  {{ classItem.className }}
-                </span>
-              </ng-container>
-
-              <ng-template #noClassOutput>
-                <span class="text-muted">-</span>
-              </ng-template>
-            </div>
-          </div>
-
-          <!-- ACTIONS -->
-          <div class="marketplace-detail-actions">
-            <div class="fs-2 fw-bolder text-muted">
-              {{ detailItem.price ?? 0 | currency:(detailItem.currency || 'TRY'):'symbol':'1.2-2' }}
-            </div>
-
-            <button
-              type="button"
-              class="btn btn-primary fw-bold px-6 d-inline-flex align-items-center gap-2"
-              (click)="addToCart(detailItem)"
-            >
-              <i class="ki-outline ki-basket fs-2"></i>
-              {{ 'MARKETPLACE.CARD.ADD_TO_CART' | translate }}
-            </button>
-          </div>
-
-        </ng-container>
-      </ng-container>
-    </ng-container>
-  </div>
-</div>
-
-<ng-template #detailLoadingTpl>
-  <div class="marketplace-detail-section">
-    <div class="py-10 text-center">
-      <div class="text-muted">
-        {{ 'MARKETPLACE.STATES.DETAIL_LOADING' | translate }}
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #detailErrorTpl>
-  <div class="marketplace-detail-section">
-    <div class="py-10 text-center">
-      <div class="text-danger fw-semibold">
-        {{ detailErrorMessage() | translate }}
-      </div>
-    </div>
-  </div>
-</ng-template>
+<app-marketplace-detail-drawer
+  [selectedItem]="selectedItem()"
+  [detailLoading]="detailLoading()"
+  [detailErrorMessage]="detailErrorMessage()"
+  [canViewAddToCartFn]="canViewAddToCart.bind(this)"
+  [getClassTagClassFn]="getClassTagClass.bind(this)"
+  (close)="closeDetail()"
+  (addToCartClicked)="addToCart($event)"
+></app-marketplace-detail-drawer>

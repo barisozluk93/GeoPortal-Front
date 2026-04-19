@@ -344,7 +344,7 @@ export const locale = {
         ORDER: 'Siparişi Tamamla',
         IN_BASKET: "Sepette",
 
-        "BRANDTITLE": 'GeoPortal',
+        "BRANDTITLE": 'TaiEarth',
         "BRANDSUBTITLE": 'Uydu Veri Platformu',
         "MARKETPLACE": {
             "COMMON": {
@@ -556,7 +556,7 @@ export const locale = {
 
             "SIDEBAR": {
                 "KICKER": "API Dokümantasyonu",
-                "TITLE": "GeoPortal API Key Kullanımı",
+                "TITLE": "TaiEarth API Key Kullanımı",
                 "SUBTITLE": "Bu doküman, satın alınan API key ile yetkili uçların nasıl kullanılacağını açıklar."
             },
             "NAV": {
@@ -573,7 +573,7 @@ export const locale = {
             "HERO": {
                 "KICKER": "API Dokümantasyonu",
                 "VERSION": "Versiyon 1.0",
-                "TITLE": "GeoPortal API Dokümantasyonu",
+                "TITLE": "TaiEarth API Dokümantasyonu",
                 "DESCRIPTION": "Bu doküman, API key ile yetkilendirilmiş uçları kullanarak uydu verilerinin listelenmesi, görüntü işleme sürecinin başlatılması, işlem durumunun takip edilmesi ve işlenmiş görüntü sonucunun alınması için hazırlanmıştır.",
                 "BASE_URL": "Base URL",
                 "AUTHENTICATION": "Kimlik Doğrulama",
@@ -973,7 +973,7 @@ export const locale = {
             "CONTACT": "İletişim",
             "RIGHTS": "Tüm hakları saklıdır."
         },
-        "COPYRIGHT": "© 2026 GeoPortal. Tüm hakları saklıdır.",
+        "COPYRIGHT": "© 2026 TaiEarth. Tüm hakları saklıdır.",
         "TERMS_SHORT": "Şartlar",
         "PRIVACY_SHORT": "Gizlilik",
         "MESSAGES": {
@@ -1222,7 +1222,11 @@ export const locale = {
                 "CUSTOMER": "Müşteri",
                 "AREA": "Alan"
             }
-        }
+        },
+        "SELECTED_FEATURE": "Seçilen Öznitelik",
+        "LAYER_NAME_LABEL": "Katman Adı",
+        "GEOMETRY_TYPE": "Geometri Tipi",
+        "FEATURE_DETAILS": "Öznitelik Detayları"
 
         // END (TR-EN-LANGUAGE-BRANCH)
     }

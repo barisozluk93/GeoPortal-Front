@@ -70,6 +70,7 @@
           [items]="customerTypeItems"
           bindLabel="label"
           bindValue="value"
+          [clearable]="true"
           [placeholder]="'DASHBOARD.FILTER.SELECT' | translate"
           [(ngModel)]="filters.customerType"
         >
@@ -84,6 +85,7 @@
           [items]="channelItems"
           bindLabel="label"
           bindValue="value"
+          [clearable]="true"
           [placeholder]="'DASHBOARD.FILTER.SELECT' | translate"
           [(ngModel)]="filters.channel"
         >

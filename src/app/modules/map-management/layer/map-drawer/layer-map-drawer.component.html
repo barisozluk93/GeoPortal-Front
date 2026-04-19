@@ -1,0 +1,35 @@
+<div
+  class="layer-drawer-overlay"
+  *ngIf="isOpen"
+  (click)="close()"
+></div>
+
+<aside class="layer-drawer layer-drawer--map" [class.open]="isOpen">
+  <div class="layer-drawer__card card border-0 rounded-0">
+    <div class="layer-drawer__header card-header">
+      <div class="card-title m-0 flex-column align-items-start">
+        <div class="layer-drawer__kicker">
+          {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
+        </div>
+        <h3 class="layer-drawer__title">
+          {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
+        </h3>
+      </div>
+
+      <div class="card-toolbar">
+        <button class="btn btn-sm btn-icon btn-secondary" type="button" (click)="close()">
+          <span
+            [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+            class="svg-icon svg-icon-2"
+          ></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="layer-drawer__body card-body">
+      <div class="layer-map">
+        <app-map [refreshKey]="refreshKey"></app-map>
+      </div>
+    </div>
+  </div>
+</aside>

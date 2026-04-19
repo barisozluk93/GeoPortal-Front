@@ -65,7 +65,7 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
       id: 'endpoint-1',
       titleKey: 'API_DOC.ENDPOINTS.SATELLITE_DATA.TITLE',
       method: 'POST',
-      path: '/geoportalApi/map/getSatelliteDatas',
+      path: '/taiearthApi/map/getSatelliteDatas',
       descriptionKey: 'API_DOC.ENDPOINTS.SATELLITE_DATA.DESCRIPTION',
       authKey: 'API_DOC.COMMON.APIKEY_REQUIRED',
       requestHeaders: [
@@ -94,7 +94,7 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
         'API_DOC.ENDPOINTS.SATELLITE_DATA.NOTES.1',
         'API_DOC.ENDPOINTS.SATELLITE_DATA.NOTES.2'
       ],
-      curlExample: `curl -X POST "${this.baseUrl}/geoportalApi/map/getSatelliteDatas" \\
+      curlExample: `curl -X POST "${this.baseUrl}/taiearthApi/map/getSatelliteDatas" \\
   -H "Content-Type: application/json" \\
   -H "x-api-key: YOUR_API_KEY" \\
   -d '{
@@ -111,7 +111,7 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
       id: 'endpoint-2',
       titleKey: 'API_DOC.ENDPOINTS.PROCESS_STATUS.TITLE',
       method: 'GET',
-      path: '/geoportalApi/map/getStatus/{processId}',
+      path: '/taiearthApi/map/getStatus/{processId}',
       descriptionKey: 'API_DOC.ENDPOINTS.PROCESS_STATUS.DESCRIPTION',
       authKey: 'API_DOC.COMMON.APIKEY_REQUIRED',
       requestHeaders: [
@@ -130,14 +130,14 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
         'API_DOC.ENDPOINTS.PROCESS_STATUS.NOTES.1',
         'API_DOC.ENDPOINTS.PROCESS_STATUS.NOTES.2'
       ],
-      curlExample: `curl -X GET "${this.baseUrl}/geoportalApi/map/getStatus/PROC-20260401-0001" \\
+      curlExample: `curl -X GET "${this.baseUrl}/taiearthApi/map/getStatus/PROC-20260401-0001" \\
   -H "x-api-key: YOUR_API_KEY"`
     },
     {
       id: 'endpoint-3',
       titleKey: 'API_DOC.ENDPOINTS.PROCESSED_RESULT.TITLE',
       method: 'GET',
-      path: '/geoportalApi/map/getProcessedSatelliteImage/{processId}',
+      path: '/taiearthApi/map/getProcessedSatelliteImage/{processId}',
       descriptionKey: 'API_DOC.ENDPOINTS.PROCESSED_RESULT.DESCRIPTION',
       authKey: 'API_DOC.COMMON.APIKEY_REQUIRED',
       requestHeaders: [
@@ -159,7 +159,7 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
         'API_DOC.ENDPOINTS.PROCESSED_RESULT.NOTES.1',
         'API_DOC.ENDPOINTS.PROCESSED_RESULT.NOTES.2'
       ],
-      curlExample: `curl -X GET "${this.baseUrl}/geoportalApi/map/getProcessedSatelliteImage/PROC-20260401-0001" \\
+      curlExample: `curl -X GET "${this.baseUrl}/taiearthApi/map/getProcessedSatelliteImage/PROC-20260401-0001" \\
   -H "x-api-key: YOUR_API_KEY"`
     }
   ];
@@ -171,7 +171,7 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
   "city": "Istanbul",
   "district": "Besiktas",
   "acquisitionDate": "2026-03-20T00:00:00",
-  "provider": "GeoPortal",
+  "provider": "TaiEarth",
   "resolution": 0.5,
   "cloudRate": 12,
   "areaKm2": 18.7,

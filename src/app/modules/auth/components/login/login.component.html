@@ -7,15 +7,25 @@
 >
   <div class="login-card">
     <div class="login-card__header">
-      <div class="login-brand" (click)="onBrandClick()" style="cursor: pointer;">
-        <div class="login-brand__icon bg-primary text-white">
-          G
-        </div>
+      <div class="login-brand-wrap">
+        <a
+          (click)="onBrandClick()"
+          class="app-auth__brand text-decoration-none"
+        >
+          <div class="app-auth__brand-badge">
+            <span class="app-auth__brand-icon">T</span>
+          </div>
 
-        <div class="login-brand__content text-center">
-          <span class="login-brand__title">{{ 'BRANDTITLE' | translate }}</span>
-          <span class="login-brand__subtitle">{{ 'BRANDSUBTITLE' | translate }}</span>
-        </div>
+          <div class="app-auth__brand-content mt-2">
+            <div class="app-auth__eyebrow text-primary">
+              {{ 'FOOTER.PRODUCT_LABEL' | translate }}
+            </div>
+
+            <div class="app-auth__title-row">
+              <h3 class="app-auth__title">TaiEarth</h3>
+            </div>
+          </div>
+        </a>
       </div>
 
       <div class="login-card__heading">
@@ -82,7 +92,7 @@
           {{ 'PASSWORD' | translate }}
         </label>
 
-        <a routerLink="/auth/forgot-password" class="login-link fs-7 fw-bold">
+        <a routerLink="/auth/forgot-password" class="login-link fs-7 fw-bold text-primary">
           {{ 'FORGOT_PASSWORD' | translate }}
         </a>
       </div>
@@ -146,7 +156,7 @@
 
     <div class="text-center text-gray-600 fs-6">
       {{ 'NOTMEMBERYET' | translate }}
-      <a routerLink="/auth/registration" class="login-link fw-bold ms-1">
+      <a routerLink="/auth/registration" class="login-link fw-bold text-primary ms-1">
         {{ 'SIGNUP' | translate }}
       </a>
     </div>

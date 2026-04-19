@@ -12,6 +12,7 @@ import { AuthService } from './modules/auth/services/auth.service';
 import { Interceptor } from './http-interceptor/http-interceptor';
 import { AlertModule } from './_metronic/partials/layout/alert/alert.module';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { RedirectComponent } from './redirect.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -23,7 +24,7 @@ function appInitializer(authService: AuthService) {
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, RedirectComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

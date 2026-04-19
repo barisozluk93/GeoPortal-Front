@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "geoportal": {
+    "taiearth": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/geoportal",
+            "outputPath": "dist/taiearth",
             "allowedCommonJsDependencies": [
               "object-path",
               "apexcharts",
@@ -80,10 +80,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "geoportal:build:production"
+              "buildTarget": "taiearth:build:production"
             },
             "development": {
-              "buildTarget": "geoportal:build:development"
+              "buildTarget": "taiearth:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -91,7 +91,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "geoportal:build"
+            "buildTarget": "taiearth:build"
           }
         },
         "test": {

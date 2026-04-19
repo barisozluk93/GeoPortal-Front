@@ -166,6 +166,7 @@
           [items]="invoiceTypes"
           bindLabel="name"
           bindValue="id"
+          [clearable]="true"
           [placeholder]="'SELECT_INVOICE_TYPE' | translate"
           [invalid]="isInvalid('invoiceType')"
         ></app-custom-select>

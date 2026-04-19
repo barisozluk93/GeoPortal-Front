@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '../modules/auth/services/auth.guard';
+import { RedirectComponent } from '../redirect.component';
 
 const Routing: Routes = [
   {
@@ -67,7 +68,7 @@ const Routing: Routes = [
   },
   {
     path: '',
-    redirectTo: '/landing/marketplace',
+    component: RedirectComponent,
     pathMatch: 'full',
   },
   {

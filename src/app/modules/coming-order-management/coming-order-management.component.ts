@@ -76,12 +76,11 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    const keys = ['PENDING_APPROVAL', 'APPROVED', 'PREPARING', 'REJECTED', 'COMPLETED'];
-
+    const keys = ["ORDER_COMPLETED", "ORDER_NOT_YET_COMPLETED"];
     const translationRequest = keys.map(key => this.translate.get(key));
 
     forkJoin(translationRequest).subscribe((translations) => {
-      const [pendingApprovalText, approvedText, preparingText, rejectedText, completedText] = translations;
+      const [orderCompleted, orderNotYetCompleted] = translations;
 
       const filterParams = this.buildFilterQueryParams(this.filterModel);
 
@@ -91,20 +90,11 @@ export class ComingOrderManagementComponent implements OnInit, OnDestroy {
             result.data.items.forEach(item => {
               item.orderDate = formatDate(item?.orderDate!, "dd/MM/yyyy HH:mm", this.locale);
 
-              if (item.orderStatus == OrderStatusEnum['Onay Bekliyor']) {
-                item.orderStatusStr = pendingApprovalText;
+              if (item.orderStatus == OrderStatusEnum['Sipariş Tamamlandı']) {
+                item.orderStatusStr = orderCompleted;
               }
-              else if (item.orderStatus == OrderStatusEnum['Onaylandı']) {
-                item.orderStatusStr = approvedText;
-              }
-              else if (item.orderStatus == OrderStatusEnum['Hazırlanıyor']) {
-                item.orderStatusStr = preparingText;
-              }
-              else if (item.orderStatus == OrderStatusEnum['Reddedildi']) {
-                item.orderStatusStr = rejectedText;
-              }
-              else if (item.orderStatus == OrderStatusEnum['Tamamlandı']) {
-                item.orderStatusStr = completedText;
+              else if (item.orderStatus == OrderStatusEnum['Sipariş Tamamlanmadı']) {
+                item.orderStatusStr = orderNotYetCompleted;
               }
 
               item.priceStr = item?.price.toFixed(2) + " ₺";

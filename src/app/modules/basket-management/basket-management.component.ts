@@ -37,51 +37,12 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
     private translate: TranslateService) {
   }
 
-  addOne(productId: number | undefined) {
-    if (this.currentUserIsExist) {
-      let data: BasketModel = { id: 0, userId: this.currentUser.id, productId: productId, isDeleted: false, product: undefined, totalPrice: undefined, numberOf: undefined };
-      this.basketManagementService.save(data).subscribe(result => {
-        if (result.isSuccess) {
-          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
-          this.basketService.loadBasketFromDb();
-        }
-        else {
-          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
-        }
-      })
-    }
-    else {
-      if (this.basketFromStorage.length < 15) {
-        let itemToAdd = this.basketFromStorage.filter(f => f.productId == productId)[0];
-        this.basketFromStorage.push(itemToAdd);
-        this.basketService.setBasket(this.basketFromStorage);
-      }
-      else {
-        this.alertService.createAlert("warning", this.translate.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS'));
-      }
-    }
-  }
-
-
   confirmBasket() {
     if (!this.currentUserIsExist) {
       this.router.navigate(['/auth/login']);
     }
     else {
       this.router.navigate(['/ordercompletion']);
-
-      // let data: OrderModel = { id: 0, basketId: this.basketFromStorage[0].id, userId: this.currentUser.id, price: this.totalPrice};
-
-      // this.orderManagementService.save(data).subscribe(result => {
-      //   if(result.isSuccess) {
-      //     this.basketService.loadBasketFromDb();
-      //     this.alertService.createAlert("success", result.message);
-
-      //     // this.notificationService.updateNotifications(this.currentUser.id);
-      //   }
-      //   else{
-// this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));      //   }
-      // })
     }
   }
 
@@ -111,40 +72,6 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteOne(productId: number | undefined) {
-    if (this.currentUserIsExist) {
-      var id = this.basketFromStorage.filter(f => f.productId == productId)[0].id;
-
-      this.basketManagementService.delete(id, productId!).subscribe(result => {
-        if (result.isSuccess) {
-          this.basketService.loadBasketFromDb();
-          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
-        }
-        else {
-          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
-        }
-      })
-    }
-    else {
-      let i: number = 0;
-      let index: number = -1;
-      this.basketFromStorage.forEach(item => {
-        if (item.productId == productId) {
-          if (index == -1) {
-            index = i;
-          }
-        }
-
-        i++;
-      });
-
-      if (index > -1) {
-        this.basketFromStorage.splice(index, 1);
-        this.basketService.setBasket(this.basketFromStorage);
-      }
-    }
-  }
-
   ngOnDestroy(): void {
   }
 
@@ -168,22 +95,7 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
         this.basketFromStorage = result;
 
         result.forEach(item => {
-          this.numberOfItem += 1;
-          this.totalPrice += item.product?.price!;
-
-          if (this.basket.length == 0) {
-            this.basket.push({ id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price });
-          }
-          else {
-            let itemInBasket = this.basket.filter(f => f.productId == item.productId);
-            if (itemInBasket.length > 0) {
-              if (itemInBasket[0].numberOf) { itemInBasket[0].numberOf += 1; }
-              if (itemInBasket[0].totalPrice) { itemInBasket[0].totalPrice += item.product?.price!; }
-            }
-            else {
-              this.basket.push({ id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price });
-            }
-          }
+          this.basket.push({ id: 0, userId: 0, productId: item.product?.id, product: item.product, numberOf: 1, isDeleted: item.isDeleted, totalPrice: item.product?.price });
         })
       }
     });

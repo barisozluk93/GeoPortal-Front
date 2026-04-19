@@ -7,7 +7,8 @@
             <div class="hero-bg"></div>
             <div class="hero-overlay"></div>
 
-            <div class="card-body p-6 p-lg-10 d-flex flex-column justify-content-between h-100 position-relative z-index-1">
+            <div
+              class="card-body p-6 p-lg-10 d-flex flex-column justify-content-between h-100 position-relative z-index-1">
               <div class="hero-content-wrap">
                 <div class="badge badge-light-primary mb-5">
                   {{ 'DATA_PAGE.KICKER' | translate }}
@@ -24,31 +25,18 @@
 
               <div class="card bg-transparent border border-white border-opacity-10 shadow-none hero-search-card">
                 <div class="card-body p-4 p-lg-5">
-                  <!-- <div class="text-white fw-bold fs-6 mb-4">
-                    {{ 'DATA_PAGE.SEARCH_TITLE' | translate }}
-                  </div> -->
+                  <div class="d-flex flex-column flex-lg-row gap-3">
+                    <div class="position-relative flex-grow-1 search-input-container">
+                      <i class="ki-outline ki-magnifier fs-2 text-gray-500 search-icon"></i>
 
-                  <div class="position-relative">
-                    <i class="ki-outline ki-magnifier fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-5 z-index-1"></i>
-
-                    <div class="d-flex flex-column flex-lg-row gap-3">
-                      <input
-                        type="text"
-                        class="form-control ps-13"
-                        [ngModel]="searchQuery()"
+                      <input type="text" class="form-control ps-13" [ngModel]="searchQuery()"
                         (ngModelChange)="searchQuery.set($event)"
-                        [placeholder]="'DATA_PAGE.SEARCH_PLACEHOLDER' | translate"
-                        (keyup.enter)="submitSearch()"
-                      />
-
-                      <button
-                        class="btn btn-primary px-8 flex-shrink-0"
-                        (click)="submitSearch()"
-                        [disabled]="loading()"
-                      >
-                        {{ loading() ? ('DATA_PAGE.LOADING' | translate) : ('DATA_PAGE.SEARCH_BUTTON' | translate) }}
-                      </button>
+                        [placeholder]="'DATA_PAGE.SEARCH_PLACEHOLDER' | translate" (keyup.enter)="submitSearch()" />
                     </div>
+
+                    <button class="btn btn-primary px-8 flex-shrink-0" (click)="submitSearch()" [disabled]="loading()">
+                      {{ loading() ? ('DATA_PAGE.LOADING' | translate) : ('DATA_PAGE.SEARCH_BUTTON' | translate) }}
+                    </button>
                   </div>
                 </div>
               </div>

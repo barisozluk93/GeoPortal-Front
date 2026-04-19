@@ -2,15 +2,22 @@
   <div class="login-card register-card">
 
     <div class="login-card__header text-center">
-      <div class="login-brand justify-content-center mb-6" (click)="onBrandClick()" style="cursor: pointer;">
-        <div class="login-brand__icon bg-primary text-white">
-          G
-        </div>
+      <div class="login-brand-wrap mb-6">
+        <a (click)="onBrandClick()" class="app-auth__brand text-decoration-none" style="cursor: pointer;">
+          <div class="app-auth__brand-badge">
+            <span class="app-auth__brand-icon">T</span>
+          </div>
 
-        <div class="login-brand__content">
-          <span class="login-brand__title">{{ 'BRANDTITLE' | translate }}</span>
-          <span class="login-brand__subtitle">{{ 'BRANDSUBTITLE' | translate }}</span>
-        </div>
+          <div class="app-auth__brand-content mt-2">
+            <div class="app-auth__eyebrow text-primary">
+              {{ 'FOOTER.PRODUCT_LABEL' | translate }}
+            </div>
+
+            <div class="app-auth__title-row">
+              <h3 class="app-auth__title">TaiEarth</h3>
+            </div>
+          </div>
+        </a>
       </div>
 
       <h1 class="login-card__title">
@@ -322,7 +329,7 @@
 
     <div class="text-center mt-6">
       <span class="text-gray-600">{{ 'ALREADY_HAVE_AN_ACCOUNT' | translate }}</span>
-      <a routerLink="/auth/login" class="login-link fw-bold ms-1">
+      <a routerLink="/auth/login" class="login-link fw-bold text-primary ms-1">
         {{ 'AUTH.LOGIN.TITLE' | translate }}
       </a>
     </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { RoleEnum } from 'src/app/enums/role.enum';
@@ -84,8 +84,8 @@ const menuList: HeaderMenuModel[] = [
         childMenus: [],
         isForbid: undefined,
         open: false,
-      }
-    ]
+      },
+    ],
   },
   {
     id: 16,
@@ -229,8 +229,8 @@ const menuList: HeaderMenuModel[] = [
         childMenus: [],
         isForbid: undefined,
         open: false,
-      }
-    ]
+      },
+    ],
   },
   {
     id: 15,
@@ -257,10 +257,10 @@ const menuList: HeaderMenuModel[] = [
 export class HeaderMenuComponent implements OnInit, OnDestroy {
   menuList: HeaderMenuModel[] = [];
   permissionList: number[] | undefined;
-
-  isAdmin: boolean;
+  isAdmin = false;
 
   private userSub?: Subscription;
+
   private documentClickHandler = () => {
     this.closeAll();
   };
@@ -270,16 +270,30 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {}
 
-  constrolMenuVisibility() {
+  ngOnInit(): void {
+    this.isAdmin = this.authService.currentUserValue?.roles?.includes(RoleEnum.SuperAdmin) ?? false;
+    this.menuList = this.cloneMenuList(menuList);
+
+    document.addEventListener('click', this.documentClickHandler);
+
+    this.controlMenuVisibility();
+  }
+
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this.documentClickHandler);
+    this.userSub?.unsubscribe();
+  }
+
+  controlMenuVisibility(): void {
     this.userSub = this.authService.currentUserSubject
       .asObservable()
       .subscribe(result => {
-        this.menuList = this.cloneMenuList(menuList);
+        const cloned = this.cloneMenuList(menuList);
 
         if (result?.permissions) {
           this.permissionList = JSON.parse(result.permissions) as number[];
 
-          this.menuList.forEach(menu => {
+          cloned.forEach(menu => {
             if (menu.permissionId) {
               menu.isForbid = !this.permissionList?.includes(menu.permissionId);
             } else if (menu.childMenus?.length) {
@@ -303,7 +317,7 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
             }
           });
         } else {
-          this.menuList.forEach(menu => {
+          cloned.forEach(menu => {
             if (menu.permissionId) {
               menu.isForbid = true;
             } else if (menu.childMenus?.length) {
@@ -324,41 +338,25 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
             }
           });
         }
+
+        this.menuList = cloned;
       });
   }
 
-  ngOnInit(): void {
-    if(this.authService.currentUserValue) {
-      this.isAdmin = this.authService.currentUserValue.roles.includes(RoleEnum.SuperAdmin);
-    }
-    else{
-      this.isAdmin = false;
-    }
-
-    this.menuList = this.cloneMenuList(menuList);
-    document.addEventListener('click', this.documentClickHandler);
-    
-    this.constrolMenuVisibility();
-  }
-
-  ngOnDestroy(): void {
-    document.removeEventListener('click', this.documentClickHandler);
-    this.userSub?.unsubscribe();
-  }
-
   toggleMenu(index: number, event: Event): void {
+    event.preventDefault();
     event.stopPropagation();
 
     this.menuList = this.menuList.map((menu, i) => ({
       ...menu,
-      open: i === index ? !menu.open : false
+      open: i === index ? !menu.open : false,
     }));
   }
 
   closeAll(): void {
     this.menuList = this.menuList.map(menu => ({
       ...menu,
-      open: false
+      open: false,
     }));
   }
 
@@ -381,9 +379,9 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
       childMenus: menu.childMenus
         ? menu.childMenus.map(child => ({
             ...child,
-            open: false
+            open: false,
           }))
-        : []
+        : [],
     }));
   }
 }

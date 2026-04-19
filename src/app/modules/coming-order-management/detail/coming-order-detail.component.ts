@@ -1,7 +1,6 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Location, formatDate } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -9,6 +8,7 @@ import { OrderStatusEnum } from 'src/app/enums/order-status.enum';
 import { OrderModel } from '../../coming-order-management/models/order.model';
 import { OrderProductModel } from '../../coming-order-management/models/orderproduct.model';
 import { ComingOrderManagementService } from '../coming-order-management.service';
+import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 
 @Component({
   selector: 'app-coming-order-detail',
@@ -22,17 +22,16 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
 
   loading = false;
 
-  previewModalOpen = false;
-  previewUrl: SafeResourceUrl | null = null;
-  previewFileName = '';
-
   invoiceUploading = false;
   invoiceDeleting = false;
   updatingProductId: number | null = null;
 
   selectedStatusMap: { [key: number]: number | null } = {};
-
   statusOptions: Array<{ value: number; label: string }> = [];
+
+  mapPreviewDrawerOpen = false;
+  selectedPreviewProduct: OrderProductModel | null = null;
+  selectedPreviewWkt: string | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -40,10 +39,10 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
     private comingOrderManagementService: ComingOrderManagementService,
     private translate: TranslateService,
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer,
     @Inject(LOCALE_ID) public locale: string,
-    private location: Location
-  ) { }
+    private location: Location,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
     this.translate.onLangChange
@@ -62,7 +61,7 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
 
     this.route.paramMap
       .pipe(takeUntil(this.destroy$))
-      .subscribe(params => {
+      .subscribe((params) => {
         const id = Number(params.get('id'));
         if (id) {
           this.orderId = id;
@@ -74,6 +73,7 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    document.body.style.overflow = '';
   }
 
   private updateHeader(): void {
@@ -103,7 +103,7 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
       'COMPLETED'
     ];
 
-    forkJoin(keys.map(key => this.translate.get(key))).subscribe(translations => {
+    forkJoin(keys.map((key) => this.translate.get(key))).subscribe((translations) => {
       const [
         orderCompletedText,
         orderNotCompletedText,
@@ -136,7 +136,7 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
             data.orderStatusStr = this.getOrderStatusText(data.orderStatus);
           }
 
-          data.orderProducts?.forEach(orderProduct => {
+          data.orderProducts?.forEach((orderProduct) => {
             if (orderProduct.orderStatus === OrderStatusEnum['Onay Bekliyor']) {
               orderProduct.orderStatusStr = pendingApprovalText;
             } else if (orderProduct.orderStatus === OrderStatusEnum['Onaylandı']) {
@@ -170,6 +170,7 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
         },
         error: () => {
           this.loading = false;
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       });
     });
@@ -258,67 +259,6 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  isImageFile(fileName?: string): boolean {
-    if (!fileName) {
-      return false;
-    }
-
-    const lower = fileName.toLowerCase();
-
-    return (
-      lower.endsWith('.png') ||
-      lower.endsWith('.jpg') ||
-      lower.endsWith('.jpeg') ||
-      lower.endsWith('.webp') ||
-      lower.endsWith('.gif') ||
-      lower.endsWith('.bmp')
-    );
-  }
-
-  openFileModal(item: OrderModel): void {
-    const safeUrl = this.buildFilePreviewUrl(item);
-
-    if (!safeUrl) {
-      return;
-    }
-
-    this.previewUrl = safeUrl;
-    this.previewFileName = item.fileName!;
-    this.previewModalOpen = true;
-  }
-
-  closePreviewModal(): void {
-    this.previewModalOpen = false;
-    this.previewUrl = null;
-    this.previewFileName = '';
-  }
-
-  private buildFilePreviewUrl(item: OrderModel): SafeResourceUrl | null {
-    const rawUrl =
-      item?.fileResult?.url ||
-      item?.fileResult?.downloadUrl ||
-      item?.fileResult?.path ||
-      item?.fileResult?.fileUrl ||
-      null;
-
-    if (rawUrl) {
-      return this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
-    }
-
-    if (item?.fileResult?.fileContents && item?.fileResult?.contentType) {
-      let fileContents = item.fileResult.fileContents as string;
-      const prefix = `data:${item.fileResult.contentType};base64,`;
-
-      if (!fileContents.includes(prefix)) {
-        fileContents = prefix + fileContents;
-      }
-
-      return this.sanitizer.bypassSecurityTrustResourceUrl(fileContents);
-    }
-
-    return null;
-  }
-
   onInvoiceSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input?.files?.[0];
@@ -332,7 +272,6 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
     const formData = new FormData();
     formData.append('file', file);
 
-
     this.comingOrderManagementService.upload(formData).subscribe({
       next: (result: any) => {
         this.invoiceUploading = false;
@@ -341,17 +280,27 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
         if (result?.isSuccess) {
           this.order.fileId = result.data.id;
 
-          this.comingOrderManagementService.addInvoice(this.order.id, this.order.fileId!).subscribe(saveResult => {
-            if (saveResult.isSuccess) {
-              this.getById();
-            } else {
+          this.comingOrderManagementService.addInvoice(this.order.id, this.order.fileId!).subscribe({
+            next: (saveResult) => {
+              if (saveResult.isSuccess) {
+                this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
+                this.getById();
+              } else {
+                this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
+              }
+            },
+            error: () => {
+              this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
             }
           });
+        } else {
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       },
       error: () => {
         this.invoiceUploading = false;
         input.value = '';
+        this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
       }
     });
   }
@@ -368,11 +317,15 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
         this.invoiceDeleting = false;
 
         if (result?.isSuccess) {
+          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
           this.getById();
+        } else {
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       },
       error: () => {
         this.invoiceDeleting = false;
+        this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
       }
     });
   }
@@ -413,10 +366,10 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
         allowed = [4];
         break;
       default:
-        return []; // 2 ve 4 → update yok
+        return [];
     }
 
-    return allowed.map(s => ({
+    return allowed.map((s) => ({
       value: s,
       label: this.getOrderStatusText(s)
     }));
@@ -442,11 +395,15 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
         this.updatingProductId = null;
 
         if (result?.isSuccess) {
+          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
           this.getById();
+        } else {
+          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
         }
       },
       error: () => {
         this.updatingProductId = null;
+        this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
       }
     });
   }
@@ -469,5 +426,50 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
 
   hasAnyOrderFile(): boolean {
     return this.getOrderWithFiles().length > 0;
+  }
+
+  canPreviewProduct(item: OrderProductModel): boolean {
+    return item?.product?.categoryId === 3;
+  }
+
+  openMapPreview(item: OrderProductModel): void {
+    const wkt = this.resolveProductWkt(item);
+
+    if (!wkt) {
+      return;
+    }
+
+    this.selectedPreviewProduct = item;
+    this.selectedPreviewWkt = wkt;
+    this.mapPreviewDrawerOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeMapPreview(): void {
+    this.mapPreviewDrawerOpen = false;
+    this.selectedPreviewProduct = null;
+    this.selectedPreviewWkt = null;
+    document.body.style.overflow = '';
+  }
+
+  private resolveProductWkt(item: OrderProductModel): string | null {
+    const product: any = item?.product;
+    const orderProduct: any = item;
+
+    const candidates = [
+      product?.wkt,
+      product?.areaWkt,
+      product?.geometryWkt,
+      product?.polygonWkt,
+      product?.footprintWkt,
+      orderProduct?.wkt,
+      orderProduct?.areaWkt,
+      orderProduct?.geometryWkt,
+      orderProduct?.polygonWkt,
+      orderProduct?.footprintWkt
+    ];
+
+    const found = candidates.find((x) => typeof x === 'string' && x.trim().length > 0);
+    return found ? found.trim() : null;
   }
 }

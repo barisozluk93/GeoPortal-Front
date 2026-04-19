@@ -266,7 +266,8 @@ a:hover {
    --------------------------------------------------------- */
 .form-control,
 .form-select,
-.input-group-text {
+.input-group-text
+app-custom-select {
   min-height: 48px;
   border-radius: var(--glass-radius-sm) !important;
   background: rgba(11, 22, 40, 0.82) !important;

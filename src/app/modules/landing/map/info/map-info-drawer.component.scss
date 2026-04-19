@@ -1,0 +1,198 @@
+.detail-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(540px, calc(100% - 76px));
+  max-width: calc(100% - 76px);
+  transform: translate3d(100%, 0, 0);
+  transition:
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.22s ease,
+    visibility 0.22s ease;
+  z-index: 36;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 !important;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: var(--glass-surface);
+  border-left: 1px solid rgba(92, 137, 255, 0.16);
+  box-shadow:
+    -22px 0 36px rgba(0, 0, 0, 0.18),
+    inset 1px 0 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.detail-drawer.open {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.detail-drawer__header {
+  padding: 22px 22px 18px;
+  border-bottom: 1px solid rgba(92, 137, 255, 0.1);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex: 0 0 auto;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+}
+
+.detail-drawer__kicker {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #7eb6ff;
+  margin-bottom: 8px;
+}
+
+.detail-drawer__title {
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #f6fbff;
+}
+
+.detail-drawer__subtitle {
+  margin-top: 6px;
+  color: #94a8c9;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.detail-drawer__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  background: transparent;
+}
+
+.detail-section + .detail-section {
+  margin-top: 1.2rem;
+}
+
+.detail-section__title {
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #eef5ff;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.detail-grid__item,
+.service-endpoint-box {
+  background: var(--glass-surface-soft);
+  border: 1px solid rgba(92, 137, 255, 0.14);
+  box-shadow:
+    0 18px 36px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.detail-grid__item {
+  padding: 0.9rem;
+  border-radius: 16px;
+}
+
+.detail-grid__item span {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.78rem;
+  color: #8ea2c9;
+}
+
+.detail-grid__item strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #f3f8ff;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.service-endpoint-box {
+  padding: 0.95rem 1rem;
+  border-radius: 16px;
+  color: #d6e2f5;
+  line-height: 1.7;
+  word-break: break-word;
+}
+
+.package-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.package-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #8bc0ff;
+  background: rgba(77, 163, 255, 0.08);
+  border: 1px solid rgba(92, 137, 255, 0.14);
+}
+
+.drawer-close-btn.btn.btn-light {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(92, 137, 255, 0.14) !important;
+  color: #dbe7f7 !important;
+}
+
+.drawer-close-btn.btn.btn-light:hover {
+  background: rgba(77, 163, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.detail-drawer__body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.detail-drawer__body::-webkit-scrollbar-thumb {
+  background: rgba(133, 157, 198, 0.45);
+  border-radius: 999px;
+}
+
+.detail-drawer__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (max-width: 991.98px) {
+  .detail-drawer {
+    width: min(480px, calc(100% - 76px));
+    max-width: calc(100% - 76px);
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .detail-drawer {
+    width: calc(100% - 60px);
+    max-width: calc(100% - 60px);
+  }
+}
