@@ -200,7 +200,6 @@ export const locale = {
 
     // Shopping Page
     LANGUAGE: "Language",
-    PRODUCT: "Product",
     PRODUCTS: "Products",
     VEGETABLE: "Vegetable",
     FRUIT: "Fruit",
@@ -677,12 +676,16 @@ export const locale = {
       },
       "ACTIONS": {
         "LAYER_MANAGER": "Layer Manager",
-        "SEARCH": "Search Map",
-        "POLYGON": "Polygon",
+        "SEARCH": "Search on Map",
+        "POLYGON": "Select Area",
         "UPLOAD_FILE": "Upload File",
         "RESET": "Reset",
         "ZOOM_IN": "Zoom In",
-        "ZOOM_OUT": "Zoom Out"
+        "ZOOM_OUT": "Zoom Out",
+        "MEASURE_LENGTH": "Measure Length",
+        "MEASURE_AREA": "Measure Area",
+        "GOTO_COORDINATE": "Go to Coordinate",
+        "EXPORT_IMAGE": "Export"
       },
       "SEARCH": {
         "KICKER": "Map",
@@ -705,6 +708,28 @@ export const locale = {
       "STATE": {
         "LOADING": "Loading",
         "NO_DATA": "No data available to display"
+      },
+      "MEASUREMENT": {
+        "START": "Start measuring",
+        "LENGTH": "Length",
+        "AREA": "Area"
+      },
+      "COORDINATE_PANEL": {
+        "KICKER": "Location",
+        "TITLE": "Go To Coordinate",
+        "SUBTITLE": "Enter latitude and longitude to navigate directly to a point on the map.",
+        "FORM_TITLE": "Coordinate Information",
+        "ACTIONS_TITLE": "Actions",
+        "INFO_TITLE": "Preview",
+        "LATITUDE": "Latitude",
+        "LONGITUDE": "Longitude",
+        "LATITUDE_PLACEHOLDER": "Ex: 39.920770",
+        "LONGITUDE_PLACEHOLDER": "Ex: 32.854110",
+        "LATITUDE_HELP": "Latitude must be between -90 and 90.",
+        "LONGITUDE_HELP": "Longitude must be between -180 and 180.",
+        "USE_CURRENT": "Use Current Position",
+        "GO": "Show On Map",
+        "INVALID": "Please enter valid coordinates."
       },
       "COMMON": {
         "BASEMAPS": "Basemaps",
@@ -796,6 +821,39 @@ export const locale = {
           "CLASSIFIED_TITLE": "Classification",
           "CLASSIFIED_DESC": "Should classification be performed for the selected area?"
         }
+      },
+      "EXPORT": {
+        "KICKER": "Export",
+        "TITLE": "Export map",
+        "SUBTITLE": "Download the current map view as an image or PDF file.",
+        "IMAGE_TITLE": "Download as image",
+        "IMAGE_SUBTITLE": "Saves the current map view as a PNG file.",
+        "PDF_TITLE": "Download as PDF",
+        "PDF_SUBTITLE": "Saves the current map view as a PDF document.",
+        "FAILED": "The map could not be exported.",
+        "PARTIAL_WARNING": "Some layers could not be exported. The layer server may not allow CORS."
+      },
+      "PRODUCT_SMART_FILTER": {
+        "KICKER": "Smart Filter",
+        "TITLE": "Product Smart Filter",
+        "SUBTITLE": "Filter satellite products by technical parameters.",
+        "PARAMETERS": "Parameters",
+        "RESULTS": "Results",
+        "LOADING": "Loading",
+        "NO_RESULTS": "No results found.",
+        "CLEAR": "Clear",
+        "IMAGE_TYPE": "Image Type",
+        "IMAGE_TYPE_PLACEHOLDER": "e.g. PAN, MS, SAR",
+        "DATE_RANGE": "Acquisition Date",
+        "MAX_CLOUD_RATE": "Max. Cloud Rate",
+        "MAX_OFF_NADIR": "Max. Off-Nadir",
+        "MAX_RESOLUTION": "Max. Resolution",
+        "SPECTRAL_RESOLUTION": "Spectral Resolution",
+        "SPECTRAL_RESOLUTION_PLACEHOLDER": "e.g. RGB, NIR, SWIR",
+        "PRICE": "Price",
+        "ADD_TO_CART": "Add to cart",
+        "IN_CART": "In cart",
+        "SELECTED": "Selected"
       }
     },
 
@@ -1266,9 +1324,19 @@ export const locale = {
     "SELECTED_FEATURE": "Selected Feature",
     "LAYER_NAME_LABEL": "Layer Name",
     "GEOMETRY_TYPE": "Geometry Type",
-    "FEATURE_DETAILS": "Feature Details"
-
-
+    "FEATURE_DETAILS": "Feature Details",
+    "PRODUCT": {
+      "FOOTPRINT": "Product Footprint",
+      "NAME": "Product Name",
+      "IMAGE_ID": "Image ID",
+      "PROVIDER": "Provider",
+      "SENSOR_MODE": "Image Type",
+      "ACQUISITION_DATE": "Acquisition Date",
+      "CLOUD_RATE": "Cloud Coverage",
+      "NADIR_ANGLE": "Off-Nadir Angle",
+      "RESOLUTION": "Ground Resolution",
+      "SPECTRAL_RESOLUTION": "Spectral Resolution"
+    }
     // END (TR-EN-LANGUAGE-BRANCH)
   },
 };

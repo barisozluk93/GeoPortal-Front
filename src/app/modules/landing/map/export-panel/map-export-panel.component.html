@@ -1,0 +1,57 @@
+<aside class="map-side-panel map-side-panel--left" [class.open]="open">
+  <div class="map-side-panel__panel">
+    <div class="map-side-panel__header">
+      <div>
+        <div class="map-side-panel__kicker text-primary">
+          {{ 'MAP.EXPORT.KICKER' | translate }}
+        </div>
+
+        <div class="map-side-panel__title">
+          {{ 'MAP.EXPORT.TITLE' | translate }}
+        </div>
+
+        <div class="map-side-panel__subtitle">
+          {{ 'MAP.EXPORT.SUBTITLE' | translate }}
+        </div>
+      </div>
+
+      <button
+        class="drawer-close-btn btn btn-sm btn-icon btn-light"
+        type="button"
+        (click)="close.emit()"
+        [title]="'MAP.PANEL.COLLAPSE' | translate"
+        [attr.aria-label]="'MAP.PANEL.COLLAPSE' | translate">
+        <span
+          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+          class="svg-icon svg-icon-2"
+          aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div class="map-side-panel__body">
+      <div class="sidebar-card export-options-card">
+        <button type="button" class="export-option-btn" (click)="exportAs.emit('image')">
+          <span class="export-option-icon">
+            <i class="fa-solid fa-image"></i>
+          </span>
+
+          <span class="export-option-content">
+            <strong>{{ 'MAP.EXPORT.IMAGE_TITLE' | translate }}</strong>
+            <small>{{ 'MAP.EXPORT.IMAGE_SUBTITLE' | translate }}</small>
+          </span>
+        </button>
+
+        <button type="button" class="export-option-btn" (click)="exportAs.emit('pdf')">
+          <span class="export-option-icon">
+            <i class="fa-solid fa-file-pdf"></i>
+          </span>
+
+          <span class="export-option-content">
+            <strong>{{ 'MAP.EXPORT.PDF_TITLE' | translate }}</strong>
+            <small>{{ 'MAP.EXPORT.PDF_SUBTITLE' | translate }}</small>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</aside>

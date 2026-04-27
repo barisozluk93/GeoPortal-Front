@@ -220,4 +220,28 @@
   line-height: 1.7;
 }
 
-/* ... media queryler aynen devam ... */
+/* === FIX: title + price alignment (COMING ORDER) === */
+
+.product-item-card__main {
+  min-width: 0;
+}
+
+.product-item-card__main > .d-flex {
+  min-width: 0;
+}
+
+.product-item-card__main .min-w-0 {
+  min-width: 0;
+}
+
+.product-item-card__main .fs-4 {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.product-item-card__main .text-nowrap {
+  white-space: nowrap;
+  flex: 0 0 auto;
+  margin-left: auto;
+}

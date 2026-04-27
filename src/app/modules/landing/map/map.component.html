@@ -2,81 +2,40 @@
   <div class="map-shell">
     <div class="map-stage">
       <div class="drawer-overlay"
-        *ngIf="!previewMode && (layerManagerOpen() || searchPanelOpen() || legendPanelOpen() || infoPanelOpen() || filterDrawerOpen() || featureInfoDrawerOpen() || purchaseDrawerOpen())"
+        *ngIf="!previewMode && (layerManagerOpen() || searchPanelOpen() || exportPanelOpen() ||  smartFilterOpen() || legendPanelOpen() || infoPanelOpen() || filterDrawerOpen() || featureInfoDrawerOpen() || coordinatePanelOpen())"
         (click)="closeAllDrawers()"></div>
 
       <!-- LEFT ACTION RAIL -->
-      <div class="left-actions-shell" *ngIf="!previewMode">
-        <div class="left-actions-bar">
-          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
-            [class.active]="layerManagerOpen()" (click)="toggleLayerManager()"
-            [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.LAYER_MANAGER' | translate">
-            <span [inlineSVG]="'./assets/media/icons/duotune/general/gen009.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-
-          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
-            [class.active]="searchPanelOpen()" (click)="toggleSearchPanel()" [title]="'MAP.ACTIONS.SEARCH' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.SEARCH' | translate">
-            <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-
-          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
-            [class.active]="polygonMode()" (click)="togglePolygonDraw()" [title]="'MAP.ACTIONS.POLYGON' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.POLYGON' | translate">
-            <span [inlineSVG]="'./assets/media/icons/duotune/general/gen032.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-
-          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary"
-            (click)="triggerFileUpload()" [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate"
-            [attr.aria-label]="'MAP.ACTIONS.UPLOAD_FILE' | translate">
-            <span [inlineSVG]="'./assets/media/icons/duotune/files/fil005.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-
-          <button type="button" class="left-action-btn btn btn-icon btn-active-light-primary" (click)="resetView()"
-            [title]="'MAP.ACTIONS.RESET' | translate" [attr.aria-label]="'MAP.ACTIONS.RESET' | translate">
-            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr029.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
-          </button>
-        </div>
-      </div>
+      <app-map-toolbar [previewMode]="previewMode" [layerManagerOpen]="layerManagerOpen()"
+        [searchPanelOpen]="searchPanelOpen()" [exportPanelOpen]="exportPanelOpen()"
+        [smartFilterOpen]="smartFilterOpen()" [polygonMode]="polygonMode()" [measureLengthMode]="measureLengthMode()"
+        [measureAreaMode]="measureAreaMode()" (layerManagerClick)="toggleLayerManager()"
+        (searchClick)="toggleSearchPanel()" (smartFilterClick)="toggleSmartFilter()"
+        (polygonClick)="togglePolygonDraw()" (measureLengthClick)="toggleLengthMeasure()"
+        (measureAreaClick)="toggleAreaMeasure()" (coordinateClick)="toggleCoordinatePanel()"
+        (exportImageClick)="toggleExportPanel()" (uploadClick)="triggerFileUpload()" (resetClick)="resetView()">
+      </app-map-toolbar>
 
       <!-- LEFT PANEL -->
-      <app-map-left-panel
-        *ngIf="!previewMode"
-        [searchOpen]="searchPanelOpen()"
-        [layerManagerOpen]="layerManagerOpen()"
-        [loading]="loadingLayers()"
-        [error]="layerLoadError()"
-        [layerGroups]="layerGroups()"
-        [searchText]="searchText()"
-        [searchResults]="searchResults()"
-        [uploadedFileName]="uploadedFileName()"
-        [layerType]="LayerType"
-        [legendOpen]="legendPanelOpen()"
-        [infoOpen]="infoPanelOpen()"
-        [filterOpen]="filterDrawerOpen()"
+      <app-map-left-panel *ngIf="!previewMode" [searchOpen]="searchPanelOpen()" [layerManagerOpen]="layerManagerOpen()"
+        [loading]="loadingLayers()" [error]="layerLoadError()" [layerGroups]="layerGroups()" [searchText]="searchText()"
+        [searchResults]="searchResults()" [uploadedFileName]="uploadedFileName()" [layerType]="LayerType"
+        [legendOpen]="legendPanelOpen()" [infoOpen]="infoPanelOpen()" [filterOpen]="filterDrawerOpen()"
         [selectedLegendLayerId]="selectedLegendLayer()?.id ?? null"
         [selectedInfoLayerId]="selectedInfoLayer()?.id ?? null"
-        [selectedFilterLayerId]="selectedFilterLayer()?.id ?? null"
-        (closeSearch)="closeSearchPanel()"
-        (toggleLayerManager)="toggleLayerManager()"
-        (searchTextChange)="searchText.set($event)"
-        (search)="searchPlace()"
-        (selectResult)="flyToResult($event)"
-        (toggleGroup)="toggleGroup($event)"
+        [selectedFilterLayerId]="selectedFilterLayer()?.id ?? null" (closeSearch)="closeSearchPanel()"
+        (toggleLayerManager)="toggleLayerManager()" (searchTextChange)="searchText.set($event)" (search)="searchPlace()"
+        (selectResult)="flyToResult($event)" (toggleGroup)="toggleGroup($event)"
         (toggleLayerVisibility)="onLayerVisibilityChange($event.layer, $event.value)"
-        (changeOpacity)="onOpacityChange($event.layer, $event.value)"
-        (openLegend)="toggleLegend($event)"
-        (openInfo)="toggleInfo($event)"
-        (openFilter)="toggleFilterDrawer($event)">
+        (changeOpacity)="onOpacityChange($event.layer, $event.value)" (openLegend)="toggleLegend($event)"
+        (openInfo)="toggleInfo($event)" (openFilter)="toggleFilterDrawer($event)">
       </app-map-left-panel>
 
-      <!-- hidden file input parent'ta kalıyor -->
+      <!-- EXPORT PANEL -->
+      <app-map-export-panel *ngIf="!previewMode" [open]="exportPanelOpen()" (close)="closeExportPanel()"
+        (exportAs)="exportMap($event)">
+      </app-map-export-panel>
+
       <input #fileInput type="file" hidden accept=".geojson,.json,.kml,.zip" (change)="onFileSelected($event)" />
 
       <!-- MAP -->
@@ -88,16 +47,14 @@
         <div class="map-zoom-actions">
           <button class="map-zoom-btn btn btn-icon btn-light" type="button" (click)="zoomIn()"
             [title]="'MAP.ACTIONS.ZOOM_IN' | translate" [attr.aria-label]="'MAP.ACTIONS.ZOOM_IN' | translate">
-            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
+            <i class="fa-solid fa-plus text-white"></i>
           </button>
 
           <div class="map-zoom-divider" aria-hidden="true"></div>
 
           <button class="map-zoom-btn btn btn-icon btn-light" type="button" (click)="zoomOut()"
             [title]="'MAP.ACTIONS.ZOOM_OUT' | translate" [attr.aria-label]="'MAP.ACTIONS.ZOOM_OUT' | translate">
-            <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr010.svg'" class="svg-icon svg-icon-2"
-              aria-hidden="true"></span>
+            <i class="fa-solid fa-minus text-white"></i>
           </button>
         </div>
 
@@ -113,59 +70,49 @@
       </div>
 
       <!-- LEGEND DRAWER -->
-      <app-map-legend-drawer
-        [open]="legendPanelOpen()"
-        [layer]="selectedLegendLayer()"
-        [getLayerTypeText]="getLayerTypeText.bind(this)"
-        [hasLegend]="hasLegend.bind(this)"
-        [getLegendUrl]="getLegendUrl.bind(this)"
-        (close)="closeLegend()">
+      <app-map-legend-drawer [open]="legendPanelOpen()" [layer]="selectedLegendLayer()"
+        [getLayerTypeText]="getLayerTypeText.bind(this)" [hasLegend]="hasLegend.bind(this)"
+        [getLegendUrl]="getLegendUrl.bind(this)" (close)="closeLegend()">
       </app-map-legend-drawer>
 
       <!-- INFO DRAWER -->
-      <app-map-info-drawer
-        [open]="infoPanelOpen()"
-        [layer]="selectedInfoLayer()"
-        [layerType]="LayerType"
-        [getLayerTypeText]="getLayerTypeText.bind(this)"
-        [getDefaultVersion]="getDefaultVersion.bind(this)"
-        [getDefaultFormat]="getDefaultFormat.bind(this)"
-        (close)="closeInfo()">
+      <app-map-info-drawer [open]="infoPanelOpen()" [layer]="selectedInfoLayer()" [layerType]="LayerType"
+        [getLayerTypeText]="getLayerTypeText.bind(this)" [getDefaultVersion]="getDefaultVersion.bind(this)"
+        [getDefaultFormat]="getDefaultFormat.bind(this)" (close)="closeInfo()">
       </app-map-info-drawer>
 
       <!-- FILTER DRAWER -->
-      <app-map-filter-drawer
-        [open]="filterDrawerOpen()"
-        [layer]="selectedFilterLayer()"
-        [operatorSelectItems]="operatorSelectItems"
-        [buildLayerCqlFilter]="buildLayerCqlFilter.bind(this)"
-        [loadFilterFieldOptionsFn]="loadFilterFieldOptions.bind(this)"
-        (close)="closeFilterDrawer()"
-        (addRule)="addFilterRow()"
-        (removeRule)="removeFilterRow($event)"
-        (apply)="applyFilterToLayerWithValidation($event)"
-        (clear)="clearFilterForLayer($event)">
+      <app-map-filter-drawer [open]="filterDrawerOpen()" [layer]="selectedFilterLayer()"
+        [operatorSelectItems]="operatorSelectItems" [buildLayerCqlFilter]="buildLayerCqlFilter.bind(this)"
+        [loadFilterFieldOptionsFn]="loadFilterFieldOptions.bind(this)" (close)="closeFilterDrawer()"
+        (addRule)="addFilterRow()" (removeRule)="removeFilterRow($event)"
+        (apply)="applyFilterToLayerWithValidation($event)" (clear)="clearFilterForLayer($event)">
       </app-map-filter-drawer>
 
+      <!-- COORDINATE PANEL -->
+      <app-map-coordinate-panel *ngIf="!previewMode" [open]="coordinatePanelOpen()" [lat]="gotoLat()" [lon]="gotoLon()"
+        (latChange)="gotoLat.set($event)" (lonChange)="gotoLon.set($event)" (useCurrentClick)="fillCurrentCoordinates()"
+        (goClick)="goToCoordinates()" (closeClick)="closeCoordinatePanel()">
+      </app-map-coordinate-panel>
+
       <!-- FEATURE INFO DRAWER -->
-      <app-map-feature-info-drawer
-        [open]="featureInfoDrawerOpen()"
-        [title]="featurePopupTitle()"
-        [subtitle]="featurePopupSubtitle()"
-        [entries]="featurePopupEntries()"
-        (close)="closeFeatureInfoDrawer()">
+      <app-map-feature-info-drawer [open]="featureInfoDrawerOpen()" [title]="featurePopupTitle()"
+        [subtitle]="featurePopupSubtitle()" [entries]="featurePopupEntries()" (close)="closeFeatureInfoDrawer()">
       </app-map-feature-info-drawer>
 
-      <!-- PURCHASE DRAWER -->
-      <app-map-purchase-drawer
-        *ngIf="!previewMode"
-        [open]="purchaseDrawerOpen()"
-        [product]="selectedPurchaseProduct()"
-        [options]="purchaseOptions()"
-        (close)="closePurchaseDrawer()"
-        (optionChange)="onPurchaseOptionChange($event.key, $event.checked)"
-        (addToCart)="addCustomProductToCart()">
-      </app-map-purchase-drawer>
+      <!-- SMART FILTER DRAWER -->
+      <app-map-product-smart-filter *ngIf="!previewMode" [open]="smartFilterOpen()" [loading]="smartFilterLoading()"
+        [results]="smartFilterResults()" (close)="closeSmartFilter()" (apply)="applySmartFilter($event)"
+        (clear)="clearSmartFilter()" (toggleResults)="toggleSmartFilterResultsPanel()">>
+      </app-map-product-smart-filter>
+
+      <!-- SMART FILTER RESULTS LEFT PANEL -->
+      <app-map-product-smart-filter-results-panel *ngIf="!previewMode"
+        [open]="smartFilterResultsPanelOpen() && smartFilterResults().length > 0" [loading]="smartFilterLoading()"
+        [results]="smartFilterResults()" [selectedProductId]="selectedSmartFilterProductId()"
+        [canViewAddToCartFn]="canViewAddToCart.bind(this)" (close)="closeSmartFilterResultsPanel()"
+        (selectProduct)="selectSmartFilterProduct($event)" (addToCart)="addSmartFilterProductToCart($event)">
+      </app-map-product-smart-filter-results-panel>
     </div>
   </div>
 </section>

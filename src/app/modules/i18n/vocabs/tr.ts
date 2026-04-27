@@ -201,7 +201,6 @@ export const locale = {
 
         // Shopping Page
         LANGUAGE: "Dil",
-        PRODUCT: "Ürün",
         PRODUCTS: "Ürünler",
         VEGETABLE: "Sebze",
         FRUIT: "Meyve",
@@ -679,11 +678,37 @@ export const locale = {
             "ACTIONS": {
                 "LAYER_MANAGER": "Katman Yöneticisi",
                 "SEARCH": "Haritada Ara",
-                "POLYGON": "Poligon",
+                "POLYGON": "Alan Seç",
                 "UPLOAD_FILE": "Dosya Yükle",
                 "RESET": "Sıfırla",
                 "ZOOM_IN": "Yakınlaştır",
-                "ZOOM_OUT": "Uzaklaştır"
+                "ZOOM_OUT": "Uzaklaştır",
+                "MEASURE_LENGTH": "Uzunluk Ölç",
+                "MEASURE_AREA": "Alan Ölç",
+                "GOTO_COORDINATE": "Koordinata Git",
+                "EXPORT_IMAGE": "Dışa aktar"
+            },
+            "MEASUREMENT": {
+                "START": "Ölçüm başlatın",
+                "LENGTH": "Uzunluk",
+                "AREA": "Alan"
+            },
+            "COORDINATE_PANEL": {
+                "KICKER": "Konum",
+                "TITLE": "Koordinata Git",
+                "SUBTITLE": "Enlem ve boylam girerek haritada doğrudan ilgili noktaya gidebilirsiniz.",
+                "FORM_TITLE": "Koordinat Bilgileri",
+                "ACTIONS_TITLE": "İşlemler",
+                "INFO_TITLE": "Önizleme",
+                "LATITUDE": "Enlem",
+                "LONGITUDE": "Boylam",
+                "LATITUDE_PLACEHOLDER": "Örn: 39.920770",
+                "LONGITUDE_PLACEHOLDER": "Örn: 32.854110",
+                "LATITUDE_HELP": "Enlem değeri -90 ile 90 arasında olmalıdır.",
+                "LONGITUDE_HELP": "Boylam değeri -180 ile 180 arasında olmalıdır.",
+                "USE_CURRENT": "Mevcut Konumu Al",
+                "GO": "Haritada Göster",
+                "INVALID": "Geçerli koordinat giriniz."
             },
             "SEARCH": {
                 "KICKER": "Harita",
@@ -797,6 +822,39 @@ export const locale = {
                     "CLASSIFIED_TITLE": "Sınıflandırma",
                     "CLASSIFIED_DESC": "Seçilen alan için sınıflandırma yapılsın mı?"
                 }
+            },
+            "EXPORT": {
+                "KICKER": "Dışa Aktar",
+                "TITLE": "Haritayı dışa aktar",
+                "SUBTITLE": "Harita görünümünü görsel veya PDF dosyası olarak indirebilirsin.",
+                "IMAGE_TITLE": "Görsel olarak indir",
+                "IMAGE_SUBTITLE": "Mevcut harita görünümünü PNG formatında kaydeder.",
+                "PDF_TITLE": "PDF olarak indir",
+                "PDF_SUBTITLE": "Mevcut harita görünümünü PDF dokümanı olarak kaydeder.",
+                "FAILED": "Harita dışa aktarılamadı.",
+                "PARTIAL_WARNING": "Bazı katmanlar dışa aktarılamadı. Katman sunucusunda CORS izni olmayabilir."
+            },
+            "PRODUCT_SMART_FILTER": {
+                "KICKER": "Akıllı Filtre",
+                "TITLE": "Ürün Akıllı Filtre",
+                "SUBTITLE": "Uydu ürünlerini teknik parametrelere göre filtreleyin.",
+                "PARAMETERS": "Parametreler",
+                "RESULTS": "Sonuçlar",
+                "LOADING": "Yükleniyor",
+                "NO_RESULTS": "Sonuç bulunamadı.",
+                "CLEAR": "Temizle",
+                "IMAGE_TYPE": "Görüntü Tipi",
+                "IMAGE_TYPE_PLACEHOLDER": "Örn. PAN, MS, SAR",
+                "DATE_RANGE": "Çekim Tarihi",
+                "MAX_CLOUD_RATE": "Maks. Bulutluluk",
+                "MAX_OFF_NADIR": "Maks. Off-Nadir",
+                "MAX_RESOLUTION": "Maks. Çözünürlük",
+                "SPECTRAL_RESOLUTION": "Spektral Çözünürlük",
+                "SPECTRAL_RESOLUTION_PLACEHOLDER": "Örn. RGB, NIR, SWIR",
+                "PRICE": "Fiyat",
+                "ADD_TO_CART": "Sepete ekle",
+                "IN_CART": "Sepette",
+                "SELECTED": "Seçili"
             }
         },
         "CARD_HOLDER": "Kart Üzerindeki İsim",
@@ -1226,8 +1284,19 @@ export const locale = {
         "SELECTED_FEATURE": "Seçilen Öznitelik",
         "LAYER_NAME_LABEL": "Katman Adı",
         "GEOMETRY_TYPE": "Geometri Tipi",
-        "FEATURE_DETAILS": "Öznitelik Detayları"
-
+        "FEATURE_DETAILS": "Öznitelik Detayları",
+        "PRODUCT": {
+            "FOOTPRINT": "Ürün Footprint",
+            "NAME": "Ürün Adı",
+            "IMAGE_ID": "Görüntü ID",
+            "PROVIDER": "Sağlayıcı",
+            "SENSOR_MODE": "Görüntü Tipi",
+            "ACQUISITION_DATE": "Çekim Tarihi",
+            "CLOUD_RATE": "Bulutluluk Oranı",
+            "NADIR_ANGLE": "Off-Nadir Açısı",
+            "RESOLUTION": "Yersel Çözünürlük",
+            "SPECTRAL_RESOLUTION": "Spektral Çözünürlük"
+        }
         // END (TR-EN-LANGUAGE-BRANCH)
     }
 };

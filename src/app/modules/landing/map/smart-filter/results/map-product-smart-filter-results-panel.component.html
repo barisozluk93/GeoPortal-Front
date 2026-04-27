@@ -1,0 +1,95 @@
+<aside class="smart-filter-results-panel" [class.open]="open">
+  <div class="smart-filter-results-panel__panel">
+    <div class="smart-filter-results-panel__header">
+      <div>
+        <div class="smart-filter-results-panel__kicker text-primary">
+          {{ 'MAP.PRODUCT_SMART_FILTER.RESULTS' | translate }}
+        </div>
+
+        <div class="smart-filter-results-panel__title">
+          {{ 'MAP.PRODUCT_SMART_FILTER.TITLE' | translate }}
+        </div>
+
+        <div class="smart-filter-results-panel__subtitle">
+          {{ loading ? ('MAP.PRODUCT_SMART_FILTER.LOADING' | translate) : results.length }}
+          {{ 'MAP.PRODUCT_SMART_FILTER.RESULTS' | translate }}
+        </div>
+      </div>
+
+      <button
+        class="drawer-close-btn btn btn-sm btn-icon btn-light"
+        type="button"
+        (click)="close.emit()"
+        [title]="'MAP.PANEL.COLLAPSE' | translate"
+        [attr.aria-label]="'MAP.PANEL.COLLAPSE' | translate">
+        <span
+          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+          class="svg-icon svg-icon-2"
+          aria-hidden="true">
+        </span>
+      </button>
+    </div>
+
+    <div class="smart-filter-results-panel__body">
+      <div class="state-box" *ngIf="loading">
+        {{ 'MAP.PRODUCT_SMART_FILTER.LOADING' | translate }}
+      </div>
+
+      <div class="state-box" *ngIf="!loading && !results.length">
+        {{ 'MAP.PRODUCT_SMART_FILTER.NO_RESULTS' | translate }}
+      </div>
+
+      <div class="product-result-list" *ngIf="!loading && results.length">
+        <div
+          class="product-result-card"
+          role="button"
+          tabindex="0"
+          *ngFor="let item of results; trackBy: trackByProduct"
+          [class.active]="isSelected(item)"
+          (click)="selectProduct.emit(item)"
+          (keyup.enter)="selectProduct.emit(item)"
+          (keyup.space)="selectProduct.emit(item)">
+          <div class="product-result-card__main">
+            <div class="product-result-card__eyebrow">
+              {{ item.imageId || '-' }}
+            </div>
+
+            <div class="product-result-card__title-row">
+              <div class="product-result-card__title">
+                {{ getProductTitle(item) }}
+              </div>
+
+              <span class="product-selected-badge" *ngIf="isSelected(item)">
+                {{ 'MAP.PRODUCT_SMART_FILTER.SELECTED' | translate }}
+              </span>
+            </div>
+
+            <div class="product-result-card__subtitle">
+              {{ getProductSubtitle(item) }}
+            </div>
+          </div>
+
+          <div class="product-result-card__footer">
+            <div>
+              <div class="product-price-label">
+                {{ 'MAP.PRODUCT_SMART_FILTER.PRICE' | translate }}
+              </div>
+              <div class="product-price text-primary">
+                {{ getProductPrice(item) }}
+              </div>
+            </div>
+
+            <button
+              class="btn btn-sm btn-primary add-cart-btn"
+              type="button"
+              *ngIf="canViewAddToCart(item)"
+              (click)="onAddToCart($event, item)">
+              <i class="ki-outline ki-basket fs-3"></i>
+              <span>{{ 'MAP.PRODUCT_SMART_FILTER.ADD_TO_CART' | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>

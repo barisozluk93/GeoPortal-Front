@@ -20,7 +20,11 @@ import { MapLegendDrawerComponent } from './map/legend/map-legend-drawer.compone
 import { MapInfoDrawerComponent } from './map/info/map-info-drawer.component';
 import { MapFilterDrawerComponent } from './map/layer-filter/map-filter-drawer.component';
 import { MapFeatureInfoDrawerComponent } from './map/feature-info/map-feature-info-drawer.component';
-import { MapPurchaseDrawerComponent } from './map/purchase/map-purchase-drawer.component';
+import { MapToolbarComponent } from './map/toolbar/map-toolbar.component';
+import { MapCoordinatePanelComponent } from './map/coordinate/map-coordinate-panel.component';
+import { MapExportPanelComponent } from './map/export-panel/map-export-panel.component';
+import { MapProductSmartFilterComponent } from './map/smart-filter/map-product-smart-filter.component';
+import { MapProductSmartFilterResultsPanelComponent } from './map/smart-filter/results/map-product-smart-filter-results-panel.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +41,11 @@ import { MapPurchaseDrawerComponent } from './map/purchase/map-purchase-drawer.c
     MapInfoDrawerComponent,
     MapFilterDrawerComponent,
     MapFeatureInfoDrawerComponent,
-    MapPurchaseDrawerComponent
+    MapToolbarComponent,
+    MapCoordinatePanelComponent,
+    MapExportPanelComponent,
+    MapProductSmartFilterComponent,
+    MapProductSmartFilterResultsPanelComponent
   ],
   imports: [
     CommonModule, 

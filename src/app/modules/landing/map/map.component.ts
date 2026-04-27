@@ -2,7 +2,9 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Inject,
   Input,
+  LOCALE_ID,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -16,6 +18,9 @@ import Feature from 'ol/Feature';
 import OlMap from 'ol/Map';
 import View from 'ol/View';
 import Geometry from 'ol/geom/Geometry';
+import LineString from 'ol/geom/LineString';
+import Polygon from 'ol/geom/Polygon';
+import Point from 'ol/geom/Point';
 import BaseLayer from 'ol/layer/Base';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
@@ -32,29 +37,29 @@ import Modify from 'ol/interaction/Modify';
 import Snap from 'ol/interaction/Snap';
 import shp from 'shpjs';
 import WKT from 'ol/format/WKT.js';
+import Overlay from 'ol/Overlay';
+import { getArea, getLength } from 'ol/sphere';
 
-import { BasketService } from 'src/app/_metronic/partials/layout/basket/basket.service';
-import { BasketManagementService } from '../../basket-management/basket-management.service';
-import { AuthService } from '../../auth';
-import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LayerGroupModel } from '../../map-management/models/layergroup.model';
 import { LayerModel } from '../../map-management/models/layer.model';
 import { LayerType } from '../../map-management/models/layertype.model';
 import { MapSearchService } from '../map-search.service';
 import { MapService } from './map.service';
-import { BasketModel } from '../../basket-management/models/basket.model';
-import { ProductModel } from '../marketplace/models/product.model';
 import { LangChangeEvent } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { jsPDF } from 'jspdf';
+import { ProductSmartFilterRequest, ProductSmartFilterResult } from './smart-filter/models/product-smart-filter.model';
+import { formatDate } from '@angular/common';
+import { BasketService } from 'src/app/_metronic/partials/layout/basket/basket.service';
+import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
+import { BasketModel } from '../../basket-management/models/basket.model';
+import { AuthService } from '../../auth';
+import { BasketManagementService } from '../../basket-management/basket-management.service';
 
-type PurchaseOptionKey = 'orthorectified' | 'pansharpened' | 'classified';
 
-type PurchaseOptions = {
-  orthorectified: boolean;
-  pansharpened: boolean;
-  classified: boolean;
-};
+type MapExportFormat = 'image' | 'pdf';
+
 
 type SearchResult = {
   display_name: string;
@@ -108,6 +113,11 @@ type FeatureInfoContext =
   | { type: 'wmsText'; layer: UiLayerModel; responseText: string }
   | null;
 
+type SmartFilterPopupInfo = {
+  labelKey: string;
+  value: string;
+};
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -126,10 +136,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   readonly translateService = inject(TranslateService);
   readonly mapSearch = inject(MapSearchService);
   readonly mapService = inject(MapService);
-  readonly basketManagementService = inject(BasketManagementService);
   readonly basketService = inject(BasketService);
-  readonly authService = inject(AuthService);
   readonly alertService = inject(AlertService);
+  readonly authService = inject(AuthService);
+  readonly basketManagementService = inject(BasketManagementService);
 
   private langChangeSubscription?: Subscription;
   private featureInfoContext: FeatureInfoContext = null;
@@ -139,6 +149,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   private drawInteraction?: Draw;
   private modifyInteraction?: Modify;
   private snapInteraction?: Snap;
+  private measurementDrawInteraction?: Draw;
+  private measurementTooltipOverlay?: Overlay;
+  private measurementTooltipEl?: HTMLDivElement;
+  private finishedMeasurementOverlays: Overlay[] = [];
 
   private readonly mapReady = signal(false);
   private lastHandledTargetNonce: number | null = null;
@@ -179,6 +193,18 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     })
   });
 
+
+  private readonly selectedSmartFilterFootprintStyle = new Style({
+    fill: new Fill({ color: 'rgba(77, 163, 255, 0.24)' }),
+    stroke: new Stroke({ color: '#7eb6ff', width: 4 }),
+    image: new CircleStyle({
+      radius: 8,
+      fill: new Fill({ color: '#ffffff' }),
+      stroke: new Stroke({ color: '#7eb6ff', width: 3 })
+    })
+  });
+
+  readonly smartFilterResultsPanelOpen = signal(false);
   readonly searchText = signal('');
   readonly searchResults = signal<SearchResult[]>([]);
   readonly searchPanelOpen = signal(false);
@@ -187,6 +213,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   readonly layerManagerOpen = signal(false);
   readonly uploadedFileName = signal('');
   readonly polygonMode = signal(false);
+  readonly measureLengthMode = signal(false);
+  readonly measureAreaMode = signal(false);
+  readonly measurementLabel = signal('');
+  readonly coordinatePanelOpen = signal(false);
+  readonly exportPanelOpen = signal(false);
+  readonly gotoLat = signal('');
+  readonly gotoLon = signal('');
 
   readonly layerGroups = signal<UiLayerGroupModel[]>([]);
   readonly loadingLayers = signal(false);
@@ -203,14 +236,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   readonly featurePopupSubtitle = signal('');
   readonly featurePopupEntries = signal<FeaturePopupEntry[]>([]);
 
-  readonly purchaseDrawerOpen = signal(false);
-  readonly selectedPurchaseProduct = signal<ProductModel | null>(null);
-
-  readonly purchaseOptions = signal<PurchaseOptions>({
-    orthorectified: false,
-    pansharpened: false,
-    classified: false
-  });
+  readonly smartFilterOpen = signal(false);
+  readonly smartFilterLoading = signal(false);
+  readonly smartFilterResults = signal<ProductSmartFilterResult[]>([]);
+  readonly selectedSmartFilterProductId = signal<number | null>(null);
+  readonly smartFilterCart = signal<ProductSmartFilterResult[]>([]);
 
   readonly LayerType = LayerType;
 
@@ -219,7 +249,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   private readonly defaultCenter = fromLonLat([35.2433, 39.0]);
   private readonly defaultZoom = 6;
 
-  constructor() {
+  constructor(@Inject(LOCALE_ID) public locale: string) {
     effect(() => {
       const isMapReady = this.mapReady();
       const target = this.mapSearch.targetLocation();
@@ -242,15 +272,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.suppressMapClicks();
     this.focusTarget(target.lat, target.lon, target.geojson);
 
-    const geoType = target?.geojson?.type;
-
-    if (geoType === 'Polygon' || geoType === 'MultiPolygon') {
-      await this.openPurchaseDrawerForGeometry(
-        target.geojson,
-        'search',
-        target.display_name || target.label || target.name || 'Selected Area'
-      );
-    }
 
     this.mapSearch.clear();
   }
@@ -399,7 +420,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.langChangeSubscription?.unsubscribe();
     this.mapReady.set(false);
     this.closeFeatureInfoDrawer();
-    this.closePurchaseDrawer();
+    this.stopMeasurementDrawing();
     this.map?.setTarget(undefined);
   }
 
@@ -414,6 +435,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   openSearchPanel(): void {
     this.searchPanelOpen.set(true);
     this.layerManagerOpen.set(false);
+    this.exportPanelOpen.set(false);
     this.closeRightDrawersOnly();
   }
 
@@ -428,6 +450,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
       if (next) {
         this.layerManagerOpen.set(false);
+        this.exportPanelOpen.set(false);
         this.closeRightDrawersOnly();
       }
 
@@ -445,6 +468,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
       if (next) {
         this.closeSearchPanel();
+        this.exportPanelOpen.set(false);
         this.closeRightDrawersOnly();
       }
 
@@ -460,7 +484,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.closeInfo();
     this.closeFilterDrawer();
     this.closeFeatureInfoDrawer();
-    this.closePurchaseDrawer();
     this.selectedLegendLayer.set(layer);
     this.legendPanelOpen.set(true);
   }
@@ -495,7 +518,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.closeLegend();
     this.closeFilterDrawer();
     this.closeFeatureInfoDrawer();
-    this.closePurchaseDrawer();
     this.selectedInfoLayer.set(layer);
     this.infoPanelOpen.set(true);
   }
@@ -510,13 +532,16 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.closeInfo();
     this.closeFilterDrawer();
     this.closeFeatureInfoDrawer();
-    this.closePurchaseDrawer();
+    this.closeCoordinatePanel();
+    this.closeSmartFilter();
   }
 
   closeAllDrawers(): void {
     this.closeRightDrawersOnly();
     this.layerManagerOpen.set(false);
     this.searchPanelOpen.set(false);
+    this.exportPanelOpen.set(false);
+    this.smartFilterResultsPanelOpen.set(false);
   }
 
   toggleInfo(layer: UiLayerModel): void {
@@ -544,7 +569,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.closeLegend();
     this.closeInfo();
     this.closeFeatureInfoDrawer();
-    this.closePurchaseDrawer();
 
     if (!layer.filters?.length) {
       layer.filters = [this.createEmptyFilterRule()];
@@ -563,6 +587,25 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.filterDrawerOpen.set(false);
     this.selectedFilterLayer.set(null);
   }
+
+  toggleExportPanel(): void {
+    this.exportPanelOpen.update((current) => {
+      const next = !current;
+
+      if (next) {
+        this.layerManagerOpen.set(false);
+        this.closeSearchPanel();
+        this.closeRightDrawersOnly();
+      }
+
+      return next;
+    });
+  }
+
+  closeExportPanel(): void {
+    this.exportPanelOpen.set(false);
+  }
+
 
   toggleFilterDrawer(layer: UiLayerModel): void {
     if (this.isFilterLayer(layer)) {
@@ -962,7 +1005,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     if (layer.type === LayerType.BaseMap) {
       olLayer = new TileLayer({
         source: new XYZ({
-          url: layer.url
+          url: layer.url,
+          crossOrigin: 'anonymous'
         }),
         visible: !!layer.isVisible,
         opacity: this.normalizeOpacityValue(layer.opacity as number) / 100
@@ -1438,7 +1482,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
         return;
       }
 
-      if (this.polygonMode() || this.drawInteraction || this.purchaseDrawerOpen()) {
+      if (this.polygonMode() || this.drawInteraction || this.measureLengthMode() || this.measureAreaMode()) {
         return;
       }
 
@@ -1448,14 +1492,30 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
       this.map?.forEachFeatureAtPixel(
         event.pixel,
         (feature, layer) => {
-          clickedFeature = feature as Feature<Geometry>;
-          clickedLayer = layer ?? null;
+          clickedFeature = feature as Feature<Geometry>; // 🔥 CRITICAL
+          clickedLayer = (layer ?? null) as BaseLayer | null;
           return true;
         },
         { hitTolerance: 6 }
       );
 
       if (clickedFeature) {
+        const clickedOnOverlayDrawing = clickedLayer === this.vectorLayer || !clickedLayer;
+
+        if (clickedOnOverlayDrawing) {
+          const isSmartFilterFootprint =
+            (clickedFeature as Feature<Geometry>).get('featureType') === 'smartFilterFootprint';
+
+          if (isSmartFilterFootprint) {
+            this.closeAllDrawers();
+            this.openFeatureInfoFromFeature(clickedFeature, clickedLayer);
+            return;
+          }
+
+          this.closeFeatureInfoDrawer();
+          return;
+        }
+
         this.closeAllDrawers();
         this.openFeatureInfoFromFeature(clickedFeature, clickedLayer);
         return;
@@ -1533,15 +1593,34 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
   private renderFeatureInfoFromFeature(feature: Feature<Geometry>, layer: BaseLayer | null): void {
     const geometryType = feature.getGeometry()?.getType() || '-';
-    const layerName = String(layer?.get('gpLayerName') || this.t('SELECTED_FEATURE'));
-    const featureId = feature.getId();
-    const rawProps = { ...(feature.getProperties() || {}) } as Record<string, unknown>;
-    delete rawProps.geometry;
+    const isSmartFilterFootprint = feature.get('featureType') === 'smartFilterFootprint';
+
+    const layerName = isSmartFilterFootprint
+      ? this.t('PRODUCT.FOOTPRINT')
+      : String(layer?.get('gpLayerName') || this.t('SELECTED_FEATURE'));
 
     const entries: FeaturePopupEntry[] = [
       { label: this.t('LAYER_NAME_LABEL'), value: layerName },
       { label: this.t('GEOMETRY_TYPE'), value: geometryType }
     ];
+
+    if (isSmartFilterFootprint) {
+      const smartFilterInfo = feature.get('smartFilterInfo') as SmartFilterPopupInfo[] | undefined;
+
+      for (const item of smartFilterInfo ?? []) {
+        entries.push({
+          label: this.t(item.labelKey),
+          value: item.value || '-'
+        });
+      }
+
+      this.openFeatureInfoDrawer(layerName, `${this.t('FEATURE_DETAILS')} • ${geometryType}`, entries);
+      return;
+    }
+
+    const featureId = feature.getId();
+    const rawProps = { ...(feature.getProperties() || {}) } as Record<string, unknown>;
+    delete rawProps.geometry;
 
     if (featureId !== undefined && featureId !== null && `${featureId}`.trim()) {
       entries.push({ label: this.t('FEATURE_ID'), value: String(featureId) });
@@ -1646,7 +1725,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.closeLegend();
     this.closeInfo();
     this.closeFilterDrawer();
-    this.closePurchaseDrawer();
     this.closeSearchPanel();
     this.layerManagerOpen.set(false);
 
@@ -1711,7 +1789,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   resetView(): void {
     this.clearOverlaySource();
     this.stopPolygonDrawing();
+    this.stopMeasurementDrawing(true);
     this.closeAllDrawers();
+    this.coordinatePanelOpen.set(false);
+    this.measureAreaMode.set(false);
+    this.measureLengthMode.set(false);
+    this.measurementLabel.set('');
     this.uploadedFileName.set('');
     this.searchResults.set([]);
     this.searchText.set('');
@@ -1726,6 +1809,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   togglePolygonDraw(): void {
     if (!this.map) return;
 
+    this.stopMeasurementDrawing();
+    this.measureAreaMode.set(false);
+    this.measureLengthMode.set(false);
+    this.measurementLabel.set('');
+
     if (this.polygonMode()) {
       this.stopPolygonDrawing();
       return;
@@ -1739,15 +1827,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
       type: 'Polygon'
     });
 
-    this.drawInteraction.on('drawend', async (event) => {
+    this.drawInteraction.on('drawend', () => {
       this.suppressMapClicks();
       this.stopPolygonDrawing();
       this.fitToOverlay();
-
-      const geometry = this.toGeoJsonGeometry(event.feature);
-      if (!geometry) return;
-
-      await this.openPurchaseDrawerForGeometry(geometry, 'draw', 'Drawn Area');
     });
 
     this.map.addInteraction(this.drawInteraction);
@@ -1844,11 +1927,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
 
-        const mergedGeometry = this.buildMultiPolygonGeometryFromFeatures(polygonFeatures);
-        if (mergedGeometry) {
-          this.suppressMapClicks();
-          await this.openPurchaseDrawerForGeometry(mergedGeometry, 'upload', file.name);
-        }
 
         input.value = '';
         return;
@@ -1871,11 +1949,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
 
-        const mergedGeometry = this.buildMultiPolygonGeometryFromFeatures(polygonFeatures);
-        if (mergedGeometry) {
-          this.suppressMapClicks();
-          await this.openPurchaseDrawerForGeometry(mergedGeometry, 'upload', file.name);
-        }
 
         input.value = '';
         return;
@@ -1900,11 +1973,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
 
-        const mergedGeometry = this.buildMultiPolygonGeometryFromFeatures(polygonFeatures);
-        if (mergedGeometry) {
-          this.suppressMapClicks();
-          await this.openPurchaseDrawerForGeometry(mergedGeometry, 'upload', file.name);
-        }
 
         input.value = '';
         return;
@@ -1968,7 +2036,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.focusTarget(Number(item.lat), Number(item.lon), item.geojson);
     this.searchResults.set([]);
 
-    await this.openPurchaseDrawerForGeometry(item.geojson, 'search', item.display_name);
   }
 
   private fitToOverlay(): void {
@@ -2023,325 +2090,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     }, 250);
   }
 
-  closePurchaseDrawer(): void {
-    this.purchaseDrawerOpen.set(false);
-    this.selectedPurchaseProduct.set(null);
-  }
-
-  onPurchaseOptionChange(key: PurchaseOptionKey, checked: boolean): void {
-    this.purchaseOptions.update((current) => ({
-      ...current,
-      [key]: checked
-    }));
-
-    const currentProduct = this.selectedPurchaseProduct();
-    if (!currentProduct) return;
-
-    const options = this.purchaseOptions();
-    const nextPrice = this.calculatePrice(currentProduct.areaKm2 ?? 0, options);
-
-    this.selectedPurchaseProduct.set({
-      ...currentProduct,
-      isOrthorectified: options.orthorectified,
-      isPansharpened: options.pansharpened,
-      isClassified: options.classified,
-      price: nextPrice,
-      priceStr: nextPrice.toFixed(2)
-    });
-  }
-
-  private resetPurchaseOptions(): void {
-    this.purchaseOptions.set({
-      orthorectified: false,
-      pansharpened: false,
-      classified: false
-    });
-  }
-
-  private async openPurchaseDrawerForGeometry(
-    geometry: any,
-    sourceType: 'draw' | 'upload' | 'search',
-    sourceLabel?: string
-  ): Promise<void> {
-    this.closeAllDrawers();
-    this.resetPurchaseOptions();
-    this.purchaseDrawerOpen.set(true);
-
-    const product = await this.createProductFromSelection(geometry, sourceType, sourceLabel);
-    this.selectedPurchaseProduct.set(product);
-  }
-
-  public geoJsonObjectToWkt(geomObj: any): string {
-    const geoJsonFormat = new GeoJSON();
-    const wktFormat = new WKT();
-
-    const geometry = geoJsonFormat.readGeometry(geomObj, {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:4326'
-    });
-
-    return wktFormat.writeGeometry(geometry);
-  }
-
-  private async createProductFromSelection(
-    geometry: any,
-    sourceType: 'draw' | 'upload' | 'search',
-    sourceLabel?: string
-  ): Promise<ProductModel> {
-    const options = this.purchaseOptions();
-    const areaKm2 = this.calculateAreaKm2(geometry);
-    const bbox = this.calculateBBox(geometry);
-    const wkt = this.geoJsonObjectToWkt(geometry)
-
-    return {
-      id: 0,
-      name: sourceLabel || this.getDefaultAreaName(sourceType),
-      downloadLink: undefined,
-      price: this.calculatePrice(areaKm2, options),
-      priceStr: this.calculatePrice(areaKm2, options).toFixed(2),
-      userId: 0,
-      isDeleted: false,
-      categoryId: 3,
-      city: undefined,
-      district: undefined,
-      acquisitionDate: new Date().toISOString(),
-      provider: 'Custom Request',
-      resolution: 0.5,
-      cloudRate: 0,
-      areaKm2,
-      currency: 'TRY',
-      description: `${areaKm2.toFixed(2)} km² selected area`,
-      isOrthorectified: options.orthorectified,
-      isPansharpened: options.pansharpened,
-      isClassified: options.classified,
-      classes: [],
-      wkt,
-      bbox,
-      sourceType: sourceType == 'draw' ? 1 : (sourceType == 'upload' ? 2 : 3),
-      sourceLabel,
-      requestHash: this.hashGeometry(geometry),
-      isCustomArea: true
-    };
-  }
-
-  private calculateAreaKm2(geometry: any): number {
-    if (!geometry) return 0;
-    return Number(this.estimateAreaFromBbox(geometry).toFixed(2));
-  }
-
-  private estimateAreaFromBbox(geometry: any): number {
-    const bbox = this.calculateBBox(geometry);
-    if (!bbox || bbox.length < 4) return 0;
-
-    const [minLon, minLat, maxLon, maxLat] = bbox;
-    const avgLat = (minLat + maxLat) / 2;
-
-    const kmPerDegLat = 111.32;
-    const kmPerDegLon = 111.32 * Math.cos((avgLat * Math.PI) / 180);
-
-    const widthKm = Math.max(0, (maxLon - minLon) * kmPerDegLon);
-    const heightKm = Math.max(0, (maxLat - minLat) * kmPerDegLat);
-
-    return widthKm * heightKm * 0.65;
-  }
-
-  private calculateBBox(geometry: any): number[] {
-    if (!geometry) return [];
-
-    let coords: number[][] = [];
-
-    if (geometry.type === 'Polygon') {
-      coords = geometry.coordinates?.[0] ?? [];
-    } else if (geometry.type === 'MultiPolygon') {
-      coords = (geometry.coordinates ?? []).flatMap((polygon: number[][][]) => polygon[0] ?? []);
-    } else if (geometry.type === 'Feature') {
-      return this.calculateBBox(geometry.geometry);
-    }
-
-    if (!coords.length) return [];
-
-    const lons = coords.map((c) => c[0]);
-    const lats = coords.map((c) => c[1]);
-
-    return [
-      Math.min(...lons),
-      Math.min(...lats),
-      Math.max(...lons),
-      Math.max(...lats)
-    ];
-  }
-
-  private calculatePrice(areaKm2: number, options: PurchaseOptions): number {
-    let total = areaKm2 * 10;
-
-    if (options.orthorectified) total += areaKm2 * 2;
-    if (options.pansharpened) total += areaKm2 * 3;
-    if (options.classified) total += areaKm2 * 5;
-
-    return Number(total.toFixed(2));
-  }
-
-  private getDefaultAreaName(sourceType: 'draw' | 'upload' | 'search'): string {
-    switch (sourceType) {
-      case 'draw':
-        return this.t('MAP.CUSTOM_AREA.DEFAULT_NAME_DRAW');
-      case 'upload':
-        return this.t('MAP.CUSTOM_AREA.DEFAULT_NAME_UPLOAD');
-      case 'search':
-        return this.t('MAP.CUSTOM_AREA.DEFAULT_NAME_SEARCH');
-      default:
-        return this.t('MAP.CUSTOM_AREA.DEFAULT_NAME');
-    }
-  }
-
-  private hashGeometry(geometry: any): string {
-    try {
-      return btoa(unescape(encodeURIComponent(JSON.stringify(geometry)))).slice(0, 48);
-    } catch {
-      return `${Date.now()}`;
-    }
-  }
-
-  private toGeoJsonGeometry(feature: Feature<Geometry>): any | null {
-    const geometry = feature.getGeometry();
-    if (!geometry) return null;
-
-    return new GeoJSON().writeGeometryObject(geometry, {
-      featureProjection: 'EPSG:3857',
-      dataProjection: 'EPSG:4326'
-    });
-  }
-
-  private buildMultiPolygonGeometryFromFeatures(features: Feature<Geometry>[]): any | null {
-    const polygons: number[][][][] = [];
-
-    for (const feature of features) {
-      const geo = this.toGeoJsonGeometry(feature);
-      if (!geo) continue;
-
-      if (geo.type === 'Polygon') {
-        polygons.push(geo.coordinates);
-      } else if (geo.type === 'MultiPolygon') {
-        for (const item of geo.coordinates) {
-          polygons.push(item);
-        }
-      }
-    }
-
-    if (!polygons.length) return null;
-
-    if (polygons.length === 1) {
-      return {
-        type: 'Polygon',
-        coordinates: polygons[0]
-      };
-    }
-
-    return {
-      type: 'MultiPolygon',
-      coordinates: polygons
-    };
-  }
-
-  addCustomProductToCart(): void {
-    const item = this.selectedPurchaseProduct();
-    if (!item) return;
-
-    const currentUser = this.authService.currentUserValue;
-
-    if (currentUser) {
-      const data: BasketModel = {
-        id: 0,
-        userId: Number(currentUser.id),
-        productId: item.id,
-        isDeleted: false,
-        product: item,
-        totalPrice: item.price ?? 0,
-        numberOf: 1
-      };
-
-      this.basketManagementService.save(data).subscribe((result: any) => {
-        if (result?.isSuccess) {
-          this.alertService.createAlert('success', this.t('MESSAGES.SUCCESS'));
-          this.basketService.loadBasketFromDb();
-          this.closePurchaseDrawer();
-        } else {
-          this.alertService.createAlert('danger', this.t('MESSAGES.ERROR'));
-        }
-      });
-
-      return;
-    }
-
-    const product: ProductModel = {
-      ...item,
-      categoryId: item.categoryId ?? 1,
-      id: item.id,
-      name: item.name,
-      price: item.price ?? 0,
-      isDeleted: false,
-      userId: 0
-    };
-
-    let basket = JSON.parse(localStorage.getItem('basket') as string) as BasketModel[] | null;
-
-    const alreadyExists = !!basket?.some(
-      (basketItem) =>
-        basketItem.product?.requestHash &&
-        product.requestHash &&
-        basketItem.product.requestHash === product.requestHash
-    );
-
-    if (alreadyExists) {
-      this.alertService.createAlert('warning', this.t('MAP.CUSTOM_AREA.ALREADY_IN_CART'));
-      return;
-    }
-
-    if (basket?.length) {
-      if (basket.length < 15) {
-        basket.push({
-          id: 0,
-          userId: 0,
-          product,
-          productId: product.id,
-          isDeleted: false,
-          numberOf: 1,
-          totalPrice: product.price ?? 0
-        });
-      } else {
-        this.alertService.createAlert(
-          'warning',
-          this.t('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS')
-        );
-        return;
-      }
-    } else {
-      basket = [
-        {
-          id: 0,
-          userId: 0,
-          product,
-          productId: product.id,
-          isDeleted: false,
-          numberOf: 1,
-          totalPrice: product.price ?? 0
-        }
-      ];
-    }
-
-    this.alertService.createAlert('success', this.t('MESSAGES.SUCCESS'));
-    this.basketService.setBasket(basket);
-    this.closePurchaseDrawer();
-  }
-
-  private renderPreviewWkt(wkt: string): void {
+  private renderPreviewWkt(wkt: string, closeDrawers = true): void {
     if (!wkt || !this.map || !this.view) {
       return;
     }
 
     try {
       this.clearOverlaySource();
-      this.closeAllDrawers();
+
+      if (closeDrawers) {
+        this.closeAllDrawers();
+      }
 
       const feature = new WKT().readFeature(wkt, {
         dataProjection: 'EPSG:4326',
@@ -2367,6 +2126,401 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     }
   }
 
+
+  toggleLengthMeasure(): void {
+    if (!this.map) return;
+
+    if (this.measureLengthMode()) {
+      this.stopMeasurementDrawing();
+      this.measureLengthMode.set(false);
+      this.measurementLabel.set('');
+      return;
+    }
+
+    this.stopPolygonDrawing();
+    this.measureAreaMode.set(false);
+    this.measureLengthMode.set(true);
+    this.startMeasurementDrawing('LineString');
+  }
+
+  toggleAreaMeasure(): void {
+    if (!this.map) return;
+
+    if (this.measureAreaMode()) {
+      this.stopMeasurementDrawing();
+      this.measureAreaMode.set(false);
+      this.measurementLabel.set('');
+      return;
+    }
+
+    this.stopPolygonDrawing();
+    this.measureLengthMode.set(false);
+    this.measureAreaMode.set(true);
+    this.startMeasurementDrawing('Polygon');
+  }
+
+  toggleCoordinatePanel(): void {
+    const next = !this.coordinatePanelOpen();
+
+    this.closeRightDrawersOnly();
+    this.layerManagerOpen.set(false);
+    this.closeSearchPanel();
+
+    this.coordinatePanelOpen.set(next);
+
+    if (next) {
+      this.fillCurrentCoordinates();
+    }
+  }
+
+  fillCurrentCoordinates(): void {
+    const [lon, lat] = this.currentCoords().split(',');
+    this.gotoLat.set((lat || '').trim());
+    this.gotoLon.set((lon || '').trim());
+  }
+
+  goToCoordinates(): void {
+    if (!this.view) return;
+
+    const lat = Number(this.gotoLat());
+    const lon = Number(this.gotoLon());
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      alert(this.t('MAP.COORDINATE_PANEL.INVALID'));
+      return;
+    }
+
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+      alert(this.t('MAP.COORDINATE_PANEL.INVALID'));
+      return;
+    }
+
+    this.vectorSource.clear();
+    this.closeFeatureInfoDrawer();
+
+    const point = new Feature<Geometry>({
+      geometry: new Point(fromLonLat([lon, lat]))
+    });
+
+    this.vectorSource.addFeature(point);
+
+    this.view.animate({
+      center: fromLonLat([lon, lat]),
+      zoom: 15,
+      duration: 500
+    });
+  }
+
+  async exportMap(format: MapExportFormat): Promise<void> {
+    try {
+      const result = await this.captureMapAsImage();
+
+      if (format === 'image') {
+        this.downloadMapImage(result.dataUrl);
+      }
+
+      if (format === 'pdf') {
+        this.downloadMapPdf(result.dataUrl, result.width, result.height);
+      }
+
+      if (result.skippedCanvasCount > 0) {
+        alert(this.translateService.instant('MAP.EXPORT.PARTIAL_WARNING'));
+      }
+
+      this.closeExportPanel();
+    } catch (error) {
+      console.error('Harita export edilemedi:', error);
+      alert(this.translateService.instant('MAP.EXPORT.FAILED'));
+    }
+  }
+
+  private captureMapAsImage(): Promise<{ dataUrl: string; width: number; height: number; skippedCanvasCount: number }> {
+    return new Promise((resolve, reject) => {
+      if (!this.map) {
+        reject(new Error('Map bulunamadı.'));
+        return;
+      }
+
+      this.map.once('rendercomplete', () => {
+        const exportCanvas = document.createElement('canvas');
+        const size = this.map?.getSize();
+
+        if (!size) {
+          reject(new Error('Map size alınamadı.'));
+          return;
+        }
+
+        exportCanvas.width = size[0];
+        exportCanvas.height = size[1];
+
+        const exportContext = exportCanvas.getContext('2d');
+        if (!exportContext) {
+          reject(new Error('Canvas context oluşturulamadı.'));
+          return;
+        }
+
+        let skippedCanvasCount = 0;
+        const canvases = this.mapEl.nativeElement.querySelectorAll('.ol-layer canvas');
+
+        canvases.forEach((canvasEl: Element) => {
+          const canvas = canvasEl as HTMLCanvasElement;
+          if (!canvas.width || !canvas.height) return;
+
+          const opacity = canvas.parentElement?.style.opacity;
+          exportContext.globalAlpha = opacity === '' || opacity == null ? 1 : Number(opacity);
+
+          const transform = canvas.style.transform;
+          if (transform) {
+            const matrix = transform
+              .match(/^matrix\(([-0-9., ]+)\)$/)?.[1]
+              ?.split(',')
+              .map((value) => Number(value.trim()));
+
+            if (matrix && matrix.length === 6) {
+              exportContext.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+            } else {
+              exportContext.setTransform(1, 0, 0, 1, 0, 0);
+            }
+          } else {
+            exportContext.setTransform(1, 0, 0, 1, 0, 0);
+          }
+
+          try {
+            exportContext.drawImage(canvas, 0, 0);
+          } catch (error) {
+            skippedCanvasCount++;
+            console.warn('Canvas export sırasında atlandı (muhtemelen CORS/tainted):', error);
+          }
+        });
+
+        exportContext.setTransform(1, 0, 0, 1, 0, 0);
+        exportContext.globalAlpha = 1;
+
+        try {
+          resolve({
+            dataUrl: exportCanvas.toDataURL('image/png'),
+            width: exportCanvas.width,
+            height: exportCanvas.height,
+            skippedCanvasCount
+          });
+        } catch (error) {
+          reject(error);
+        }
+      });
+
+      this.map.renderSync();
+    });
+  }
+
+  private downloadMapImage(dataUrl: string): void {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `map-export-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+    link.click();
+  }
+
+  private downloadMapPdf(dataUrl: string, width: number, height: number): void {
+    const orientation = width >= height ? 'landscape' : 'portrait';
+    const pdf = new jsPDF({
+      orientation,
+      unit: 'px',
+      format: [width, height]
+    });
+
+    pdf.addImage(dataUrl, 'PNG', 0, 0, width, height);
+    pdf.save(`map-export-${new Date().toISOString().replace(/[:.]/g, '-')}.pdf`);
+  }
+
+  private startMeasurementDrawing(type: 'LineString' | 'Polygon'): void {
+    if (!this.map) return;
+
+    this.stopMeasurementDrawing(true);
+    this.closeAllDrawers();
+    this.createMeasurementTooltip(false);
+
+    this.measurementDrawInteraction = new Draw({
+      source: this.vectorSource,
+      type
+    });
+
+    this.measurementDrawInteraction.on('drawstart', (event) => {
+      const geometry = event.feature.getGeometry();
+
+      geometry?.on('change', (geomEvent: any) => {
+        const geom = geomEvent.target as Geometry;
+        this.updateMeasurementTooltip(geom);
+      });
+    });
+
+    this.measurementDrawInteraction.on('drawend', (event) => {
+      const geometry = event.feature.getGeometry();
+      if (geometry) {
+        this.updateMeasurementTooltip(geometry, true);
+      }
+
+      if (this.measurementTooltipEl) {
+        this.measurementTooltipEl.classList.add('map-measure-tooltip--static');
+        this.measurementTooltipEl.style.background = 'linear-gradient(180deg, rgba(120,53,15,0.98) 0%, rgba(234,88,12,0.98) 100%)';
+        this.measurementTooltipEl.style.border = '2px solid #ffffff';
+        this.measurementTooltipEl.style.boxShadow = '0 14px 34px rgba(0,0,0,0.42), 0 0 0 5px rgba(251,146,60,0.28)';
+        this.measurementTooltipEl.style.color = '#ffffff';
+      }
+
+      if (this.measurementTooltipOverlay) {
+        this.finishedMeasurementOverlays.push(this.measurementTooltipOverlay);
+        this.measurementTooltipOverlay = undefined;
+        this.measurementTooltipEl = undefined;
+      }
+
+      this.suppressMapClicks();
+      this.stopMeasurementDrawing(false);
+    });
+
+    this.map.addInteraction(this.measurementDrawInteraction);
+  }
+
+  private stopMeasurementDrawing(clearSource = false): void {
+    if (this.map && this.measurementDrawInteraction) {
+      this.map.removeInteraction(this.measurementDrawInteraction);
+      this.measurementDrawInteraction = undefined;
+    }
+
+    if (this.map && this.measurementTooltipOverlay) {
+      this.map.removeOverlay(this.measurementTooltipOverlay);
+      this.measurementTooltipOverlay = undefined;
+      this.measurementTooltipEl = undefined;
+    }
+
+    if (clearSource) {
+      this.clearFinishedMeasurementOverlays();
+      this.vectorSource.clear();
+    }
+  }
+
+  private clearFinishedMeasurementOverlays(): void {
+    if (!this.map || !this.finishedMeasurementOverlays.length) return;
+
+    for (const overlay of this.finishedMeasurementOverlays) {
+      this.map.removeOverlay(overlay);
+    }
+
+    this.finishedMeasurementOverlays = [];
+  }
+
+  private createMeasurementTooltip(_finished = false): void {
+    if (!this.map) return;
+
+    if (this.measurementTooltipOverlay) {
+      this.map.removeOverlay(this.measurementTooltipOverlay);
+    }
+
+    this.measurementTooltipEl = document.createElement('div');
+    this.measurementTooltipEl.className = 'map-measure-tooltip';
+    this.measurementTooltipEl.innerHTML = this.t('MAP.MEASUREMENT.START');
+    this.measurementTooltipEl.style.position = 'relative';
+    this.measurementTooltipEl.style.display = 'inline-flex';
+    this.measurementTooltipEl.style.alignItems = 'center';
+    this.measurementTooltipEl.style.gap = '10px';
+    this.measurementTooltipEl.style.minWidth = '156px';
+    this.measurementTooltipEl.style.maxWidth = '280px';
+    this.measurementTooltipEl.style.padding = '10px 12px';
+    this.measurementTooltipEl.style.borderRadius = '16px';
+    this.measurementTooltipEl.style.border = '1px solid rgba(126, 182, 255, 0.35)';
+    this.measurementTooltipEl.style.background = 'linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.88))';
+    this.measurementTooltipEl.style.color = '#e6f0ff';
+    this.measurementTooltipEl.style.backdropFilter = 'blur(16px)';
+    this.measurementTooltipEl.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.45), 0 0 12px rgba(44, 99, 255, 0.25)';
+    this.measurementTooltipEl.style.whiteSpace = 'normal';
+    this.measurementTooltipEl.style.zIndex = '9999';
+    this.measurementTooltipEl.style.pointerEvents = 'none';
+    this.measurementTooltipEl.style.transform = 'translateY(-6px)';
+
+    this.measurementTooltipOverlay = new Overlay({
+      element: this.measurementTooltipEl,
+      offset: [0, -12],
+      positioning: 'bottom-center',
+      stopEvent: false
+    });
+
+    this.map.addOverlay(this.measurementTooltipOverlay);
+  }
+
+  private updateMeasurementTooltip(geometry: Geometry, finished = false): void {
+    if (!this.measurementTooltipEl || !this.measurementTooltipOverlay) return;
+
+    let labelHtml = '';
+    let position: number[] | undefined;
+
+    if (geometry instanceof Polygon) {
+      labelHtml = this.formatAreaMeasurement(geometry);
+      position = geometry.getInteriorPoint().getCoordinates();
+      this.measurementTooltipEl.classList.remove('map-measure-tooltip--length');
+      this.measurementTooltipEl.classList.add('map-measure-tooltip--area');
+    } else if (geometry instanceof LineString) {
+      labelHtml = this.formatLengthMeasurement(geometry);
+      position = geometry.getLastCoordinate();
+      this.measurementTooltipEl.classList.remove('map-measure-tooltip--area');
+      this.measurementTooltipEl.classList.add('map-measure-tooltip--length');
+    }
+
+    if (!labelHtml || !position) return;
+
+    this.measurementTooltipEl.innerHTML = labelHtml;
+    this.measurementTooltipOverlay.setPosition(position);
+
+    if (finished) {
+      this.measureAreaMode.set(false);
+      this.measureLengthMode.set(false);
+    }
+  }
+
+  private formatLengthMeasurement(line: LineString): string {
+    const length = getLength(line, { projection: 'EPSG:3857' });
+    const unit = length >= 1000 ? 'km' : 'm';
+    const value = length >= 1000 ? length / 1000 : length;
+
+    return this.buildMeasurementLabelHtml(
+      'length',
+      this.t('MAP.MEASUREMENT.LENGTH'),
+      this.formatMeasurementNumber(value),
+      unit
+    );
+  }
+
+  private formatAreaMeasurement(polygon: Polygon): string {
+    const area = getArea(polygon, { projection: 'EPSG:3857' });
+    const unit = area >= 1000000 ? 'km²' : 'm²';
+    const value = area >= 1000000 ? area / 1000000 : area;
+
+    return this.buildMeasurementLabelHtml(
+      'area',
+      this.t('MAP.MEASUREMENT.AREA'),
+      this.formatMeasurementNumber(value),
+      unit
+    );
+  }
+
+  private buildMeasurementLabelHtml(kind: 'length' | 'area', title: string, value: string, unit: string): string {
+    const icon = kind === 'area' ? '⬡' : '⬌';
+
+    return `
+    <span class="map-measure-tooltip__icon" aria-hidden="true">${icon}</span>
+    <span class="map-measure-tooltip__content">
+      <span class="map-measure-tooltip__title">${title}</span>
+      <span class="map-measure-tooltip__value">${value} <small>${unit}</small></span>
+    </span>
+  `;
+  }
+
+  private formatMeasurementNumber(value: number): string {
+    const lang = this.translateService.currentLang || this.translateService.getDefaultLang() || 'tr';
+
+    return new Intl.NumberFormat(lang, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }).format(value);
+  }
+
   private reloadMapLayers(): void {
     for (const [, olLayer] of this.mapLayerRegistry.entries()) {
       this.map?.removeLayer(olLayer);
@@ -2384,5 +2538,346 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     setTimeout(() => {
       this.map?.updateSize();
     }, 0);
+  }
+
+  closeCoordinatePanel(): void {
+    this.coordinatePanelOpen.set(false);
+  }
+
+  toggleSmartFilter(): void {
+    this.smartFilterOpen.update((current) => {
+      const next = !current;
+
+      if (next) {
+        this.layerManagerOpen.set(false);
+        this.closeSearchPanel();
+        this.exportPanelOpen.set(false);
+        this.closeLegend();
+        this.closeInfo();
+        this.closeFilterDrawer();
+        this.closeFeatureInfoDrawer();
+        this.closeCoordinatePanel();
+      }
+
+      return next;
+    });
+  }
+
+  closeSmartFilter(): void {
+    this.smartFilterOpen.set(false);
+  }
+
+  closeSmartFilterResultsPanel(): void {
+    this.smartFilterResultsPanelOpen.set(false);
+  }
+
+  applySmartFilter(request: ProductSmartFilterRequest): void {
+    const normalizedRequest: ProductSmartFilterRequest = {
+      ...request,
+      provider: '',
+      minOffNadir: null,
+      minResolution: null,
+      acquisitionStartDate: request.acquisitionStartDate || null,
+      acquisitionEndDate: request.acquisitionEndDate || null,
+      pageNumber: request.pageNumber || 1,
+      pageSize: request.pageSize || 50
+    };
+
+    this.smartFilterLoading.set(true);
+
+    this.mapService.smartProductFilter(normalizedRequest).subscribe({
+      next: (result) => {
+        const results = result ?? [];
+
+        this.smartFilterResults.set(results);
+        this.smartFilterResultsPanelOpen.set(results.length > 0);
+
+        this.smartFilterLoading.set(false);
+        this.selectedSmartFilterProductId.set(null);
+        this.clearOverlaySource();
+      },
+      error: (error) => {
+        console.error('Akıllı filtreleme hatası:', error);
+
+        this.smartFilterResults.set([]);
+        this.smartFilterResultsPanelOpen.set(false);
+
+        this.selectedSmartFilterProductId.set(null);
+        this.clearOverlaySource();
+        this.smartFilterLoading.set(false);
+      }
+    });
+  }
+
+  clearSmartFilter(): void {
+    this.smartFilterResults.set([]);
+    this.smartFilterResultsPanelOpen.set(false);
+    this.selectedSmartFilterProductId.set(null);
+    this.clearOverlaySource();
+  }
+
+  selectSmartFilterProduct(item: ProductSmartFilterResult): void {
+    this.selectedSmartFilterProductId.set(this.getSmartFilterProductId(item));
+    this.zoomToSmartFilterProduct(item);
+    this.closeAllDrawers();
+  }
+
+  canViewAddToCart(item: ProductSmartFilterResult): boolean {
+    const productId = this.getSmartFilterProductId(item);
+
+    if (!productId) {
+      return false;
+    }
+
+    const basket = this.basketService.basket;
+
+    if (basket) {
+      return !basket.some((basketItem) => Number(basketItem.productId) === productId);
+    }
+
+    return true;
+  }
+
+  addSmartFilterProductToCart(item: ProductSmartFilterResult): void {
+    this.addToCart(item);
+  }
+
+  addToCart(item: ProductSmartFilterResult): void {
+    const productId = this.getSmartFilterProductId(item);
+
+    if (!productId) {
+      this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+      return;
+    }
+
+    if (!this.canViewAddToCart(item)) {
+      return;
+    }
+
+    const currentUser = this.authService.currentUserValue;
+
+    if (currentUser) {
+      const data: BasketModel = {
+        id: 0,
+        userId: Number(currentUser.id),
+        productId,
+        isDeleted: false,
+        product: undefined,
+        totalPrice: undefined,
+        numberOf: undefined
+      };
+
+      this.basketManagementService.save(data).subscribe((result) => {
+        if (result.isSuccess) {
+          this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+          this.basketService.loadBasketFromDb();
+        } else {
+          this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+        }
+      });
+
+      return;
+    }
+
+    const smartItem = item as ProductSmartFilterResult & {
+      price?: number | null;
+      totalPrice?: number | null;
+      unitPrice?: number | null;
+    };
+
+    const product = {
+      categoryId: 1,
+      id: productId,
+      name: item.name || item.imageId || '-',
+      price: smartItem.price ?? smartItem.totalPrice ?? smartItem.unitPrice ?? 0,
+      isDeleted: false,
+      userId: 0
+    };
+
+    let basket = JSON.parse(localStorage.getItem('basket') as string) as BasketModel[] | null;
+
+    if (basket?.length) {
+      if (basket.some((basketItem) => Number(basketItem.productId) === productId)) {
+        this.basketService.setBasket(basket);
+        return;
+      }
+
+      if (basket.length < 15) {
+        basket.push({
+          id: 0,
+          userId: 0,
+          product: product as any,
+          productId: product.id,
+          isDeleted: false,
+          numberOf: 0,
+          totalPrice: 0
+        });
+      } else {
+        this.alertService.createAlert(
+          'warning',
+          this.translateService.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS')
+        );
+        return;
+      }
+    } else {
+      basket = [
+        {
+          id: 0,
+          userId: 0,
+          product: product as any,
+          productId: product.id,
+          isDeleted: false,
+          numberOf: 0,
+          totalPrice: 0
+        }
+      ];
+    }
+
+    this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+    this.basketService.setBasket(basket);
+  }
+
+  private getSmartFilterProductId(item: ProductSmartFilterResult | null | undefined): number {
+    const rawItem = item as (ProductSmartFilterResult & {
+      productId?: number | string | null;
+      id?: number | string | null;
+    }) | null | undefined;
+    const rawId = rawItem?.productId ?? rawItem?.id;
+    const productId = Number(rawId);
+
+    return Number.isFinite(productId) && productId > 0 ? productId : 0;
+  }
+
+  zoomToSmartFilterProduct(item: ProductSmartFilterResult): void {
+    this.suppressMapClicks();
+
+    if (item.wkt) {
+      this.renderSmartFilterFootprint(item);
+      return;
+    }
+
+    if (this.renderSmartFilterBboxFootprint(item)) {
+      return;
+    }
+  }
+
+  private renderSmartFilterBboxFootprint(item: ProductSmartFilterResult): boolean {
+    if (
+      item.bboxMinX == null ||
+      item.bboxMinY == null ||
+      item.bboxMaxX == null ||
+      item.bboxMaxY == null ||
+      !this.map ||
+      !this.view
+    ) {
+      this.clearOverlaySource();
+      return false;
+    }
+
+    try {
+      this.clearOverlaySource();
+
+      const min = fromLonLat([item.bboxMinX, item.bboxMinY]);
+      const max = fromLonLat([item.bboxMaxX, item.bboxMaxY]);
+      const minX = min[0];
+      const minY = min[1];
+      const maxX = max[0];
+      const maxY = max[1];
+
+      const feature = new Feature({
+        geometry: new Polygon([
+          [
+            [minX, minY],
+            [maxX, minY],
+            [maxX, maxY],
+            [minX, maxY],
+            [minX, minY]
+          ]
+        ])
+      }) as Feature<Geometry>;
+
+      this.setSmartFilterFootprintProperties(feature, item);
+
+      this.vectorSource.addFeature(feature);
+      this.fitToOverlay();
+
+      setTimeout(() => {
+        this.map?.updateSize();
+      }, 50);
+
+      return true;
+    } catch (error) {
+      console.error('Smart filter bbox çizimi başarısız:', error);
+      return false;
+    }
+  }
+
+  private renderSmartFilterFootprint(item: ProductSmartFilterResult): void {
+    if (!item.wkt || !this.map || !this.view) {
+      return;
+    }
+
+    try {
+      this.clearOverlaySource();
+
+      const feature = new WKT().readFeature(item.wkt, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+      }) as Feature<Geometry>;
+
+      const geometry = feature.getGeometry();
+      const geometryType = geometry?.getType();
+
+      if (!geometry || (geometryType !== 'Polygon' && geometryType !== 'MultiPolygon')) {
+        console.warn('Smart filter footprint için sadece Polygon veya MultiPolygon WKT desteklenir.');
+        return;
+      }
+
+      this.setSmartFilterFootprintProperties(feature, item);
+
+      this.vectorSource.addFeature(feature);
+      this.fitToOverlay();
+
+      setTimeout(() => {
+        this.map?.updateSize();
+      }, 50);
+    } catch (error) {
+      console.error('Smart filter footprint çizimi başarısız:', error);
+    }
+  }
+
+  private setSmartFilterFootprintProperties(
+    feature: Feature<Geometry>,
+    item: ProductSmartFilterResult
+  ): void {
+    feature.set('featureType', 'smartFilterFootprint');
+    feature.set('productId', item.id);
+    feature.set('selected', true);
+    feature.setStyle(this.selectedSmartFilterFootprintStyle);
+
+    const smartFilterInfo: SmartFilterPopupInfo[] = [
+      { labelKey: 'PRODUCT.NAME', value: item.name || '-' },
+      { labelKey: 'PRODUCT.IMAGE_ID', value: item.imageId || '-' },
+      { labelKey: 'PRODUCT.PROVIDER', value: item.provider || '-' },
+      { labelKey: 'PRODUCT.SENSOR_MODE', value: item.sensorMode || '-' },
+      {
+        labelKey: 'PRODUCT.ACQUISITION_DATE',
+        value: item.acquisitionDate
+          ? formatDate(item.acquisitionDate, 'dd/MM/yyyy HH:mm', this.locale)
+          : '-'
+      },
+      { labelKey: 'PRODUCT.CLOUD_RATE', value: item.cloudRate != null ? `${item.cloudRate}%` : '-' },
+      { labelKey: 'PRODUCT.NADIR_ANGLE', value: item.nadirAngle != null ? `${item.nadirAngle}°` : '-' },
+      { labelKey: 'PRODUCT.RESOLUTION', value: item.resolution != null ? `${item.resolution} m` : '-' },
+      { labelKey: 'PRODUCT.SPECTRAL_RESOLUTION', value: item.spectralResolution || '-' }
+    ];
+
+    feature.set('smartFilterInfo', smartFilterInfo);
+  }
+
+  toggleSmartFilterResultsPanel(): void {
+    if (!this.smartFilterResults().length) return;
+
+    this.smartFilterResultsPanelOpen.update(v => !v);
   }
 }

@@ -1,0 +1,100 @@
+<div class="left-actions-shell" *ngIf="!previewMode">
+  <div class="left-actions-bar">
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      [class.active]="layerManagerOpen"
+      (click)="layerManagerClick.emit()"
+      [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.LAYER_MANAGER' | translate">
+      <i class="fa-solid fa-layer-group text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      [class.active]="searchPanelOpen"
+      (click)="searchClick.emit()"
+      [title]="'MAP.ACTIONS.SEARCH' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.SEARCH' | translate">
+      <i class="fa-solid fa-magnifying-glass text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      [class.active]="smartFilterOpen"
+      (click)="smartFilterClick.emit()"
+      title="Akıllı Filtreleme"
+      aria-label="Akıllı Filtreleme">
+      <i class="fa-solid fa-filter-circle-dollar text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      [class.active]="polygonMode"
+      (click)="polygonClick.emit()"
+      [title]="'MAP.ACTIONS.POLYGON' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.POLYGON' | translate">
+      <i class="fa-solid fa-draw-polygon text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      [class.active]="measureLengthMode"
+      (click)="measureLengthClick.emit()"
+      [title]="'MAP.ACTIONS.MEASURE_LENGTH' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.MEASURE_LENGTH' | translate">
+      <i class="fa-solid fa-ruler text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      [class.active]="measureAreaMode"
+      (click)="measureAreaClick.emit()"
+      [title]="'MAP.ACTIONS.MEASURE_AREA' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.MEASURE_AREA' | translate">
+      <i class="fa-solid fa-compass-drafting text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      (click)="coordinateClick.emit()"
+      [title]="'MAP.ACTIONS.GOTO_COORDINATE' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.GOTO_COORDINATE' | translate">
+      <i class="fa-solid fa-location-crosshairs text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      [class.active]="exportPanelOpen"
+      (click)="exportImageClick.emit()"
+      [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.EXPORT_IMAGE' | translate">
+      <i class="fa-solid fa-file-export text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      (click)="uploadClick.emit()"
+      [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.UPLOAD_FILE' | translate">
+      <i class="fa-solid fa-file-import text-white"></i>
+    </button>
+
+    <button
+      type="button"
+      class="left-action-btn btn btn-icon btn-active-light-primary"
+      (click)="resetClick.emit()"
+      [title]="'MAP.ACTIONS.RESET' | translate"
+      [attr.aria-label]="'MAP.ACTIONS.RESET' | translate">
+      <i class="fa-solid fa-rotate text-white"></i>
+    </button>
+  </div>
+</div>

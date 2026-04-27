@@ -15,9 +15,9 @@
 }
 
 .map-side-panel--left {
-  left: 76px;
-  width: min(540px, calc(100% - 76px));
-  max-width: calc(100% - 76px);
+  left: 72px;
+  width: min(540px, calc(100% - 72px));
+  max-width: calc(100% - 72px);
   transform: translate3d(-24px, 0, 0);
 }
 
@@ -443,8 +443,8 @@
 
 @media (max-width: 991.98px) {
   .map-side-panel--left {
-    width: min(480px, calc(100% - 76px));
-    max-width: calc(100% - 76px);
+    width: min(480px, calc(100% - 72px));
+    max-width: calc(100% - 72px);
   }
 }
 

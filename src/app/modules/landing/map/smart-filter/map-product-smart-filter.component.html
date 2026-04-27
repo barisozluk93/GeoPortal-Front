@@ -1,0 +1,175 @@
+<aside class="detail-drawer" [class.open]="open">
+  <div class="detail-drawer__header">
+    <div>
+      <div class="detail-drawer__kicker text-primary">
+        {{ 'MAP.PRODUCT_SMART_FILTER.KICKER' | translate }}
+      </div>
+
+      <div class="detail-drawer__title">
+        {{ 'MAP.PRODUCT_SMART_FILTER.TITLE' | translate }}
+      </div>
+
+      <div class="detail-drawer__subtitle">
+        {{ 'MAP.PRODUCT_SMART_FILTER.SUBTITLE' | translate }}
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <button class="drawer-clear-btn btn btn-sm btn-icon btn-light" type="button" (click)="clearFilter()"
+        [title]="'MAP.PRODUCT_SMART_FILTER.CLEAR' | translate"
+        [attr.aria-label]="'MAP.PRODUCT_SMART_FILTER.CLEAR' | translate">
+        <i class="ki-outline ki-arrows-circle fs-2"></i>
+      </button>
+
+      <button class="drawer-close-btn btn btn-sm btn-icon btn-light" type="button" (click)="close.emit()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"
+          aria-hidden="true">
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="detail-drawer__body">
+    <div class="detail-section">
+      <div class="detail-section__title">
+        {{ 'MAP.PRODUCT_SMART_FILTER.RESULTS' | translate }}
+      </div>
+
+      <div class="service-endpoint-box smart-filter-summary-box position-relative">
+
+        <span class="smart-filter-summary-box__label">
+          {{ 'MAP.PRODUCT_SMART_FILTER.RESULTS' | translate }}
+        </span>
+
+        <span class="smart-filter-summary-box__count">
+          {{ loading ? ('MAP.PRODUCT_SMART_FILTER.LOADING' | translate) : results.length }}
+        </span>
+
+        <!-- BUTON (BAR İÇİNDE FLOAT) -->
+        <button class="btn btn-sm btn-light-primary smart-filter-toggle-btn" type="button"
+          *ngIf="!loading && results.length > 0" (click)="toggleResults.emit()">
+
+          <i class="ki-outline ki-eye fs-3"></i>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section__title">
+        {{ 'MAP.PRODUCT_SMART_FILTER.PARAMETERS' | translate }}
+      </div>
+
+      <div class="filter-rule-list">
+        <div class="filter-rule-card">
+          <div class="filter-rule-grid">
+            <div>
+              <label class="filter-label-mini">
+                {{ 'MAP.PRODUCT_SMART_FILTER.IMAGE_TYPE' | translate }}
+              </label>
+
+              <input class="form-control form-control-lg" [(ngModel)]="model.imageType"
+                (ngModelChange)="onFilterChange()"
+                [placeholder]="'MAP.PRODUCT_SMART_FILTER.IMAGE_TYPE_PLACEHOLDER' | translate" />
+            </div>
+
+            <div class="filter-field-full">
+              <label class="filter-label-mini">
+                {{ 'MAP.PRODUCT_SMART_FILTER.DATE_RANGE' | translate }}
+              </label>
+
+              <div class="date-range-picker">
+                <input type="date" class="form-control form-control-lg" [(ngModel)]="model.acquisitionStartDate"
+                  (ngModelChange)="onFilterChange()" />
+
+                <div class="date-range-picker__separator">—</div>
+
+                <input type="date" class="form-control form-control-lg" [(ngModel)]="model.acquisitionEndDate"
+                  (ngModelChange)="onFilterChange()" />
+              </div>
+            </div>
+
+            <div class="filter-field-full">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <label class="filter-label-mini mb-0">
+                  {{ 'MAP.PRODUCT_SMART_FILTER.MAX_CLOUD_RATE' | translate }}
+                </label>
+              </div>
+
+              <div class="filter-box rounded-4 p-5">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                  <span class="fs-7 fw-semibold text-gray-500">0%</span>
+
+                  <span class="badge badge-pill badge-outline badge-light-primary px-4 py-3 fs-8 fw-bold">
+                    {{ 'MAP.PRODUCT_SMART_FILTER.MAX_CLOUD_RATE' | translate }}: {{ model.maxCloudRate }}%
+                  </span>
+
+                  <span class="fs-7 fw-semibold text-gray-500">100%</span>
+                </div>
+
+                <input type="range" min="0" max="100" step="1" class="form-range" [(ngModel)]="model.maxCloudRate"
+                  (ngModelChange)="onFilterChange()" />
+              </div>
+            </div>
+
+            <div class="filter-field-full">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <label class="filter-label-mini mb-0">
+                  {{ 'MAP.PRODUCT_SMART_FILTER.MAX_OFF_NADIR' | translate }}
+                </label>
+              </div>
+
+              <div class="filter-box rounded-4 p-5">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                  <span class="fs-7 fw-semibold text-gray-500">0°</span>
+
+                  <span class="badge badge-pill badge-outline badge-light-primary px-4 py-3 fs-8 fw-bold">
+                    {{ 'MAP.PRODUCT_SMART_FILTER.MAX_OFF_NADIR' | translate }}: {{ model.maxOffNadir }}°
+                  </span>
+
+                  <span class="fs-7 fw-semibold text-gray-500">100°</span>
+                </div>
+
+                <input type="range" min="0" max="100" step="1" class="form-range" [(ngModel)]="model.maxOffNadir"
+                  (ngModelChange)="onFilterChange()" />
+              </div>
+            </div>
+
+            <div class="filter-field-full">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <label class="filter-label-mini mb-0">
+                  {{ 'MAP.PRODUCT_SMART_FILTER.MAX_RESOLUTION' | translate }}
+                </label>
+              </div>
+
+              <div class="filter-box rounded-4 p-5">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                  <span class="fs-7 fw-semibold text-gray-500">0.1 m</span>
+
+                  <span class="badge badge-pill badge-outline badge-light-primary px-4 py-3 fs-8 fw-bold">
+                    {{ 'MAP.PRODUCT_SMART_FILTER.MAX_RESOLUTION' | translate }}: {{ model.maxResolution }} m
+                  </span>
+
+                  <span class="fs-7 fw-semibold text-gray-500">30 m</span>
+                </div>
+
+                <input type="range" min="0.1" max="30" step="0.1" class="form-range" [(ngModel)]="model.maxResolution"
+                  (ngModelChange)="onFilterChange()" />
+              </div>
+            </div>
+
+            <div class="filter-field-full">
+              <label class="filter-label-mini">
+                {{ 'MAP.PRODUCT_SMART_FILTER.SPECTRAL_RESOLUTION' | translate }}
+              </label>
+
+              <input class="form-control form-control-lg" [(ngModel)]="model.spectralResolution"
+                (ngModelChange)="onFilterChange()"
+                [placeholder]="'MAP.PRODUCT_SMART_FILTER.SPECTRAL_RESOLUTION_PLACEHOLDER' | translate" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
