@@ -27,6 +27,7 @@ export class LayerEditSaveComponent implements OnInit, OnDestroy {
     { value: LayerType.BaseMap, label: 'Base Map' },
     { value: LayerType.Wms, label: 'WMS' },
     { value: LayerType.Wfs, label: 'WFS' },
+    { value: LayerType.Wmts, label: 'WMTS' }
   ];
 
   constructor(
@@ -84,7 +85,10 @@ export class LayerEditSaveComponent implements OnInit, OnDestroy {
 
     layerNameControl.clearValidators();
 
-    if (selectedType === LayerType.Wms || selectedType === LayerType.Wfs) {
+    if (selectedType === LayerType.Wms ||
+      selectedType === LayerType.Wfs ||
+      selectedType === LayerType.Wmts
+    ) {
       layerNameControl.setValidators([Validators.required]);
     }
 

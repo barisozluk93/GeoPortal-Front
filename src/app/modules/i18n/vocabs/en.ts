@@ -672,7 +672,9 @@ export const locale = {
         "KICKER": "Layers",
         "TITLE": "Layer Manager",
         "SUBTITLE": "Basemaps / Overlays",
-        "COLLAPSE": "Collapse"
+        "COLLAPSE": "Collapse",
+        "EXPAND": "Expand",
+        "CLOSE": "Close"
       },
       "ACTIONS": {
         "LAYER_MANAGER": "Layer Manager",
@@ -854,7 +856,34 @@ export const locale = {
         "ADD_TO_CART": "Add to cart",
         "IN_CART": "In cart",
         "SELECTED": "Selected"
-      }
+      },
+      "NEW_IMAGERY_ORDER": {
+      "KICKER": "New Imagery Order",
+      "TITLE": "Create New Request",
+      "SUBTITLE": "Adds to cart with area-based pricing",
+      "CREATE_REQUEST": "Create New Request",
+      "GEOMETRY_REQUIRED": "To create a request, first upload a file, draw a polygon, or select a polygon from search results.",
+      "IMAGE_TYPE": "Image Type",
+      "MONO": "Mono",
+      "STEREO": "Stereo",
+      "NEW": "New",
+      "MAX_CLOUD_RATE": "Maximum Cloud Rate (%)",
+      "MAX_OFF_NADIR": "Maximum Acquisition Angle / Off-Nadir (°)",
+      "CLOUD_HINT": "Enter a value between 0 and 100.",
+      "OFF_NADIR_HINT": "Enter a value between 0 and 90 degrees.",
+      "EXAMPLE_10": "e.g. 10",
+      "EXAMPLE_25": "e.g. 25",
+      "PROCESSING_OPTIONS": "Processing Options",
+      "ORTHO_RECTIFIED": "Orthorectified",
+      "PAN_SHARPEN": "Pansharpen",
+      "CLASSIFIED": "Classified",
+      "TOTAL_AREA": "Total Area",
+      "UNIT_PRICE": "Unit Price",
+      "CLEAR": "Clear",
+      "ADD_TO_CART": "Add to Cart",
+      "BASKET_PRODUCT_NAME": "{{imageType}} Imagery Request",
+      "PRICE": "Price"
+    }
     },
 
     "CARD_HOLDER": "Name on Card",
@@ -1325,6 +1354,7 @@ export const locale = {
     "LAYER_NAME_LABEL": "Layer Name",
     "GEOMETRY_TYPE": "Geometry Type",
     "FEATURE_DETAILS": "Feature Details",
+    "PRODUCT_HEADER": "Products",
     "PRODUCT": {
       "FOOTPRINT": "Product Footprint",
       "NAME": "Product Name",

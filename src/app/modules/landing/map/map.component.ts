@@ -20,6 +20,7 @@ import View from 'ol/View';
 import Geometry from 'ol/geom/Geometry';
 import LineString from 'ol/geom/LineString';
 import Polygon from 'ol/geom/Polygon';
+import MultiPolygon from 'ol/geom/MultiPolygon';
 import Point from 'ol/geom/Point';
 import BaseLayer from 'ol/layer/Base';
 import TileLayer from 'ol/layer/Tile';
@@ -28,6 +29,8 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import XYZ from 'ol/source/XYZ';
 import TileWMS from 'ol/source/TileWMS';
+import WMTS, { optionsFromCapabilities } from 'ol/source/WMTS';
+import WMTSCapabilities from 'ol/format/WMTSCapabilities';
 import GeoJSON from 'ol/format/GeoJSON';
 import KML from 'ol/format/KML';
 import { bbox as bboxStrategy } from 'ol/loadingstrategy';
@@ -56,7 +59,8 @@ import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.serv
 import { BasketModel } from '../../basket-management/models/basket.model';
 import { AuthService } from '../../auth';
 import { BasketManagementService } from '../../basket-management/basket-management.service';
-
+import { ProductModel } from '../marketplace/models/product.model';
+import { MarketplaceService } from '../marketplace/marketplace.service';
 
 type MapExportFormat = 'image' | 'pdf';
 
@@ -66,6 +70,8 @@ type SearchResult = {
   lat: string;
   lon: string;
   geojson?: any;
+  smartProduct?: ProductSmartFilterResult;
+  source?: 'nominatim' | 'smartProduct';
 };
 
 type LayerFilterOperator = '' | 'eq' | 'like' | 'gt' | 'gte' | 'lt' | 'lte' | 'between';
@@ -118,6 +124,22 @@ type SmartFilterPopupInfo = {
   value: string;
 };
 
+type SmartFilterResultsSource = 'aoi' | 'smartFilter' | null;
+
+type NewImageryOrderRequest = {
+  /** UI’da gösterilmez; sepete/backend payload’a AOI geometry olarak gönderilir. */
+  wkt?: string;
+  imageType: 'mono' | 'stereo' | '';
+  maxCloudRate: number | null;
+  maxOffNadir: number | null;
+  orthoRectified: boolean;
+  panSharpen: boolean;
+  classified: boolean;
+  areaKm2: number;
+  pricePerSquareKm: number;
+  totalPrice: number;
+};
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -140,6 +162,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   readonly alertService = inject(AlertService);
   readonly authService = inject(AuthService);
   readonly basketManagementService = inject(BasketManagementService);
+  readonly marketPlaceService = inject(MarketplaceService);
 
   private langChangeSubscription?: Subscription;
   private featureInfoContext: FeatureInfoContext = null;
@@ -194,17 +217,31 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   });
 
 
-  private readonly selectedSmartFilterFootprintStyle = new Style({
-    fill: new Fill({ color: 'rgba(77, 163, 255, 0.24)' }),
-    stroke: new Stroke({ color: '#7eb6ff', width: 4 }),
-    image: new CircleStyle({
-      radius: 8,
-      fill: new Fill({ color: '#ffffff' }),
-      stroke: new Stroke({ color: '#7eb6ff', width: 3 })
-    })
+  private readonly smartFilterFootprintPalette = [
+    { stroke: '#ff6b6b', fill: 'rgba(255, 107, 107, 0.22)' },
+    { stroke: '#51cf66', fill: 'rgba(81, 207, 102, 0.22)' },
+    { stroke: '#339af0', fill: 'rgba(51, 154, 240, 0.22)' },
+    { stroke: '#fcc419', fill: 'rgba(252, 196, 25, 0.24)' },
+    { stroke: '#cc5de8', fill: 'rgba(204, 93, 232, 0.22)' },
+    { stroke: '#22b8cf', fill: 'rgba(34, 184, 207, 0.22)' },
+    { stroke: '#ff922b', fill: 'rgba(255, 146, 43, 0.22)' }
+  ];
+
+  private readonly selectedSmartFilterFootprintSource = new VectorSource<Feature<Geometry>>();
+  private readonly selectedSmartFilterFootprintLayer = new VectorLayer({
+    source: this.selectedSmartFilterFootprintSource,
+    visible: true,
+    opacity: 1,
+    style: (feature) => this.getSmartFilterFootprintStyle(feature as Feature<Geometry>)
   });
 
   readonly smartFilterResultsPanelOpen = signal(false);
+  readonly smartFilterResultsPanelCollapsed = signal(false);
+  readonly smartFilterResultsSource = signal<SmartFilterResultsSource>(null);
+  readonly currentAoiWkt = signal('');
+  readonly currentAoiAreaKm2 = signal(0);
+  readonly newImageryPricePerKm2 = 100;
+  readonly newImageryOrderPanelOpen = signal(false);
   readonly searchText = signal('');
   readonly searchResults = signal<SearchResult[]>([]);
   readonly searchPanelOpen = signal(false);
@@ -240,11 +277,16 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   readonly smartFilterLoading = signal(false);
   readonly smartFilterResults = signal<ProductSmartFilterResult[]>([]);
   readonly selectedSmartFilterProductId = signal<number | null>(null);
+  readonly selectedSmartFilterProduct = signal<ProductSmartFilterResult | null>(null);
+  readonly selectedMarketplaceDetailProduct = signal<ProductModel | null>(null);
+  readonly marketplaceDetailLoading = signal(false);
+  readonly marketplaceDetailErrorMessage = signal('');
   readonly smartFilterCart = signal<ProductSmartFilterResult[]>([]);
 
   readonly LayerType = LayerType;
 
   private readonly mapLayerRegistry = new globalThis.Map<number, BaseLayer>();
+  private readonly pendingWmtsLayerIds = new Set<number>();
 
   private readonly defaultCenter = fromLonLat([35.2433, 39.0]);
   private readonly defaultZoom = 6;
@@ -371,7 +413,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
     this.map = new OlMap({
       target: this.mapEl.nativeElement,
-      layers: [this.vectorLayer],
+      layers: [this.vectorLayer, this.selectedSmartFilterFootprintLayer],
       view: this.view,
       controls: []
     });
@@ -541,7 +583,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     this.layerManagerOpen.set(false);
     this.searchPanelOpen.set(false);
     this.exportPanelOpen.set(false);
-    this.smartFilterResultsPanelOpen.set(false);
   }
 
   toggleInfo(layer: UiLayerModel): void {
@@ -795,17 +836,25 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     if (layer.type === LayerType.BaseMap) return 'BaseMap';
     if (layer.type === LayerType.Wms) return 'WMS';
     if (layer.type === LayerType.Wfs) return 'WFS';
+    if (layer.type === LayerType.Wmts) return 'WMTS';
+    if (layer.type === LayerType.Wcs) return 'WCS';
     return '-';
   }
 
   getDefaultVersion(layer: UiLayerModel | null): string {
     if (!layer) return '-';
-    return layer.type === LayerType.Wfs ? '2.0.0' : '1.3.0';
+    if (layer.type === LayerType.Wfs) return '2.0.0';
+    if (layer.type === LayerType.Wmts) return '1.0.0';
+    if (layer.type === LayerType.Wcs) return '2.0.1';
+    return '1.3.0';
   }
 
   getDefaultFormat(layer: UiLayerModel | null): string {
     if (!layer) return '-';
-    return layer.type === LayerType.Wfs ? 'application/json' : 'image/png';
+    if (layer.type === LayerType.Wfs) return 'application/json';
+    if (layer.type === LayerType.Wmts) return layer.format || 'image/png';
+    if (layer.type === LayerType.Wcs) return layer.format || 'image/tiff';
+    return 'image/png';
   }
 
   getLegendUrl(layer: UiLayerModel | null): string {
@@ -1078,6 +1127,16 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
       });
     }
 
+    if (layer.type === LayerType.Wmts) {
+      void this.ensureWmtsLayerExists(layer);
+      return;
+    }
+
+    if (layer.type === LayerType.Wcs) {
+      console.warn('WCS katmanları bu ekranda doğrudan render edilmiyor. WCS için WMS/WMTS proxy veya GeoTIFF raster render gerekir.', layer);
+      return;
+    }
+
     if (!olLayer) return;
 
     olLayer.set('gpLayerId', layer.id);
@@ -1087,6 +1146,86 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     const insertIndex = this.getInsertIndex(layer);
     this.map.getLayers().insertAt(insertIndex, olLayer);
     this.mapLayerRegistry.set(layer.id, olLayer);
+  }
+
+  private async ensureWmtsLayerExists(layer: LayerModel): Promise<void> {
+    if (!this.map || !layer.url || !layer.layerName) {
+      console.warn(`WMTS için url veya layerName eksik. LayerId: ${layer.id}`);
+      return;
+    }
+
+    if (this.mapLayerRegistry.has(layer.id) || this.pendingWmtsLayerIds.has(layer.id)) {
+      return;
+    }
+
+    this.pendingWmtsLayerIds.add(layer.id);
+
+    try {
+      const capabilitiesUrl = this.buildWmtsCapabilitiesUrl(layer.url);
+      const response = await fetch(capabilitiesUrl, {
+        headers: { Accept: 'application/xml, text/xml, */*' }
+      });
+
+      if (!response.ok) {
+        throw new Error(`WMTS GetCapabilities başarısız: ${response.status} ${response.statusText}`);
+      }
+
+      const capabilitiesText = await response.text();
+      const capabilities = new WMTSCapabilities().read(capabilitiesText);
+      const wmtsOptions = optionsFromCapabilities(capabilities, {
+        layer: layer.layerName,
+        ...(layer.format ? { format: layer.format } : {})
+      } as any);
+
+      if (!wmtsOptions) {
+        throw new Error(`WMTS capabilities içinde layer bulunamadı: ${layer.layerName}`);
+      }
+
+      const uiLayer = this.findUiLayerById(layer.id);
+      const isVisible = uiLayer?.visible ?? layer.isVisible;
+      const opacity = uiLayer?.opacity ?? this.normalizeOpacityValue(layer.opacity as number);
+
+      const olLayer = new TileLayer({
+        source: new WMTS({
+          ...(wmtsOptions as any),
+          crossOrigin: 'anonymous'
+        }),
+        visible: !!isVisible,
+        opacity: Number(opacity) / 100
+      });
+
+      olLayer.set('gpLayerId', layer.id);
+      olLayer.set('gpLayerName', layer.name || layer.layerName || '-');
+      olLayer.set('gpLayerType', this.getLayerTypeText(layer as UiLayerModel));
+
+      if (this.mapLayerRegistry.has(layer.id)) {
+        return;
+      }
+
+      const insertIndex = this.getInsertIndex(layer);
+      this.map?.getLayers().insertAt(insertIndex, olLayer);
+      this.mapLayerRegistry.set(layer.id, olLayer);
+    } catch (error) {
+      console.error('WMTS katmanı oluşturulamadı:', layer, error);
+    } finally {
+      this.pendingWmtsLayerIds.delete(layer.id);
+    }
+  }
+
+  private buildWmtsCapabilitiesUrl(url: string): string {
+    const trimmedUrl = (url || '').trim();
+    if (!trimmedUrl) return trimmedUrl;
+
+    if (/WMTSCapabilities\.xml(\?.*)?$/i.test(trimmedUrl)) {
+      return trimmedUrl;
+    }
+
+    if (/request=GetCapabilities/i.test(trimmedUrl) && /service=WMTS/i.test(trimmedUrl)) {
+      return trimmedUrl;
+    }
+
+    const separator = trimmedUrl.includes('?') ? (trimmedUrl.endsWith('?') || trimmedUrl.endsWith('&') ? '' : '&') : '?';
+    return `${trimmedUrl}${separator}SERVICE=WMTS&REQUEST=GetCapabilities&VERSION=1.0.0`;
   }
 
   private getInsertIndex(layer: LayerModel): number {
@@ -1500,18 +1639,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
       );
 
       if (clickedFeature) {
+        const isSmartFilterFootprint =
+          (clickedFeature as Feature<Geometry>).get('featureType') === 'smartFilterFootprint';
+
+        if (isSmartFilterFootprint) {
+          this.openMarketplaceDetailFromFootprint(clickedFeature as Feature<Geometry>);
+          return;
+        }
+
         const clickedOnOverlayDrawing = clickedLayer === this.vectorLayer || !clickedLayer;
 
         if (clickedOnOverlayDrawing) {
-          const isSmartFilterFootprint =
-            (clickedFeature as Feature<Geometry>).get('featureType') === 'smartFilterFootprint';
-
-          if (isSmartFilterFootprint) {
-            this.closeAllDrawers();
-            this.openFeatureInfoFromFeature(clickedFeature, clickedLayer);
-            return;
-          }
-
           this.closeFeatureInfoDrawer();
           return;
         }
@@ -1788,6 +1926,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
   resetView(): void {
     this.clearOverlaySource();
+    this.clearSmartFilterFootprint();
     this.stopPolygonDrawing();
     this.stopMeasurementDrawing(true);
     this.closeAllDrawers();
@@ -1827,10 +1966,14 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
       type: 'Polygon'
     });
 
-    this.drawInteraction.on('drawend', () => {
+    this.drawInteraction.on('drawend', (event) => {
+      const feature = event.feature as Feature<Geometry>;
+
       this.suppressMapClicks();
       this.stopPolygonDrawing();
       this.fitToOverlay();
+
+      void this.runSmartQueryForFeatures([feature], 'draw-polygon');
     });
 
     this.map.addInteraction(this.drawInteraction);
@@ -1926,7 +2069,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
-
+        await this.runSmartQueryForFeatures(polygonFeatures, file.name);
 
         input.value = '';
         return;
@@ -1948,7 +2091,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
-
+        await this.runSmartQueryForFeatures(polygonFeatures, file.name);
 
         input.value = '';
         return;
@@ -1972,7 +2115,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
         this.vectorSource.addFeatures(polygonFeatures);
         this.fitToOverlay();
-
+        await this.runSmartQueryForFeatures(polygonFeatures, file.name);
 
         input.value = '';
         return;
@@ -2025,6 +2168,14 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
   }
 
   async flyToResult(item: SearchResult): Promise<void> {
+    if (item.smartProduct) {
+      this.selectedSmartFilterProductId.set(this.getSmartFilterProductId(item.smartProduct));
+      this.selectedSmartFilterProduct.set(item.smartProduct);
+      this.smartFilterResultsPanelCollapsed.set(true);
+      this.zoomToSmartFilterProduct(item.smartProduct);
+      return;
+    }
+
     const geoType = item?.geojson?.type;
 
     if (geoType !== 'Polygon' && geoType !== 'MultiPolygon') {
@@ -2034,8 +2185,148 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
     this.suppressMapClicks();
     this.focusTarget(Number(item.lat), Number(item.lon), item.geojson);
-    this.searchResults.set([]);
+    await this.runSmartQueryForGeojson(item.geojson, item.display_name);
+  }
 
+  private async runSmartQueryForGeojson(geojson: any, sourceLabel: string): Promise<void> {
+    if (!geojson) return;
+
+    try {
+      const features = new GeoJSON().readFeatures(
+        {
+          type: 'Feature',
+          geometry: geojson,
+          properties: {}
+        },
+        {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:3857'
+        }
+      ) as Feature<Geometry>[];
+
+      const polygonFeatures = this.validatePolygonFeatures(features);
+      await this.runSmartQueryForFeatures(polygonFeatures, sourceLabel);
+    } catch (error) {
+      console.error('Search polygon WKT üretimi başarısız:', error);
+    }
+  }
+
+  private async runSmartQueryForFeatures(features: Feature<Geometry>[], sourceLabel: string): Promise<void> {
+    const polygonFeatures = this.validatePolygonFeatures(features ?? []);
+    if (!polygonFeatures.length) return;
+
+    const wkt = this.featuresToWkt(polygonFeatures);
+    if (!wkt) return;
+
+    this.runSmartQueryByWkt(wkt, sourceLabel);
+  }
+
+  private featuresToWkt(features: Feature<Geometry>[]): string {
+    const polygonFeatures = this.validatePolygonFeatures(features ?? []);
+    if (!polygonFeatures.length) return '';
+
+    const wktFormat = new WKT();
+
+    if (polygonFeatures.length === 1) {
+      return wktFormat.writeFeature(polygonFeatures[0], {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+      });
+    }
+
+    const multiPolygonCoordinates: number[][][][] = [];
+
+    for (const feature of polygonFeatures) {
+      const geometry = feature.getGeometry();
+      if (!geometry) continue;
+
+      const clonedGeometry = geometry.clone().transform('EPSG:3857', 'EPSG:4326');
+      const geometryType = clonedGeometry.getType();
+
+      if (geometryType === 'Polygon') {
+        multiPolygonCoordinates.push((clonedGeometry as Polygon).getCoordinates());
+      }
+
+      if (geometryType === 'MultiPolygon') {
+        multiPolygonCoordinates.push(...(clonedGeometry as MultiPolygon).getCoordinates());
+      }
+    }
+
+    if (!multiPolygonCoordinates.length) return '';
+
+    return wktFormat.writeGeometry(new MultiPolygon(multiPolygonCoordinates));
+  }
+
+  private calculateWktAreaKm2(wkt: string): number {
+    const normalizedWkt = (wkt || '').trim();
+    if (!normalizedWkt) return 0;
+
+    try {
+      const feature = new WKT().readFeature(normalizedWkt, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+      }) as Feature<Geometry>;
+
+      const geometry = feature.getGeometry();
+      if (!geometry) return 0;
+
+      const areaM2 = getArea(geometry, { projection: 'EPSG:3857' });
+      if (!Number.isFinite(areaM2) || areaM2 <= 0) return 0;
+
+      return Number((areaM2 / 1_000_000).toFixed(2));
+    } catch (error) {
+      console.error('WKT alan hesaplama başarısız:', error);
+      return 0;
+    }
+  }
+
+  private runSmartQueryByWkt(wkt: string, sourceLabel: string): void {
+    const normalizedWkt = (wkt || '').trim();
+    if (!normalizedWkt) return;
+
+    this.currentAoiWkt.set(normalizedWkt);
+    this.currentAoiAreaKm2.set(this.calculateWktAreaKm2(normalizedWkt));
+    this.smartFilterResultsSource.set('aoi');
+
+    const request = {
+      wkt: normalizedWkt,
+      provider: '',
+      minOffNadir: null,
+      minResolution: null,
+      acquisitionStartDate: null,
+      acquisitionEndDate: null,
+      pageNumber: 1,
+      pageSize: 50
+    } as ProductSmartFilterRequest;
+
+    this.smartFilterLoading.set(true);
+    this.searchPanelOpen.set(false);
+    this.layerManagerOpen.set(false);
+    this.exportPanelOpen.set(false);
+    this.closeRightDrawersOnly();
+
+    this.mapService.smartProductFilter(request).subscribe({
+      next: (result) => {
+        const results = result ?? [];
+
+        this.smartFilterResults.set(results);
+        this.openSmartFilterResultsPanel();
+        this.selectedSmartFilterProductId.set(null);
+        this.selectedSmartFilterProduct.set(null);
+        this.searchText.set(sourceLabel ? `AOI: ${sourceLabel}` : 'AOI');
+        this.searchResults.set([]);
+        this.smartFilterLoading.set(false);
+      },
+      error: (error) => {
+        console.error('AOI smart query hatası:', error);
+
+        this.smartFilterResults.set([]);
+        this.selectedSmartFilterProductId.set(null);
+        this.selectedSmartFilterProduct.set(null);
+        this.searchResults.set([]);
+        this.smartFilterLoading.set(false);
+      }
+    });
   }
 
   private fitToOverlay(): void {
@@ -2052,6 +2343,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
   private clearOverlaySource(): void {
     this.vectorSource.clear();
+  }
+
+  private clearSmartFilterFootprint(): void {
+    this.selectedSmartFilterFootprintSource.clear();
   }
 
   private stopPolygonDrawing(): void {
@@ -2569,9 +2864,35 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
   closeSmartFilterResultsPanel(): void {
     this.smartFilterResultsPanelOpen.set(false);
+    this.smartFilterResultsPanelCollapsed.set(false);
+  }
+
+  toggleSmartFilterResultsPanelCollapsed(): void {
+    if (!this.smartFilterResultsPanelOpen()) return;
+    this.smartFilterResultsPanelCollapsed.update((current) => !current);
+  }
+
+  private openSmartFilterResultsPanel(): void {
+    this.closeLegend();
+    this.closeInfo();
+    this.closeFilterDrawer();
+    this.closeFeatureInfoDrawer();
+    this.closeCoordinatePanel();
+    this.closeSmartFilter();
+
+    this.layerManagerOpen.set(false);
+    this.searchPanelOpen.set(false);
+    this.exportPanelOpen.set(false);
+    this.smartFilterResultsPanelCollapsed.set(false);
+    this.smartFilterResultsPanelOpen.set(true);
   }
 
   applySmartFilter(request: ProductSmartFilterRequest): void {
+    this.smartFilterResultsSource.set('smartFilter');
+    this.currentAoiWkt.set('');
+    this.currentAoiAreaKm2.set(0);
+    this.closeNewImageryOrderPanel();
+
     const normalizedRequest: ProductSmartFilterRequest = {
       ...request,
       provider: '',
@@ -2590,19 +2911,22 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
         const results = result ?? [];
 
         this.smartFilterResults.set(results);
-        this.smartFilterResultsPanelOpen.set(results.length > 0);
+        this.openSmartFilterResultsPanel();
 
         this.smartFilterLoading.set(false);
         this.selectedSmartFilterProductId.set(null);
+        this.selectedSmartFilterProduct.set(null);
+        this.clearSmartFilterFootprint();
         this.clearOverlaySource();
       },
       error: (error) => {
         console.error('Akıllı filtreleme hatası:', error);
 
         this.smartFilterResults.set([]);
-        this.smartFilterResultsPanelOpen.set(false);
 
         this.selectedSmartFilterProductId.set(null);
+        this.selectedSmartFilterProduct.set(null);
+        this.clearSmartFilterFootprint();
         this.clearOverlaySource();
         this.smartFilterLoading.set(false);
       }
@@ -2611,15 +2935,22 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
   clearSmartFilter(): void {
     this.smartFilterResults.set([]);
-    this.smartFilterResultsPanelOpen.set(false);
+    this.smartFilterResultsPanelCollapsed.set(false);
+    this.smartFilterResultsSource.set(null);
+    this.currentAoiWkt.set('');
+    this.currentAoiAreaKm2.set(0);
+    this.closeNewImageryOrderPanel();
     this.selectedSmartFilterProductId.set(null);
+    this.selectedSmartFilterProduct.set(null);
+    this.clearSmartFilterFootprint();
     this.clearOverlaySource();
   }
 
   selectSmartFilterProduct(item: ProductSmartFilterResult): void {
     this.selectedSmartFilterProductId.set(this.getSmartFilterProductId(item));
+    this.selectedSmartFilterProduct.set(item);
+    this.smartFilterResultsPanelCollapsed.set(true);
     this.zoomToSmartFilterProduct(item);
-    this.closeAllDrawers();
   }
 
   canViewAddToCart(item: ProductSmartFilterResult): boolean {
@@ -2770,12 +3101,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
       !this.map ||
       !this.view
     ) {
-      this.clearOverlaySource();
+      this.removeSmartFilterFootprintForProduct(item);
       return false;
     }
 
     try {
-      this.clearOverlaySource();
+      this.removeSmartFilterFootprintForProduct(item);
 
       const min = fromLonLat([item.bboxMinX, item.bboxMinY]);
       const max = fromLonLat([item.bboxMaxX, item.bboxMaxY]);
@@ -2798,8 +3129,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
       this.setSmartFilterFootprintProperties(feature, item);
 
-      this.vectorSource.addFeature(feature);
-      this.fitToOverlay();
+      this.selectedSmartFilterFootprintSource.addFeature(feature);
+      this.fitToSmartFilterFootprint(feature);
 
       setTimeout(() => {
         this.map?.updateSize();
@@ -2818,7 +3149,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     }
 
     try {
-      this.clearOverlaySource();
+      this.removeSmartFilterFootprintForProduct(item);
 
       const feature = new WKT().readFeature(item.wkt, {
         dataProjection: 'EPSG:4326',
@@ -2835,8 +3166,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
 
       this.setSmartFilterFootprintProperties(feature, item);
 
-      this.vectorSource.addFeature(feature);
-      this.fitToOverlay();
+      this.selectedSmartFilterFootprintSource.addFeature(feature);
+      this.fitToSmartFilterFootprint(feature);
 
       setTimeout(() => {
         this.map?.updateSize();
@@ -2846,14 +3177,72 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     }
   }
 
+
+  private getSmartFilterFootprintStyle(feature: Feature<Geometry>): Style {
+    const strokeColor = String(feature.get('footprintStrokeColor') || '#ff6b6b');
+    const fillColor = String(feature.get('footprintFillColor') || 'rgba(255, 107, 107, 0.22)');
+    const isSelected = Number(feature.get('productId')) === Number(this.selectedSmartFilterProductId());
+
+    return new Style({
+      fill: new Fill({ color: fillColor }),
+      stroke: new Stroke({ color: strokeColor, width: isSelected ? 4 : 2.5 }),
+      image: new CircleStyle({
+        radius: isSelected ? 8 : 6,
+        fill: new Fill({ color: '#ffffff' }),
+        stroke: new Stroke({ color: strokeColor, width: isSelected ? 3 : 2 })
+      })
+    });
+  }
+
+  private getSmartFilterFootprintColor(item: ProductSmartFilterResult): { stroke: string; fill: string } {
+    const productId = this.getSmartFilterProductId(item);
+    const sourceValue = productId || this.hashText(item.imageId || item.name || 'product');
+    return this.smartFilterFootprintPalette[Math.abs(sourceValue) % this.smartFilterFootprintPalette.length];
+  }
+
+  private hashText(value: string): number {
+    return Array.from(value || '').reduce((hash, char) => ((hash << 5) - hash) + char.charCodeAt(0), 0);
+  }
+
+  private removeSmartFilterFootprintForProduct(item: ProductSmartFilterResult): void {
+    const productId = this.getSmartFilterProductId(item);
+    if (!productId) return;
+
+    const matched = this.selectedSmartFilterFootprintSource
+      .getFeatures()
+      .filter((feature) => Number(feature.get('productId')) === productId);
+
+    for (const feature of matched) {
+      this.selectedSmartFilterFootprintSource.removeFeature(feature);
+    }
+  }
+
+
+  private fitToSmartFilterFootprint(feature?: Feature<Geometry>): void {
+    const extent = feature?.getGeometry()?.getExtent() ?? this.selectedSmartFilterFootprintSource.getExtent();
+
+    if (!extent || extent.some((v) => !isFinite(v))) return;
+
+    this.view?.fit(extent, {
+      padding: [100, 100, 100, 100],
+      maxZoom: 15,
+      duration: 300
+    });
+  }
+
   private setSmartFilterFootprintProperties(
     feature: Feature<Geometry>,
     item: ProductSmartFilterResult
   ): void {
     feature.set('featureType', 'smartFilterFootprint');
-    feature.set('productId', item.id);
+    const productId = this.getSmartFilterProductId(item);
+    const footprintColor = this.getSmartFilterFootprintColor(item);
+
+    feature.set('productId', productId);
     feature.set('selected', true);
-    feature.setStyle(this.selectedSmartFilterFootprintStyle);
+    feature.set('smartFilterProduct', item);
+    feature.set('footprintStrokeColor', footprintColor.stroke);
+    feature.set('footprintFillColor', footprintColor.fill);
 
     const smartFilterInfo: SmartFilterPopupInfo[] = [
       { labelKey: 'PRODUCT.NAME', value: item.name || '-' },
@@ -2875,9 +3264,403 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges
     feature.set('smartFilterInfo', smartFilterInfo);
   }
 
+
+  private openMarketplaceDetailFromFootprint(feature: Feature<Geometry>): void {
+    const smartProduct = feature.get('smartFilterProduct') as ProductSmartFilterResult | undefined;
+    const productId = Number(feature.get('productId') || this.getSmartFilterProductId(smartProduct) || 0);
+
+    if (!productId) {
+      this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+      return;
+    }
+
+    const matchedProduct = smartProduct || this.smartFilterResults().find((item) => this.getSmartFilterProductId(item) === productId) || null;
+
+    this.selectedSmartFilterProductId.set(productId);
+    this.selectedSmartFilterProduct.set(matchedProduct);
+    this.openMarketplaceDetailById(productId, matchedProduct);
+  }
+
+  private openMarketplaceDetailById(productId: number, fallbackProduct?: ProductSmartFilterResult | null): void {
+    if (!productId) {
+      this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+      return;
+    }
+
+    this.closeFeatureInfoDrawer();
+    this.closeLegend();
+    this.closeInfo();
+    this.closeFilterDrawer();
+    this.closeNewImageryOrderPanel();
+
+    this.marketplaceDetailErrorMessage.set('');
+    this.marketplaceDetailLoading.set(true);
+
+    if (fallbackProduct) {
+      this.selectedMarketplaceDetailProduct.set(this.mapSmartFilterResultToProductModel(fallbackProduct));
+    } else {
+      this.selectedMarketplaceDetailProduct.set(null);
+    }
+
+    const request$ = this.marketPlaceService.getById(productId);
+
+    if (!request$?.subscribe) {
+      this.marketplaceDetailLoading.set(false);
+
+      if (!fallbackProduct) {
+        this.marketplaceDetailErrorMessage.set('MESSAGES.ERROR');
+      }
+
+      console.error('Product getById metodu bulunamadı. MapService içine getProductById veya getById eklenmeli.');
+      return;
+    }
+
+    request$.subscribe({
+      next: (result: any) => {
+        this.marketplaceDetailLoading.set(false);
+
+        const product = result?.data ?? result?.result ?? result;
+
+        if (!product) {
+          if (!fallbackProduct) {
+            this.selectedMarketplaceDetailProduct.set(null);
+            this.marketplaceDetailErrorMessage.set('MESSAGES.ERROR');
+          }
+          return;
+        }
+
+        this.selectedMarketplaceDetailProduct.set(product as ProductModel);
+      },
+      error: (error: any) => {
+        console.error('Product detayı alınamadı:', error);
+        this.marketplaceDetailLoading.set(false);
+
+        if (!fallbackProduct) {
+          this.selectedMarketplaceDetailProduct.set(null);
+          this.marketplaceDetailErrorMessage.set('MESSAGES.ERROR');
+        }
+      }
+    });
+  }
+
+  closeMarketplaceDetailDrawer(): void {
+    this.selectedMarketplaceDetailProduct.set(null);
+    this.marketplaceDetailLoading.set(false);
+    this.marketplaceDetailErrorMessage.set('');
+  }
+
+  private mapSmartFilterResultToProductModel(item: ProductSmartFilterResult): ProductModel {
+    const rawItem = item as ProductSmartFilterResult & {
+      price?: number | string | null;
+      totalPrice?: number | string | null;
+      unitPrice?: number | string | null;
+      currency?: string | null;
+      areaKm2?: number | string | null;
+      city?: string | null;
+      district?: string | null;
+      satellite?: string | null;
+      processingLevel?: string | null;
+      sourceLabel?: string | null;
+      isOrthorectified?: boolean | null;
+      isPansharpened?: boolean | null;
+      isClassified?: boolean | null;
+      classes?: ProductModel['classes'];
+      thumbnailUrl?: string | null;
+      previewUrl?: string | null;
+      description?: string | null;
+    };
+
+    const productId = this.getSmartFilterProductId(item);
+    const price = Number(rawItem.price ?? rawItem.totalPrice ?? rawItem.unitPrice ?? 0);
+
+    return {
+      id: productId,
+      name: item.name || item.imageId || '-',
+      imageId: item.imageId,
+      categoryId: 1,
+      isDeleted: false,
+      price: Number.isFinite(price) ? price : 0,
+      currency: rawItem.currency || '₺',
+      provider: item.provider,
+      sensor: item.sensorMode || item.spectralResolution,
+      sourceLabel: rawItem.sourceLabel,
+      satellite: rawItem.satellite,
+      processingLevel: rawItem.processingLevel,
+      city: rawItem.city || undefined,
+      district: rawItem.district || undefined,
+      acquisitionDate: item.acquisitionDate as any,
+      resolution: item.resolution as any,
+      cloudRate: item.cloudRate as any,
+      offNadirAngle: item.nadirAngle as any,
+      areaKm2: rawItem.areaKm2 != null ? Number(rawItem.areaKm2) : undefined,
+      bboxMinX: item.bboxMinX as any,
+      bboxMinY: item.bboxMinY as any,
+      bboxMaxX: item.bboxMaxX as any,
+      bboxMaxY: item.bboxMaxY as any,
+      previewUrl: rawItem.previewUrl || item.previewUrl,
+      thumbnailUrl: rawItem.thumbnailUrl || item.thumbnailUrl,
+      description: rawItem.description || undefined,
+      isOrthorectified: !!rawItem.isOrthorectified,
+      isPansharpened: !!rawItem.isPansharpened,
+      isClassified: !!rawItem.isClassified,
+      classes: rawItem.classes,
+      wkt: item.wkt,
+      isInMarket: true,
+      isCustomArea: false
+    } as ProductModel;
+  }
+
+  canViewMarketplaceDetailAddToCart(item: ProductModel): boolean {
+    const productId = Number(item?.id || 0);
+    if (!productId) return false;
+
+    const basket = this.basketService.basket;
+    if (basket) {
+      return !basket.some((basketItem) => Number(basketItem.productId) === productId);
+    }
+
+    return true;
+  }
+
+  addMarketplaceDetailProductToCart(item: ProductModel): void {
+    const productId = Number(item?.id || 0);
+
+    if (!productId) {
+      this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+      return;
+    }
+
+    if (!this.canViewMarketplaceDetailAddToCart(item)) {
+      return;
+    }
+
+    const currentUser = this.authService.currentUserValue;
+
+    if (currentUser) {
+      const data: BasketModel = {
+        id: 0,
+        userId: Number(currentUser.id),
+        productId,
+        isDeleted: false,
+        product: undefined,
+        totalPrice: undefined,
+        numberOf: undefined
+      };
+
+      this.basketManagementService.save(data).subscribe((result) => {
+        if (result.isSuccess) {
+          this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+          this.basketService.loadBasketFromDb();
+        } else {
+          this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+        }
+      });
+
+      return;
+    }
+
+    const product = {
+      categoryId: item.categoryId || 1,
+      id: productId,
+      name: item.name || item.imageId || '-',
+      price: item.price ?? 0,
+      isDeleted: false,
+      userId: 0
+    };
+
+    let basket = JSON.parse(localStorage.getItem('basket') as string) as BasketModel[] | null;
+
+    if (basket?.length) {
+      if (basket.some((basketItem) => Number(basketItem.productId) === productId)) {
+        this.basketService.setBasket(basket);
+        return;
+      }
+
+      if (basket.length < 15) {
+        basket.push({
+          id: 0,
+          userId: 0,
+          product: product as any,
+          productId: product.id,
+          isDeleted: false,
+          numberOf: 0,
+          totalPrice: 0
+        });
+      } else {
+        this.alertService.createAlert(
+          'warning',
+          this.translateService.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS')
+        );
+        return;
+      }
+    } else {
+      basket = [
+        {
+          id: 0,
+          userId: 0,
+          product: product as any,
+          productId: product.id,
+          isDeleted: false,
+          numberOf: 0,
+          totalPrice: 0
+        }
+      ];
+    }
+
+    this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+    this.basketService.setBasket(basket);
+  }
+
+  getMarketplaceClassTagClass(name: string | undefined | null): string {
+    const normalized = (name || '').toLowerCase();
+
+    if (normalized.includes('water') || normalized.includes('su')) return 'class-tag--water';
+    if (normalized.includes('forest') || normalized.includes('vegetation') || normalized.includes('orman')) return 'class-tag--forest';
+    if (normalized.includes('urban') || normalized.includes('building') || normalized.includes('yapı')) return 'class-tag--urban';
+    if (normalized.includes('road') || normalized.includes('yol')) return 'class-tag--road';
+
+    return 'class-tag--default';
+  }
+
+
+  canCreateNewImageryRequest(): boolean {
+    return this.smartFilterResultsSource() === 'aoi' && !!this.currentAoiWkt().trim() && this.currentAoiAreaKm2() > 0;
+  }
+
+  openNewImageryOrderPanel(): void {
+    if (!this.canCreateNewImageryRequest()) {
+      this.alertService.createAlert('warning', this.translateService.instant('MESSAGES.ERROR'));
+      return;
+    }
+
+    this.closeSmartFilter();
+    this.closeLegend();
+    this.closeInfo();
+    this.closeFilterDrawer();
+    this.closeFeatureInfoDrawer();
+    this.closeCoordinatePanel();
+    this.layerManagerOpen.set(false);
+    this.searchPanelOpen.set(false);
+    this.exportPanelOpen.set(false);
+    this.newImageryOrderPanelOpen.set(true);
+  }
+
+  closeNewImageryOrderPanel(): void {
+    this.newImageryOrderPanelOpen.set(false);
+  }
+
+  addNewImageryOrderToCart(request: NewImageryOrderRequest): void {
+    const wkt = this.currentAoiWkt().trim();
+    const areaKm2 = Number(request.areaKm2 || this.currentAoiAreaKm2());
+    const pricePerSquareKm = Number(request.pricePerSquareKm || this.newImageryPricePerKm2);
+    const totalPrice = Number((request.totalPrice || areaKm2 * pricePerSquareKm || 0).toFixed(2));
+
+    if (!wkt || !areaKm2 || areaKm2 <= 0) {
+      this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+      return;
+    }
+
+    const currentUser = this.authService.currentUserValue;
+
+    const imageTypeText = request.imageType === 'stereo'
+      ? this.translateService.instant('MAP.NEW_IMAGERY_ORDER.STEREO')
+      : this.translateService.instant('MAP.NEW_IMAGERY_ORDER.MONO');
+
+    const optionLabels = [
+      request.orthoRectified ? this.translateService.instant('MAP.NEW_IMAGERY_ORDER.ORTHO_RECTIFIED') : '',
+      request.panSharpen ? this.translateService.instant('MAP.NEW_IMAGERY_ORDER.PAN_SHARPEN') : '',
+      request.classified ? this.translateService.instant('MAP.NEW_IMAGERY_ORDER.CLASSIFIED') : ''
+    ].filter(Boolean);
+
+    const productName = this.translateService.instant('MAP.NEW_IMAGERY_ORDER.BASKET_PRODUCT_NAME', {
+      imageType: imageTypeText
+    });
+
+    // 🔥 ARTIK DİREKT PRODUCT MODEL
+    const product: ProductModel = {
+      id: 0,
+      name: optionLabels.length ? `${productName} (${optionLabels.join(', ')})` : productName,
+      price: totalPrice,
+      categoryId: 3,
+      isDeleted: false,
+
+      userId: currentUser ? Number(currentUser.id) : 0,
+
+      // 🔥 CORE DATA
+      areaKm2,
+      wkt,
+      geometry: null,
+
+      cloudRate: request.maxCloudRate,
+      offNadirAngle: request.maxOffNadir,
+
+      // 🔥 OPTIONS
+      isOrthorectified: request.orthoRectified,
+      isPansharpened: request.panSharpen,
+      isClassified: request.classified,
+
+      // 🔥 CUSTOM FLAG
+      isCustomArea: true,
+      isInMarket: false
+    };
+
+    const basketItem: BasketModel = {
+      id: 0,
+      userId: currentUser ? Number(currentUser.id) : 0,
+      productId: 0,
+      product: product as any,
+      isDeleted: false,
+      numberOf: 1,
+      totalPrice
+    };
+
+    // ================= LOGIN VAR =================
+    if (currentUser) {
+      this.basketManagementService.save(basketItem).subscribe((result) => {
+        if (result.isSuccess) {
+          this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+          this.basketService.loadBasketFromDb();
+          this.closeNewImageryOrderPanel();
+        } else {
+          this.alertService.createAlert('danger', this.translateService.instant('MESSAGES.ERROR'));
+        }
+      });
+
+      return;
+    }
+
+    // ================= LOGIN YOK =================
+    let basket = JSON.parse(localStorage.getItem('basket') as string) as BasketModel[] | null;
+
+    if (basket?.length) {
+      if (basket.length < 15) {
+        basket.push(basketItem);
+      } else {
+        this.alertService.createAlert(
+          'warning',
+          this.translateService.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS')
+        );
+        return;
+      }
+    } else {
+      basket = [basketItem];
+    }
+
+    localStorage.setItem('basket', JSON.stringify(basket));
+    this.basketService.setBasket(basket);
+
+    this.alertService.createAlert('success', this.translateService.instant('MESSAGES.SUCCESS'));
+    this.closeNewImageryOrderPanel();
+  }
+
   toggleSmartFilterResultsPanel(): void {
     if (!this.smartFilterResults().length) return;
 
-    this.smartFilterResultsPanelOpen.update(v => !v);
+    if (this.smartFilterResultsPanelOpen()) {
+      this.closeSmartFilterResultsPanel();
+      return;
+    }
+
+    this.openSmartFilterResultsPanel();
   }
 }

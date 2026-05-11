@@ -1,0 +1,140 @@
+<aside class="new-imagery-order-panel" [class.open]="open">
+  <div class="new-imagery-order-panel__panel">
+    <div class="new-imagery-order-panel__header">
+      <div>
+        <div class="new-imagery-order-panel__kicker text-primary">
+          {{ 'MAP.NEW_IMAGERY_ORDER.KICKER' | translate }}
+        </div>
+
+        <div class="new-imagery-order-panel__title">
+          {{ 'MAP.NEW_IMAGERY_ORDER.TITLE' | translate }}
+        </div>
+
+        <div class="new-imagery-order-panel__subtitle">
+          {{ 'MAP.NEW_IMAGERY_ORDER.SUBTITLE' | translate }}
+        </div>
+      </div>
+
+      <button
+        class="drawer-close-btn btn btn-sm btn-icon btn-light"
+        type="button"
+        (click)="close.emit()"
+        [title]="'MAP.PANEL.COLLAPSE' | translate"
+        [attr.aria-label]="'MAP.PANEL.COLLAPSE' | translate">
+        <span
+          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+          class="svg-icon svg-icon-2"
+          aria-hidden="true">
+        </span>
+      </button>
+    </div>
+
+    <div class="new-imagery-order-panel__body">
+      <div class="state-box state-box--warning" *ngIf="!hasGeometry">
+        {{ 'MAP.NEW_IMAGERY_ORDER.GEOMETRY_REQUIRED' | translate }}
+      </div>
+
+      <div class="area-pricing-card">
+        <div>
+          <div class="area-pricing-card__label">
+            {{ 'MAP.NEW_IMAGERY_ORDER.TOTAL_AREA' | translate }}
+          </div>
+          <div class="area-pricing-card__value">
+            {{ formattedArea }}
+          </div>
+        </div>
+
+        <div>
+          <div class="area-pricing-card__label">
+            {{ 'MAP.NEW_IMAGERY_ORDER.UNIT_PRICE' | translate }}
+          </div>
+          <div class="area-pricing-card__value">
+            {{ formattedUnitPrice }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">{{ 'MAP.NEW_IMAGERY_ORDER.IMAGE_TYPE' | translate }}</label>
+        <div class="segmented-control">
+          <button
+            type="button"
+            class="segmented-control__item"
+            [class.active]="imageType === 'mono'"
+            (click)="imageType = 'mono'">
+            {{ 'MAP.NEW_IMAGERY_ORDER.MONO' | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="segmented-control__item"
+            [class.active]="imageType === 'stereo'"
+            (click)="imageType = 'stereo'">
+            {{ 'MAP.NEW_IMAGERY_ORDER.STEREO' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">{{ 'MAP.NEW_IMAGERY_ORDER.MAX_CLOUD_RATE' | translate }}</label>
+        <input
+          class="form-control form-control-lg"
+          type="number"
+          min="0"
+          max="100"
+          step="1"
+          [(ngModel)]="maxCloudRate"
+          [placeholder]="'MAP.NEW_IMAGERY_ORDER.EXAMPLE_10' | translate" />
+        <div class="field-hint">{{ 'MAP.NEW_IMAGERY_ORDER.CLOUD_HINT' | translate }}</div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">{{ 'MAP.NEW_IMAGERY_ORDER.MAX_OFF_NADIR' | translate }}</label>
+        <input
+          class="form-control form-control-lg"
+          type="number"
+          min="0"
+          max="90"
+          step="1"
+          [(ngModel)]="maxOffNadir"
+          [placeholder]="'MAP.NEW_IMAGERY_ORDER.EXAMPLE_25' | translate" />
+        <div class="field-hint">{{ 'MAP.NEW_IMAGERY_ORDER.OFF_NADIR_HINT' | translate }}</div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">{{ 'MAP.NEW_IMAGERY_ORDER.PROCESSING_OPTIONS' | translate }}</label>
+
+        <label class="option-check">
+          <input type="checkbox" [(ngModel)]="orthoRectified" />
+          <span>{{ 'MAP.NEW_IMAGERY_ORDER.ORTHO_RECTIFIED' | translate }}</span>
+        </label>
+
+        <label class="option-check">
+          <input type="checkbox" [(ngModel)]="panSharpen" />
+          <span>{{ 'MAP.NEW_IMAGERY_ORDER.PAN_SHARPEN' | translate }}</span>
+        </label>
+
+        <label class="option-check">
+          <input type="checkbox" [(ngModel)]="classified" />
+          <span>{{ 'MAP.NEW_IMAGERY_ORDER.CLASSIFIED' | translate }}</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="new-imagery-order-panel__footer">
+      <div class="new-imagery-order-panel__price-summary">
+        <div class="fs-7 fw-semibold text-muted mb-1">
+          {{ 'MAP.NEW_IMAGERY_ORDER.PRICE' | translate }}
+        </div>
+        <div class="fs-2 fw-bolder text-primary">
+          {{ formattedTotalPrice }}
+        </div>
+      </div>
+
+      <button class="btn btn-primary add-order-cart-btn" type="button" [disabled]="!canSubmit" (click)="submit()">
+        <i class="ki-outline ki-basket fs-3"></i>
+        <span>{{ 'MAP.NEW_IMAGERY_ORDER.ADD_TO_CART' | translate }}</span>
+      </button>
+    </div>
+  </div>
+</aside>

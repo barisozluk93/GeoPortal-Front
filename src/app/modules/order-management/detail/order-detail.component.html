@@ -47,7 +47,7 @@
               </div>
 
               <div class="text-muted fs-7">
-                {{ getTotalProductCount() }} {{ 'PRODUCT' | translate }}
+                {{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}
               </div>
             </div>
           </div>
@@ -231,7 +231,7 @@
             <div class="section-title d-flex align-items-center justify-content-between gap-3">
               <span>{{ 'PRODUCT_INFORMATION' | translate }}</span>
               <span class="badge badge-light-primary">
-                {{ getTotalProductCount() }} {{ 'PRODUCT' | translate }}
+                {{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}
               </span>
             </div>
 
@@ -309,7 +309,7 @@
                           *ngIf="item.productValue || item.product?.downloadLink"
                           type="button"
                           class="btn btn-icon btn-sm btn-light-primary"
-                          (click)="copyToClipboard(item.productValue, item.id)"
+                          (click)="copyToClipboard(item.productValue || item.product?.downloadLink, item.id)"
                           [attr.aria-label]="copiedMap[item.id] ? 'Copied' : 'Copy'"
                           [attr.title]="copiedMap[item.id] ? 'Copied' : 'Copy'"
                         >

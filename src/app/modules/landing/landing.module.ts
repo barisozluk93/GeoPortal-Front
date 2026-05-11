@@ -25,6 +25,8 @@ import { MapCoordinatePanelComponent } from './map/coordinate/map-coordinate-pan
 import { MapExportPanelComponent } from './map/export-panel/map-export-panel.component';
 import { MapProductSmartFilterComponent } from './map/smart-filter/map-product-smart-filter.component';
 import { MapProductSmartFilterResultsPanelComponent } from './map/smart-filter/results/map-product-smart-filter-results-panel.component';
+import { MapNewImageryOrderPanelComponent } from './map/imagery/map-new-imagery-order-panel.component';
+import { ProductDetailDrawerComponent } from './map/detail/product-detail-drawer.component'
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { MapProductSmartFilterResultsPanelComponent } from './map/smart-filter/r
     MapCoordinatePanelComponent,
     MapExportPanelComponent,
     MapProductSmartFilterComponent,
-    MapProductSmartFilterResultsPanelComponent
+    MapProductSmartFilterResultsPanelComponent,
+    MapNewImageryOrderPanelComponent,
+    ProductDetailDrawerComponent
   ],
   imports: [
     CommonModule, 

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { ProductSmartFilterResult } from '../models/product-smart-filter.model';
 
 @Component({
@@ -7,15 +8,21 @@ import { ProductSmartFilterResult } from '../models/product-smart-filter.model';
   styleUrls: ['./map-product-smart-filter-results-panel.component.scss']
 })
 export class MapProductSmartFilterResultsPanelComponent {
+  constructor(private translate: TranslateService) {}
   @Input() open = false;
+  @Input() collapsed = false;
   @Input() loading = false;
   @Input() results: ProductSmartFilterResult[] = [];
   @Input() selectedProductId: number | null = null;
+  @Input() selectedProduct: ProductSmartFilterResult | null = null;
+  @Input() showCreateRequestButton = false;
   @Input() cartItems: ProductSmartFilterResult[] = [];
 
   @Output() close = new EventEmitter<void>();
+  @Output() toggleCollapsed = new EventEmitter<void>();
   @Output() selectProduct = new EventEmitter<ProductSmartFilterResult>();
   @Output() addToCart = new EventEmitter<ProductSmartFilterResult>();
+  @Output() createRequest = new EventEmitter<void>();
 
   @Input() canViewAddToCartFn: ((item: ProductSmartFilterResult) => boolean) | null = null;
 
@@ -67,6 +74,18 @@ export class MapProductSmartFilterResultsPanelComponent {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })} ${currency}`;
+  }
+
+
+  getCollapsedSubtitle(): string {
+    if (this.loading) return this.translate.instant('MAP.PRODUCT_SMART_FILTER.LOADING');
+    if (this.selectedProduct) {
+      const title = this.getProductTitle(this.selectedProduct);
+      const subtitle = this.getProductSubtitle(this.selectedProduct);
+      return subtitle && subtitle !== '-' ? `${title} • ${subtitle}` : title;
+    }
+
+    return `${this.results.length} ${this.translate.instant('MAP.PRODUCT_SMART_FILTER.RESULTS')}`;
   }
 
   onAddToCart(event: MouseEvent, item: ProductSmartFilterResult): void {

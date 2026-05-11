@@ -673,7 +673,9 @@ export const locale = {
                 "KICKER": "Katmanlar",
                 "TITLE": "Katman Yöneticisi",
                 "SUBTITLE": "Altlıklar / Katmanlar",
-                "COLLAPSE": "Daralt"
+                "COLLAPSE": "Daralt",
+                "EXPAND": "Genişlet",
+                "CLOSE": "Kapat"
             },
             "ACTIONS": {
                 "LAYER_MANAGER": "Katman Yöneticisi",
@@ -855,7 +857,34 @@ export const locale = {
                 "ADD_TO_CART": "Sepete ekle",
                 "IN_CART": "Sepette",
                 "SELECTED": "Seçili"
-            }
+            },
+            "NEW_IMAGERY_ORDER": {
+      "KICKER": "Yeni Görüntü Siparişi",
+      "TITLE": "Yeni Talep Oluştur",
+      "SUBTITLE": "Alan bazlı fiyatlandırma ile sepete eklenir",
+      "CREATE_REQUEST": "Yeni Talep Oluştur",
+      "GEOMETRY_REQUIRED": "Talep oluşturmak için önce dosya yükleyin, polygon çizin veya arama sonucundan polygon seçin.",
+      "IMAGE_TYPE": "Görüntü Tipi",
+      "MONO": "Mono",
+      "STEREO": "Stereo",
+      "NEW": "Yeni",
+      "MAX_CLOUD_RATE": "Maksimum Bulutluluk Oranı (%)",
+      "MAX_OFF_NADIR": "Maksimum Çekim Açısı / Off-Nadir (°)",
+      "CLOUD_HINT": "0 - 100 arasında değer girilebilir.",
+      "OFF_NADIR_HINT": "0 - 90 derece arasında değer girilebilir.",
+      "EXAMPLE_10": "Örn. 10",
+      "EXAMPLE_25": "Örn. 25",
+      "PROCESSING_OPTIONS": "İşleme Seçenekleri",
+      "ORTHO_RECTIFIED": "Ortorektifiye",
+      "PAN_SHARPEN": "Pansharpen",
+      "CLASSIFIED": "Classified",
+      "TOTAL_AREA": "Toplam Alan",
+      "UNIT_PRICE": "Birim Fiyat",
+      "CLEAR": "Temizle",
+      "ADD_TO_CART": "Sepete Ekle",
+      "BASKET_PRODUCT_NAME": "{{imageType}} Görüntü Talebi",
+      "PRICE": "Fiyat"
+    }
         },
         "CARD_HOLDER": "Kart Üzerindeki İsim",
         "CARD_NUMBER": "Kart Numarası",
@@ -1281,6 +1310,7 @@ export const locale = {
                 "AREA": "Alan"
             }
         },
+        "PRODUCT_HEADER": "Ürün",
         "SELECTED_FEATURE": "Seçilen Öznitelik",
         "LAYER_NAME_LABEL": "Katman Adı",
         "GEOMETRY_TYPE": "Geometri Tipi",

@@ -43,6 +43,7 @@ export class DataTableComponent implements OnInit, OnDestroy {
     { label: 'Base Map', value: 1 },
     { label: 'WMS', value: 2 },
     { label: 'WFS', value: 3 },
+    { label: 'WMTS', value: 4 }
   ];
 
   booleanFilterOptions = [
@@ -232,6 +233,8 @@ export class DataTableComponent implements OnInit, OnDestroy {
         return 'WMS';
       case 3:
         return 'WFS';
+      case 4:
+        return 'WMTS';
       default:
         return '-';
     }

@@ -1,7 +1,7 @@
-<aside class="smart-filter-results-panel" [class.open]="open">
+<aside class="smart-filter-results-panel" [class.open]="open" [class.collapsed]="collapsed">
   <div class="smart-filter-results-panel__panel">
     <div class="smart-filter-results-panel__header">
-      <div>
+      <div class="smart-filter-results-panel__header-content">
         <div class="smart-filter-results-panel__kicker text-primary">
           {{ 'MAP.PRODUCT_SMART_FILTER.RESULTS' | translate }}
         </div>
@@ -11,26 +11,52 @@
         </div>
 
         <div class="smart-filter-results-panel__subtitle">
-          {{ loading ? ('MAP.PRODUCT_SMART_FILTER.LOADING' | translate) : results.length }}
-          {{ 'MAP.PRODUCT_SMART_FILTER.RESULTS' | translate }}
+          <ng-container *ngIf="collapsed; else expandedSubtitle">
+            {{ getCollapsedSubtitle() }}
+          </ng-container>
+
+          <ng-template #expandedSubtitle>
+            {{ loading ? ('MAP.PRODUCT_SMART_FILTER.LOADING' | translate) : results.length }}
+            {{ 'MAP.PRODUCT_SMART_FILTER.RESULTS' | translate }}
+          </ng-template>
         </div>
       </div>
 
-      <button
-        class="drawer-close-btn btn btn-sm btn-icon btn-light"
-        type="button"
-        (click)="close.emit()"
-        [title]="'MAP.PANEL.COLLAPSE' | translate"
-        [attr.aria-label]="'MAP.PANEL.COLLAPSE' | translate">
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-          class="svg-icon svg-icon-2"
-          aria-hidden="true">
-        </span>
-      </button>
+      <div class="smart-filter-results-panel__actions">
+        <button
+          class="drawer-close-btn btn btn-sm btn-icon btn-light"
+          type="button"
+          (click)="toggleCollapsed.emit()"
+          [title]="collapsed ? ('MAP.PANEL.EXPAND' | translate) : ('MAP.PANEL.MINIMIZE' | translate)"
+          [attr.aria-label]="collapsed ? ('MAP.PANEL.EXPAND' | translate) : ('MAP.PANEL.MINIMIZE' | translate)">
+          <i class="fa-solid" [ngClass]="collapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+        </button>
+
+        <button
+          class="drawer-close-btn btn btn-sm btn-icon btn-light"
+          type="button"
+          (click)="close.emit()"
+          [title]="'MAP.PANEL.COLLAPSE' | translate"
+          [attr.aria-label]="'MAP.PANEL.COLLAPSE' | translate">
+          <span
+            [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+            class="svg-icon svg-icon-2"
+            aria-hidden="true">
+          </span>
+        </button>
+      </div>
     </div>
 
-    <div class="smart-filter-results-panel__body">
+    <div class="smart-filter-results-panel__body" *ngIf="!collapsed">
+      <button
+        class="btn btn-primary new-request-btn"
+        type="button"
+        *ngIf="showCreateRequestButton"
+        (click)="createRequest.emit()">
+        <i class="fa-solid fa-plus"></i>
+        <span>{{ 'MAP.NEW_IMAGERY_ORDER.CREATE_REQUEST' | translate }}</span>
+      </button>
+
       <div class="state-box" *ngIf="loading">
         {{ 'MAP.PRODUCT_SMART_FILTER.LOADING' | translate }}
       </div>

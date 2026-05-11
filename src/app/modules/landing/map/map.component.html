@@ -108,11 +108,34 @@
 
       <!-- SMART FILTER RESULTS LEFT PANEL -->
       <app-map-product-smart-filter-results-panel *ngIf="!previewMode"
-        [open]="smartFilterResultsPanelOpen() && smartFilterResults().length > 0" [loading]="smartFilterLoading()"
-        [results]="smartFilterResults()" [selectedProductId]="selectedSmartFilterProductId()"
-        [canViewAddToCartFn]="canViewAddToCart.bind(this)" (close)="closeSmartFilterResultsPanel()"
+        [open]="smartFilterResultsPanelOpen()" [collapsed]="smartFilterResultsPanelCollapsed()"
+        [loading]="smartFilterLoading()" [results]="smartFilterResults()"
+        [selectedProductId]="selectedSmartFilterProductId()" [selectedProduct]="selectedSmartFilterProduct()"
+        [showCreateRequestButton]="canCreateNewImageryRequest()" [canViewAddToCartFn]="canViewAddToCart.bind(this)"
+        (close)="closeSmartFilterResultsPanel()" (toggleCollapsed)="toggleSmartFilterResultsPanelCollapsed()"
+        (createRequest)="openNewImageryOrderPanel()"
         (selectProduct)="selectSmartFilterProduct($event)" (addToCart)="addSmartFilterProductToCart($event)">
       </app-map-product-smart-filter-results-panel>
+
+      <app-map-new-imagery-order-panel *ngIf="!previewMode"
+        [open]="newImageryOrderPanelOpen()"
+        [hasGeometry]="!!currentAoiWkt().trim()"
+        [areaKm2]="currentAoiAreaKm2()"
+        [pricePerSquareKm]="newImageryPricePerKm2"
+        (close)="closeNewImageryOrderPanel()"
+        (addToCart)="addNewImageryOrderToCart($event)">
+      </app-map-new-imagery-order-panel>
+
+      <app-product-detail-drawer *ngIf="!previewMode"
+        [selectedItem]="selectedMarketplaceDetailProduct()"
+        [detailLoading]="marketplaceDetailLoading()"
+        [detailErrorMessage]="marketplaceDetailErrorMessage()"
+        [canViewAddToCartFn]="canViewMarketplaceDetailAddToCart.bind(this)"
+        [getClassTagClassFn]="getMarketplaceClassTagClass.bind(this)"
+        (close)="closeMarketplaceDetailDrawer()"
+        (addToCartClicked)="addMarketplaceDetailProductToCart($event)">
+      </app-product-detail-drawer>
+
     </div>
   </div>
 </section>
