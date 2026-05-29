@@ -1,396 +1,343 @@
 :host {
   display: block;
-  position: relative;
-  z-index: 105;
+  width: 100%;
+  height: 92px;
+  min-height: 92px;
+}
+
+#kt_header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 1100 !important;
+  transition: all 0.25s ease;
 }
 
 .modern-header {
-  position: sticky;
-  top: 0;
-  left: 0;
   width: 100%;
-  z-index: 1050;
-  min-height: 65px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(10, 20, 36, 0.72) 0%,
-      rgba(7, 17, 31, 0.68) 100%
-    ) !important;
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 10px 30px rgba(2, 6, 23, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  min-height: 92px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
   transition:
-    box-shadow 0.25s ease,
+    background 0.25s ease,
     border-color 0.25s ease,
-    background-color 0.25s ease,
-    backdrop-filter 0.25s ease;
-  overflow: visible;
-}
+    box-shadow 0.25s ease,
+    min-height 0.25s ease;
 
-.modern-header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      circle at left top,
-      rgba(var(--bs-primary-rgb), 0.16) 0%,
-      rgba(var(--bs-primary-rgb), 0) 42%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.04) 0%,
-      rgba(255, 255, 255, 0.01) 50%,
-      rgba(255, 255, 255, 0.03) 100%
-    );
-}
-
-.modern-header.scrolled {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 14px 34px rgba(2, 6, 23, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  &.scrolled {
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom-color: rgba(15, 23, 42, 0.08);
+    box-shadow:
+      0 10px 30px rgba(15, 23, 42, 0.06),
+      0 2px 8px rgba(15, 23, 42, 0.04);
+  }
 }
 
 .modern-header-container {
-  position: relative;
-  z-index: 2;
-  min-height: 65px;
+  min-height: 92px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding-top: 0.45rem !important;
-  padding-bottom: 0.45rem !important;
-  overflow: visible;
-}
-
-#kt_header_container {
-  min-height: 65px !important;
-  padding-top: 0.45rem !important;
-  padding-bottom: 0.45rem !important;
-  overflow: visible !important;
-}
-
-.modern-header-left,
-.modern-header-right {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  overflow: visible;
-}
-
-.modern-header-left {
-  flex: 1 1 auto;
-  gap: 0.5rem;
-}
-
-.modern-header-right {
-  flex: 0 0 auto;
-  margin-left: auto;
-}
-
-.app-header__brand {
-  position: relative;
-  z-index: 2;
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 0.8rem;
-  flex: 0 0 auto;
-  flex-shrink: 0;
-  min-width: fit-content;
-  margin-right: 0.2rem;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.app-header__brand:hover {
-  text-decoration: none;
-}
-
-.app-header__brand-badge {
-  width: 3.1rem;
-  height: 3.1rem;
-  border-radius: 1.05rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--kt-primary, #3e97ff) 18%, transparent) 0%,
-      color-mix(in srgb, var(--kt-primary, #3e97ff) 10%, transparent) 100%
-    );
-  border: 1px solid
-    color-mix(in srgb, var(--kt-primary, #3e97ff) 18%, transparent);
-  box-shadow:
-    0 10px 24px color-mix(in srgb, var(--kt-primary, #3e97ff) 14%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  flex-shrink: 0;
-}
-
-.app-header__brand-icon {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--kt-primary);
-  letter-spacing: 0.04em;
-}
-
-.app-header__brand-content {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.app-header__eyebrow {
-  margin-bottom: 0.3rem;
-  font-size: 0.68rem;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--kt-primary);
-  white-space: nowrap;
-}
-
-.app-header__title-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: nowrap;
-  margin-bottom: 0;
-  min-width: 0;
-}
-
-.app-header__title {
-  margin: 0;
-  font-size: 1.2rem;
-  line-height: 1.12;
-  font-weight: 800;
-  color: var(--kt-gray-900);
-  white-space: nowrap;
-}
-
-.app-header__status,
-.app-header__description {
-  display: none !important;
-}
-
-.mobile-toggle-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: rgba(255, 255, 255, 0.88) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 8px 16px rgba(2, 6, 23, 0.12);
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.mobile-toggle-btn:hover {
-  background: rgba(var(--bs-primary-rgb), 0.14) !important;
-  border-color: rgba(var(--bs-primary-rgb), 0.26) !important;
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 10px 18px rgba(2, 6, 23, 0.16);
-}
-
-.mobile-toggle-btn .svg-icon svg,
-.mobile-toggle-btn .svg-icon i {
-  color: rgba(255, 255, 255, 0.9) !important;
-  fill: currentColor;
-}
-
-app-header-menu {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  flex: 1 1 auto;
-  min-width: 0;
-  margin-left: 0;
-  overflow: hidden;
-  position: relative;
-}
-
-app-topbar {
-  display: flex;
-  align-items: center;
-  height: 38px;
-  flex: 0 0 auto;
-}
-
-::ng-deep app-topbar .btn,
-::ng-deep app-topbar .btn-icon,
-::ng-deep app-topbar .topbar-item {
-  border-radius: 12px !important;
-}
-
-::ng-deep app-topbar .btn,
-::ng-deep app-topbar .btn-icon {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: rgba(255, 255, 255, 0.88) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 8px 16px rgba(2, 6, 23, 0.12);
-}
-
-::ng-deep app-topbar .btn:hover,
-::ng-deep app-topbar .btn-icon:hover {
-  background: rgba(var(--bs-primary-rgb), 0.14) !important;
-  border-color: rgba(var(--bs-primary-rgb), 0.24) !important;
-  color: #fff !important;
-}
-
-#kt_wrapper {
-  padding-top: 0 !important;
-}
-
-#kt_content {
-  margin-top: 0 !important;
+  gap: 20px;
+  transition: min-height 0.25s ease;
 }
 
 .desktop-padding {
-  padding-left: 100px !important;
-  padding-right: 100px !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
 }
 
 .mobile-padding {
-  padding-left: 20px !important;
-  padding-right: 20px !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
 }
 
-.modern-header-container,
-.modern-header-left,
-.modern-header-right,
-.app-headerer__brand,
-.app-headerer__brand-content,
-app-header-menu {
+.modern-header-left {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
   min-width: 0;
 }
 
-@media (max-width: 1399.98px) {
-  .modern-header-left {
-    gap: 0.35rem;
-  }
+.modern-header-center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
 
-  .app-header__brand {
-    gap: 0.7rem;
-  }
+.modern-header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  min-width: 0;
+}
 
-  .app-header__brand-badge {
-    width: 2.95rem;
-    height: 2.95rem;
-  }
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  cursor: pointer;
+  user-select: none;
+}
 
-  .app-header__title {
-    font-size: 1.1rem;
+.app-header__brand-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.app-header__logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.app-header__brand:hover {
+  .app-header__logo-img {
+    transform: translateY(-1px);
   }
 }
 
-@media (max-width: 1199.98px) {
-  .modern-header-left {
-    gap: 0.25rem;
+.app-header__brand-divider {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 23, 42, 0),
+    rgba(15, 23, 42, 0.14),
+    rgba(15, 23, 42, 0)
+  );
+  flex-shrink: 0;
+}
+
+.app-header__brand-name {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--bs-dark);
+  white-space: nowrap;
+}
+
+.mobile-toggle-btn {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  background: rgba(248, 250, 252, 0.95) !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: var(--bs-gray-700) !important;
+  transition:
+    all 0.2s ease,
+    transform 0.15s ease;
+  box-shadow:
+    0 2px 10px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  &:hover,
+  &:focus {
+    background: #ffffff !important;
+    border-color: rgba(var(--bs-primary-rgb), 0.2) !important;
+    color: var(--bs-primary) !important;
+    transform: translateY(-1px);
+    box-shadow:
+      0 8px 24px rgba(var(--bs-primary-rgb), 0.12),
+      0 2px 8px rgba(15, 23, 42, 0.05);
   }
 
-  .app-header__brand {
-    gap: 0.6rem;
-    margin-right: 0.05rem;
-  }
+  .svg-icon {
+    color: currentColor;
 
-  .app-header__brand-badge {
-    width: 2.8rem;
-    height: 2.8rem;
-    border-radius: 0.95rem;
-  }
-
-  .app-header__brand-icon {
-    font-size: 0.98rem;
-  }
-
-  .app-header__eyebrow {
-    font-size: 0.62rem;
-  }
-
-  .app-header__title {
-    font-size: 1rem;
+    svg {
+      width: 22px !important;
+      height: 22px !important;
+    }
   }
 }
 
-@media (max-width: 991.98px) {
+::ng-deep app-topbar {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+::ng-deep app-topbar .menu-trigger,
+::ng-deep app-topbar .btn,
+::ng-deep app-topbar .topbar-item {
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+::ng-deep app-topbar .menu-trigger:hover,
+::ng-deep app-topbar .btn:hover,
+::ng-deep app-topbar .topbar-item:hover {
+  transform: translateY(-1px);
+}
+
+::ng-deep .menu,
+::ng-deep .menu-sub,
+::ng-deep .menu-sub-dropdown,
+::ng-deep [data-kt-menu='true'] {
+  z-index: 1200 !important;
+}
+
+::ng-deep .menu-sub-dropdown {
+  position: absolute !important;
+  overflow: visible !important;
+}
+
+@media (max-width: 1199px) {
+  :host {
+    height: 74px;
+    min-height: 74px;
+  }
+
+  .modern-header {
+    min-height: 74px;
+  }
+
   .modern-header-container {
-    align-items: center;
-    min-height: 65px;
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
+    min-height: 74px;
+  }
+
+  .desktop-padding {
+    padding-left: 22px !important;
+    padding-right: 22px !important;
+  }
+
+  .app-header__logo-img {
+    height: 34px;
+  }
+
+  .app-header__brand-name {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 991px) {
+  :host {
+    height: 64px;
+    min-height: 64px;
+  }
+
+  #kt_header,
+  .modern-header,
+  .modern-header-container {
+    height: 64px !important;
+    min-height: 64px !important;
+  }
+
+  .modern-header {
+    background: rgba(255, 255, 255, 0.96);
+  }
+
+  .modern-header-container {
+    padding: 0 10px !important;
+    gap: 8px !important;
   }
 
   .modern-header-left {
-    align-items: center;
-    gap: 0.75rem;
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .modern-header-center {
+    display: none !important;
   }
 
   .modern-header-right {
-    align-items: center;
-    padding-top: 0;
-  }
-
-  .app-header__brand {
-    min-width: 0;
     flex: 1 1 auto;
-    margin-right: 0.5rem !important;
-    overflow: hidden;
-  }
-
-  .app-header__brand-content {
-    display: none !important;
-  }
-
-  app-header-menu {
-    display: none !important;
-  }
-
-  app-topbar {
+    min-width: 0;
     display: flex;
-    align-items: center;
-    flex: 0 0 auto;
-  }
-
-  .modern-header-right app-topbar > * {
-    flex-shrink: 0;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .modern-header-container {
-    gap: 0.5rem;
+    justify-content: flex-end;
+    overflow: visible !important;
   }
 
   .app-header__brand {
-    margin-right: 0.25rem !important;
+    display: none !important;
   }
 
   .mobile-toggle-btn {
-    flex: 0 0 auto;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 12px !important;
+    margin-right: 2px !important;
+
+    .svg-icon {
+      svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+    }
   }
 
-  .desktop-padding,
-  .mobile-padding {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
+  .modern-header,
+  .modern-header-container,
+  .modern-header-right {
+    overflow: visible !important;
+  }
+
+  ::ng-deep app-topbar {
+    max-width: 100%;
+    min-width: 0;
+    overflow: visible !important;
+  }
+
+  ::ng-deep app-topbar .btn,
+  ::ng-deep app-topbar .topbar-item {
+    height: 40px !important;
+    min-height: 40px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+    white-space: nowrap;
+  }
+
+  ::ng-deep app-topbar .symbol,
+  ::ng-deep app-topbar .symbol img {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .modern-header-container {
+    padding: 0 8px !important;
+    gap: 6px !important;
+  }
+
+  .mobile-toggle-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+  }
+
+  ::ng-deep app-topbar .btn,
+  ::ng-deep app-topbar .topbar-item {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    font-size: 11px !important;
+  }
+
+  ::ng-deep app-topbar .symbol,
+  ::ng-deep app-topbar .symbol img {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
   }
 }

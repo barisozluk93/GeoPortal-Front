@@ -21,10 +21,10 @@ export class RedirectComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       }
       else{
-        this.router.navigate(['/landing/marketplace']);
+        this.router.navigate(['/landing/data']);
       }
     } else {
-      this.router.navigate(['/landing/marketplace']);
+      this.router.navigate(['/landing/data']);
     }
   }
 }

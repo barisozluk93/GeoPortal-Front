@@ -1,100 +1,139 @@
-<div class="left-actions-shell" *ngIf="!previewMode">
-  <div class="left-actions-bar">
+<div
+  class="map-toolbar-wrapper"
+  [ngClass]="{
+    'toolbar-left': side === 'left',
+    'toolbar-right': side === 'right'
+  }"
+>
+  <ng-container *ngIf="side === 'left'">
+    <div class="left-map-toolbar" role="group">
+      <button
+        type="button"
+        class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+        [ngClass]="{ 'map-action-btn--active': activeTool === 'layer-manager' }"
+        [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
+        (mouseenter)="layerManagerHovered.emit()"
+        (click)="layerManagerClicked.emit()"
+      >
+        <i class="fa-solid fa-layer-group fs-1"></i>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+        [title]="'MAP.ACTIONS.SEARCH' | translate"
+        (click)="searchClicked.emit()"
+      >
+        <i class="fa-solid fa-search fs-1"></i>
+      </button>
+
+      <div class="map-action-dropdown">
+        <button
+          type="button"
+          class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+          [title]="'MAP.ACTIONS.AREA_TOOLS' | translate"
+        >
+          <i class="fa-solid fa-vector-square fs-1"></i>
+        </button>
+
+        <div class="map-action-dropdown__menu">
+          <button
+            type="button"
+            class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+            [title]="'MAP.ACTIONS.DRAW_POLYGON' | translate"
+            (click)="polygonClicked.emit()"
+          >
+            <i class="fa-solid fa-draw-polygon fs-1"></i>
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+            [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate"
+            (click)="uploadClicked.emit()"
+          >
+            <i class="fa-solid fa-file-upload fs-1"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="measure-wrapper">
+        <button
+          type="button"
+          class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+          [ngClass]="{ 'map-action-btn--active': activeTool === 'measure' }"
+          [title]="'MAP.ACTIONS.MEASURE_LENGTH' | translate"
+          (click)="measureLengthClicked.emit()"
+        >
+          <i class="fa-solid fa-ruler fs-1"></i>
+        </button>
+
+        <div class="measure-result" *ngIf="measureText">
+          <span>{{ measureText }}</span>
+          <i class="fa-solid fa-ruler-combined"></i>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+        [ngClass]="{ 'map-action-btn--active': activeTool === 'coordinate' }"
+        [title]="'MAP.ACTIONS.GOTO_COORDINATE' | translate"
+        (mouseenter)="goToCoordinateHovered.emit()"
+        (click)="goToCoordinateClicked.emit()"
+      >
+        <i class="fa-solid fa-location-crosshairs fs-1"></i>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+        [ngClass]="{ 'map-action-btn--active': activeTool === 'export' }"
+        [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate"
+        (click)="exportClicked.emit()"
+      >
+        <i class="fa-solid fa-file-download fs-1"></i>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+        [title]="'MAP.ACTIONS.RESET' | translate"
+        (click)="resetClicked.emit()"
+      >
+        <i class="fa-solid fa-rotate-left fs-1"></i>
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="side === 'right'">
     <button
       type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      [class.active]="layerManagerOpen"
-      (click)="layerManagerClick.emit()"
-      [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.LAYER_MANAGER' | translate">
-      <i class="fa-solid fa-layer-group text-white"></i>
+      class="north-compass"
+      [title]="'MAP.ACTIONS.NORTH' | translate"
+    >
+      <span class="north-compass__label">N</span>
+      <i class="fa-solid fa-caret-up north-compass__icon"></i>
     </button>
 
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      [class.active]="searchPanelOpen"
-      (click)="searchClick.emit()"
-      [title]="'MAP.ACTIONS.SEARCH' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.SEARCH' | translate">
-      <i class="fa-solid fa-magnifying-glass text-white"></i>
-    </button>
+    <div class="zoom-toolbar" role="group">
+      <button
+        type="button"
+        class="zoom-btn"
+        [title]="'MAP.ACTIONS.ZOOM_IN' | translate"
+        (click)="zoomInClicked.emit()"
+      >
+        <i class="fa-solid fa-plus"></i>
+      </button>
 
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      [class.active]="smartFilterOpen"
-      (click)="smartFilterClick.emit()"
-      title="Akıllı Filtreleme"
-      aria-label="Akıllı Filtreleme">
-      <i class="fa-solid fa-filter-circle-dollar text-white"></i>
-    </button>
-
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      [class.active]="polygonMode"
-      (click)="polygonClick.emit()"
-      [title]="'MAP.ACTIONS.POLYGON' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.POLYGON' | translate">
-      <i class="fa-solid fa-draw-polygon text-white"></i>
-    </button>
-
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      [class.active]="measureLengthMode"
-      (click)="measureLengthClick.emit()"
-      [title]="'MAP.ACTIONS.MEASURE_LENGTH' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.MEASURE_LENGTH' | translate">
-      <i class="fa-solid fa-ruler text-white"></i>
-    </button>
-
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      [class.active]="measureAreaMode"
-      (click)="measureAreaClick.emit()"
-      [title]="'MAP.ACTIONS.MEASURE_AREA' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.MEASURE_AREA' | translate">
-      <i class="fa-solid fa-compass-drafting text-white"></i>
-    </button>
-
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      (click)="coordinateClick.emit()"
-      [title]="'MAP.ACTIONS.GOTO_COORDINATE' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.GOTO_COORDINATE' | translate">
-      <i class="fa-solid fa-location-crosshairs text-white"></i>
-    </button>
-
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      [class.active]="exportPanelOpen"
-      (click)="exportImageClick.emit()"
-      [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.EXPORT_IMAGE' | translate">
-      <i class="fa-solid fa-file-export text-white"></i>
-    </button>
-
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      (click)="uploadClick.emit()"
-      [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.UPLOAD_FILE' | translate">
-      <i class="fa-solid fa-file-import text-white"></i>
-    </button>
-
-    <button
-      type="button"
-      class="left-action-btn btn btn-icon btn-active-light-primary"
-      (click)="resetClick.emit()"
-      [title]="'MAP.ACTIONS.RESET' | translate"
-      [attr.aria-label]="'MAP.ACTIONS.RESET' | translate">
-      <i class="fa-solid fa-rotate text-white"></i>
-    </button>
-  </div>
+      <button
+        type="button"
+        class="zoom-btn"
+        [title]="'MAP.ACTIONS.ZOOM_OUT' | translate"
+        (click)="zoomOutClicked.emit()"
+      >
+        <i class="fa-solid fa-minus"></i>
+      </button>
+    </div>
+  </ng-container>
 </div>

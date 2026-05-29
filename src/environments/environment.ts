@@ -60,8 +60,8 @@ export const environment = {
       'thumbnail': './assets/media/demos/demo6.png'
     },
 
-    'taiearth': {
-      'title': 'TaiEarth',
+    'geoportal': {
+      'title': 'GeoPortal',
       'description': 'CRM Dashboard',
       'published': false,
       'thumbnail': './assets/media/demos/demo7.png'

@@ -1,3 +1,50 @@
 :host {
   background: var(--bs-body-bg);
 }
+
+@media (max-width: 991px) {
+  :host {
+    position: fixed !important;
+    top: 64px !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    z-index: 1040 !important;
+    height: calc(100vh - 64px) !important;
+    max-height: calc(100vh - 64px) !important;
+    overflow: hidden !important;
+    background: #ffffff;
+  }
+
+  .aside-primary,
+  .aside-secondary {
+    height: calc(100vh - 64px) !important;
+    max-height: calc(100vh - 64px) !important;
+    overflow-y: auto !important;
+  }
+
+  .aside-primary {
+    padding-top: 0 !important;
+  }
+
+  .aside-secondary {
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  .aside-workspace {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 16px !important;
+  }
+
+  ::ng-deep #kt_aside,
+  ::ng-deep .aside {
+    top: 64px !important;
+    height: calc(100vh - 64px) !important;
+    z-index: 1040 !important;
+  }
+
+  ::ng-deep .drawer-overlay {
+    top: 64px !important;
+    height: calc(100vh - 64px) !important;
+  }
+}

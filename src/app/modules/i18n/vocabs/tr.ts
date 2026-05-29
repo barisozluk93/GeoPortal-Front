@@ -343,7 +343,7 @@ export const locale = {
         ORDER: 'Siparişi Tamamla',
         IN_BASKET: "Sepette",
 
-        "BRANDTITLE": 'TaiEarth',
+        "BRANDTITLE": 'GeoPortal',
         "BRANDSUBTITLE": 'Uydu Veri Platformu',
         "MARKETPLACE": {
             "COMMON": {
@@ -419,7 +419,7 @@ export const locale = {
             "LOADING": "Veriler yükleniyor...",
             "KICKER": "Veri Erişimi",
             "TITLE": "Uydu verisine ihtiyacınıza uygun yöntemle erişin",
-            "COPY": "Platformumuzda veriye üç farklı şekilde erişebilirsiniz: Marketplace üzerinden hazır veri satın alabilir, harita üzerinden bölge bazlı sorgulama yaparak veriyi keşfedip satın alabilir veya API key satın alarak endpointler üzerinden sisteminize entegre edebilirsiniz.",
+            "COPY": "Platformumuzda veriye iki farklı şekilde erişebilirsiniz: Harita üzerinden bölge bazlı sorgulama yaparak veriyi keşfedip satın alabilir veya API key satın alarak endpointler üzerinden sisteminize entegre edebilirsiniz.",
             "SEARCH_TITLE": "Bölge bazlı veri arama",
             "SEARCH_PLACEHOLDER": "Ülke, il, ilçe veya mahalle yazın",
             "SEARCH_BUTTON": "Ara",
@@ -428,17 +428,17 @@ export const locale = {
             "ACTION_API": "API",
             "ACTION_MAP": "Map",
             "SUMMARY_KICKER": "Veri Akışları",
-            "SUMMARY_TITLE": "3 farklı erişim yolu",
+            "SUMMARY_TITLE": "2 farklı erişim yolu",
             "CARD_1_TITLE": "Marketplace",
             "CARD_1_DESC": "Hazır veri ürünlerini filtreleyin, inceleyin ve doğrudan satın alın.",
             "CARD_2_TITLE": "Harita Üzerinden Sorgulama",
             "CARD_2_DESC": "Bölge arayın, alan seçin veya çizim yapın; sorguladığınız veriyi görüntüleyin ve satın alın.",
-            "CARD_3_TITLE": "API ERIŞİMİ",
+            "CARD_3_TITLE": "API Erişimi",
             "CARD_3_DESC": "API key satın alarak endpointler üzerinden veriyi kendi sistemlerinize entegre edin.",
             "MAP_SHORTCUT": "Haritada Veri Ara",
             "USE_CASES": "Erişim Yöntemleri",
-            "SECTION2_TITLE": "Veriye ulaşmak için üç farklı yol",
-            "SECTION2_COPY": "Hazır ürün satın alma, harita üzerinden bölge bazlı sorgulama ve API entegrasyonu ile farklı ihtiyaçlara uygun veri erişim akışlarını tek platformda sunuyoruz.",
+            "SECTION2_TITLE": "Veriye ulaşmak için iki farklı yol",
+            "SECTION2_COPY": "Harita üzerinden bölge bazlı sorgulama ve API entegrasyonu ile farklı ihtiyaçlara uygun veri erişim akışlarını tek platformda sunuyoruz.",
             "ACCESS_1_TITLE": "Marketplace ile Satın Alma",
             "ACCESS_1_DESC": "Hazır uydu görüntülerini ve işlenmiş veri ürünlerini filtreleyerek inceleyin, karşılaştırın ve doğrudan satın alın.",
             "ACCESS_1_ITEM_1": "Hazır veri kataloğu",
@@ -450,7 +450,7 @@ export const locale = {
             "ACCESS_2_ITEM_1": "Bölge bazlı arama",
             "ACCESS_2_ITEM_2": "Alan seçimi ve çizim",
             "ACCESS_2_ITEM_3": "Sorgulanan veriyi görüntüleme ve satış",
-            "ACCESS_2_ACTION": "Haritaya Git",
+            "ACCESS_2_ACTION": "Keşfet",
             "ACCESS_3_TITLE": "API Key ile Erişim",
             "ACCESS_3_DESC": "API key satın alarak endpointler üzerinden polygon bazlı veri sorgulayın, süreçleri yönetin ve çıktıları kendi uygulamalarınıza entegre edin.",
             "ACCESS_3_ITEM_1": "API key satın alma",
@@ -458,9 +458,9 @@ export const locale = {
             "ACCESS_3_ITEM_3": "Kurumsal sistem entegrasyonu",
             "ACCESS_3_ACTION": "API Ekranına Git",
             "FLOW_1_TITLE": "Yöntemi Seçin",
-            "FLOW_1_DESC": "Marketplace, harita veya API erişimi arasından ihtiyacınıza uygun yöntemi belirleyin.",
+            "FLOW_1_DESC": "Harita veya API erişimi arasından ihtiyacınıza uygun yöntemi belirleyin.",
             "FLOW_2_TITLE": "Veriyi Bulun",
-            "FLOW_2_DESC": "Hazır ürünleri inceleyin, bölge bazlı sorgulama yapın veya API üzerinden veri çağırın.",
+            "FLOW_2_DESC": "Bölge bazlı sorgulama yapın veya API üzerinden veri çağırın.",
             "FLOW_3_TITLE": "Satın Alın veya Entegre Edin",
             "FLOW_3_DESC": "Veriyi satın alın ya da API key ile doğrudan sistemlerinize bağlayın."
         },
@@ -506,7 +506,7 @@ export const locale = {
         "CONTACT": {
             "HERO": {
                 "KICKER": "İletişim",
-                "TITLE": "Uydu Verisi, API ve Marketplace ihtiyaçlarınız için bizimle iletişime geçin",
+                "TITLE": "Uydu Verisi ve API ihtiyaçlarınız için bizimle iletişime geçin",
                 "COPY": "Veri satın almak, API’mizi iş akışınıza entegre etmek ya da bölgesel talep ve kurumsal çözümler hakkında görüşmek istiyorsanız ekibimiz size yardımcı olmaya hazır. İhtiyacınızı paylaşın, en kısa sürede sizinle iletişime geçelim.",
                 "ITEMS": {
                     "RESPONSE": {
@@ -555,7 +555,7 @@ export const locale = {
 
             "SIDEBAR": {
                 "KICKER": "API Dokümantasyonu",
-                "TITLE": "TaiEarth API Key Kullanımı",
+                "TITLE": "GeoPortal API Key Kullanımı",
                 "SUBTITLE": "Bu doküman, satın alınan API key ile yetkili uçların nasıl kullanılacağını açıklar."
             },
             "NAV": {
@@ -572,7 +572,7 @@ export const locale = {
             "HERO": {
                 "KICKER": "API Dokümantasyonu",
                 "VERSION": "Versiyon 1.0",
-                "TITLE": "TaiEarth API Dokümantasyonu",
+                "TITLE": "GeoPortal API Dokümantasyonu",
                 "DESCRIPTION": "Bu doküman, API key ile yetkilendirilmiş uçları kullanarak uydu verilerinin listelenmesi, görüntü işleme sürecinin başlatılması, işlem durumunun takip edilmesi ve işlenmiş görüntü sonucunun alınması için hazırlanmıştır.",
                 "BASE_URL": "Base URL",
                 "AUTHENTICATION": "Kimlik Doğrulama",
@@ -688,7 +688,23 @@ export const locale = {
                 "MEASURE_LENGTH": "Uzunluk Ölç",
                 "MEASURE_AREA": "Alan Ölç",
                 "GOTO_COORDINATE": "Koordinata Git",
-                "EXPORT_IMAGE": "Dışa aktar"
+                "EXPORT_IMAGE": "Dışa aktar",
+                "NORTH": "Kuzey",
+                "AREA_TOOLS": "AOI Araçları"
+            },
+            "LAYER_MANAGER": {
+                "TITLE": "Katman Yöneticisi",
+                "SUBTITLE": "Katmanları yönet",
+                "EMPTY": "Katman bulunamadı",
+                "FILTER": "Filtrele",
+                "LEGEND": "Lejant",
+                "INFO": "Bilgi",
+                "OPACITY": "Opaklık"
+            },
+            "COORDINATE_OPTIONS": {
+                "TITLE": "Seçenekler",
+                "DECIMAL_DEGREE": "Ondalık Derece",
+                "DEGREE_MINUTE_SECOND": "Derece Dakika Saniye"
             },
             "MEASUREMENT": {
                 "START": "Ölçüm başlatın",
@@ -709,8 +725,26 @@ export const locale = {
                 "LATITUDE_HELP": "Enlem değeri -90 ile 90 arasında olmalıdır.",
                 "LONGITUDE_HELP": "Boylam değeri -180 ile 180 arasında olmalıdır.",
                 "USE_CURRENT": "Mevcut Konumu Al",
-                "GO": "Haritada Göster",
+                "GO": "Git",
                 "INVALID": "Geçerli koordinat giriniz."
+            },
+            EXPORT: {
+                TITLE: 'Haritayı Dışa Aktar',
+                FILE_NAME: 'Dosya adı',
+                FILE_NAME_PLACEHOLDER: 'Dosya adı giriniz',
+                FILE_NAME_REQUIRED: 'Dosya adı zorunludur.',
+                FILE_TYPE: 'Dosya tipi',
+                FILE_TYPE_PLACEHOLDER: 'Dosya tipi seçiniz',
+                FILE_TYPE_REQUIRED: 'Dosya tipi zorunludur.',
+                PDF: 'PDF',
+                PNG: 'PNG',
+                X: 'X',
+                Y: 'Y',
+                X_PLACEHOLDER: 'Örn: 1920',
+                Y_PLACEHOLDER: 'Örn: 1080',
+                X_REQUIRED: 'X zorunludur.',
+                Y_REQUIRED: 'Y zorunludur.',
+                SUBMIT: 'Export Et',
             },
             "SEARCH": {
                 "KICKER": "Harita",
@@ -825,17 +859,6 @@ export const locale = {
                     "CLASSIFIED_DESC": "Seçilen alan için sınıflandırma yapılsın mı?"
                 }
             },
-            "EXPORT": {
-                "KICKER": "Dışa Aktar",
-                "TITLE": "Haritayı dışa aktar",
-                "SUBTITLE": "Harita görünümünü görsel veya PDF dosyası olarak indirebilirsin.",
-                "IMAGE_TITLE": "Görsel olarak indir",
-                "IMAGE_SUBTITLE": "Mevcut harita görünümünü PNG formatında kaydeder.",
-                "PDF_TITLE": "PDF olarak indir",
-                "PDF_SUBTITLE": "Mevcut harita görünümünü PDF dokümanı olarak kaydeder.",
-                "FAILED": "Harita dışa aktarılamadı.",
-                "PARTIAL_WARNING": "Bazı katmanlar dışa aktarılamadı. Katman sunucusunda CORS izni olmayabilir."
-            },
             "PRODUCT_SMART_FILTER": {
                 "KICKER": "Akıllı Filtre",
                 "TITLE": "Ürün Akıllı Filtre",
@@ -859,32 +882,32 @@ export const locale = {
                 "SELECTED": "Seçili"
             },
             "NEW_IMAGERY_ORDER": {
-      "KICKER": "Yeni Görüntü Siparişi",
-      "TITLE": "Yeni Talep Oluştur",
-      "SUBTITLE": "Alan bazlı fiyatlandırma ile sepete eklenir",
-      "CREATE_REQUEST": "Yeni Talep Oluştur",
-      "GEOMETRY_REQUIRED": "Talep oluşturmak için önce dosya yükleyin, polygon çizin veya arama sonucundan polygon seçin.",
-      "IMAGE_TYPE": "Görüntü Tipi",
-      "MONO": "Mono",
-      "STEREO": "Stereo",
-      "NEW": "Yeni",
-      "MAX_CLOUD_RATE": "Maksimum Bulutluluk Oranı (%)",
-      "MAX_OFF_NADIR": "Maksimum Çekim Açısı / Off-Nadir (°)",
-      "CLOUD_HINT": "0 - 100 arasında değer girilebilir.",
-      "OFF_NADIR_HINT": "0 - 90 derece arasında değer girilebilir.",
-      "EXAMPLE_10": "Örn. 10",
-      "EXAMPLE_25": "Örn. 25",
-      "PROCESSING_OPTIONS": "İşleme Seçenekleri",
-      "ORTHO_RECTIFIED": "Ortorektifiye",
-      "PAN_SHARPEN": "Pansharpen",
-      "CLASSIFIED": "Classified",
-      "TOTAL_AREA": "Toplam Alan",
-      "UNIT_PRICE": "Birim Fiyat",
-      "CLEAR": "Temizle",
-      "ADD_TO_CART": "Sepete Ekle",
-      "BASKET_PRODUCT_NAME": "{{imageType}} Görüntü Talebi",
-      "PRICE": "Fiyat"
-    }
+                "KICKER": "Yeni Görüntü Siparişi",
+                "TITLE": "Yeni Talep Oluştur",
+                "SUBTITLE": "Alan bazlı fiyatlandırma ile sepete eklenir",
+                "CREATE_REQUEST": "Yeni Talep Oluştur",
+                "GEOMETRY_REQUIRED": "Talep oluşturmak için önce dosya yükleyin, polygon çizin veya arama sonucundan polygon seçin.",
+                "IMAGE_TYPE": "Görüntü Tipi",
+                "MONO": "Mono",
+                "STEREO": "Stereo",
+                "NEW": "Yeni",
+                "MAX_CLOUD_RATE": "Maksimum Bulutluluk Oranı (%)",
+                "MAX_OFF_NADIR": "Maksimum Çekim Açısı / Off-Nadir (°)",
+                "CLOUD_HINT": "0 - 100 arasında değer girilebilir.",
+                "OFF_NADIR_HINT": "0 - 90 derece arasında değer girilebilir.",
+                "EXAMPLE_10": "Örn. 10",
+                "EXAMPLE_25": "Örn. 25",
+                "PROCESSING_OPTIONS": "İşleme Seçenekleri",
+                "ORTHO_RECTIFIED": "Ortorektifiye",
+                "PAN_SHARPEN": "Pansharpen",
+                "CLASSIFIED": "Classified",
+                "TOTAL_AREA": "Toplam Alan",
+                "UNIT_PRICE": "Birim Fiyat",
+                "CLEAR": "Temizle",
+                "ADD_TO_CART": "Sepete Ekle",
+                "BASKET_PRODUCT_NAME": "{{imageType}} Görüntü Talebi",
+                "PRICE": "Fiyat"
+            }
         },
         "CARD_HOLDER": "Kart Üzerindeki İsim",
         "CARD_NUMBER": "Kart Numarası",
@@ -1056,11 +1079,11 @@ export const locale = {
             "MARKETPLACE": "Pazaryeri",
             "DATA": "Veri",
             "API": "API",
-            "MAP": "Harita",
+            "MAP": "Keşfet",
             "CONTACT": "İletişim",
             "RIGHTS": "Tüm hakları saklıdır."
         },
-        "COPYRIGHT": "© 2026 TaiEarth. Tüm hakları saklıdır.",
+        "COPYRIGHT": "© 2026 GeoPortal. Tüm hakları saklıdır.",
         "TERMS_SHORT": "Şartlar",
         "PRIVACY_SHORT": "Gizlilik",
         "MESSAGES": {

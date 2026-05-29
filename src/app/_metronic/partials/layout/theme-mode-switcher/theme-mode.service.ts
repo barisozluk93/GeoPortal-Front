@@ -18,12 +18,12 @@ const themeMenuModeLSKey = 'kt_theme_mode_menu';
 
 const getThemeModeFromLocalStorage = (lsKey: string): ThemeModeType => {
   if (!localStorage) {
-    return 'dark';
+    return 'light';
   }
 
   const data = localStorage.getItem(lsKey);
   if (!data) {
-    return 'dark';
+    return 'light';
   }
 
   if (data === 'light') {

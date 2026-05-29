@@ -1,7 +1,8 @@
-import { Component, Input, OnDestroy, OnInit, NgZone } from '@angular/core';
+import { Component, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
+
 import { NotificationService } from 'src/app/_metronic/partials/layout/extras/dropdown-inner/notifications-inner/notification.service';
 import { NotificationModel } from 'src/app/models/notification.model';
 import { AuthService } from 'src/app/modules/auth';
@@ -15,23 +16,26 @@ import { RoleEnum } from 'src/app/enums/role.enum';
 @Component({
   selector: 'app-topbar',
   templateUrl: './topbar.component.html',
-  styleUrls: ['./topbar.component.scss']
+  styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent implements OnInit, OnDestroy {
   language!: LanguageFlag;
   langs = languages;
+
   isCurrentUserExist = true;
+  isNotificationAnimating = false;
+  isAdmin = false;
+
   user: UserModel | undefined;
 
   unreadedNotificationCount = 0;
   totalNotificationCount = 0;
+
   notifications: NotificationModel[] = [];
+
   avatarUrl = '';
 
   private destroy$ = new Subject<void>();
-  isNotificationAnimating = false;
-
-  isAdmin: boolean;
 
   constructor(
     private notificationService: NotificationService,
@@ -58,38 +62,44 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
     this.translate.onLangChange
       .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
+      .subscribe((result) => {
         this.setLanguage(result.lang);
       });
 
     this.authService.currentUserSubject
       .asObservable()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
+      .subscribe((result) => {
         if (result) {
-          this.isAdmin = result.roles.includes(RoleEnum.SuperAdmin) ? true : false;
+          this.isAdmin =
+            result.roles.includes(RoleEnum.SuperAdmin) ?? false;
+
           this.isCurrentUserExist = true;
 
           this.userManagementService.updateUser(result.id!);
 
           this.userManagementService.user$
             .pipe(takeUntil(this.destroy$))
-            .subscribe(userResult => {
+            .subscribe((userResult) => {
               this.user = userResult ?? undefined;
             });
 
           this.loadNotifications();
           this.loadUnreadedNotificationCount();
         } else {
-          this.isAdmin = false;
-          this.isCurrentUserExist = false;
-          this.user = undefined;
-          this.notifications = [];
-          this.unreadedNotificationCount = 0;
-          this.totalNotificationCount = 0;
-          this.avatarUrl = '';
+          this.resetState();
         }
       });
+  }
+
+  private resetState(): void {
+    this.isAdmin = false;
+    this.isCurrentUserExist = false;
+    this.user = undefined;
+    this.notifications = [];
+    this.unreadedNotificationCount = 0;
+    this.totalNotificationCount = 0;
+    this.avatarUrl = '';
   }
 
   private triggerNotificationAnimation(): void {
@@ -109,16 +119,22 @@ export class TopbarComponent implements OnInit, OnDestroy {
         }
 
         this.ngZone.run(() => {
-          const exists = this.notifications.some(x => x.id === notification.id);
+          const exists = this.notifications.some(
+            (x) => x.id === notification.id
+          );
+
           if (exists) {
             return;
           }
 
           this.notifications.unshift(notification);
+
           this.totalNotificationCount = this.notifications.length;
+
           this.unreadedNotificationCount++;
 
           this.triggerNotificationAnimation();
+
           this.showNotificationAlert(notification);
         });
       });
@@ -136,28 +152,48 @@ export class TopbarComponent implements OnInit, OnDestroy {
       });
   }
 
-  private showNotificationAlert(notification: NotificationModel): void {
+  private showNotificationAlert(
+    notification: NotificationModel
+  ): void {
     let message = '';
 
     switch (notification.type) {
       case 'NEW_ORDER':
-        message = `(${notification.body}) ${this.translate.instant('NEW_ORDER_MESSAGE')}`;
+        message = `(${notification.body}) ${this.translate.instant(
+          'NEW_ORDER_MESSAGE'
+        )}`;
         break;
+
       case 'ORDER_APPROVED':
-        message = `(${notification.body}) ${this.translate.instant('ORDER_APPROVED_MESSAGE')}`;
+        message = `(${notification.body}) ${this.translate.instant(
+          'ORDER_APPROVED_MESSAGE'
+        )}`;
         break;
+
       case 'ORDER_REJECTED':
-        message = `(${notification.body}) ${this.translate.instant('ORDER_REJECTED_MESSAGE')}`;
+        message = `(${notification.body}) ${this.translate.instant(
+          'ORDER_REJECTED_MESSAGE'
+        )}`;
         break;
+
       case 'ORDER_COMPLETED':
-        message = `(${notification.body}) ${this.translate.instant('ORDER_COMPLETED_MESSAGE')}`;
+        message = `(${notification.body}) ${this.translate.instant(
+          'ORDER_COMPLETED_MESSAGE'
+        )}`;
         break;
+
       case 'ORDER_PREPARING':
-        message = `(${notification.body}) ${this.translate.instant('ORDER_PREPARING_MESSAGE')}`;
+        message = `(${notification.body}) ${this.translate.instant(
+          'ORDER_PREPARING_MESSAGE'
+        )}`;
         break;
+
       case 'ADD_INVOICE':
-        message = `(${notification.body}) ${this.translate.instant('ADD_INVOICE_MESSAGE')}`;
+        message = `(${notification.body}) ${this.translate.instant(
+          'ADD_INVOICE_MESSAGE'
+        )}`;
         break;
+
       default:
         message = notification.body ?? '';
         break;
@@ -169,39 +205,41 @@ export class TopbarComponent implements OnInit, OnDestroy {
   }
 
   loadNotifications(): void {
-    if (this.authService.currentUserValue) {
-      this.notificationService
-        .all(this.authService.currentUserValue.id!)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (response) => {
-            this.notifications = response.data ?? [];
-            this.totalNotificationCount = this.notifications.length;
-          },
-          error: (error) => {
-            console.error('Bildirimler alınırken hata oluştu:', error);
-            this.notifications = [];
-            this.totalNotificationCount = 0;
-          }
-        });
+    if (!this.authService.currentUserValue) {
+      return;
     }
+
+    this.notificationService
+      .all(this.authService.currentUserValue.id!)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.notifications = response.data ?? [];
+          this.totalNotificationCount = this.notifications.length;
+        },
+        error: () => {
+          this.notifications = [];
+          this.totalNotificationCount = 0;
+        },
+      });
   }
 
   loadUnreadedNotificationCount(): void {
-    if (this.authService.currentUserValue) {
-      this.notificationService
-        .getUnreadedCount(this.authService.currentUserValue.id!)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (response) => {
-            this.unreadedNotificationCount = response.data ?? 0;
-          },
-          error: (error) => {
-            console.error('Okunmamış bildirim sayısı alınırken hata oluştu:', error);
-            this.unreadedNotificationCount = 0;
-          }
-        });
+    if (!this.authService.currentUserValue) {
+      return;
     }
+
+    this.notificationService
+      .getUnreadedCount(this.authService.currentUserValue.id!)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.unreadedNotificationCount = response.data ?? 0;
+        },
+        error: () => {
+          this.unreadedNotificationCount = 0;
+        },
+      });
   }
 
   refreshNotificationData(): void {

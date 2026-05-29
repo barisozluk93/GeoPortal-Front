@@ -1,7 +1,7 @@
 :host {
   display: block;
-  padding: 60px;
-  min-height: calc(100vh - 65px);
+  padding: 30px 30px;
+  min-height: calc(100vh - 92px);
 }
 
 .order-detail-page {
@@ -56,7 +56,6 @@
   font-weight: 700;
   color: var(--bs-gray-600);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
   margin-bottom: 0.35rem;
 }
 
@@ -191,7 +190,6 @@
   font-weight: 700;
   color: var(--bs-gray-700);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
   margin-bottom: 1rem;
 }
 

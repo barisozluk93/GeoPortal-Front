@@ -103,8 +103,8 @@ const menuList: HeaderMenuModel[] = [
   },
   {
     id: 6,
-    name: 'Gelen Sipariş Yönetimi',
-    nameEn: 'Incoming Order Management',
+    name: 'Sipariş Yönetimi',
+    nameEn: 'Order Management',
     url: '/incomingordermanagement',
     icon: undefined,
     permissionId: 32,
@@ -116,20 +116,20 @@ const menuList: HeaderMenuModel[] = [
     isForbid: undefined,
     open: false,
   },
-  {
-    id: 11,
-    name: 'Market',
-    nameEn: 'Marketplace',
-    url: '/landing/marketplace',
-    icon: undefined,
-    isDeleted: false,
-    isSystemData: true,
-    parentId: undefined,
-    parent: undefined,
-    childMenus: [],
-    isForbid: false,
-    open: false,
-  },
+  // {
+  //   id: 11,
+  //   name: 'Market',
+  //   nameEn: 'Marketplace',
+  //   url: '/landing/marketplace',
+  //   icon: undefined,
+  //   isDeleted: false,
+  //   isSystemData: true,
+  //   parentId: undefined,
+  //   parent: undefined,
+  //   childMenus: [],
+  //   isForbid: false,
+  //   open: false,
+  // },
   {
     id: 8,
     name: 'Veri',
@@ -160,8 +160,8 @@ const menuList: HeaderMenuModel[] = [
   },
   {
     id: 7,
-    name: 'Harita',
-    nameEn: 'Map',
+    name: 'Keşfet',
+    nameEn: 'Explore',
     url: '/landing/map',
     icon: undefined,
     isDeleted: false,
@@ -234,8 +234,8 @@ const menuList: HeaderMenuModel[] = [
   },
   {
     id: 15,
-    name: 'Destek Yönetimi',
-    nameEn: 'Support Management',
+    name: 'Destek',
+    nameEn: 'Support',
     url: '/supportmanagement',
     icon: undefined,
     permissionId: 56,
@@ -261,7 +261,7 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
 
   private userSub?: Subscription;
 
-  private documentClickHandler = () => {
+  private documentClickHandler = (): void => {
     this.closeAll();
   };
 
@@ -271,7 +271,10 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.isAdmin = this.authService.currentUserValue?.roles?.includes(RoleEnum.SuperAdmin) ?? false;
+    this.isAdmin =
+      this.authService.currentUserValue?.roles?.includes(RoleEnum.SuperAdmin) ??
+      false;
+
     this.menuList = this.cloneMenuList(menuList);
 
     document.addEventListener('click', this.documentClickHandler);
@@ -287,21 +290,23 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
   controlMenuVisibility(): void {
     this.userSub = this.authService.currentUserSubject
       .asObservable()
-      .subscribe(result => {
+      .subscribe((result) => {
         const cloned = this.cloneMenuList(menuList);
 
         if (result?.permissions) {
           this.permissionList = JSON.parse(result.permissions) as number[];
 
-          cloned.forEach(menu => {
+          cloned.forEach((menu) => {
             if (menu.permissionId) {
               menu.isForbid = !this.permissionList?.includes(menu.permissionId);
             } else if (menu.childMenus?.length) {
               let hasVisibleChild = false;
 
-              menu.childMenus.forEach(childMenu => {
+              menu.childMenus.forEach((childMenu) => {
                 if (childMenu.permissionId) {
-                  childMenu.isForbid = !this.permissionList?.includes(childMenu.permissionId);
+                  childMenu.isForbid = !this.permissionList?.includes(
+                    childMenu.permissionId
+                  );
                 } else {
                   childMenu.isForbid = !!this.isAdmin;
                 }
@@ -317,17 +322,21 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
             }
           });
         } else {
-          cloned.forEach(menu => {
+          cloned.forEach((menu) => {
             if (menu.permissionId) {
               menu.isForbid = true;
             } else if (menu.childMenus?.length) {
               let hasVisibleChild = false;
 
-              menu.childMenus.forEach(childMenu => {
+              menu.childMenus.forEach((childMenu) => {
                 if (childMenu.permissionId) {
                   childMenu.isForbid = true;
                 } else {
                   childMenu.isForbid = false;
+                  hasVisibleChild = true;
+                }
+
+                if (!childMenu.isForbid) {
                   hasVisibleChild = true;
                 }
               });
@@ -354,7 +363,7 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
   }
 
   closeAll(): void {
-    this.menuList = this.menuList.map(menu => ({
+    this.menuList = this.menuList.map((menu) => ({
       ...menu,
       open: false,
     }));
@@ -369,15 +378,17 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
   }
 
   hasActiveChild(menu: HeaderMenuModel): boolean {
-    return !!menu.childMenus?.some(child => checkIsActive(this.router.url, child.url));
+    return !!menu.childMenus?.some((child) =>
+      checkIsActive(this.router.url, child.url)
+    );
   }
 
   private cloneMenuList(source: HeaderMenuModel[]): HeaderMenuModel[] {
-    return source.map(menu => ({
+    return source.map((menu) => ({
       ...menu,
       open: false,
       childMenus: menu.childMenus
-        ? menu.childMenus.map(child => ({
+        ? menu.childMenus.map((child) => ({
             ...child,
             open: false,
           }))

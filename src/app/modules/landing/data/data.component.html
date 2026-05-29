@@ -1,229 +1,169 @@
 <div class="data-page">
   <section class="data-hero">
     <div class="container-fluid">
-      <div class="row g-7 align-items-stretch">
-        <div class="col-12 col-xl-8">
-          <div class="card h-100 border-0 hero-main-card position-relative overflow-hidden">
-            <div class="hero-bg"></div>
-            <div class="hero-overlay"></div>
+      <div class="card data-shell border-0 overflow-hidden">
+        <div class="card-body p-0">
+          <div class="row g-0 data-hero-row">
 
-            <div
-              class="card-body p-6 p-lg-10 d-flex flex-column justify-content-between h-100 position-relative z-index-1">
-              <div class="hero-content-wrap">
-                <div class="badge badge-light-primary mb-5">
+            <div class="col-12 col-xl-7">
+              <div class="data-hero-content h-100 p-8 p-lg-12 d-flex flex-column justify-content-center">
+                <div class="badge badge-light-primary w-fit mb-5">
                   {{ 'DATA_PAGE.KICKER' | translate }}
                 </div>
 
-                <h1 class="text-white fw-bolder lh-sm fs-1 fs-lg-4x mb-5 hero-title">
+                <h1 class="fw-bolder fs-2x fs-lg-4x mb-5">
                   {{ 'DATA_PAGE.TITLE' | translate }}
                 </h1>
 
-                <p class="text-muted fs-5 mb-8 hero-copy">
+                <p class="text-muted fs-4 fw-semibold mw-700px mb-8">
                   {{ 'DATA_PAGE.COPY' | translate }}
                 </p>
-              </div>
 
-              <div class="card bg-transparent border border-white border-opacity-10 shadow-none hero-search-card">
-                <div class="card-body p-4 p-lg-5">
-                  <div class="d-flex flex-column flex-lg-row gap-3">
-                    <div class="position-relative flex-grow-1 search-input-container">
-                      <i class="ki-outline ki-magnifier fs-2 text-gray-500 search-icon"></i>
+                <div class="data-search card border-0 mw-700px">
+                  <div class="card-body p-3">
+                    <div class="d-flex flex-column flex-md-row gap-3">
+                      <div class="position-relative flex-grow-1">
+                        <i
+                          class="ki-outline ki-magnifier fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-4"></i>
 
-                      <input type="text" class="form-control ps-13" [ngModel]="searchQuery()"
-                        (ngModelChange)="searchQuery.set($event)"
-                        [placeholder]="'DATA_PAGE.SEARCH_PLACEHOLDER' | translate" (keyup.enter)="submitSearch()" />
+                        <input type="text" class="form-control form-control-lg form-control-solid ps-12"
+                          [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                          [placeholder]="'DATA_PAGE.SEARCH_PLACEHOLDER' | translate" (keyup.enter)="submitSearch()" />
+                      </div>
+
+                      <button class="btn btn-primary btn-lg px-8" (click)="submitSearch()" [disabled]="loading()">
+                        {{
+                        loading()
+                        ? ('DATA_PAGE.LOADING' | translate)
+                        : ('DATA_PAGE.SEARCH_BUTTON' | translate)
+                        }}
+                      </button>
                     </div>
-
-                    <button class="btn btn-primary px-8 flex-shrink-0" (click)="submitSearch()" [disabled]="loading()">
-                      {{ loading() ? ('DATA_PAGE.LOADING' | translate) : ('DATA_PAGE.SEARCH_BUTTON' | translate) }}
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="col-12 col-xl-4">
-          <div class="card h-100 border-0 hero-side-card">
-            <div class="card-body p-6 p-lg-8">
-              <div class="mb-6">
-                <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
-                  {{ 'DATA_PAGE.SUMMARY_KICKER' | translate }}
-                </div>
-
-                <h3 class="text-white fw-bolder fs-2 mb-0">
-                  {{ 'DATA_PAGE.SUMMARY_TITLE' | translate }}
-                </h3>
-              </div>
-
-              <div class="d-flex flex-column gap-4">
-                <div class="rounded-4 border border-white border-opacity-10 p-4 summary-item">
-                  <div class="d-flex align-items-start gap-4">
-                    <div class="symbol symbol-50px flex-shrink-0">
-                      <span class="symbol-label bg-light-primary">
-                        <i class="ki-outline ki-shop fs-2 text-primary"></i>
-                      </span>
-                    </div>
-
-                    <div class="flex-grow-1">
-                      <div class="text-white fw-bold fs-5 mb-1">
-                        {{ 'DATA_PAGE.CARD_1_TITLE' | translate }}
-                      </div>
-                      <div class="text-muted fs-7 fw-semibold lh-lg">
-                        {{ 'DATA_PAGE.CARD_1_DESC' | translate }}
-                      </div>
-                    </div>
+            <div class="col-12 col-xl-5">
+              <div class="data-panel h-100 p-8 p-lg-10">
+                <div class="data-panel-header mb-8">
+                  <div class="data-panel-kicker">
+                    {{ 'DATA_PAGE.SUMMARY_KICKER' | translate }}
                   </div>
+
+                  <h3 class="data-panel-title">
+                    {{ 'DATA_PAGE.SUMMARY_TITLE' | translate }}
+                  </h3>
                 </div>
 
-                <div class="rounded-4 border border-white border-opacity-10 p-4 summary-item">
-                  <div class="d-flex align-items-start gap-4">
-                    <div class="symbol symbol-50px flex-shrink-0">
-                      <span class="symbol-label bg-light-primary">
-                        <i class="ki-outline ki-geolocation fs-2 text-primary"></i>
-                      </span>
+                <div class="data-mini-list">
+                  <div class="data-mini-card">
+                    <div class="data-mini-icon">
+                      <i class="ki-outline ki-geolocation fs-2"></i>
                     </div>
 
-                    <div class="flex-grow-1">
-                      <div class="text-white fw-bold fs-5 mb-1">
+                    <div>
+                      <div class="data-mini-title">
                         {{ 'DATA_PAGE.CARD_2_TITLE' | translate }}
                       </div>
-                      <div class="text-muted fs-7 fw-semibold lh-lg">
+
+                      <div class="data-mini-desc">
                         {{ 'DATA_PAGE.CARD_2_DESC' | translate }}
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="rounded-4 border border-white border-opacity-10 p-4 summary-item">
-                  <div class="d-flex align-items-start gap-4">
-                    <div class="symbol symbol-50px flex-shrink-0">
-                      <span class="symbol-label bg-light-primary">
-                        <i class="ki-outline ki-code fs-2 text-primary"></i>
-                      </span>
+                  <div class="data-mini-card">
+                    <div class="data-mini-icon">
+                      <i class="ki-outline ki-code fs-2"></i>
                     </div>
 
-                    <div class="flex-grow-1">
-                      <div class="text-white fw-bold fs-5 mb-1">
+                    <div>
+                      <div class="data-mini-title">
                         {{ 'DATA_PAGE.CARD_3_TITLE' | translate }}
                       </div>
-                      <div class="text-muted fs-7 fw-semibold lh-lg">
+
+                      <div class="data-mini-desc">
                         {{ 'DATA_PAGE.CARD_3_DESC' | translate }}
                       </div>
                     </div>
                   </div>
+
+                  <div class="data-mini-card">
+                    <div class="data-mini-icon">
+                      <i class="ki-outline ki-data fs-2"></i>
+                    </div>
+
+                    <div>
+                      <div class="data-mini-title">
+                        {{ 'DATA_PAGE.USE_CASES' | translate }}
+                      </div>
+
+                      <div class="data-mini-desc">
+                        {{ 'DATA_PAGE.SECTION2_COPY' | translate }}
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </div>
+
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
   <section class="data-section">
     <div class="container-fluid">
-      <div class="text-center mb-8">
+
+      <div class="text-center mb-12">
         <div class="badge badge-light-primary mb-4">
           {{ 'DATA_PAGE.USE_CASES' | translate }}
         </div>
 
-        <h2 class="text-white fw-bolder fs-2hx mb-4">
+        <h2 class="fw-bolder fs-2hx mb-4">
           {{ 'DATA_PAGE.SECTION2_TITLE' | translate }}
         </h2>
 
-        <p class="text-muted fs-6 section-copy mx-auto">
+        <p class="text-muted fs-5 fw-semibold mw-750px mx-auto mb-0">
           {{ 'DATA_PAGE.SECTION2_COPY' | translate }}
         </p>
       </div>
 
-      <div class="row g-7">
-        <div class="col-12 col-md-6 col-xl-4">
-          <div class="card h-100 border-0 feature-card">
-            <div class="card-body p-6 d-flex flex-column h-100">
-              <div class="symbol symbol-60px mb-5">
-                <span class="symbol-label bg-light-primary">
-                  <i class="ki-outline ki-shop fs-2x text-primary"></i>
-                </span>
-              </div>
-
-              <div class="text-white fw-bolder fs-3 mb-3">
-                {{ 'DATA_PAGE.ACCESS_1_TITLE' | translate }}
-              </div>
-
-              <div class="text-muted fs-6 fw-semibold lh-lg mb-5">
-                {{ 'DATA_PAGE.ACCESS_1_DESC' | translate }}
-              </div>
-
-              <div class="d-flex flex-column gap-3 mb-7">
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_1_ITEM_1' | translate }}
-                  </span>
-                </div>
-
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_1_ITEM_2' | translate }}
-                  </span>
-                </div>
-
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_1_ITEM_3' | translate }}
-                  </span>
-                </div>
-              </div>
-
-              <a routerLink="/landing/marketplace" class="btn btn-light-primary mt-auto">
-                {{ 'DATA_PAGE.ACCESS_1_ACTION' | translate }}
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-4">
-          <div class="card h-100 border-0 feature-card">
-            <div class="card-body p-6 d-flex flex-column h-100">
-              <div class="symbol symbol-60px mb-5">
+      <div class="row justify-content-center g-6">
+        <div class="col-12 col-md-6 col-xl-5">
+          <div class="card data-card h-100">
+            <div class="card-body p-7 d-flex flex-column">
+              <div class="symbol symbol-60px mb-6">
                 <span class="symbol-label bg-light-primary">
                   <i class="ki-outline ki-geolocation fs-2x text-primary"></i>
                 </span>
               </div>
 
-              <div class="text-white fw-bolder fs-3 mb-3">
+              <h3 class="fw-bolder fs-2 mb-3">
                 {{ 'DATA_PAGE.ACCESS_2_TITLE' | translate }}
-              </div>
+              </h3>
 
-              <div class="text-muted fs-6 fw-semibold lh-lg mb-5">
+              <p class="text-muted fs-6 fw-semibold lh-lg mb-7">
                 {{ 'DATA_PAGE.ACCESS_2_DESC' | translate }}
-              </div>
+              </p>
 
-              <div class="d-flex flex-column gap-3 mb-7">
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_2_ITEM_1' | translate }}
-                  </span>
+              <div class="d-flex flex-column gap-3 mb-8">
+                <div class="data-check">
+                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
+                  {{ 'DATA_PAGE.ACCESS_2_ITEM_1' | translate }}
                 </div>
 
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_2_ITEM_2' | translate }}
-                  </span>
+                <div class="data-check">
+                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
+                  {{ 'DATA_PAGE.ACCESS_2_ITEM_2' | translate }}
                 </div>
 
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_2_ITEM_3' | translate }}
-                  </span>
+                <div class="data-check">
+                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
+                  {{ 'DATA_PAGE.ACCESS_2_ITEM_3' | translate }}
                 </div>
               </div>
 
@@ -234,43 +174,37 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-6 col-xl-4">
-          <div class="card h-100 border-0 feature-card">
-            <div class="card-body p-6 d-flex flex-column h-100">
-              <div class="symbol symbol-60px mb-5">
+        <div class="col-12 col-md-6 col-xl-5">
+          <div class="card data-card h-100">
+            <div class="card-body p-7 d-flex flex-column">
+              <div class="symbol symbol-60px mb-6">
                 <span class="symbol-label bg-light-primary">
                   <i class="ki-outline ki-code fs-2x text-primary"></i>
                 </span>
               </div>
 
-              <div class="text-white fw-bolder fs-3 mb-3">
+              <h3 class="fw-bolder fs-2 mb-3">
                 {{ 'DATA_PAGE.ACCESS_3_TITLE' | translate }}
-              </div>
+              </h3>
 
-              <div class="text-muted fs-6 fw-semibold lh-lg mb-5">
+              <p class="text-muted fs-6 fw-semibold lh-lg mb-7">
                 {{ 'DATA_PAGE.ACCESS_3_DESC' | translate }}
-              </div>
+              </p>
 
-              <div class="d-flex flex-column gap-3 mb-7">
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_3_ITEM_1' | translate }}
-                  </span>
+              <div class="d-flex flex-column gap-3 mb-8">
+                <div class="data-check">
+                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
+                  {{ 'DATA_PAGE.ACCESS_3_ITEM_1' | translate }}
                 </div>
 
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_3_ITEM_2' | translate }}
-                  </span>
+                <div class="data-check">
+                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
+                  {{ 'DATA_PAGE.ACCESS_3_ITEM_2' | translate }}
                 </div>
 
-                <div class="d-flex align-items-center gap-3">
-                  <i class="ki-outline ki-check-circle fs-4 text-primary"></i>
-                  <span class="text-muted fs-7 fw-semibold">
-                    {{ 'DATA_PAGE.ACCESS_3_ITEM_3' | translate }}
-                  </span>
+                <div class="data-check">
+                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
+                  {{ 'DATA_PAGE.ACCESS_3_ITEM_3' | translate }}
                 </div>
               </div>
 
@@ -281,52 +215,67 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section class="data-section data-section--compact">
-    <div class="container-fluid">
-      <div class="card border-0 flow-card">
-        <div class="card-body p-6 p-lg-8">
-          <div class="row g-5">
-            <div class="col-12 col-lg-4">
-              <div class="rounded-4 border border-white border-opacity-10 p-5 h-100 flow-item">
-                <div class="badge badge-light-primary mb-4">01</div>
-                <div class="text-white fw-bolder fs-4 mb-2">
-                  {{ 'DATA_PAGE.FLOW_1_TITLE' | translate }}
-                </div>
-                <div class="text-muted fs-6 lh-lg">
-                  {{ 'DATA_PAGE.FLOW_1_DESC' | translate }}
-                </div>
-              </div>
+      <div class="data-timeline-section mt-15">
+        <div class="data-timeline">
+
+          <div class="data-timeline-item">
+            <div class="data-timeline-dot">
+              <i class="ki-outline ki-magnifier fs-2"></i>
             </div>
 
-            <div class="col-12 col-lg-4">
-              <div class="rounded-4 border border-white border-opacity-10 p-5 h-100 flow-item">
-                <div class="badge badge-light-primary mb-4">02</div>
-                <div class="text-white fw-bolder fs-4 mb-2">
-                  {{ 'DATA_PAGE.FLOW_2_TITLE' | translate }}
-                </div>
-                <div class="text-muted fs-6 lh-lg">
-                  {{ 'DATA_PAGE.FLOW_2_DESC' | translate }}
-                </div>
-              </div>
-            </div>
+            <div class="data-timeline-card">
+              <span>01</span>
 
-            <div class="col-12 col-lg-4">
-              <div class="rounded-4 border border-white border-opacity-10 p-5 h-100 flow-item">
-                <div class="badge badge-light-primary mb-4">03</div>
-                <div class="text-white fw-bolder fs-4 mb-2">
-                  {{ 'DATA_PAGE.FLOW_3_TITLE' | translate }}
-                </div>
-                <div class="text-muted fs-6 lh-lg">
-                  {{ 'DATA_PAGE.FLOW_3_DESC' | translate }}
-                </div>
-              </div>
+              <h4>
+                {{ 'DATA_PAGE.FLOW_1_TITLE' | translate }}
+              </h4>
+
+              <p>
+                {{ 'DATA_PAGE.FLOW_1_DESC' | translate }}
+              </p>
             </div>
           </div>
+
+          <div class="data-timeline-item">
+            <div class="data-timeline-dot">
+              <i class="ki-outline ki-data fs-2"></i>
+            </div>
+
+            <div class="data-timeline-card">
+              <span>02</span>
+
+              <h4>
+                {{ 'DATA_PAGE.FLOW_2_TITLE' | translate }}
+              </h4>
+
+              <p>
+                {{ 'DATA_PAGE.FLOW_2_DESC' | translate }}
+              </p>
+            </div>
+          </div>
+
+          <div class="data-timeline-item">
+            <div class="data-timeline-dot">
+              <i class="ki-outline ki-geolocation fs-2"></i>
+            </div>
+
+            <div class="data-timeline-card">
+              <span>03</span>
+
+              <h4>
+                {{ 'DATA_PAGE.FLOW_3_TITLE' | translate }}
+              </h4>
+
+              <p>
+                {{ 'DATA_PAGE.FLOW_3_DESC' | translate }}
+              </p>
+            </div>
+          </div>
+
         </div>
       </div>
+
     </div>
   </section>
 </div>

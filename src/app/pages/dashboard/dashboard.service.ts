@@ -11,8 +11,7 @@ export class DashboardService {
 
     return of({
       kpis: {
-        totalRevenue: 2854300,
-        marketplaceRevenue: 1240000,
+        totalRevenue: 1614300,
         apiRevenue: 980000,
         activeApiSubscriptions: 84,
         pendingOrders: 37,
@@ -23,16 +22,15 @@ export class DashboardService {
         totalApiCallsToday: 84231,
       },
       revenueTrend: [
-        { date: '01 Apr', totalRevenue: 84000, marketplaceRevenue: 42000, apiRevenue: 26000 },
-        { date: '02 Apr', totalRevenue: 92000, marketplaceRevenue: 45000, apiRevenue: 30000 },
-        { date: '03 Apr', totalRevenue: 78000, marketplaceRevenue: 36000, apiRevenue: 25000 },
-        { date: '04 Apr', totalRevenue: 98000, marketplaceRevenue: 50000, apiRevenue: 32000 },
-        { date: '05 Apr', totalRevenue: 110000, marketplaceRevenue: 58000, apiRevenue: 34000 },
-        { date: '06 Apr', totalRevenue: 103000, marketplaceRevenue: 54000, apiRevenue: 31000 },
-        { date: '07 Apr', totalRevenue: 117000, marketplaceRevenue: 61000, apiRevenue: 36000 },
+        { date: '01 Apr', totalRevenue: 68000, apiRevenue: 26000 },
+        { date: '02 Apr', totalRevenue: 76000, apiRevenue: 30000 },
+        { date: '03 Apr', totalRevenue: 62000, apiRevenue: 25000 },
+        { date: '04 Apr', totalRevenue: 80000, apiRevenue: 32000 },
+        { date: '05 Apr', totalRevenue: 86000, apiRevenue: 34000 },
+        { date: '06 Apr', totalRevenue: 79000, apiRevenue: 31000 },
+        { date: '07 Apr', totalRevenue: 94000, apiRevenue: 36000 },
       ],
       revenueBreakdown: [
-        { label: 'Marketplace', value: 1240000 },
         { label: 'API', value: 980000 },
         { label: 'Kurumsal Özel Talep', value: 634300 },
       ],
@@ -74,7 +72,7 @@ export class DashboardService {
           id: 'ORD-1002',
           customerName: 'Ahmet Yılmaz',
           customerType: 'Bireysel',
-          sourceType: 'Marketplace',
+          sourceType: 'API',
           region: 'İzmir / Menemen',
           createdAt: '2026-04-07 09:45',
           amount: 1850,
@@ -94,7 +92,7 @@ export class DashboardService {
           id: 'ORD-1004',
           customerName: 'Elif Kaya',
           customerType: 'Bireysel',
-          sourceType: 'Marketplace',
+          sourceType: 'Özel Talep',
           region: 'Muğla / Bodrum',
           createdAt: '2026-04-07 08:55',
           amount: 2400,
@@ -128,11 +126,6 @@ export class DashboardService {
         },
       ],
       systemHealth: [
-        {
-          name: 'Marketplace',
-          status: 'Healthy',
-          description: 'Sipariş akışı normal çalışıyor',
-        },
         {
           name: 'API Gateway',
           status: 'Healthy',

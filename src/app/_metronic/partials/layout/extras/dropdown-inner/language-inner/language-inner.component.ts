@@ -9,40 +9,34 @@ import { TranslationService } from '../../../../../../modules/i18n';
 })
 export class LanguageInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class')
-@HostBinding('class')
-class = `menu menu-sub menu-sub-dropdown menu-column menu-rounded border border-gray-200 shadow-sm py-2 fs-6 w-200px`;  @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
+  class = 'menu menu-sub menu-sub-dropdown menu-column menu-rounded border border-gray-200 shadow-sm py-2 fs-6 w-200px';
 
-  language: LanguageFlag;
+  @HostBinding('attr.data-kt-menu')
+  dataKtMenu = 'true';
+
+  language!: LanguageFlag;
   langs = languages;
   private unsubscribe: Subscription[] = [];
 
-  constructor( 
-    private translationService: TranslationService
-  ) {}
+  constructor(private translationService: TranslationService) {}
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.setLanguage(this.translationService.getSelectedLanguage());
   }
 
-
-  selectLanguage(lang: string) {
+  selectLanguage(lang: string): void {
     this.translationService.setLanguage(lang);
     this.setLanguage(lang);
-    // document.location.reload();
   }
 
-  setLanguage(lang: string) {
-    this.langs.forEach((language: LanguageFlag) => {
-      if (language.lang === lang) {
-        language.active = true;
-        this.language = language;
-      } else {
-        language.active = false;
-      }
+  setLanguage(lang: string): void {
+    this.langs.forEach((item) => {
+      item.active = item.lang === lang;
+      if (item.active) this.language = item;
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
 }
@@ -55,7 +49,7 @@ interface LanguageFlag {
   active?: boolean;
 }
 
-const languages = [
+const languages: LanguageFlag[] = [
   {
     lang: 'en',
     nameTr: 'İngilizce',

@@ -14,8 +14,8 @@ const routes: Routes = [
     path: '',
     component: LandingComponent,
     children: [
-      { path: '', redirectTo: 'marketplace', pathMatch: 'full' },
-      { path: 'marketplace', component: MarketplaceComponent },
+      { path: '', redirectTo: 'data', pathMatch: 'full' },
+      // { path: 'marketplace', component: MarketplaceComponent },
       { path: 'data', component: DataComponent },
       { path: 'api', component: ApiComponent },
       { path: 'contact', component: ContactComponent },

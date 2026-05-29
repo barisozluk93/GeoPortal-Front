@@ -12,7 +12,7 @@
             <h2 class="basket-page-title mb-1">
               {{ 'MY_BASKET' | translate }}
             </h2>
-            <div class="basket-page-subtitle">
+            <div class="basket-page-subtitle text-muted">
               {{ basket.length }} {{ 'PRODUCT_HEADER' | translate }}
             </div>
           </div>
@@ -70,7 +70,7 @@
                       </div>
 
                       <div class="d-flex flex-column min-w-0">
-                        <span class="basket-item__label">
+                        <span class="basket-item__label text-primary">
                           {{ 'PRODUCT_HEADER' | translate }}
                         </span>
 
@@ -80,7 +80,9 @@
 
                         <div class="basket-item__meta">
                           <span class="basket-item__meta-dot"></span>
-                          <span>{{ 'IN_BASKET' | translate }}</span>
+                          <span class="text-muted">
+                            {{ 'IN_BASKET' | translate }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -88,7 +90,7 @@
 
                   <div class="col-9 col-lg-4">
                     <div class="basket-price-box">
-                      <span class="basket-price-box__label">
+                      <span class="basket-price-box__label text-primary">
                         {{ 'TOTAL' | translate }}
                       </span>
                       <span class="basket-price-box__value">
@@ -157,13 +159,13 @@
     <div class="card basket-summary-card shadow-sm sticky-summary">
       <div class="card-header border-0 pt-8 pb-8">
         <div class="d-flex flex-column">
-          <div class="basket-summary-card__eyebrow">
+          <div class="basket-summary-card__eyebrow text-primary">
             {{ 'ORDER_SUMMARY' | translate }}
           </div>
           <h3 class="basket-summary-card__title mb-1">
             {{ 'TOTAL' | translate }}
           </h3>
-          <span class="basket-summary-card__subtitle">
+          <span class="basket-summary-card__subtitle text-muted">
             {{ numberOfItem }} {{ 'PRODUCT_HEADER' | translate }}
           </span>
         </div>

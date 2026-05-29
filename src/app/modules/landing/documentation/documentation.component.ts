@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  ViewChild
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 interface DocNavItem {
@@ -27,27 +20,13 @@ interface DocEndpoint {
   curlExample?: string;
 }
 
-type SidebarMode = 'static' | 'fixed' | 'bottom';
-
 @Component({
   selector: 'app-documentation',
   templateUrl: './documentation.component.html',
   styleUrls: ['./documentation.component.scss']
 })
-export class DocumentationComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('sidebarColumn') sidebarColumnRef!: ElementRef<HTMLElement>;
-  @ViewChild('sidebarCard') sidebarCardRef!: ElementRef<HTMLElement>;
-  @ViewChild('mainContent') mainContentRef!: ElementRef<HTMLElement>;
-
+export class DocumentationComponent {
   readonly baseUrl = environment.appUrl;
-
-  sidebarMode: SidebarMode = 'static';
-  sidebarStyles: Record<string, string> = {};
-
-  private readonly stickyTop = 90;
-  private readonly mobileBreakpoint = 1199;
-  private resizeObserver?: ResizeObserver;
-  private rafId = 0;
 
   readonly navItems: DocNavItem[] = [
     { id: 'overview', labelKey: 'API_DOC.NAV.OVERVIEW' },
@@ -171,7 +150,7 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
   "city": "Istanbul",
   "district": "Besiktas",
   "acquisitionDate": "2026-03-20T00:00:00",
-  "provider": "TaiEarth",
+  "provider": "GeoPortal",
   "resolution": 0.5,
   "cloudRate": 12,
   "areaKm2": 18.7,
@@ -191,124 +170,61 @@ export class DocumentationComponent implements AfterViewInit, OnDestroy {
   ]
 }`;
 
-  ngAfterViewInit(): void {
-    this.setupObservers();
-    this.queueSidebarUpdate();
+scrollTo(id: string): void {
+  const element = document.getElementById(id);
+
+  if (!element) {
+    return;
   }
 
-  ngOnDestroy(): void {
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-    }
+  const headerOffset = 110;
+  const scrollParent = this.getScrollParent(element);
 
-    if (this.rafId) {
-      cancelAnimationFrame(this.rafId);
-    }
-  }
-
-  @HostListener('window:scroll')
-  onWindowScroll(): void {
-    this.queueSidebarUpdate();
-  }
-
-  @HostListener('window:resize')
-  onWindowResize(): void {
-    this.queueSidebarUpdate();
-  }
-
-  scrollTo(id: string): void {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    const headerOffset = 100;
-    const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
-    const offsetPosition = elementPosition - headerOffset;
+  if (scrollParent === window) {
+    const top = element.getBoundingClientRect().top + window.scrollY - headerOffset;
 
     window.scrollTo({
-      top: offsetPosition,
+      top,
       behavior: 'smooth'
     });
+
+    return;
   }
+
+  const container = scrollParent as HTMLElement;
+  const containerRect = container.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+
+  container.scrollTo({
+    top: container.scrollTop + elementRect.top - containerRect.top - headerOffset,
+    behavior: 'smooth'
+  });
+}
+
+private getScrollParent(element: HTMLElement): HTMLElement | Window {
+  let parent = element.parentElement;
+
+  while (parent) {
+    const style = window.getComputedStyle(parent);
+    const overflowY = style.overflowY;
+
+    const isScrollable =
+      (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') &&
+      parent.scrollHeight > parent.clientHeight;
+
+    if (isScrollable) {
+      return parent;
+    }
+
+    parent = parent.parentElement;
+  }
+
+  return window;
+}
 
   getMethodClass(method: 'GET' | 'POST'): string {
     return method === 'GET'
       ? 'method-badge method-badge--get'
       : 'method-badge method-badge--post';
-  }
-
-  private setupObservers(): void {
-    if (!this.sidebarColumnRef?.nativeElement || !this.sidebarCardRef?.nativeElement || !this.mainContentRef?.nativeElement) {
-      return;
-    }
-
-    this.resizeObserver = new ResizeObserver(() => {
-      this.queueSidebarUpdate();
-    });
-
-    this.resizeObserver.observe(this.sidebarColumnRef.nativeElement);
-    this.resizeObserver.observe(this.sidebarCardRef.nativeElement);
-    this.resizeObserver.observe(this.mainContentRef.nativeElement);
-  }
-
-  private queueSidebarUpdate(): void {
-    if (this.rafId) {
-      cancelAnimationFrame(this.rafId);
-    }
-
-    this.rafId = requestAnimationFrame(() => {
-      this.updateSidebarPosition();
-    });
-  }
-
-  private updateSidebarPosition(): void {
-    const sidebarColumn = this.sidebarColumnRef?.nativeElement;
-    const sidebarCard = this.sidebarCardRef?.nativeElement;
-    const mainContent = this.mainContentRef?.nativeElement;
-
-    if (!sidebarColumn || !sidebarCard || !mainContent) {
-      return;
-    }
-
-    if (window.innerWidth <= this.mobileBreakpoint) {
-      this.sidebarMode = 'static';
-      this.sidebarStyles = {};
-      return;
-    }
-
-    const columnRect = sidebarColumn.getBoundingClientRect();
-    const mainRect = mainContent.getBoundingClientRect();
-    const cardHeight = sidebarCard.offsetHeight;
-    const topOffset = this.stickyTop;
-    const pageY = window.scrollY || window.pageYOffset;
-
-    const columnTopAbs = columnRect.top + pageY;
-    const mainTopAbs = mainRect.top + pageY;
-    const mainBottomAbs = mainRect.bottom + pageY;
-
-    const startStickY = Math.max(columnTopAbs, mainTopAbs) - topOffset;
-    const stopStickY = mainBottomAbs - cardHeight - topOffset;
-
-    if (pageY < startStickY) {
-      this.sidebarMode = 'static';
-      this.sidebarStyles = {};
-      return;
-    }
-
-    if (pageY >= stopStickY) {
-      this.sidebarMode = 'bottom';
-      this.sidebarStyles = {
-        top: `${Math.max(mainContent.offsetHeight - cardHeight, 0)}px`,
-        left: '0px',
-        width: `${sidebarColumn.offsetWidth}px`
-      };
-      return;
-    }
-
-    this.sidebarMode = 'fixed';
-    this.sidebarStyles = {
-      top: `${topOffset}px`,
-      left: `${columnRect.left}px`,
-      width: `${sidebarColumn.offsetWidth}px`
-    };
   }
 }

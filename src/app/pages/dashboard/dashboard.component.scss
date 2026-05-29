@@ -1,8 +1,7 @@
 :host {
   display: block;
   min-width: 0;
-  padding: 60px;
-  min-height: calc(100vh - 65px);
+  min-height: calc(100vh - 92px);
 }
 
 .satdash {
@@ -11,57 +10,33 @@
 
 /* HERO */
 .satdash-hero {
-  position: relative;
   overflow: hidden;
-  border: 1px solid var(--bs-card-border-color, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--bs-border-color);
   background:
-    radial-gradient(circle at top right, rgba(61, 139, 253, 0.16), transparent 32%),
-    radial-gradient(circle at left center, rgba(111, 66, 193, 0.1), transparent 28%),
-    var(--glass-surface);
-  box-shadow: var(--bs-card-box-shadow, 0 0 20px rgba(0, 0, 0, 0.08));
-}
-
-.satdash-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.015) 42%,
-    rgba(255, 255, 255, 0) 100%
-  );
-}
-
-.satdash-hero > .card-body {
-  position: relative;
-  z-index: 1;
+    radial-gradient(circle at top right, rgba(var(--bs-primary-rgb), 0.12), transparent 30%),
+    var(--bs-card-bg);
 }
 
 .satdash-hero__eyebrow {
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--bs-primary);
 }
 
 .satdash-hero__dot {
-  width: 0.55rem;
-  height: 0.55rem;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
-  flex: 0 0 0.55rem;
   background: var(--bs-primary);
-  box-shadow: 0 0 0 0.45rem rgba(var(--bs-primary-rgb), 0.14);
+  flex-shrink: 0;
 }
 
 .satdash-hero__title {
-  font-size: clamp(1.7rem, 2vw + 1rem, 2.65rem);
+  font-size: clamp(1.8rem, 2vw + 1rem, 2.8rem);
   line-height: 1.15;
   font-weight: 700;
-  color: var(--bs-heading-color, #ffffff);
-  max-width: 900px;
+  color: var(--bs-heading-color);
 }
 
 .satdash-hero__title span {
@@ -69,148 +44,86 @@
 }
 
 .satdash-hero__text {
-  max-width: 760px;
+  max-width: 720px;
   font-size: 1rem;
-  line-height: 1.75;
-  color: var(--bs-gray-700);
+  line-height: 1.7;
 }
 
-/* HERO METRICS */
+/* METRICS */
 .satdash-metric {
   height: 100%;
+  padding: 1rem;
   border-radius: 1rem;
-  padding: 1rem 1rem 0.95rem;
+  background: var(--bs-gray-100);
+}
+
+[data-bs-theme='dark'] .satdash-metric {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .satdash-metric__label {
-  margin-bottom: 0.5rem;
-  font-size: 0.75rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--bs-gray-600);
 }
 
 .satdash-metric__value {
-  font-size: clamp(1.3rem, 1.2vw + 0.9rem, 1.85rem);
-  line-height: 1.15;
+  font-size: clamp(1.3rem, 1vw + 1rem, 1.9rem);
   font-weight: 700;
-  color: var(--bs-heading-color, #ffffff);
-}
-
-/* CHIP TONLARI */
-.satdash-chip {
-  border-radius: 999px;
-}
-
-.satdash-chip--soft {
-  background-color: rgba(var(--bs-primary-rgb), 0.12) !important;
-  color: var(--bs-primary) !important;
-}
-
-.satdash-chip--warn {
-  background-color: rgba(var(--bs-warning-rgb), 0.15) !important;
-  color: var(--bs-warning) !important;
-}
-
-.satdash-chip--info {
-  background-color: rgba(var(--bs-info-rgb), 0.15) !important;
-  color: var(--bs-info) !important;
-}
-
-.satdash-chip--success {
-  background-color: rgba(var(--bs-success-rgb), 0.15) !important;
-  color: var(--bs-success) !important;
+  line-height: 1.15;
+  color: var(--bs-heading-color);
 }
 
 /* LOADING */
 .satdash-loading {
-  background: var(--glass-surface);
-  border: 1px solid var(--bs-card-border-color, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--bs-border-color);
+  background: var(--bs-card-bg);
 }
 
-/* CHILD COMPONENT YÜZEYLERİNE HAFİF DOKUNUŞ */
+/* CHILD CARDS */
 :host ::ng-deep app-chart-card .card,
 :host ::ng-deep app-kpi-card .card {
-  background: var(--glass-surface);
-  border-color: var(--bs-card-border-color, rgba(255, 255, 255, 0.08));
+  border-color: var(--bs-border-color);
+  background: var(--bs-card-bg);
 }
 
 :host ::ng-deep app-chart-card .card-header {
-  border-bottom-color: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--bs-border-color);
 }
 
-:host ::ng-deep app-chart-card .card-body,
-:host ::ng-deep app-kpi-card .card-body {
-  position: relative;
-}
-
-/* TABLE / LIST / HEALTH ALANLARI BİRAZ DAHA TEMİZ GÖRÜNSÜN */
-:host ::ng-deep app-orders-table .table,
-:host ::ng-deep app-system-health .table {
+/* TABLES */
+:host ::ng-deep .table {
   --bs-table-bg: transparent;
 }
 
-:host ::ng-deep app-orders-table .table > :not(caption) > * > *,
-:host ::ng-deep app-system-health .table > :not(caption) > * > * {
+:host ::ng-deep .table > :not(caption) > * > * {
   background-color: transparent !important;
-  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 
-:host ::ng-deep app-regional-demands .card,
-:host ::ng-deep app-system-health .card,
-:host ::ng-deep app-orders-table .card {
-  background: transparent;
-  box-shadow: none;
-  border: 0;
-}
-
-/* CHART WRAPPER TAŞMA KONTROLÜ */
+/* CHART FIX */
 :host ::ng-deep .apexcharts-canvas,
 :host ::ng-deep .apexcharts-svg {
   max-width: 100% !important;
 }
 
 /* RESPONSIVE */
-@media (max-width: 1199.98px) {
-  .satdash-hero__title {
-    max-width: none;
-  }
-}
-
 @media (max-width: 991.98px) {
+
   .satdash-hero__text {
     font-size: 0.95rem;
-  }
-
-  .satdash-metric {
-    padding: 0.9rem;
   }
 }
 
 @media (max-width: 767.98px) {
-  .satdash {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-  }
 
-  .satdash-hero__eyebrow {
-    font-size: 0.68rem;
-  }
 
   .satdash-hero__title {
-    font-size: 1.5rem;
-  }
-
-  .satdash-hero__text {
-    line-height: 1.65;
+    font-size: 1.55rem;
   }
 
   .satdash-metric__value {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
 }

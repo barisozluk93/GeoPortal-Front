@@ -1,178 +1,248 @@
-/* topbar.component.scss */
-
-.notification-symbol {
-  overflow: visible;
-}
-
-.notification-symbol-label {
-  position: relative;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(44, 99, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease;
+:host {
+  display: flex;
+  align-items: center;
+  height: 100%;
   overflow: visible !important;
 }
 
-.notification-symbol:hover .notification-symbol-label {
+/* =========================================================
+   TOPBAR ROOT
+========================================================= */
+
+:host {
+  .topbar,
+  .navbar,
+  .toolbar {
+    background: transparent !important;
+  }
+}
+
+/* =========================================================
+   COMMON SPACING
+========================================================= */
+
+.d-flex.align-items-center.me-3 {
+  margin-right: 0.75rem !important;
+}
+
+
+/* =========================================================
+   USER / LANGUAGE / NOTIFICATION ICONS
+========================================================= */
+
+.symbol {
+  position: relative;
+  overflow: visible !important;
+}
+
+.symbol-40px {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+.symbol img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px !important;
+  border: 1px solid #d1d5db !important;
+  background: #ffffff !important;
+}
+
+/* =========================================================
+   ICON BUTTON STYLE
+========================================================= */
+
+.cursor-pointer.symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease;
+}
+
+.cursor-pointer.symbol:hover {
+  background: #f3f4f6 !important;
+  border-color: #9ca3af !important;
   transform: translateY(-1px);
-  border-color: rgba(44, 99, 255, 0.4);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 6px 18px rgba(44, 99, 255, 0.18);
+}
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+.notification-symbol {
+  position: relative;
+}
+
+.notification-symbol-label {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .notification-bell {
-  font-size: 17px;
-  color: #ffffff;
-  transition: transform 0.2s ease, color 0.2s ease;
+  font-size: 1rem;
+  color: #000000 !important;
 }
 
-.notification-symbol:hover .notification-bell {
-  transform: scale(1.06);
-}
+/* =========================================================
+   NOTIFICATION BADGE
+========================================================= */
 
 .notification-badge {
   position: absolute;
-  top: -6px;
-  right: -7px;
+  top: -5px;
+  right: -5px;
   min-width: 20px;
   height: 20px;
-  padding: 0 6px;
+  padding: 0 5px;
   border-radius: 999px;
-  background: #2c63ff;
-  color: #ffffff;
-  font-size: 10px;
+  background: var(--bs-danger) !important;
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
   font-weight: 700;
-  line-height: 20px;
-  text-align: center;
-  box-shadow:
-    0 4px 10px rgba(44, 99, 255, 0.28),
-    0 0 0 2px rgba(10, 18, 32, 0.9);
-  z-index: 3;
+  line-height: 1;
+  border: 2px solid #ffffff;
 }
+
+/* =========================================================
+   NOTIFICATION PULSE
+========================================================= */
 
 .notification-pulse {
   position: absolute;
   top: -2px;
-  right: -3px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(44, 99, 255, 0.22);
-  z-index: 1;
-  animation: notificationPulse 1.8s infinite;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--bs-danger) !important;
+  animation: pulse-animation 1.8s infinite;
 }
 
-.has-unread .notification-symbol-label {
-  border-color: rgba(44, 99, 255, 0.35);
-  box-shadow:
-    0 2px 8px rgba(15, 23, 42, 0.06),
-    0 0 0 1px rgba(44, 99, 255, 0.08) inset;
-}
-
-.is-animating .notification-bell {
-  animation: notificationShake 0.7s ease;
-}
-
-@keyframes notificationPulse {
+@keyframes pulse-animation {
   0% {
-    transform: scale(0.8);
-    opacity: 0.9;
+    transform: scale(0.95);
+    opacity: 1;
   }
+
   70% {
-    transform: scale(2);
+    transform: scale(1.6);
     opacity: 0;
   }
+
   100% {
-    transform: scale(2);
+    transform: scale(0.95);
     opacity: 0;
   }
-}
-
-@keyframes notificationShake {
-  0% { transform: rotate(0deg); }
-  15% { transform: rotate(-14deg); }
-  30% { transform: rotate(10deg); }
-  45% { transform: rotate(-8deg); }
-  60% { transform: rotate(6deg); }
-  75% { transform: rotate(-3deg); }
-  100% { transform: rotate(0deg); }
-}
-
-.primary-action {
-  min-height: 42px;
-  padding: 0 16px;
-  border-radius: 12px;
-  font: inherit;
-  font-size: 0.92rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-}
-
-.primary-action {
-  color: #fff;
-  border: 0;
-  background: linear-gradient(135deg, #1f66ff 0%, #4c8cff 100%);
-  box-shadow: 0 12px 28px rgba(31, 102, 255, 0.3);
-}
-
-.primary-action:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 16px 32px rgba(31, 102, 255, 0.38);
-}
-
-.primary-action:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 /* =========================================================
-   PATCH ONLY - TOPBAR OVERFLOW FIX
-   ========================================================= */
+   ANIMATION
+========================================================= */
 
-:host {
-  display: flex;
-  align-items: center;
-  min-width: fit-content;
+.notification-symbol.is-animating {
+  animation: bell-shake 0.6s ease;
 }
 
-/* TÜM ITEMLARI TEK SATIRDA TUT */
-:host > * {
-  flex: 0 0 auto;
+@keyframes bell-shake {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  20% {
+    transform: rotate(-12deg);
+  }
+
+  40% {
+    transform: rotate(12deg);
+  }
+
+  60% {
+    transform: rotate(-8deg);
+  }
+
+  80% {
+    transform: rotate(8deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
-/* =========================
-   MOBILE FIX
-   ========================= */
+/* =========================================================
+   DROPDOWN MENUS
+========================================================= */
 
-@media (max-width: 991.98px) {
-  :host {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 6px; /* margin yerine gap kullan */
+::ng-deep .menu,
+::ng-deep .dropdown-menu,
+::ng-deep .menu-sub,
+::ng-deep .menu-sub-dropdown {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 14px !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden;
+  z-index: 99999 !important;
+}
+
+/* =========================================================
+   DROPDOWN ITEMS
+========================================================= */
+
+::ng-deep .menu-item,
+::ng-deep .menu-link {
+  color: #111827 !important;
+}
+
+::ng-deep .menu-link {
+  border-radius: 10px !important;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .menu-link:hover {
+  background: #f3f4f6 !important;
+  color: #000000 !important;
+}
+
+::ng-deep .menu-link.active {
+  background: #f3f4f6 !important;
+  color: #000000 !important;
+}
+
+/* =========================================================
+   SVG / ICON COLORS
+========================================================= */
+
+i,
+svg,
+span {
+  color: #000000 !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991px) {
+  .d-flex.align-items-center.me-3 {
+    margin-right: 0.45rem !important;
   }
 
-  /* kritik: marginleri kaldır */
-  :host > * {
-    margin-right: 0 !important;
-  }
-
-  /* iconlar küçülmez */
   .symbol-40px {
-    width: 36px;
-    height: 36px;
-  }
-
-  /* basket de küçülmez */
-  app-basket {
-    flex: 0 0 auto;
+    width: 38px !important;
+    height: 38px !important;
   }
 }

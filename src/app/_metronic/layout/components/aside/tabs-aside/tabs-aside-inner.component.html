@@ -1,42 +1,19 @@
 <div class="modern-aside-inner">
-  <div
-    #ktTabsAsideScroll
-    class="modern-aside-scroll flex-column-fluid hover-scroll-y"
-    data-kt-scroll="true"
-    data-kt-scroll-activate="true"
-    data-kt-scroll-height="auto"
-    data-kt-scroll-wrappers="#kt_aside_wordspace"
-    data-kt-scroll-dependencies="#kt_aside_secondary_footer"
-    data-kt-scroll-offset="0px"
-  >
+  <div #ktTabsAsideScroll class="modern-aside-scroll flex-column-fluid hover-scroll-y" data-kt-scroll="true"
+    data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-wrappers="#kt_aside_wordspace"
+    data-kt-scroll-dependencies="#kt_aside_secondary_footer" data-kt-scroll-offset="0px">
     <div class="modern-aside-surface">
-      <a routerLink="/landing/marketplace" class="aside-brand-link">
+      <a routerLink="/landing/data" class="aside-brand-link">
         <div class="aside-brand">
-          <div class="aside-brand-badge">
-            <span class="aside-brand-icon">T</span>
-          </div>
-
-          <div class="aside-brand-content">
-            <div class="aside-brand-eyebrow">
-              {{ 'FOOTER.PRODUCT_LABEL' | translate }}
-            </div>
-
-            <div class="aside-brand-title-row">
-              <h3 class="aside-brand-title">TaiEarth</h3>
-            </div>
-          </div>
+          <img src="./assets/media/logos/logo.svg" alt="GeoPortal" class="w-100" />
         </div>
       </a>
 
       <div class="modern-aside-divider"></div>
 
       <div class="tab-content">
-        <div
-          class="tab-pane fade"
-          id="kt_aside_nav_tab_menu"
-          role="tabpanel"
-          [ngClass]="{ 'active show': activeTab.link === 'menu' }"
-        >
+        <div class="tab-pane fade" id="kt_aside_nav_tab_menu w-100" role="tabpanel"
+          [ngClass]="{ 'active show': activeTab.link === 'menu' }">
           <app-menu-tab></app-menu-tab>
         </div>
       </div>

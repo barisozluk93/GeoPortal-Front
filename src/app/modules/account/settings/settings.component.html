@@ -1,24 +1,13 @@
-<div class="d-flex flex-column gap-8">
-  <div class="card hover-card border-0">
+<div class="settings-page">
+  <div class="settings-card card border-0">
     <div class="card-body">
       <app-profile-details [user]="userData"></app-profile-details>
     </div>
   </div>
-  <div class="card hover-card border-0">
+
+  <div class="settings-card card border-0">
     <div class="card-body">
       <app-sign-in-method [user]="userData"></app-sign-in-method>
     </div>
   </div>
 </div>
-
-<style>
-  .hover-card {
-    transition: all 0.25s ease;
-    cursor: pointer;
-  }
-
-  .hover-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  }
-</style>

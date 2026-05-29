@@ -6,7 +6,6 @@
 >
   <div id="kt_aside_menu_wrapper" class="modern-menu-wrapper">
     <ng-container *ngFor="let menu of menuList">
-      <!-- Single menu item -->
       <div
         *ngIf="menu.childMenus?.length == 0 && !menu.isForbid"
         class="menu-item"
@@ -16,20 +15,12 @@
           [routerLink]="menu.url"
           routerLinkActive="active"
         >
-          <span class="menu-icon">
-            <span
-              [inlineSVG]="'./assets/media/icons/duotune/general/gen022.svg'"
-              class="svg-icon svg-icon-2"
-            ></span>
-          </span>
-
           <span class="menu-title">
-            {{ ("LANG" | translate) === 'tr' ? menu.name : menu.nameEn }}
+            {{ ("LANG" | translate) === "tr" ? menu.name : menu.nameEn }}
           </span>
         </a>
       </div>
 
-      <!-- Accordion menu item -->
       <div
         *ngIf="menu.childMenus && menu.childMenus.length > 0 && !menu.isForbid"
         class="menu-item menu-accordion"
@@ -37,42 +28,32 @@
         routerLinkActive="here show"
       >
         <span class="menu-link">
-          <span class="menu-icon">
-            <span
-              class="svg-icon svg-icon-2"
-              [inlineSVG]="'./assets/media/icons/duotune/general/gen022.svg'"
-            ></span>
-          </span>
-
           <span class="menu-title">
-            {{ ("LANG" | translate) === 'tr' ? menu.name : menu.nameEn }}
+            {{ ("LANG" | translate) === "tr" ? menu.name : menu.nameEn }}
           </span>
 
           <span class="menu-arrow"></span>
         </span>
 
-        <ng-container *ngFor="let childMenu of menu.childMenus">
-          <div
-            *ngIf="!childMenu.isForbid"
-            class="menu-sub menu-sub-accordion"
-          >
-            <div class="menu-item">
+        <div class="menu-sub menu-sub-accordion">
+          <ng-container *ngFor="let childMenu of menu.childMenus">
+            <div *ngIf="!childMenu.isForbid" class="menu-item">
               <a
                 class="menu-link without-sub"
                 routerLinkActive="active"
                 [routerLink]="childMenu.url"
               >
-                <span class="menu-bullet">
-                  <span class="bullet bullet-dot"></span>
-                </span>
-
                 <span class="menu-title">
-                  {{ ("LANG" | translate) === 'tr' ? childMenu.name : childMenu.nameEn }}
+                  {{
+                    ("LANG" | translate) === "tr"
+                      ? childMenu.name
+                      : childMenu.nameEn
+                  }}
                 </span>
               </a>
             </div>
-          </div>
-        </ng-container>
+          </ng-container>
+        </div>
       </div>
     </ng-container>
 

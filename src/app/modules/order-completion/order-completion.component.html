@@ -9,7 +9,7 @@
             <h2 class="checkout-page-title mb-1">
               {{ 'ORDER_COMPLETION_TITLE' | translate }}
             </h2>
-            <div class="checkout-page-subtitle">
+            <div class="checkout-page-subtitle text-muted">
               {{ 'ORDER_COMPLETION_SUBTITLE' | translate }}
             </div>
           </div>
@@ -35,7 +35,7 @@
               <span class="checkout-tab__title">
                 {{ 'ADDRESS_INFOS' | translate }}
               </span>
-              <span class="checkout-tab__desc" *ngIf="selectedAddress">
+              <span class="checkout-tab__desc text-muted" *ngIf="selectedAddress">
                 {{ selectedAddress.addressHeader }}
               </span>
             </span>
@@ -48,7 +48,7 @@
               <span class="checkout-tab__title">
                 {{ 'PAYMENT_INFOS' | translate }}
               </span>
-              <span class="checkout-tab__desc">
+              <span class="checkout-tab__desc text-muted">
                 {{ 'SECURE_PAYMENT_INFO' | translate }}
               </span>
             </span>
@@ -66,7 +66,7 @@
                       <h3 class="inner-section-title mb-1">
                         {{ 'ADDRESS_INFOS' | translate }}
                       </h3>
-                      <div class="inner-section-subtitle">
+                      <div class="inner-section-subtitle text-muted">
                         {{ 'SELECTED_ADDRESS_INFO' | translate }}
                       </div>
                     </div>
@@ -198,7 +198,7 @@
                     <h3 class="inner-section-title mb-1">
                       {{ 'PAYMENT_FORM_TITLE' | translate }}
                     </h3>
-                    <div class="inner-section-subtitle">
+                    <div class="inner-section-subtitle text-muted">
                       {{ 'PAYMENT_FORM_SUBTITLE' | translate }}
                     </div>
                   </div>
@@ -210,7 +210,7 @@
 
                       <!-- CARD HOLDER -->
                       <div class="col-12">
-                        <label class="form-label fw-semibold text-gray-700">
+                        <label class="form-control-label">
                           {{ 'CARD_HOLDER' | translate }}
                         </label>
 
@@ -226,7 +226,7 @@
 
                       <!-- CARD NUMBER -->
                       <div class="col-12">
-                        <label class="form-label fw-semibold text-gray-700">
+                        <label class="form-control-label">
                           {{ 'CARD_NUMBER' | translate }}
                         </label>
 
@@ -243,7 +243,7 @@
 
                       <!-- EXPIRY -->
                       <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold text-gray-700">
+                        <label class="form-control-label">
                           {{ 'EXPIRY_DATE' | translate }}
                         </label>
 
@@ -260,7 +260,7 @@
 
                       <!-- CVV -->
                       <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold text-gray-700">
+                        <label class="form-control-label">
                           {{ 'CVV' | translate }}
                         </label>
 
@@ -281,7 +281,7 @@
                           <input class="form-check-input mt-1" type="checkbox" formControlName="agreement" [ngClass]="{
             'is-invalid': isFieldInvalid('agreement')
           }" />
-                          <span class="form-check-label text-gray-700 fw-semibold ms-3">
+                          <span class="form-check-label ms-3">
                             {{ 'PAYMENT_AGREEMENT' | translate }}
                           </span>
                         </label>
@@ -306,13 +306,13 @@
     <div class="card basket-summary-card shadow-sm sticky-summary">
       <div class="card-header border-0 pt-8 pb-8">
         <div class="d-flex flex-column">
-          <div class="basket-summary-card__eyebrow">
+          <div class="basket-summary-card__eyebrow text-primary">
             {{ 'ORDER_SUMMARY' | translate }}
           </div>
           <h3 class="basket-summary-card__title mb-1">
             {{ 'TOTAL' | translate }}
           </h3>
-          <span class="basket-summary-card__subtitle">
+          <span class="basket-summary-card__subtitle text-muted">
             {{ numberOfItem }} {{ 'PRODUCT_HEADER' | translate }}
           </span>
         </div>

@@ -16,7 +16,7 @@ import {
 } from 'ng-apexcharts';
 
 export type CustomerType = 'Bireysel' | 'Kurumsal';
-export type SourceType = 'Marketplace' | 'API' | 'Özel Talep';
+export type SourceType = 'API' | 'Özel Talep';
 
 export type OrderStatus =
   | 'Talep Oluşturuldu'
@@ -49,7 +49,6 @@ export interface DashboardFilters {
 
 export interface DashboardKpis {
   totalRevenue: number;
-  marketplaceRevenue: number;
   apiRevenue: number;
   activeApiSubscriptions: number;
   pendingOrders: number;
@@ -63,7 +62,6 @@ export interface DashboardKpis {
 export interface RevenueTrendItem {
   date: string;
   totalRevenue: number;
-  marketplaceRevenue: number;
   apiRevenue: number;
 }
 

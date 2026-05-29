@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg-2';
-import { MarketplaceComponent } from './marketplace/marketplace.component';
 import { DataComponent } from './data/data.component';
 import { ApiComponent } from './api/api.component';
 import { ContactComponent } from './contact/contact.component';
@@ -14,42 +13,27 @@ import { DocumentationComponent } from './documentation/documentation.component'
 import { MapComponent } from './map/map.component';
 import { CustomSelectModule } from '../common/select/custom-select.module';
 import { CustomModalModule } from '../common/custom-modal/custom-modal.module';
-import { MarketplaceDetailDrawerComponent } from './marketplace/detail/marketplace-detail-drawer.component';
-import { MapLeftPanelComponent } from './map/left-panel/map-left-panel.component';
-import { MapLegendDrawerComponent } from './map/legend/map-legend-drawer.component';
-import { MapInfoDrawerComponent } from './map/info/map-info-drawer.component';
-import { MapFilterDrawerComponent } from './map/layer-filter/map-filter-drawer.component';
-import { MapFeatureInfoDrawerComponent } from './map/feature-info/map-feature-info-drawer.component';
 import { MapToolbarComponent } from './map/toolbar/map-toolbar.component';
-import { MapCoordinatePanelComponent } from './map/coordinate/map-coordinate-panel.component';
 import { MapExportPanelComponent } from './map/export-panel/map-export-panel.component';
-import { MapProductSmartFilterComponent } from './map/smart-filter/map-product-smart-filter.component';
-import { MapProductSmartFilterResultsPanelComponent } from './map/smart-filter/results/map-product-smart-filter-results-panel.component';
-import { MapNewImageryOrderPanelComponent } from './map/imagery/map-new-imagery-order-panel.component';
-import { ProductDetailDrawerComponent } from './map/detail/product-detail-drawer.component'
+import { LayerManagerComponent } from './map/layer-manager/layer-manager.component';
+import { GoToCoordinatePanelComponent } from './map/coordinate/go-to-coordinate-panel.component';
+import { LayerLegendPanelComponent } from './map/legend/layer-legend-panel.component';
+import { LayerFilterPanelComponent } from './map/layer-filter/layer-filter-panel.component';
 
 @NgModule({
   declarations: [
     LandingComponent,
-    MarketplaceComponent,
-    MarketplaceDetailDrawerComponent,
     DataComponent,
     ApiComponent,
     ContactComponent,
     DocumentationComponent,
     MapComponent,
-    MapLeftPanelComponent,
-    MapLegendDrawerComponent,
-    MapInfoDrawerComponent,
-    MapFilterDrawerComponent,
-    MapFeatureInfoDrawerComponent,
+    LayerLegendPanelComponent,
+    LayerFilterPanelComponent,
     MapToolbarComponent,
-    MapCoordinatePanelComponent,
+    GoToCoordinatePanelComponent,
     MapExportPanelComponent,
-    MapProductSmartFilterComponent,
-    MapProductSmartFilterResultsPanelComponent,
-    MapNewImageryOrderPanelComponent,
-    ProductDetailDrawerComponent
+    LayerManagerComponent
   ],
   imports: [
     CommonModule, 

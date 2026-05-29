@@ -23,7 +23,7 @@ export class AuthGuard  {
     localStorage.removeItem(this.authLocalStorageToken);
     this.authService.currentUserSubject.next(undefined);
 
-    this.router.navigate(['/landing/marketplace'], {
+    this.router.navigate(['/landing/data'], {
       queryParams: {},
     });
     return false;

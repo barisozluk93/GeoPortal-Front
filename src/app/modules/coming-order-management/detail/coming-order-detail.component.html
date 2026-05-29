@@ -1,395 +1,358 @@
 <div class="order-detail-page" *ngIf="!loading && order">
-  <div class="d-flex flex-column gap-7">
-    <!-- Top summary -->
-    <div class="card mb-7">
-      <div class="card-body p-6 p-lg-8">
-        <div class="d-flex flex-wrap justify-content-between align-items-start gap-5">
-          <div class="d-flex align-items-start gap-4">
-            <button
-              type="button"
-              class="btn btn-icon btn-light-primary btn-sm mt-1"
-              (click)="goBack()"
-              [attr.title]="'BACK' | translate"
-            >
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
+  <div class="order-page-header">
+    <button
+      type="button"
+      class="btn btn-icon btn-light-primary btn-sm"
+      (click)="goBack()"
+      [attr.title]="'BACK' | translate"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
 
-            <div>
-              <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
-                <h2 class="mb-0 fw-bolder text-gray-900">
-                  {{ header }}
-                </h2>
+    <div class="min-w-0">
+      <div class="order-kicker">
+        {{ 'COMING_ORDER_DETAIL.ORDER_AND_PRODUCT_INFORMATION' | translate }}
+      </div>
 
+      <h1 class="order-title">
+        {{ header }}
+      </h1>
+
+      <div class="order-subtitle">
+        {{ 'ORDER_NUMBER' | translate }}:
+        <span class="fw-semibold">{{ order.orderNo || '-' }}</span>
+      </div>
+    </div>
+
+    <div class="order-header-status ms-lg-auto">
+      <div class="summary-status-icon">
+        <i [class]="getOrderStatusIconClass(order.orderStatus)"></i>
+      </div>
+
+      <div>
+        <span [ngClass]="getStatusBadgeClass(order.orderStatus)">
+          {{ order.orderStatusStr || getOrderStatusText(order.orderStatus) }}
+        </span>
+
+        <div class="order-muted mt-2">
+          {{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card order-main-card">
+    <div class="card-body p-6 p-lg-8">
+      <div class="row g-8 align-items-start">
+        <div class="col-12 col-xxl-5">
+          <div class="section-title">
+            {{ 'ORDER_INFORMATION' | translate }}
+          </div>
+
+          <div class="info-grid info-grid--two-col">
+            <div class="info-item">
+              <div class="info-label">{{ 'ORDER_NUMBER' | translate }}</div>
+              <div class="info-value">{{ order.orderNo || '-' }}</div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">{{ 'ORDER_DATE' | translate }}</div>
+              <div class="info-value">{{ order.orderDate || '-' }}</div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">{{ 'STATUS' | translate }}</div>
+              <div class="info-value">
                 <span [ngClass]="getStatusBadgeClass(order.orderStatus)">
                   {{ order.orderStatusStr || getOrderStatusText(order.orderStatus) }}
                 </span>
               </div>
+            </div>
 
-              <div class="text-muted fs-6 mb-2">
-                {{ 'ORDER_NUMBER' | translate }}:
-                <span class="fw-semibold text-gray-800">
-                  {{ order.orderNo || '-' }}
-                </span>
+            <div class="info-item">
+              <div class="info-label">{{ 'TOTAL_PRODUCT' | translate }}</div>
+              <div class="info-value">{{ getTotalProductCount() }}</div>
+            </div>
+
+            <div class="info-item info-item-full">
+              <div class="info-label">{{ 'COMING_ORDER_DETAIL.AMOUNT_LABEL' | translate }}</div>
+              <div class="amount-value">
+                {{
+                  order.price != null
+                    ? (order.price | currency:'₺':'symbol':'1.2-2')
+                    : '-'
+                }}
+              </div>
+            </div>
+
+            <div class="info-item info-item-full" *ngIf="order.orderStatus == 5">
+              <div class="info-label">{{ 'INVOICE' | translate }}</div>
+
+              <div class="invoice-upload-panel">
+                <input
+                  #invoiceInput
+                  type="file"
+                  class="d-none"
+                  accept=".pdf"
+                  (change)="onInvoiceSelected($event)"
+                />
+
+                <ng-container *ngIf="hasAnyOrderFile(); else emptyInvoiceUploader">
+                  <div class="invoice-inline-list">
+                    <div class="invoice-inline-card" *ngFor="let item of getOrderWithFiles()">
+                      <div class="invoice-inline-card__top">
+                        <div class="invoice-inline-card__icon">
+                          <i [class]="getFileIconClass(item.fileName)"></i>
+                        </div>
+
+                        <div class="invoice-inline-card__content min-w-0">
+                          <div class="invoice-inline-card__name text-truncate">
+                            {{ item.fileName || ('INVOICE' | translate) }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="invoice-inline-card__actions">
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-light-primary"
+                          (click)="invoiceInput.click()"
+                          [disabled]="invoiceUploading"
+                        >
+                          {{ invoiceUploading ? ('PLEASE_WAIT' | translate) : ('UPLOAD_INVOICE' | translate) }}
+                        </button>
+
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-light-danger"
+                          (click)="deleteInvoice()"
+                          [disabled]="invoiceDeleting"
+                        >
+                          {{ invoiceDeleting ? ('PLEASE_WAIT' | translate) : ('DELETE' | translate) }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-template #emptyInvoiceUploader>
+                  <div
+                    class="empty-state-block empty-state-block--actionable"
+                    (click)="invoiceInput.click()"
+                  >
+                    <div class="empty-state-icon">
+                      <i class="fa-solid fa-file-arrow-up"></i>
+                    </div>
+
+                    <div class="min-w-0">
+                      <div class="fw-semibold order-text mb-1">
+                        {{ 'COMING_ORDER_DETAIL.NO_INVOICE_UPLOADED' | translate }}
+                      </div>
+                      <div class="order-muted fs-8">
+                        {{ 'COMING_ORDER_DETAIL.CLICK_TO_UPLOAD_INVOICE' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
               </div>
             </div>
           </div>
 
-          <div class="status-summary d-flex align-items-center gap-3">
-            <div class="symbol symbol-50px">
-              <span class="symbol-label bg-light">
-                <i [class]="getOrderStatusIconClass(order.orderStatus) + ' fs-2'"></i>
-              </span>
-            </div>
+          <div class="separator my-7"></div>
 
-            <div>
-              <div class="fw-bold text-gray-900 fs-6">
-                {{ order.orderStatusStr || getOrderStatusText(order.orderStatus) }}
-              </div>
-
-              <div class="text-muted fs-7">
-                {{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}
-              </div>
-            </div>
+          <div class="section-title">
+            {{ 'INVOICE_ADDRESS' | translate }}
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Order + Products -->
-    <div class="card mb-7">
-      <div class="card-header border-0 min-h-60px">
-        <div class="card-title">
-          <h3 class="fw-bold m-0">
-            {{ 'COMING_ORDER_DETAIL.ORDER_AND_PRODUCT_INFORMATION' | translate }}
-          </h3>
-        </div>
-      </div>
-
-      <div class="card-body p-6 p-lg-8 pt-0">
-        <div class="row g-8 align-items-start">
-          <!-- LEFT / ORDER -->
-          <div class="col-12 col-xxl-5">
-            <div class="section-title">
-              {{ 'ORDER_INFORMATION' | translate }}
-            </div>
-
-            <div class="info-grid info-grid--two-col">
+          <ng-container *ngIf="order.invoiceAddress as address; else noAddress">
+            <div class="info-grid">
               <div class="info-item">
-                <div class="info-label">{{ 'ORDER_NUMBER' | translate }}</div>
-                <div class="info-value">{{ order.orderNo || '-' }}</div>
+                <div class="info-label">{{ 'ADDRESS_HEADER' | translate }}</div>
+                <div class="info-value">{{ address.addressHeader || '-' }}</div>
               </div>
 
               <div class="info-item">
-                <div class="info-label">{{ 'ORDER_DATE' | translate }}</div>
-                <div class="info-value">{{ order.orderDate || '-' }}</div>
+                <div class="info-label">{{ 'FULL_NAME' | translate }}</div>
+                <div class="info-value">{{ address.name }} {{ address.surname }}</div>
               </div>
 
               <div class="info-item">
-                <div class="info-label">{{ 'STATUS' | translate }}</div>
-                <div class="info-value">
-                  <span [ngClass]="getStatusBadgeClass(order.orderStatus)">
-                    {{ order.orderStatusStr || getOrderStatusText(order.orderStatus) }}
-                  </span>
-                </div>
+                <div class="info-label">{{ 'PHONE' | translate }}</div>
+                <div class="info-value">{{ address.phone || '-' }}</div>
               </div>
 
               <div class="info-item">
-                <div class="info-label">{{ 'TOTAL_PRODUCT' | translate }}</div>
-                <div class="info-value">{{ getTotalProductCount() }}</div>
+                <div class="info-label">{{ 'CITY' | translate }} / {{ 'DISTRICT' | translate }}</div>
+                <div class="info-value">{{ address.city }} / {{ address.district }}</div>
               </div>
 
-              <div class="info-item">
-                <div class="info-label">{{ 'COMING_ORDER_DETAIL.AMOUNT_LABEL' | translate }}</div>
-                <div class="text-primary info-value fw-bolder fs-2">
-                  {{
-                    order.price != null
-                      ? (order.price | currency:'₺':'symbol':'1.2-2')
-                      : '-'
-                  }}
-                </div>
+              <div class="info-item info-item-full">
+                <div class="info-label">{{ 'ADDRESS' | translate }}</div>
+                <div class="info-value">{{ address.address || '-' }}</div>
               </div>
 
-              <!-- INVOICE UPLOAD / DELETE -->
-              <div class="info-item" *ngIf="order.orderStatus == 5">
-                <div class="info-label">{{ 'INVOICE' | translate }}</div>
+              <div class="info-item" *ngIf="address.firmaAdi">
+                <div class="info-label">{{ 'FIRM_NAME' | translate }}</div>
+                <div class="info-value">{{ address.firmaAdi }}</div>
+              </div>
 
-                <div class="invoice-upload-panel">
-                  <input
-                    #invoiceInput
-                    type="file"
-                    class="d-none"
-                    accept=".pdf"
-                    (change)="onInvoiceSelected($event)"
-                  />
+              <div class="info-item" *ngIf="address.vkn">
+                <div class="info-label">{{ 'TAX_NO' | translate }}</div>
+                <div class="info-value">{{ address.vkn }}</div>
+              </div>
 
-                  <ng-container *ngIf="hasAnyOrderFile(); else emptyInvoiceUploader">
-                    <div class="invoice-inline-list">
-                      <div class="invoice-inline-card" *ngFor="let item of getOrderWithFiles()">
-                        <div class="invoice-inline-card__top">
-                          <div class="invoice-inline-card__icon">
-                            <i [class]="getFileIconClass(item.fileName)"></i>
-                          </div>
-
-                          <div class="invoice-inline-card__content min-w-0">
-                            <div class="invoice-inline-card__name text-truncate">
-                              {{ item.fileName || ('INVOICE' | translate) }}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="invoice-inline-card__actions">
-                          <button
-                            type="button"
-                            class="btn btn-sm btn-light-primary"
-                            (click)="invoiceInput.click()"
-                            [disabled]="invoiceUploading"
-                          >
-                            <span *ngIf="!invoiceUploading">
-                              {{ 'UPLOAD_INVOICE' | translate }}
-                            </span>
-                            <span *ngIf="invoiceUploading">
-                              {{ 'PLEASE_WAIT' | translate }}
-                            </span>
-                          </button>
-
-                          <button
-                            type="button"
-                            class="btn btn-sm btn-light-danger"
-                            (click)="deleteInvoice()"
-                            [disabled]="invoiceDeleting"
-                          >
-                            <span *ngIf="!invoiceDeleting">
-                              {{ 'DELETE' | translate }}
-                            </span>
-                            <span *ngIf="invoiceDeleting">
-                              {{ 'PLEASE_WAIT' | translate }}
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-container>
-
-                  <ng-template #emptyInvoiceUploader>
-                    <div
-                      class="empty-state-block empty-state-block--compact empty-state-block--actionable"
-                      (click)="invoiceInput.click()"
-                    >
-                      <div class="empty-state-icon">
-                        <i class="fa-solid fa-file-arrow-up text-primary"></i>
-                      </div>
-
-                      <div class="min-w-0">
-                        <div class="fw-semibold text-gray-900 mb-1">
-                          {{ 'COMING_ORDER_DETAIL.NO_INVOICE_UPLOADED' | translate }}
-                        </div>
-                        <div class="text-muted fs-8">
-                          {{ 'COMING_ORDER_DETAIL.CLICK_TO_UPLOAD_INVOICE' | translate }}
-                        </div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </div>
+              <div class="info-item" *ngIf="address.vergiDairesi">
+                <div class="info-label">{{ 'TAX_OFFICE' | translate }}</div>
+                <div class="info-value">{{ address.vergiDairesi }}</div>
               </div>
             </div>
+          </ng-container>
 
-            <div class="separator my-7"></div>
-
-            <div class="section-title">
-              {{ 'INVOICE_ADDRESS' | translate }}
-            </div>
-
-            <ng-container *ngIf="order.invoiceAddress as address; else noAddress">
-              <div class="info-grid">
-                <div class="info-item">
-                  <div class="info-label">{{ 'ADDRESS_HEADER' | translate }}</div>
-                  <div class="info-value">{{ address.addressHeader || '-' }}</div>
-                </div>
-
-                <div class="info-item">
-                  <div class="info-label">{{ 'FULL_NAME' | translate }}</div>
-                  <div class="info-value">{{ address.name }} {{ address.surname }}</div>
-                </div>
-
-                <div class="info-item">
-                  <div class="info-label">{{ 'PHONE' | translate }}</div>
-                  <div class="info-value">{{ address.phone || '-' }}</div>
-                </div>
-
-                <div class="info-item">
-                  <div class="info-label">{{ 'CITY' | translate }} / {{ 'DISTRICT' | translate }}</div>
-                  <div class="info-value">{{ address.city }} / {{ address.district }}</div>
-                </div>
-
-                <div class="info-item info-item-full">
-                  <div class="info-label">{{ 'ADDRESS' | translate }}</div>
-                  <div class="info-value">{{ address.address || '-' }}</div>
-                </div>
-
-                <div class="info-item" *ngIf="address.firmaAdi">
-                  <div class="info-label">{{ 'FIRM_NAME' | translate }}</div>
-                  <div class="info-value">{{ address.firmaAdi }}</div>
-                </div>
-
-                <div class="info-item" *ngIf="address.vkn">
-                  <div class="info-label">{{ 'TAX_NO' | translate }}</div>
-                  <div class="info-value">{{ address.vkn }}</div>
-                </div>
-
-                <div class="info-item" *ngIf="address.vergiDairesi">
-                  <div class="info-label">{{ 'TAX_OFFICE' | translate }}</div>
-                  <div class="info-value">{{ address.vergiDairesi }}</div>
-                </div>
+          <ng-template #noAddress>
+            <div class="empty-state-block">
+              <div class="empty-state-icon">
+                <i class="fa-regular fa-address-card"></i>
               </div>
-            </ng-container>
-
-            <ng-template #noAddress>
-              <div class="text-muted fs-7">
+              <div class="order-muted fs-7">
                 {{ 'COMING_ORDER_DETAIL.NO_INVOICE_ADDRESS' | translate }}
               </div>
-            </ng-template>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="col-12 col-xxl-7">
+          <div class="section-title d-flex align-items-center justify-content-between gap-3">
+            <span>{{ 'PRODUCT_INFORMATION' | translate }}</span>
+            <span class="badge badge-light-primary">
+              {{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}
+            </span>
           </div>
 
-          <!-- RIGHT / PRODUCTS -->
-          <div class="col-12 col-xxl-7">
-            <div class="section-title d-flex align-items-center justify-content-between gap-3">
-              <span>{{ 'PRODUCT_INFORMATION' | translate }}</span>
-              <span class="badge badge-light-primary">
-                {{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}
-              </span>
-            </div>
-
-            <div class="d-flex flex-column gap-5">
-              <div class="product-item-card" *ngFor="let item of order.orderProducts">
-                <div class="product-item-card__layout">
-                  <!-- Product content -->
-                  <div class="product-item-card__main">
-                    <div class="d-flex flex-column gap-4">
-                      <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div class="min-w-0 flex-grow-1">
-                          <div class="fs-4 fw-bold text-gray-900 min-w-0">
-                            {{ item.product?.name || '-' }}
-                          </div>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-3 ms-auto">
-                          <div class="fw-bold text-primary fs-4 text-nowrap">
-                            {{
-                              getProductPrice(item) != null
-                                ? (getProductPrice(item)! | currency:'₺':'symbol':'1.2-2')
-                                : '-'
-                            }}
-                          </div>
+          <div class="d-flex flex-column gap-5">
+            <div class="product-item-card" *ngFor="let item of order.orderProducts">
+              <div class="product-item-card__layout">
+                <div class="product-item-card__main">
+                  <div class="d-flex flex-column gap-4">
+                    <div class="product-head">
+                      <div class="min-w-0 flex-grow-1">
+                        <div class="product-title">
+                          {{ item.product?.name || '-' }}
                         </div>
                       </div>
 
-                      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <div class="d-flex align-items-center flex-wrap gap-2">
-                          <span [ngClass]="getStatusBadgeClass(item.orderStatus)">
-                            {{ item.orderStatusStr || getOrderStatusText(item.orderStatus) }}
-                          </span>
-
-                          <span class="badge badge-light-primary" *ngIf="item.proccessDate">
-                            {{ item.proccessDate }}
-                          </span>
-                        </div>
-
-                        <button
-                          *ngIf="canPreviewProduct(item)"
-                          type="button"
-                          class="btn btn-icon btn-sm btn-primary-light"
-                          (click)="openMapPreview(item)"
-                          title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}"
-                        >
-                          <i class="fa-solid fa-map-location-dot"></i>
-                        </button>
-                      </div>
-
-                      <div
-                        class="d-flex flex-wrap gap-2"
-                        *ngIf="item.product?.isOrthorectified || item.product?.isPansharpened || item.product?.isClassified"
-                      >
-                        <span *ngIf="item.product?.isOrthorectified" class="badge badge-light-success">
-                          {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
-                        </span>
-
-                        <span *ngIf="item.product?.isPansharpened" class="badge badge-light-info">
-                          {{ 'MARKETPLACE.BUNDLE.SHORT_2' | translate }}
-                        </span>
-
-                        <span *ngIf="item.product?.isClassified" class="badge badge-light-warning">
-                          {{ 'MARKETPLACE.BUNDLE.SHORT_3' | translate }}
-                        </span>
-                      </div>
-
-                      <div class="d-flex flex-wrap gap-2">
-                        <span class="badge badge-light-primary" *ngIf="item.product?.provider">
-                          {{ 'VENDOR' | translate }}: {{ item.product?.provider }}
-                        </span>
-
-                        <span class="badge badge-light-primary" *ngIf="item.product?.resolution">
-                          {{ item.product?.resolution }} m
-                        </span>
-
-                        <span
-                          class="badge badge-light-primary"
-                          *ngIf="item.product?.cloudRate !== undefined && item.product?.cloudRate !== null"
-                        >
-                          {{ 'COMING_ORDER_DETAIL.CLOUD_LABEL' | translate }}: %{{ item.product?.cloudRate }}
-                        </span>
-                      </div>
-
-                      <div class="product-description text-muted" *ngIf="item.product?.description">
-                        {{ item.product?.description }}
+                      <div class="product-price">
+                        {{
+                          getProductPrice(item) != null
+                            ? (getProductPrice(item)! | currency:'₺':'symbol':'1.2-2')
+                            : '-'
+                        }}
                       </div>
                     </div>
-                  </div>
 
-                  <!-- Product update status -->
-                  <div class="product-item-card__flow">
-                    <div class="product-flow-card">
-                      <div class="product-flow-card__title">
-                        {{ 'UPDATE_STATUS' | translate }}
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                      <div class="d-flex align-items-center flex-wrap gap-2">
+                        <span [ngClass]="getStatusBadgeClass(item.orderStatus)">
+                          {{ item.orderStatusStr || getOrderStatusText(item.orderStatus) }}
+                        </span>
+
+                        <span class="badge badge-light-primary" *ngIf="item.proccessDate">
+                          {{ item.proccessDate }}
+                        </span>
                       </div>
 
-                      <div class="update-status-panel">
-                        <app-custom-select
-                          [items]="getAvailableStatusOptions(item)"
-                          bindLabel="label"
-                          bindValue="value"
-                          [placeholder]="'SELECT_STATUS' | translate"
-                          [clearable]="false"
-                          size="lg"
-                          [clearable]="true"
-                          [disabled]="isStatusUpdateDisabled(item)"
-                          [(ngModel)]="selectedStatusMap[item.id]"
-                        >
-                        </app-custom-select>
+                      <button
+                        *ngIf="canPreviewProduct(item)"
+                        type="button"
+                        class="btn btn-icon btn-sm btn-light-primary"
+                        (click)="openMapPreview(item)"
+                        title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}"
+                      >
+                        <i class="fa-solid fa-map-location-dot"></i>
+                      </button>
+                    </div>
 
-                        <button
-                          type="button"
-                          class="btn btn-primary mt-5 w-100"
-                          (click)="updateProductStatus(item)"
-                          [disabled]="isUpdateButtonDisabled(item)"
-                        >
-                          <span *ngIf="updatingProductId !== item.id">
-                            {{ 'UPDATE_STATUS' | translate }}
-                          </span>
-                          <span *ngIf="updatingProductId === item.id">
-                            {{ 'PLEASE_WAIT' | translate }}
-                          </span>
-                        </button>
+                    <div
+                      class="d-flex flex-wrap gap-2"
+                      *ngIf="item.product?.isOrthorectified || item.product?.isPansharpened || item.product?.isClassified"
+                    >
+                      <span *ngIf="item.product?.isOrthorectified" class="badge badge-light-success">
+                        {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
+                      </span>
 
-                        <div class="update-status-note mt-5 text-muted" *ngIf="isStatusUpdateDisabled(item)">
-                          {{ 'COMING_ORDER_DETAIL.STATUS_CAN_NOT_BE_UPDATED' | translate }}
-                        </div>
+                      <span *ngIf="item.product?.isPansharpened" class="badge badge-light-info">
+                        {{ 'MARKETPLACE.BUNDLE.SHORT_2' | translate }}
+                      </span>
+
+                      <span *ngIf="item.product?.isClassified" class="badge badge-light-warning">
+                        {{ 'MARKETPLACE.BUNDLE.SHORT_3' | translate }}
+                      </span>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                      <span class="badge badge-light-primary" *ngIf="item.product?.provider">
+                        {{ 'VENDOR' | translate }}: {{ item.product?.provider }}
+                      </span>
+
+                      <span class="badge badge-light-primary" *ngIf="item.product?.resolution">
+                        {{ item.product?.resolution }} m
+                      </span>
+
+                      <span
+                        class="badge badge-light-primary"
+                        *ngIf="item.product?.cloudRate !== undefined && item.product?.cloudRate !== null"
+                      >
+                        {{ 'COMING_ORDER_DETAIL.CLOUD_LABEL' | translate }}: %{{ item.product?.cloudRate }}
+                      </span>
+                    </div>
+
+                    <div class="product-description" *ngIf="item.product?.description">
+                      {{ item.product?.description }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="product-item-card__flow">
+                  <div class="product-flow-card">
+                    <div class="product-flow-card__title">
+                      {{ 'UPDATE_STATUS' | translate }}
+                    </div>
+
+                    <div class="update-status-panel">
+                      <app-custom-select
+                        [items]="getAvailableStatusOptions(item)"
+                        bindLabel="label"
+                        bindValue="value"
+                        [placeholder]="'SELECT_STATUS' | translate"
+                        [clearable]="true"
+                        size="lg"
+                        [disabled]="isStatusUpdateDisabled(item)"
+                        [(ngModel)]="selectedStatusMap[item.id]"
+                      >
+                      </app-custom-select>
+
+                      <button
+                        type="button"
+                        class="btn btn-primary mt-5 w-100"
+                        (click)="updateProductStatus(item)"
+                        [disabled]="isUpdateButtonDisabled(item)"
+                      >
+                        {{ updatingProductId === item.id ? ('PLEASE_WAIT' | translate) : ('UPDATE_STATUS' | translate) }}
+                      </button>
+
+                      <div class="update-status-note mt-5" *ngIf="isStatusUpdateDisabled(item)">
+                        {{ 'COMING_ORDER_DETAIL.STATUS_CAN_NOT_BE_UPDATED' | translate }}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div *ngIf="!order.orderProducts?.length" class="text-muted fs-6">
+            <div *ngIf="!order.orderProducts?.length" class="empty-state-block">
+              <div class="empty-state-icon">
+                <i class="fa-solid fa-box-open"></i>
+              </div>
+              <div class="order-muted fs-6">
                 {{ 'NO_DATA_AVAILABLE' | translate }}
               </div>
             </div>
@@ -397,20 +360,20 @@
         </div>
       </div>
     </div>
-
-    <app-coming-order-map-preview
-      [isOpen]="mapPreviewDrawerOpen"
-      [title]="selectedPreviewProduct?.product?.name || '-'"
-      [previewWkt]="selectedPreviewWkt"
-      (closeDrawer)="closeMapPreview()"
-    ></app-coming-order-map-preview>
   </div>
+
+  <app-coming-order-map-preview
+    [isOpen]="mapPreviewDrawerOpen"
+    [title]="selectedPreviewProduct?.product?.name || '-'"
+    [previewWkt]="selectedPreviewWkt"
+    (closeDrawer)="closeMapPreview()"
+  ></app-coming-order-map-preview>
 </div>
 
-<div *ngIf="loading" class="card">
+<div *ngIf="loading" class="order-loading card">
   <div class="card-body p-10 d-flex flex-column align-items-center justify-content-center">
     <span class="spinner-border text-primary mb-4"></span>
-    <div class="text-muted">
+    <div class="order-muted">
       {{ 'PLEASE_WAIT' | translate }}
     </div>
   </div>

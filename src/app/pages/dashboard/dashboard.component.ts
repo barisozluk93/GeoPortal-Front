@@ -51,11 +51,7 @@ export class DashboardComponent implements OnInit {
 
     this.dashboardService
       .getOverview(this.filters)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-        })
-      )
+      .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (response: DashboardOverview) => {
           this.overview = response;
@@ -126,6 +122,16 @@ export class DashboardComponent implements OnInit {
 
   private buildCharts(): void {
     const mobile = this.isMobile();
+
+    const primary = this.getCssVar('--bs-primary') || '#009ef7';
+    const success = this.getCssVar('--bs-success') || '#50cd89';
+    const warning = this.getCssVar('--bs-warning') || '#ffc700';
+    const info = this.getCssVar('--bs-info') || '#7239ea';
+    const textMuted = this.getCssVar('--bs-gray-600') || '#7e8299';
+    const borderColor = this.getCssVar('--bs-border-color') || '#eff2f5';
+    const cardBg = this.getCssVar('--bs-card-bg') || '#ffffff';
+    const tooltipTheme = this.isDarkTheme() ? 'dark' : 'light';
+
     const revenueDates = this.overview.revenueTrend.map((x) => x.date);
     const apiUsageDates = this.overview.apiUsageTrend.map((x) => x.date);
     const pipelineStatuses = this.overview.orderPipeline.map((x) => x.status);
@@ -137,40 +143,32 @@ export class DashboardComponent implements OnInit {
           data: this.overview.revenueTrend.map((x) => x.totalRevenue),
         },
         {
-          name: 'Marketplace',
-          data: this.overview.revenueTrend.map((x) => x.marketplaceRevenue),
-        },
-        {
           name: 'API',
           data: this.overview.revenueTrend.map((x) => x.apiRevenue),
         },
       ],
-      colors: ['#4da3ff', '#6c8dff', '#35d6ec'],
+      colors: [primary, success],
       chart: {
         type: 'area',
         height: mobile ? 280 : 340,
         toolbar: { show: false },
         zoom: { enabled: false },
-        foreColor: '#8ea2c9',
+        foreColor: textMuted,
       },
       xaxis: {
         categories: revenueDates,
         labels: {
           style: {
-            colors: Array(revenueDates.length).fill('#7f8ea8'),
+            colors: Array(revenueDates.length).fill(textMuted),
           },
         },
-        axisBorder: {
-          color: 'rgba(92,137,255,0.12)',
-        },
-        axisTicks: {
-          color: 'rgba(92,137,255,0.12)',
-        },
+        axisBorder: { color: borderColor },
+        axisTicks: { color: borderColor },
       },
       yaxis: {
         labels: {
           style: {
-            colors: ['#7f8ea8'],
+            colors: [textMuted],
           },
           formatter: (value: number) =>
             `₺${Math.round(value).toLocaleString('tr-TR')}`,
@@ -178,13 +176,13 @@ export class DashboardComponent implements OnInit {
       },
       stroke: {
         curve: 'smooth',
-        width: [3.5, 3, 3],
+        width: [3, 3],
       },
       fill: {
         type: 'gradient',
         gradient: {
           shadeIntensity: 1,
-          opacityFrom: 0.3,
+          opacityFrom: 0.28,
           opacityTo: 0.04,
         },
       },
@@ -194,17 +192,17 @@ export class DashboardComponent implements OnInit {
       legend: {
         show: true,
         labels: {
-          colors: '#9eb0cc',
+          colors: textMuted,
         },
       },
       tooltip: {
-        theme: 'dark',
+        theme: tooltipTheme,
         y: {
           formatter: (value: number) => `₺${value.toLocaleString('tr-TR')}`,
         },
       },
       grid: {
-        borderColor: 'rgba(92,137,255,0.08)',
+        borderColor,
         strokeDashArray: 4,
       },
       markers: {
@@ -223,32 +221,28 @@ export class DashboardComponent implements OnInit {
           data: this.overview.apiUsageTrend.map((x) => x.calls),
         },
       ],
-      colors: ['#35d6ec'],
+      colors: [info],
       chart: {
         type: 'line',
         height: mobile ? 260 : 320,
         toolbar: { show: false },
         zoom: { enabled: false },
-        foreColor: '#8ea2c9',
+        foreColor: textMuted,
       },
       xaxis: {
         categories: apiUsageDates,
         labels: {
           style: {
-            colors: Array(apiUsageDates.length).fill('#7f8ea8'),
+            colors: Array(apiUsageDates.length).fill(textMuted),
           },
         },
-        axisBorder: {
-          color: 'rgba(92,137,255,0.12)',
-        },
-        axisTicks: {
-          color: 'rgba(92,137,255,0.12)',
-        },
+        axisBorder: { color: borderColor },
+        axisTicks: { color: borderColor },
       },
       yaxis: {
         labels: {
           style: {
-            colors: ['#7f8ea8'],
+            colors: [textMuted],
           },
           formatter: (value: number) =>
             `${Math.round(value).toLocaleString('tr-TR')}`,
@@ -256,8 +250,8 @@ export class DashboardComponent implements OnInit {
       },
       stroke: {
         curve: 'smooth',
-        width: 3.5,
-        colors: ['#35d6ec'],
+        width: 3,
+        colors: [info],
       },
       fill: {
         type: 'solid',
@@ -269,19 +263,19 @@ export class DashboardComponent implements OnInit {
         show: false,
       },
       tooltip: {
-        theme: 'dark',
+        theme: tooltipTheme,
         y: {
           formatter: (value: number) =>
             `${value.toLocaleString('tr-TR')} çağrı`,
         },
       },
       grid: {
-        borderColor: 'rgba(92,137,255,0.08)',
+        borderColor,
         strokeDashArray: 4,
       },
       markers: {
         size: mobile ? 3 : 4,
-        colors: ['#35d6ec'],
+        colors: [info],
         strokeWidth: 0,
         hover: {
           size: mobile ? 5 : 6,
@@ -291,17 +285,17 @@ export class DashboardComponent implements OnInit {
 
     this.revenueBreakdownChart = {
       series: this.overview.revenueBreakdown.map((x) => x.value),
-      colors: ['#4da3ff', '#6c8dff', '#35d6ec'],
+      colors: [primary, success],
       chart: {
         type: 'donut',
         height: mobile ? 260 : 320,
-        foreColor: '#9eb0cc',
+        foreColor: textMuted,
       },
       labels: this.overview.revenueBreakdown.map((x) => x.label),
       legend: {
         position: 'bottom',
         labels: {
-          colors: '#9eb0cc',
+          colors: textMuted,
         },
       },
       dataLabels: {
@@ -328,13 +322,13 @@ export class DashboardComponent implements OnInit {
         },
       ],
       tooltip: {
-        theme: 'dark',
+        theme: tooltipTheme,
         y: {
           formatter: (value: number) => `₺${value.toLocaleString('tr-TR')}`,
         },
       },
       stroke: {
-        colors: ['#0f1b2d'],
+        colors: [cardBg],
         width: 3,
       },
     };
@@ -346,31 +340,27 @@ export class DashboardComponent implements OnInit {
           data: this.overview.orderPipeline.map((x) => x.count),
         },
       ],
-      colors: ['#4da3ff'],
+      colors: [primary],
       chart: {
         type: 'bar',
         height: mobile ? 300 : 350,
         toolbar: { show: false },
-        foreColor: '#8ea2c9',
+        foreColor: textMuted,
       },
       xaxis: {
         categories: pipelineStatuses,
         labels: {
           style: {
-            colors: Array(pipelineStatuses.length).fill('#7f8ea8'),
+            colors: Array(pipelineStatuses.length).fill(textMuted),
           },
         },
-        axisBorder: {
-          color: 'rgba(92,137,255,0.12)',
-        },
-        axisTicks: {
-          color: 'rgba(92,137,255,0.12)',
-        },
+        axisBorder: { color: borderColor },
+        axisTicks: { color: borderColor },
       },
       yaxis: {
         labels: {
           style: {
-            colors: ['#7f8ea8'],
+            colors: [textMuted],
           },
           formatter: (value: number) => `${Math.round(value)}`,
         },
@@ -386,30 +376,30 @@ export class DashboardComponent implements OnInit {
         enabled: false,
       },
       tooltip: {
-        theme: 'dark',
+        theme: tooltipTheme,
         y: {
           formatter: (value: number) => `${value} sipariş`,
         },
       },
       grid: {
-        borderColor: 'rgba(92,137,255,0.08)',
+        borderColor,
         strokeDashArray: 4,
       },
     };
 
     this.membershipChart = {
       series: this.overview.membershipDistribution.map((x) => x.value),
-      colors: ['#4da3ff', '#67dd9a'],
+      colors: [primary, success],
       chart: {
         type: 'donut',
         height: mobile ? 250 : 300,
-        foreColor: '#9eb0cc',
+        foreColor: textMuted,
       },
       labels: this.overview.membershipDistribution.map((x) => x.type),
       legend: {
         position: 'bottom',
         labels: {
-          colors: '#9eb0cc',
+          colors: textMuted,
         },
       },
       dataLabels: {
@@ -436,14 +426,14 @@ export class DashboardComponent implements OnInit {
         },
       ],
       tooltip: {
-        theme: 'dark',
+        theme: tooltipTheme,
         y: {
           formatter: (value: number) =>
             `${value.toLocaleString('tr-TR')} kullanıcı`,
         },
       },
       stroke: {
-        colors: ['#0f1b2d'],
+        colors: [cardBg],
         width: 3,
       },
     };
@@ -453,10 +443,25 @@ export class DashboardComponent implements OnInit {
     return typeof window !== 'undefined' && window.innerWidth < 576;
   }
 
+  private isDarkTheme(): boolean {
+    return document.documentElement.getAttribute('data-bs-theme') === 'dark';
+  }
+
+  private getCssVar(name: string): string {
+    if (typeof window === 'undefined') {
+      return '';
+    }
+
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
+  }
+
   private formatDateInput(date: Date): string {
     const y = date.getFullYear();
     const m = `${date.getMonth() + 1}`.padStart(2, '0');
     const d = `${date.getDate()}`.padStart(2, '0');
+
     return `${y}-${m}-${d}`;
   }
 }

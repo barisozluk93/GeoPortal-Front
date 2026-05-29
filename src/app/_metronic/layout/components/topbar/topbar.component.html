@@ -1,13 +1,9 @@
 
-<app-basket *ngIf="!isAdmin" class="d-flex align-items-center me-3"></app-basket>
+<app-basket *ngIf="!isAdmin && isCurrentUserExist" class="d-flex align-items-center me-3"></app-basket>
 
 <div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3">
-  <button type="button" (click)="routeToLogin()" class="primary-action">
-    <ng-container>
-      <span class="indicator-label">
+  <button (click)="routeToLogin()" class="btn btn-primary">
         {{'LOG_IN' | translate}}
-      </span>
-    </ng-container>
   </button>
 </div>
 

@@ -241,7 +241,7 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
         this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
 
         setTimeout(() => {
-          this.router.navigate(['/landing/marketplace']);
+          this.router.navigate(['/landing/data']);
         }, 2500);
       } else {
         this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));

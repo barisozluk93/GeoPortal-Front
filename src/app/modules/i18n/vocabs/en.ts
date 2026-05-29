@@ -343,7 +343,7 @@ export const locale = {
     ORDER: 'Order',
     IN_BASKET: "In Basket",
 
-    "BRANDTITLE": 'TaiEarth',
+    "BRANDTITLE": 'GeoPortal',
     "BRANDSUBTITLE": 'Satellite Data Platform',
     "MARKETPLACE": {
       "COMMON": {
@@ -419,7 +419,7 @@ export const locale = {
       "LOADING": "Loading data...",
       "KICKER": "Data Access",
       "TITLE": "Access satellite data with the method that fits your needs",
-      "COPY": "Our platform offers three different ways to access data: you can purchase ready-made data through the Marketplace, query and purchase data through the Map with region-based search, or buy an API key and integrate data into your own systems through API endpoints.",
+      "COPY": "Our platform offers two different ways to access data: query and purchase data through the Map with region-based search, or buy an API key and integrate data into your own systems through API endpoints.",
       "SEARCH_TITLE": "Region-based data search",
       "SEARCH_PLACEHOLDER": "Enter a country, city, district, or neighborhood",
       "SEARCH_BUTTON": "Search",
@@ -428,17 +428,17 @@ export const locale = {
       "ACTION_API": "API",
       "ACTION_MAP": "Map",
       "SUMMARY_KICKER": "Data Flows",
-      "SUMMARY_TITLE": "3 different access methods",
+      "SUMMARY_TITLE": "2 different access methods",
       "CARD_1_TITLE": "Marketplace",
       "CARD_1_DESC": "Filter, review, and directly purchase ready-made data products.",
       "CARD_2_TITLE": "Query Through Map",
       "CARD_2_DESC": "Search by region, select or draw an area, view the queried data, and purchase it.",
-      "CARD_3_TITLE": "API ACCESS",
+      "CARD_3_TITLE": "API Access",
       "CARD_3_DESC": "Purchase an API key and integrate data into your own systems through endpoints.",
       "MAP_SHORTCUT": "Search Data on Map",
       "USE_CASES": "Access Methods",
-      "SECTION2_TITLE": "Three different ways to reach your data",
-      "SECTION2_COPY": "We provide multiple data access flows on a single platform: ready-made product purchase, region-based querying through the map, and API integration for enterprise use.",
+      "SECTION2_TITLE": "Two different ways to reach your data",
+      "SECTION2_COPY": "We provide multiple data access flows on a single platform: region-based querying through the map, and API integration for enterprise use.",
       "ACCESS_1_TITLE": "Purchase Through Marketplace",
       "ACCESS_1_DESC": "Review, compare, and directly purchase ready-made satellite imagery and processed data products.",
       "ACCESS_1_ITEM_1": "Ready-made data catalog",
@@ -450,7 +450,7 @@ export const locale = {
       "ACCESS_2_ITEM_1": "Region-based search",
       "ACCESS_2_ITEM_2": "Area selection and drawing",
       "ACCESS_2_ITEM_3": "Viewing and selling queried data",
-      "ACCESS_2_ACTION": "Go to Map",
+      "ACCESS_2_ACTION": "Explore",
       "ACCESS_3_TITLE": "Access with API Key",
       "ACCESS_3_DESC": "Purchase an API key to query polygon-based data through endpoints, manage processing flows, and integrate outputs into your own applications.",
       "ACCESS_3_ITEM_1": "Purchase API key",
@@ -458,9 +458,9 @@ export const locale = {
       "ACCESS_3_ITEM_3": "Enterprise system integration",
       "ACCESS_3_ACTION": "Go to API",
       "FLOW_1_TITLE": "Choose the Method",
-      "FLOW_1_DESC": "Select the most suitable method for your needs: Marketplace, Map, or API access.",
+      "FLOW_1_DESC": "Select the most suitable method for your needs: Map, or API access.",
       "FLOW_2_TITLE": "Find the Data",
-      "FLOW_2_DESC": "Review ready-made products, run region-based queries, or call data through the API.",
+      "FLOW_2_DESC": "Run region-based queries, or call data through the API.",
       "FLOW_3_TITLE": "Purchase or Integrate",
       "FLOW_3_DESC": "Purchase the data directly or connect it to your systems with an API key."
     },
@@ -506,7 +506,7 @@ export const locale = {
     "CONTACT": {
       "HERO": {
         "KICKER": "Contact",
-        "TITLE": "Let’s talk about your Satellite Data, API and Marketplace Needs",
+        "TITLE": "Let’s talk about your Satellite Data and API Needs",
         "COPY": "Whether you want to purchase data, integrate our API into your workflow, or discuss regional demand and enterprise solutions, our team is ready to help. Share your needs with us and we’ll get back to you as soon as possible.",
         "ITEMS": {
           "RESPONSE": {
@@ -554,7 +554,7 @@ export const locale = {
     "API_DOC": {
       "SIDEBAR": {
         "KICKER": "API Documentation",
-        "TITLE": "TaiEarth API Key Usage",
+        "TITLE": "GeoPortal API Key Usage",
         "SUBTITLE": "This document explains how to use the authorized endpoints with the purchased API key."
       },
       "NAV": {
@@ -571,7 +571,7 @@ export const locale = {
       "HERO": {
         "KICKER": "API Documentation",
         "VERSION": "Version 1.0",
-        "TITLE": "TaiEarth API Documentation",
+        "TITLE": "GeoPortal API Documentation",
         "DESCRIPTION": "This document is prepared for listing satellite data, starting the image processing workflow, tracking the processing status, and retrieving the processed result by using API-key authorized endpoints.",
         "BASE_URL": "Base URL",
         "AUTHENTICATION": "Authentication",
@@ -687,7 +687,23 @@ export const locale = {
         "MEASURE_LENGTH": "Measure Length",
         "MEASURE_AREA": "Measure Area",
         "GOTO_COORDINATE": "Go to Coordinate",
-        "EXPORT_IMAGE": "Export"
+        "EXPORT_IMAGE": "Export",
+        "NORTH": "North",
+        "AREA_TOOLS": "AOI Tools"
+      },
+      "LAYER_MANAGER": {
+        "TITLE": "Layer Manager",
+        "SUBTITLE": "Manage layers",
+        "EMPTY": "No layers found",
+        "FILTER": "Filter",
+        "LEGEND": "Legend",
+        "INFO": "Info",
+        "OPACITY": "Opacity"
+      },
+      "COORDINATE_OPTIONS": {
+        "TITLE": "Options",
+        "DECIMAL_DEGREE": "Decimal Degree",
+        "DEGREE_MINUTE_SECOND": "Degree Minute Second"
       },
       "SEARCH": {
         "KICKER": "Map",
@@ -730,7 +746,7 @@ export const locale = {
         "LATITUDE_HELP": "Latitude must be between -90 and 90.",
         "LONGITUDE_HELP": "Longitude must be between -180 and 180.",
         "USE_CURRENT": "Use Current Position",
-        "GO": "Show On Map",
+        "GO": "Go",
         "INVALID": "Please enter valid coordinates."
       },
       "COMMON": {
@@ -824,16 +840,23 @@ export const locale = {
           "CLASSIFIED_DESC": "Should classification be performed for the selected area?"
         }
       },
-      "EXPORT": {
-        "KICKER": "Export",
-        "TITLE": "Export map",
-        "SUBTITLE": "Download the current map view as an image or PDF file.",
-        "IMAGE_TITLE": "Download as image",
-        "IMAGE_SUBTITLE": "Saves the current map view as a PNG file.",
-        "PDF_TITLE": "Download as PDF",
-        "PDF_SUBTITLE": "Saves the current map view as a PDF document.",
-        "FAILED": "The map could not be exported.",
-        "PARTIAL_WARNING": "Some layers could not be exported. The layer server may not allow CORS."
+      EXPORT: {
+        TITLE: 'Export Map',
+        FILE_NAME: 'File name',
+        FILE_NAME_PLACEHOLDER: 'Enter file name',
+        FILE_NAME_REQUIRED: 'File name is required.',
+        FILE_TYPE: 'File type',
+        FILE_TYPE_PLACEHOLDER: 'Select file type',
+        FILE_TYPE_REQUIRED: 'File type is required.',
+        PDF: 'PDF',
+        PNG: 'PNG',
+        X: 'X',
+        Y: 'Y',
+        X_PLACEHOLDER: 'Ex: 1920',
+        Y_PLACEHOLDER: 'Ex: 1080',
+        X_REQUIRED: 'X is required.',
+        Y_REQUIRED: 'Y is required.',
+        SUBMIT: 'Export',
       },
       "PRODUCT_SMART_FILTER": {
         "KICKER": "Smart Filter",
@@ -858,32 +881,32 @@ export const locale = {
         "SELECTED": "Selected"
       },
       "NEW_IMAGERY_ORDER": {
-      "KICKER": "New Imagery Order",
-      "TITLE": "Create New Request",
-      "SUBTITLE": "Adds to cart with area-based pricing",
-      "CREATE_REQUEST": "Create New Request",
-      "GEOMETRY_REQUIRED": "To create a request, first upload a file, draw a polygon, or select a polygon from search results.",
-      "IMAGE_TYPE": "Image Type",
-      "MONO": "Mono",
-      "STEREO": "Stereo",
-      "NEW": "New",
-      "MAX_CLOUD_RATE": "Maximum Cloud Rate (%)",
-      "MAX_OFF_NADIR": "Maximum Acquisition Angle / Off-Nadir (°)",
-      "CLOUD_HINT": "Enter a value between 0 and 100.",
-      "OFF_NADIR_HINT": "Enter a value between 0 and 90 degrees.",
-      "EXAMPLE_10": "e.g. 10",
-      "EXAMPLE_25": "e.g. 25",
-      "PROCESSING_OPTIONS": "Processing Options",
-      "ORTHO_RECTIFIED": "Orthorectified",
-      "PAN_SHARPEN": "Pansharpen",
-      "CLASSIFIED": "Classified",
-      "TOTAL_AREA": "Total Area",
-      "UNIT_PRICE": "Unit Price",
-      "CLEAR": "Clear",
-      "ADD_TO_CART": "Add to Cart",
-      "BASKET_PRODUCT_NAME": "{{imageType}} Imagery Request",
-      "PRICE": "Price"
-    }
+        "KICKER": "New Imagery Order",
+        "TITLE": "Create New Request",
+        "SUBTITLE": "Adds to cart with area-based pricing",
+        "CREATE_REQUEST": "Create New Request",
+        "GEOMETRY_REQUIRED": "To create a request, first upload a file, draw a polygon, or select a polygon from search results.",
+        "IMAGE_TYPE": "Image Type",
+        "MONO": "Mono",
+        "STEREO": "Stereo",
+        "NEW": "New",
+        "MAX_CLOUD_RATE": "Maximum Cloud Rate (%)",
+        "MAX_OFF_NADIR": "Maximum Acquisition Angle / Off-Nadir (°)",
+        "CLOUD_HINT": "Enter a value between 0 and 100.",
+        "OFF_NADIR_HINT": "Enter a value between 0 and 90 degrees.",
+        "EXAMPLE_10": "e.g. 10",
+        "EXAMPLE_25": "e.g. 25",
+        "PROCESSING_OPTIONS": "Processing Options",
+        "ORTHO_RECTIFIED": "Orthorectified",
+        "PAN_SHARPEN": "Pansharpen",
+        "CLASSIFIED": "Classified",
+        "TOTAL_AREA": "Total Area",
+        "UNIT_PRICE": "Unit Price",
+        "CLEAR": "Clear",
+        "ADD_TO_CART": "Add to Cart",
+        "BASKET_PRODUCT_NAME": "{{imageType}} Imagery Request",
+        "PRICE": "Price"
+      }
     },
 
     "CARD_HOLDER": "Name on Card",
@@ -1058,12 +1081,12 @@ export const locale = {
       "MARKETPLACE": "Marketplace",
       "DATA": "Data",
       "API": "API",
-      "MAP": "Map",
+      "MAP": "Explore",
       "CONTACT": "Contact",
       "RIGHTS": "All rights reserved.",
       "COOKIES": "Cookies Policy"
     },
-    "COPYRIGHT": "© 2026 TaiEarth. All rights reserved.",
+    "COPYRIGHT": "© 2026 GeoPortal. All rights reserved.",
     "TERMS_SHORT": "Terms",
     "PRIVACY_SHORT": "Privacy",
     "MESSAGES": {

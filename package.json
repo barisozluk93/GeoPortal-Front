@@ -1,5 +1,5 @@
 {
-  "name": "taiearth",
+  "name": "geoportal",
   "version": "8.2.3",
   "scripts": {
     "ng": "ng",

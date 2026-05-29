@@ -1,0 +1,122 @@
+:host {
+  display: block;
+}
+
+.sign-method {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.section-heading__icon {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  border-radius: 12px;
+  color: var(--app-primary) !important;
+  background: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.section-heading__title {
+  color: var(--app-text) !important;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.section-heading__desc {
+  color: var(--app-muted) !important;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.security-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.security-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 14px;
+  background: #f9fafb !important;
+  border: 1px solid var(--app-border) !important;
+}
+
+.security-item__content {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.security-item__icon {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  border-radius: 12px;
+  color: var(--app-primary) !important;
+  background: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.security-item__info {
+  min-width: 0;
+}
+
+.security-item__label {
+  color: var(--app-text) !important;
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+.security-item__value {
+  margin-top: 0.15rem;
+  color: var(--app-muted) !important;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.security-form {
+  width: 100%;
+}
+
+.settings-form-narrow {
+  max-width: 440px;
+  width: 100%;
+}
+
+.security-form__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .security-item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+
+  .security-form__actions {
+    flex-direction: column-reverse;
+  }
+}

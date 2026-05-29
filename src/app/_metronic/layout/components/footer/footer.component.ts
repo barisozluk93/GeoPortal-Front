@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/modules/auth';
 })
 export class FooterComponent implements OnInit {
   footerContainerCssClasses: string = '';
-  currentDateStr: string = new Date().getFullYear().toString();
+  currentYear: string = new Date().getFullYear().toString();
 
   isAdmin: boolean = false;
   constructor(private layout: LayoutService, private router: Router, private auth: AuthService) {}
@@ -28,7 +28,7 @@ export class FooterComponent implements OnInit {
       this.router.navigate(['/dashboard']);
     }
     else {
-      this.router.navigate(['/landing/marketplace'])
+      this.router.navigate(['/landing/data'])
     }
   }
 }

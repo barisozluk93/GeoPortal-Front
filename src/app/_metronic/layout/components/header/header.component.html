@@ -1,8 +1,4 @@
-<div
-  id="kt_header"
-  class="modern-header"
-  [class.scrolled]="isScrolled"
->
+<div id="kt_header" class="modern-header" [class.scrolled]="isScrolled">
   <div
     id="kt_header_container"
     [ngClass]="[
@@ -11,12 +7,14 @@
     ]"
     class="modern-header-container"
   >
+    <!-- LEFT / BRAND -->
     <div class="modern-header-left">
       <div class="d-flex d-lg-none align-items-center me-3">
         <button
           type="button"
           class="btn btn-icon mobile-toggle-btn"
           id="kt_aside_toggle"
+          aria-label="Menüyü aç"
         >
           <span
             [inlineSVG]="'./assets/media/icons/duotune/abstract/abs015.svg'"
@@ -27,30 +25,32 @@
 
       <a
         (click)="onBrandClick()"
-        class="app-header__brand text-decoration-none me-3"
+        class="app-header__brand text-decoration-none"
       >
-        <div class="app-header__brand-badge">
-          <span class="app-header__brand-icon">T</span>
-        </div>
+        <div class="app-header__brand-top">
+          <img
+            src="./assets/media/logos/logo.svg"
+            alt="GeoPortal"
+            class="app-header__logo-img"
+          />
 
-        <div class="app-header__brand-content mt-2" *ngIf="!isMobile">
-          <div class="app-header__eyebrow text-primary">
-            {{ 'FOOTER.PRODUCT_LABEL' | translate }}
-          </div>
+          <div class="app-header__brand-divider"></div>
 
-          <div class="app-header__title-row">
-            <h3 class="app-header__title">TaiEarth</h3>
+          <div class="app-header__brand-name" *ngIf="!isMobile">
+            GeoPortal
           </div>
         </div>
       </a>
+    </div>
 
+    <!-- CENTER MENU -->
+    <div class="modern-header-center">
       <app-header-menu *ngIf="!isMobile"></app-header-menu>
     </div>
 
+    <!-- RIGHT / TOPBAR -->
     <div class="modern-header-right">
-      <app-topbar
-        class="d-flex align-items-center flex-shrink-0"
-      ></app-topbar>
+      <app-topbar class="d-flex align-items-center flex-shrink-0"></app-topbar>
     </div>
   </div>
 </div>

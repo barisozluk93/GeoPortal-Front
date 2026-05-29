@@ -25,9 +25,7 @@
       <span class="menu-icon">
         <i class="fa-solid fa-user fs-5"></i>
       </span>
-      <span class="menu-title">
-        {{ 'MY_PROFILE' | translate }}
-      </span>
+      <span class="menu-title">{{ 'MY_PROFILE' | translate }}</span>
     </a>
   </div>
 
@@ -36,26 +34,18 @@
       <span class="menu-icon">
         <i class="fa-solid fa-box fs-5"></i>
       </span>
-      <span class="menu-title">
-        {{ 'MY_ORDERS' | translate }}
-      </span>
+      <span class="menu-title">{{ 'MY_ORDERS' | translate }}</span>
     </a>
   </div>
 
-  <div
-    class="menu-item px-3 user-menu__lang-item"
-    data-kt-menu-trigger="hover"
-    data-kt-menu-placement="left-start"
-    data-kt-menu-flip="bottom"
-  >
-    <a class="menu-link px-3 rounded-3 cursor-pointer">
+  <div class="menu-item px-3 user-menu__lang-item" [class.show]="langDropdownOpen" (mouseenter)="openLangDropdown()"
+    (mouseleave)="closeLangDropdown()">
+    <a class="menu-link px-3 rounded-3 cursor-pointer" (click)="toggleLangDropdown($event)">
       <span class="menu-icon">
         <i class="fa-solid fa-language fs-5"></i>
       </span>
 
-      <span class="menu-title">
-        {{ 'LANGUAGE' | translate }}
-      </span>
+      <span class="menu-title">{{ 'LANGUAGE' | translate }}</span>
 
       <span class="ms-auto d-flex align-items-center me-2">
         <img class="w-20px h-20px rounded-1 me-2" [src]="language.flag" alt="language-flag" />
@@ -63,14 +53,15 @@
           {{ ('LANG' | translate) === 'tr' ? language.nameTr : language.nameEn }}
         </span>
       </span>
+
+      <span class="menu-arrow"></span>
     </a>
 
-    <div class="user-menu__subdropdown menu-sub menu-sub-dropdown menu-column menu-rounded fw-semibold py-2 w-200px">
-      <div *ngFor="let l of langs" class="menu-item px-3" (click)="selectLanguage(l.lang)">
-        <a
-          class="menu-link px-3 rounded-3 d-flex align-items-center"
-          [ngClass]="{ active: l.lang === language.lang }"
-        >
+    <div class="user-menu__subdropdown menu-sub menu-sub-dropdown menu-column menu-rounded fw-semibold py-2 w-200px"
+      [class.show]="langDropdownOpen" (mouseenter)="openLangDropdown()" (mouseleave)="closeLangDropdown()">
+      <div *ngFor="let l of langs" class="menu-item px-3">
+        <a class="menu-link px-3 rounded-3 d-flex align-items-center cursor-pointer"
+          [ngClass]="{ active: l.lang === language.lang }" (click)="selectLanguage(l.lang)">
           <span class="symbol symbol-20px me-3">
             <img class="rounded-1" [src]="l.flag" alt="language-flag" />
           </span>
@@ -97,9 +88,7 @@
           <span class="path2"></span>
         </i>
       </span>
-      <span class="menu-title">
-        {{ 'AUTH.GENERAL.SIGNOUT_BUTTON' | translate }}
-      </span>
+      <span class="menu-title">{{ 'AUTH.GENERAL.SIGNOUT_BUTTON' | translate }}</span>
     </a>
   </div>
 </ng-container>

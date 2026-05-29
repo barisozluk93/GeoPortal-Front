@@ -1,141 +1,69 @@
-<section class="map-page">
-  <div class="map-shell">
-    <div class="map-stage">
-      <div class="drawer-overlay"
-        *ngIf="!previewMode && (layerManagerOpen() || searchPanelOpen() || exportPanelOpen() ||  smartFilterOpen() || legendPanelOpen() || infoPanelOpen() || filterDrawerOpen() || featureInfoDrawerOpen() || coordinatePanelOpen())"
-        (click)="closeAllDrawers()"></div>
+<div class="map-page">
+  <div id="mapCanvas" class="map-canvas"></div>
 
-      <!-- LEFT ACTION RAIL -->
-      <app-map-toolbar [previewMode]="previewMode" [layerManagerOpen]="layerManagerOpen()"
-        [searchPanelOpen]="searchPanelOpen()" [exportPanelOpen]="exportPanelOpen()"
-        [smartFilterOpen]="smartFilterOpen()" [polygonMode]="polygonMode()" [measureLengthMode]="measureLengthMode()"
-        [measureAreaMode]="measureAreaMode()" (layerManagerClick)="toggleLayerManager()"
-        (searchClick)="toggleSearchPanel()" (smartFilterClick)="toggleSmartFilter()"
-        (polygonClick)="togglePolygonDraw()" (measureLengthClick)="toggleLengthMeasure()"
-        (measureAreaClick)="toggleAreaMeasure()" (coordinateClick)="toggleCoordinatePanel()"
-        (exportImageClick)="toggleExportPanel()" (uploadClick)="triggerFileUpload()" (resetClick)="resetView()">
-      </app-map-toolbar>
+  <div class="map-coordinate-box">
+    <div class="fw-bolder fs-5 text-nowrap">
+      <i class="fa-solid fa-location-crosshairs fw-bolder fs-5 text-primary me-2"></i>
+      {{ currentCoordinateText }}
+    </div>
 
-      <!-- LEFT PANEL -->
-      <app-map-left-panel *ngIf="!previewMode" [searchOpen]="searchPanelOpen()" [layerManagerOpen]="layerManagerOpen()"
-        [loading]="loadingLayers()" [error]="layerLoadError()" [layerGroups]="layerGroups()" [searchText]="searchText()"
-        [searchResults]="searchResults()" [uploadedFileName]="uploadedFileName()" [layerType]="LayerType"
-        [legendOpen]="legendPanelOpen()" [infoOpen]="infoPanelOpen()" [filterOpen]="filterDrawerOpen()"
-        [selectedLegendLayerId]="selectedLegendLayer()?.id ?? null"
-        [selectedInfoLayerId]="selectedInfoLayer()?.id ?? null"
-        [selectedFilterLayerId]="selectedFilterLayer()?.id ?? null" (closeSearch)="closeSearchPanel()"
-        (toggleLayerManager)="toggleLayerManager()" (searchTextChange)="searchText.set($event)" (search)="searchPlace()"
-        (selectResult)="flyToResult($event)" (toggleGroup)="toggleGroup($event)"
-        (toggleLayerVisibility)="onLayerVisibilityChange($event.layer, $event.value)"
-        (changeOpacity)="onOpacityChange($event.layer, $event.value)" (openLegend)="toggleLegend($event)"
-        (openInfo)="toggleInfo($event)" (openFilter)="toggleFilterDrawer($event)">
-      </app-map-left-panel>
+    <div class="dropdown position-relative">
+      <button type="button" class="btn btn-sm btn-light-primary btn-icon"
+        [attr.title]="'MAP.COORDINATE_OPTIONS.TITLE' | translate"
+        [attr.aria-label]="'MAP.COORDINATE_OPTIONS.TITLE' | translate" (click)="toggleCoordinateMenu()">
+        <i class="fa-solid fa-ellipsis-vertical fw-bolder fs-5"></i>
+      </button>
 
-      <!-- EXPORT PANEL -->
-      <app-map-export-panel *ngIf="!previewMode" [open]="exportPanelOpen()" (close)="closeExportPanel()"
-        (exportAs)="exportMap($event)">
-      </app-map-export-panel>
-
-      <input #fileInput type="file" hidden accept=".geojson,.json,.kml,.zip" (change)="onFileSelected($event)" />
-
-      <!-- MAP -->
-      <div class="map-canvas-shell">
-        <div class="map-canvas-glow map-canvas-glow--one"></div>
-        <div class="map-canvas-glow map-canvas-glow--two"></div>
-        <div #mapEl class="map-element"></div>
-
-        <div class="map-zoom-actions">
-          <button class="map-zoom-btn btn btn-icon btn-light" type="button" (click)="zoomIn()"
-            [title]="'MAP.ACTIONS.ZOOM_IN' | translate" [attr.aria-label]="'MAP.ACTIONS.ZOOM_IN' | translate">
-            <i class="fa-solid fa-plus text-white"></i>
+      <ul class="dropdown-menu dropdown-menu-end map-options-menu" [class.show]="isCoordinateMenuOpen">
+        <li class="menu-item px-3">
+          <button type="button" class="menu-link px-3 d-flex align-items-center w-100 border-0"
+            [ngClass]="{ active: coordinateFormat === 'dd' }" (click)="setCoordinateFormat('dd')">
+            <span class="menu-title">{{ 'MAP.COORDINATE_OPTIONS.DECIMAL_DEGREE' | translate }}</span>
+            <i *ngIf="coordinateFormat === 'dd'" class="fa-solid fa-check text-primary ms-auto"></i>
           </button>
+        </li>
 
-          <div class="map-zoom-divider" aria-hidden="true"></div>
-
-          <button class="map-zoom-btn btn btn-icon btn-light" type="button" (click)="zoomOut()"
-            [title]="'MAP.ACTIONS.ZOOM_OUT' | translate" [attr.aria-label]="'MAP.ACTIONS.ZOOM_OUT' | translate">
-            <i class="fa-solid fa-minus text-white"></i>
+        <li class="menu-item px-3">
+          <button type="button" class="menu-link px-3 d-flex align-items-center w-100 border-0"
+            [ngClass]="{ active: coordinateFormat === 'dms' }" (click)="setCoordinateFormat('dms')">
+            <span class="menu-title">{{ 'MAP.COORDINATE_OPTIONS.DEGREE_MINUTE_SECOND' | translate }}</span>
+            <i *ngIf="coordinateFormat === 'dms'" class="fa-solid fa-check text-primary ms-auto"></i>
           </button>
-        </div>
-
-        <div class="map-status">
-          <div class="map-status-title text-primary">{{ 'MAP.STATUS.TITLE' | translate }}</div>
-
-          <div class="map-status-text map-status-text--inline">
-            <span>{{ 'MAP.STATUS.COORDINATE' | translate }}: {{ currentCoords() }}</span>
-            <span>{{ 'MAP.STATUS.ZOOM' | translate }}: {{ currentZoom() }}</span>
-            <span *ngIf="uploadedFileName()">{{ 'MAP.STATUS.LOADED_FILE' | translate }}: {{ uploadedFileName() }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- LEGEND DRAWER -->
-      <app-map-legend-drawer [open]="legendPanelOpen()" [layer]="selectedLegendLayer()"
-        [getLayerTypeText]="getLayerTypeText.bind(this)" [hasLegend]="hasLegend.bind(this)"
-        [getLegendUrl]="getLegendUrl.bind(this)" (close)="closeLegend()">
-      </app-map-legend-drawer>
-
-      <!-- INFO DRAWER -->
-      <app-map-info-drawer [open]="infoPanelOpen()" [layer]="selectedInfoLayer()" [layerType]="LayerType"
-        [getLayerTypeText]="getLayerTypeText.bind(this)" [getDefaultVersion]="getDefaultVersion.bind(this)"
-        [getDefaultFormat]="getDefaultFormat.bind(this)" (close)="closeInfo()">
-      </app-map-info-drawer>
-
-      <!-- FILTER DRAWER -->
-      <app-map-filter-drawer [open]="filterDrawerOpen()" [layer]="selectedFilterLayer()"
-        [operatorSelectItems]="operatorSelectItems" [buildLayerCqlFilter]="buildLayerCqlFilter.bind(this)"
-        [loadFilterFieldOptionsFn]="loadFilterFieldOptions.bind(this)" (close)="closeFilterDrawer()"
-        (addRule)="addFilterRow()" (removeRule)="removeFilterRow($event)"
-        (apply)="applyFilterToLayerWithValidation($event)" (clear)="clearFilterForLayer($event)">
-      </app-map-filter-drawer>
-
-      <!-- COORDINATE PANEL -->
-      <app-map-coordinate-panel *ngIf="!previewMode" [open]="coordinatePanelOpen()" [lat]="gotoLat()" [lon]="gotoLon()"
-        (latChange)="gotoLat.set($event)" (lonChange)="gotoLon.set($event)" (useCurrentClick)="fillCurrentCoordinates()"
-        (goClick)="goToCoordinates()" (closeClick)="closeCoordinatePanel()">
-      </app-map-coordinate-panel>
-
-      <!-- FEATURE INFO DRAWER -->
-      <app-map-feature-info-drawer [open]="featureInfoDrawerOpen()" [title]="featurePopupTitle()"
-        [subtitle]="featurePopupSubtitle()" [entries]="featurePopupEntries()" (close)="closeFeatureInfoDrawer()">
-      </app-map-feature-info-drawer>
-
-      <!-- SMART FILTER DRAWER -->
-      <app-map-product-smart-filter *ngIf="!previewMode" [open]="smartFilterOpen()" [loading]="smartFilterLoading()"
-        [results]="smartFilterResults()" (close)="closeSmartFilter()" (apply)="applySmartFilter($event)"
-        (clear)="clearSmartFilter()" (toggleResults)="toggleSmartFilterResultsPanel()">>
-      </app-map-product-smart-filter>
-
-      <!-- SMART FILTER RESULTS LEFT PANEL -->
-      <app-map-product-smart-filter-results-panel *ngIf="!previewMode"
-        [open]="smartFilterResultsPanelOpen()" [collapsed]="smartFilterResultsPanelCollapsed()"
-        [loading]="smartFilterLoading()" [results]="smartFilterResults()"
-        [selectedProductId]="selectedSmartFilterProductId()" [selectedProduct]="selectedSmartFilterProduct()"
-        [showCreateRequestButton]="canCreateNewImageryRequest()" [canViewAddToCartFn]="canViewAddToCart.bind(this)"
-        (close)="closeSmartFilterResultsPanel()" (toggleCollapsed)="toggleSmartFilterResultsPanelCollapsed()"
-        (createRequest)="openNewImageryOrderPanel()"
-        (selectProduct)="selectSmartFilterProduct($event)" (addToCart)="addSmartFilterProductToCart($event)">
-      </app-map-product-smart-filter-results-panel>
-
-      <app-map-new-imagery-order-panel *ngIf="!previewMode"
-        [open]="newImageryOrderPanelOpen()"
-        [hasGeometry]="!!currentAoiWkt().trim()"
-        [areaKm2]="currentAoiAreaKm2()"
-        [pricePerSquareKm]="newImageryPricePerKm2"
-        (close)="closeNewImageryOrderPanel()"
-        (addToCart)="addNewImageryOrderToCart($event)">
-      </app-map-new-imagery-order-panel>
-
-      <app-product-detail-drawer *ngIf="!previewMode"
-        [selectedItem]="selectedMarketplaceDetailProduct()"
-        [detailLoading]="marketplaceDetailLoading()"
-        [detailErrorMessage]="marketplaceDetailErrorMessage()"
-        [canViewAddToCartFn]="canViewMarketplaceDetailAddToCart.bind(this)"
-        [getClassTagClassFn]="getMarketplaceClassTagClass.bind(this)"
-        (close)="closeMarketplaceDetailDrawer()"
-        (addToCartClicked)="addMarketplaceDetailProductToCart($event)">
-      </app-product-detail-drawer>
-
+        </li>
+      </ul>
     </div>
   </div>
-</section>
+
+  <div class="map-left-tools">
+    <app-map-toolbar side="left" [measureText]="lengthMeasureText" [activeTool]="activeTool"
+      (layerManagerClicked)="toggleLayerManager()" (goToCoordinateClicked)="toggleGoToCoordinatePanel()"
+      (measureLengthClicked)="toggleLengthMeasure()" (resetClicked)="resetMap()" (exportClicked)="toggleExportPanel()">
+    </app-map-toolbar>
+
+    <div class="map-panels-container" *ngIf="isLayerManagerOpen">
+      <app-layer-manager [layerGroups]="layerGroups" [baseMapOpacity]="baseMapOpacity"
+        (baseMapOpacityChanged)="setBaseMapOpacity($event)"
+        (layerVisibilityChanged)="setLayerVisibility($event.layer, $event.visible)"
+        (layerOpacityChanged)="setLayerOpacity($event.layer, $event.opacity)"
+        (layerFilterClicked)="openLayerFilter($event)" (layerLegendClicked)="openLayerLegend($event)"
+        (layerInfoClicked)="openLayerInfo($event)"></app-layer-manager>
+
+      <app-layer-legend-panel *ngIf="selectedLegendLayer" [layer]="selectedLegendLayer"
+        (closed)="closeLayerLegend()"></app-layer-legend-panel>
+
+      <app-layer-filter-panel *ngIf="selectedFilterLayer" [layer]="selectedFilterLayer" (closed)="closeLayerFilter()"
+        (filterApplied)="applyLayerFilter($event.layer, $event.cqlFilter)"
+        (filterCleared)="clearLayerFilter($event)"></app-layer-filter-panel>
+    </div>
+
+    <div class="map-layer-manager-floating" *ngIf="isGoToCoordinatePanelOpen" (mouseenter)="openGoToCoordinatePanel()">
+      <app-go-to-coordinate-panel (coordinateSelected)="focusCoordinate($event)"></app-go-to-coordinate-panel>
+    </div>
+
+    <div class="map-layer-manager-floating" *ngIf="isExportPanelOpen" (mouseenter)="openExportPanel()">
+      <app-map-export-panel (exportRequested)="exportMap($event)"></app-map-export-panel>
+    </div>
+  </div>
+
+  <app-map-toolbar side="right" (zoomInClicked)="zoomIn()" (zoomOutClicked)="zoomOut()"></app-map-toolbar>
+</div>

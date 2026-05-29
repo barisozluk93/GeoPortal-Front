@@ -1,7 +1,10 @@
 <div class="app-header-menu" (click)="$event.stopPropagation()">
   <div class="app-header-menu__nav">
+
     <ng-container *ngFor="let menu of menuList; let i = index">
       <ng-container *ngIf="!menu.isForbid">
+
+        <!-- NORMAL LINK -->
         <div
           class="app-header-menu__item"
           *ngIf="!menu.childMenus || menu.childMenus.length === 0"
@@ -18,6 +21,7 @@
           </a>
         </div>
 
+        <!-- DROPDOWN -->
         <div
           class="app-header-menu__item app-header-menu__item--has-submenu"
           *ngIf="menu.childMenus && menu.childMenus.length > 0"
@@ -43,8 +47,12 @@
             </span>
           </button>
 
-          <div class="app-header-menu__submenu" [class.show]="menu.open">
+          <div
+            class="app-header-menu__submenu"
+            [class.show]="menu.open"
+          >
             <ng-container *ngFor="let child of menu.childMenus">
+
               <a
                 *ngIf="!child.isForbid"
                 class="app-header-menu__submenu-link"
@@ -57,10 +65,13 @@
                   {{ ('LANG' | translate) === 'tr' ? child.name : child.nameEn }}
                 </span>
               </a>
+
             </ng-container>
           </div>
         </div>
+
       </ng-container>
     </ng-container>
+
   </div>
 </div>

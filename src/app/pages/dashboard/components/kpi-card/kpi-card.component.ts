@@ -23,14 +23,14 @@ export class KpiCardComponent implements OnChanges {
         icon: 'ki-duotone ki-wallet',
         color: 'kpi-blue'
       },
-      {
-        title: 'DASHBOARD.KPI.MARKETPLACE',
-        sub: 'DASHBOARD.KPI.MARKETPLACE_SUB',
-        value: this.kpis.marketplaceRevenue,
-        format: 'currency',
-        icon: 'ki-duotone ki-shop',
-        color: 'kpi-purple'
-      },
+      // {
+      //   title: 'DASHBOARD.KPI.MARKETPLACE',
+      //   sub: 'DASHBOARD.KPI.MARKETPLACE_SUB',
+      //   value: this.kpis.marketplaceRevenue,
+      //   format: 'currency',
+      //   icon: 'ki-duotone ki-shop',
+      //   color: 'kpi-purple'
+      // },
       {
         title: 'DASHBOARD.KPI.API_REVENUE',
         sub: 'DASHBOARD.KPI.API_REVENUE_SUB',

@@ -1,96 +1,89 @@
-<footer class="app-footer">
-  <div class="container app-footer__container">
-    <div class="app-footer__surface">
-      <div class="app-footer__top">
-        <div class="app-footer__brand" (click)="onBrandClick()">
-          <div class="app-footer__brand-badge">
-            <span class="app-footer__brand-icon">T</span>
-          </div>
+<footer class="modern-footer">
+  <div class="modern-footer__container">
 
-          <div class="app-footer__brand-content">
-            <div class="app-footer__eyebrow text-primary">
-              {{ 'FOOTER.PRODUCT_LABEL' | translate }}
-            </div>
+    <div class="modern-footer__shell">
+      <div class="modern-footer__brand" (click)="onBrandClick()">
+        <div class="modern-footer__brand-top">
+          <img
+            src="./assets/media/logos/logo.svg"
+            alt="GeoPortal"
+            class="modern-footer__logo"
+          />
 
-            <div class="app-footer__title-row">
-              <h3 class="app-footer__title">TaiEarth</h3>
-              <span class="app-footer__status">
-                {{ 'FOOTER.STATUS' | translate }}
-              </span>
-            </div>
+          <div class="modern-footer__brand-divider"></div>
 
-            <p class="app-footer__description">
-              {{ 'FOOTER.DESCRIPTION' | translate }}
-            </p>
+          <div>
+            <div class="modern-footer__brand-name">GeoPortal</div>
           </div>
         </div>
 
-        <div class="app-footer__nav">
-          <div class="app-footer__group">
-            <div class="app-footer__heading text-primary">
-              {{ 'FOOTER.LEGAL' | translate }}
-            </div>
-
-            <a routerLink="/privacy" class="app-footer__link">
-              {{ 'FOOTER.PRIVACY' | translate }}
-            </a>
-
-            <a routerLink="/terms" class="app-footer__link">
-              {{ 'FOOTER.TERMS' | translate }}
-            </a>
-
-            <a routerLink="/cookies" class="app-footer__link">
-              {{ 'FOOTER.COOKIES' | translate }}
-            </a>
-          </div>
-
-          <div class="app-footer__group">
-            <div class="app-footer__heading text-primary">
-              {{ 'FOOTER.PLATFORM' | translate }}
-            </div>
-
-            <a routerLink="/landing/marketplace" class="app-footer__link">
-              {{ 'FOOTER.MARKETPLACE' | translate }}
-            </a>
-
-            <a routerLink="/landing/data" class="app-footer__link">
-              {{ 'FOOTER.DATA' | translate }}
-            </a>
-
-            <a routerLink="/landing/data" class="app-footer__link">
-              {{ 'FOOTER.API' | translate }}
-            </a>
-
-            <a routerLink="/landing/map" class="app-footer__link">
-              {{ 'FOOTER.MAP' | translate }}
-            </a>
-
-            <a routerLink="/landing/contact" class="app-footer__link">
-              {{ 'FOOTER.CONTACT' | translate }}
-            </a>
-          </div>
-        </div>
+        <p class="modern-footer__description">
+          {{ 'FOOTER.DESCRIPTION' | translate }}
+        </p>
       </div>
 
-      <div class="app-footer__divider"></div>
+      <div class="modern-footer__columns">
+        <div class="modern-footer__group">
+          <div class="modern-footer__title">
+            {{ 'FOOTER.PLATFORM' | translate }}
+          </div>
 
-      <div class="app-footer__bottom">
-        <div class="app-footer__copyright">
-          © 2026 TaiEarth. {{ 'FOOTER.RIGHTS' | translate }}
+          <a routerLink="/landing/data" class="modern-footer__link">
+            {{ 'FOOTER.DATA' | translate }}
+          </a>
+
+          <a routerLink="/landing/api" class="modern-footer__link">
+            {{ 'FOOTER.API' | translate }}
+          </a>
+
+          <a routerLink="/landing/map" class="modern-footer__link">
+            {{ 'FOOTER.MAP' | translate }}
+          </a>
+
+          <a routerLink="/landing/contact" class="modern-footer__link">
+            {{ 'FOOTER.CONTACT' | translate }}
+          </a>
         </div>
 
-        <div class="app-footer__bottom-links">
-          <a routerLink="/privacy" class="app-footer__bottom-link">
+        <div class="modern-footer__group">
+          <div class="modern-footer__title">
+            {{ 'FOOTER.LEGAL' | translate }}
+          </div>
+
+          <a routerLink="/privacy" class="modern-footer__link">
             {{ 'FOOTER.PRIVACY' | translate }}
           </a>
-          <a routerLink="/terms" class="app-footer__bottom-link">
+
+          <a routerLink="/terms" class="modern-footer__link">
             {{ 'FOOTER.TERMS' | translate }}
           </a>
-          <a routerLink="/cookies" class="app-footer__bottom-link">
+
+          <a routerLink="/cookies" class="modern-footer__link">
             {{ 'FOOTER.COOKIES' | translate }}
           </a>
         </div>
       </div>
     </div>
+
+    <div class="modern-footer__bottom">
+      <div class="modern-footer__copyright">
+        © 2026 GeoPortal. {{ 'FOOTER.RIGHTS' | translate }}
+      </div>
+
+      <div class="modern-footer__bottom-links">
+        <a routerLink="/privacy" class="modern-footer__bottom-link">
+          {{ 'FOOTER.PRIVACY' | translate }}
+        </a>
+
+        <a routerLink="/terms" class="modern-footer__bottom-link">
+          {{ 'FOOTER.TERMS' | translate }}
+        </a>
+
+        <a routerLink="/cookies" class="modern-footer__bottom-link">
+          {{ 'FOOTER.COOKIES' | translate }}
+        </a>
+      </div>
+    </div>
+
   </div>
 </footer>

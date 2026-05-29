@@ -81,10 +81,10 @@ export class FilterBarComponent implements OnInit, OnDestroy {
         label: this.translate.instant('DASHBOARD.FILTER.OPTIONS.ALL'),
         value: 'Tümü',
       },
-      {
-        label: this.translate.instant('DASHBOARD.FILTER.OPTIONS.MARKETPLACE'),
-        value: 'Marketplace',
-      },
+      // {
+      //   label: this.translate.instant('DASHBOARD.FILTER.OPTIONS.MARKETPLACE'),
+      //   value: 'Marketplace',
+      // },
       {
         label: this.translate.instant('DASHBOARD.FILTER.OPTIONS.API'),
         value: 'API',

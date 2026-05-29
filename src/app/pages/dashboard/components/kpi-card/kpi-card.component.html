@@ -10,12 +10,14 @@
             <i [class]="item.icon + ' fs-2x'"></i>
           </div>
 
-          <div class="fw-semibold text-muted">
+          <div class="text-primary" style="font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;">
             {{ item.title | translate }}
           </div>
         </div>
 
-        <div class="fs-2 fw-bold text-white mb-1">
+        <div class="fs-2 fw-bold mb-1">
           {{ item.format === 'currency'
             ? formatCurrency(item.value)
             : formatNumber(item.value)

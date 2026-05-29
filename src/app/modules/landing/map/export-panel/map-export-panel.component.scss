@@ -1,172 +1,55 @@
-* {
-  box-sizing: border-box;
-}
-
-:host {
-  pointer-events: none;
-}
-
-.map-side-panel {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  z-index: 34;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.22s ease,
-    visibility 0.22s ease;
-}
-
-.map-side-panel--left {
-  left: 72px;
-  width: min(540px, calc(100% - 72px));
-  max-width: calc(100% - 72px);
-  transform: translate3d(-24px, 0, 0);
-}
-
-.map-side-panel--left.open {
-  transform: translate3d(0, 0, 0);
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.map-side-panel__panel {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  border-radius: 0 !important;
+.map-export-panel {
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  border-radius: 0;
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
   overflow: hidden;
-  background: var(--glass-surface);
-  border-right: 1px solid rgba(92, 137, 255, 0.16);
-  box-shadow:
-    22px 0 36px rgba(0, 0, 0, 0.18),
-    inset -1px 0 0 rgba(255, 255, 255, 0.03);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
 }
 
-.map-side-panel__header {
-  padding: 22px 22px 18px;
-  border-bottom: 1px solid rgba(92, 137, 255, 0.1);
+.map-export-panel__header {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--bs-border-color);
+  background: rgba(var(--bs-primary-rgb), 0.04);
+}
+
+.map-export-panel__title {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  flex: 0 0 auto;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
-}
-
-.map-side-panel__kicker {
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: #7eb6ff;
-  margin-bottom: 8px;
-}
-
-.map-side-panel__title {
-  font-size: 1.12rem;
+  align-items: center;
+  gap: 10px;
+  color: var(--bs-gray-900);
+  font-size: 15px;
   font-weight: 700;
-  line-height: 1.35;
-  color: #f6fbff;
+
+  i {
+    font-size: 17px;
+  }
 }
 
-.map-side-panel__subtitle {
-  margin-top: 6px;
-  color: #94a8c9;
-  font-size: 0.9rem;
-  line-height: 1.6;
+.map-export-panel__body {
+  padding: 14px;
 }
 
-.map-side-panel__body {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 20px;
-  background: transparent;
+.export-field {
+  margin-bottom: 12px;
 }
 
-.sidebar-card {
-  background: var(--glass-surface-soft);
-  border: 1px solid rgba(92, 137, 255, 0.14);
-  box-shadow:
-    0 18px 36px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 20px;
-  padding: 1.25rem;
+.export-label {
+  margin-bottom: 6px;
+  color: var(--bs-gray-700);
+  font-size: 12px;
+  font-weight: 700;
 }
 
-.export-options-card {
+.export-grid {
   display: grid;
-  gap: 14px;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.export-option-btn {
-  width: 100%;
-  min-height: 78px;
-  border: 1px solid rgba(92, 137, 255, 0.14);
-  border-radius: 18px;
-  background: rgba(77, 163, 255, 0.06);
-  color: #eaf2ff;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  text-align: left;
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.export-option-btn:hover {
-  background: rgba(77, 163, 255, 0.1);
-  border-color: rgba(126, 182, 255, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.16);
-}
-
-.export-option-icon {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  border-radius: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #7eb6ff;
-  background: rgba(77, 163, 255, 0.12);
-  border: 1px solid rgba(126, 182, 255, 0.18);
-}
-
-.export-option-content {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-}
-
-.export-option-content strong {
-  font-size: 0.98rem;
-  font-weight: 800;
-  line-height: 1.3;
-  color: #f6fbff;
-}
-
-.export-option-content small {
-  font-size: 0.84rem;
-  font-weight: 500;
-  line-height: 1.45;
-  color: #94a8c9;
+@media (max-width: 576px) {
+  .map-export-panel {
+    width: calc(100vw - 24px);
+  }
 }

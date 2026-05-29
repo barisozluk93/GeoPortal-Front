@@ -3,26 +3,35 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   selector: 'app-map-toolbar',
   templateUrl: './map-toolbar.component.html',
-  styleUrls: ['./map-toolbar.component.scss']
+  styleUrls: ['./map-toolbar.component.scss'],
 })
 export class MapToolbarComponent {
-  @Input() previewMode = false;
-  @Input() layerManagerOpen = false;
-  @Input() searchPanelOpen = false;
-  @Input() exportPanelOpen = false;
-  @Input() smartFilterOpen = false;
-  @Input() polygonMode = false;
-  @Input() measureLengthMode = false;
-  @Input() measureAreaMode = false;
+  @Input() side: 'left' | 'right' = 'left';
+  @Input() measureText = '';
 
-  @Output() layerManagerClick = new EventEmitter<void>();
-  @Output() searchClick = new EventEmitter<void>();
-  @Output() smartFilterClick = new EventEmitter<void>();
-  @Output() polygonClick = new EventEmitter<void>();
-  @Output() measureLengthClick = new EventEmitter<void>();
-  @Output() measureAreaClick = new EventEmitter<void>();
-  @Output() coordinateClick = new EventEmitter<void>();
-  @Output() exportImageClick = new EventEmitter<void>();
-  @Output() uploadClick = new EventEmitter<void>();
-  @Output() resetClick = new EventEmitter<void>();
+  @Input()
+  activeTool:
+    | 'layer-manager'
+    | 'coordinate'
+    | 'measure'
+    | 'export'
+    | null = null;
+
+  @Output() layerManagerHovered = new EventEmitter<void>();
+  @Output() layerManagerClicked = new EventEmitter<void>();
+
+  @Output() searchClicked = new EventEmitter<void>();
+  @Output() polygonClicked = new EventEmitter<void>();
+  @Output() uploadClicked = new EventEmitter<void>();
+
+  @Output() measureLengthClicked = new EventEmitter<void>();
+
+  @Output() goToCoordinateHovered = new EventEmitter<void>();
+  @Output() goToCoordinateClicked = new EventEmitter<void>();
+
+  @Output() exportClicked = new EventEmitter<void>();
+  @Output() resetClicked = new EventEmitter<void>();
+
+  @Output() zoomInClicked = new EventEmitter<void>();
+  @Output() zoomOutClicked = new EventEmitter<void>();
 }

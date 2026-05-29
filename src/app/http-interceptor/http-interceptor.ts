@@ -139,6 +139,6 @@ export class Interceptor implements HttpInterceptor {
     localStorage.removeItem(this.authLocalStorageToken);
     this.isRefreshing = false;
     this.refreshTokenSubject.next(null);
-    this.router.navigate(['/landing/marketplace']);
+    this.router.navigate(['/landing/data']);
   }
 }

@@ -1,38 +1,23 @@
 <div
+  *ngFor="let l of langs"
   class="menu-item px-3"
-  data-kt-menu-trigger="hover"
-  data-kt-menu-placement="left-start"
-  data-kt-menu-flip="bottom"
+  (click)="selectLanguage(l.lang)"
 >
-  <a class="menu-link px-3 d-flex justify-content-between cursor-pointer">
-    <span class="d-flex align-items-center">
-      <i class="fa-solid fa-language me-3"></i>
-      {{ 'LANGUAGE' | translate }}
+  <a
+    class="menu-link px-3 d-flex align-items-center"
+    [ngClass]="{ active: l.lang === language.lang }"
+  >
+    <span class="symbol symbol-20px me-3">
+      <img class="rounded-1" [src]="l.flag" alt="flag" />
     </span>
 
-    <span class="d-flex align-items-center text-gray-700 fs-7">
-      <img class="w-20px h-20px rounded-1 me-2" [src]="language.flag" alt="flag" />
-      {{ ('LANG' | translate) === 'tr' ? language.nameTr : language.nameEn }}
+    <span class="menu-title">
+      {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
     </span>
+
+    <i
+      *ngIf="l.lang === language.lang"
+      class="fa-solid fa-check text-primary ms-auto"
+    ></i>
   </a>
-
-  <div class="menu-sub menu-sub-dropdown w-200px py-2">
-    <div
-      *ngFor="let l of langs"
-      class="menu-item px-3"
-      (click)="selectLanguage(l.lang)"
-    >
-      <a class="menu-link px-3 d-flex align-items-center" [ngClass]="{ active: l.lang === language.lang }">
-        <span class="symbol symbol-20px me-3">
-          <img class="rounded-1" [src]="l.flag" alt="flag" />
-        </span>
-
-        <span class="menu-title">
-          {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
-        </span>
-
-        <i *ngIf="l.lang === language.lang" class="fa-solid fa-check text-primary ms-auto"></i>
-      </a>
-    </div>
-  </div>
 </div>

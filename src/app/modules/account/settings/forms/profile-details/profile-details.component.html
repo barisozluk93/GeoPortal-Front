@@ -1,92 +1,104 @@
-<div *ngIf="user">
-  <div class="mb-8">
-    <h3 class="fw-bold fs-3 mb-1">{{ 'PROFILE_DETAILS' | translate }}</h3>
-    <div class="text-gray-500 fs-6">{{ 'UPDATE_PERSONAL_INFORMATION' | translate }}</div>
+<div class="profile-details" *ngIf="user">
+  <div class="section-heading">
+    <div class="section-heading__icon">
+      <app-keenicon name="profile-circle" class="fs-2"></app-keenicon>
+    </div>
+
+    <div>
+      <h3 class="mb-1">{{ 'PROFILE_DETAILS' | translate }}</h3>
+      <div class="text-muted">{{ 'UPDATE_PERSONAL_INFORMATION' | translate }}</div>
+    </div>
   </div>
 
-  <form [formGroup]="form" novalidate class="form">
-
-    <div class="row g-6">
-
-      <!-- NAME -->
+  <form [formGroup]="form" novalidate class="profile-form">
+    <div class="row g-5">
       <div class="col-md-6">
-        <label class="form-label fw-semibold">{{ 'FIRST_NAME' | translate }}</label>
-
-        <input type="text" class="form-control" formControlName="name" [ngClass]="{
+        <label class="form-label fw-bolder">{{ 'FIRST_NAME' | translate }}</label>
+        <input
+          type="text"
+          class="form-control form-control-lg"
+          formControlName="name"
+          [ngClass]="{
             'is-invalid': form.controls['name'].invalid && (form.controls['name'].dirty || form.controls['name'].touched)
-          }" />
-
-        <div class="invalid-feedback d-block"
-          *ngIf="form.controls['name'].errors?.required && (form.controls['name'].dirty || form.controls['name'].touched)">
+          }"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="form.controls['name'].errors?.required && (form.controls['name'].dirty || form.controls['name'].touched)"
+        >
           {{ 'FIRST_NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
         </div>
       </div>
 
-      <!-- SURNAME -->
       <div class="col-md-6">
-        <label class="form-label fw-semibold">{{ 'LAST_NAME' | translate }}</label>
-
-        <input type="text" class="form-control" formControlName="surname" [ngClass]="{
+        <label class="form-label fw-bolder">{{ 'LAST_NAME' | translate }}</label>
+        <input
+          type="text"
+          class="form-control form-control-lg"
+          formControlName="surname"
+          [ngClass]="{
             'is-invalid': form.controls['surname'].invalid && (form.controls['surname'].dirty || form.controls['surname'].touched)
-          }" />
-
-        <div class="invalid-feedback d-block"
-          *ngIf="form.controls['surname'].errors?.required && (form.controls['surname'].dirty || form.controls['surname'].touched)">
+          }"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="form.controls['surname'].errors?.required && (form.controls['surname'].dirty || form.controls['surname'].touched)"
+        >
           {{ 'LAST_NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
         </div>
       </div>
 
-      <!-- USERNAME -->
       <div class="col-md-6">
-        <label class="form-label fw-semibold">{{ 'USERNAME' | translate }}</label>
-
-        <input type="text" class="form-control" formControlName="username" [ngClass]="{
+        <label class="form-label fw-bolder">{{ 'USERNAME' | translate }}</label>
+        <input
+          type="text"
+          class="form-control form-control-lg"
+          formControlName="username"
+          [ngClass]="{
             'is-invalid': form.controls['username'].invalid && (form.controls['username'].dirty || form.controls['username'].touched)
-          }" />
-
-        <div class="invalid-feedback d-block"
-          *ngIf="form.controls['username'].errors?.required && (form.controls['username'].dirty || form.controls['username'].touched)">
+          }"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="form.controls['username'].errors?.required && (form.controls['username'].dirty || form.controls['username'].touched)"
+        >
           {{ 'USERNAME' | translate }} {{ 'IS_REQUIRED' | translate }}
         </div>
       </div>
 
-      <!-- PHONE -->
       <div class="col-md-6">
-        <label class="form-label fw-semibold">
-          {{ 'CONTRACT_PHONE' | translate }}
-        </label>
-
-        <input type="tel" class="form-control" formControlName="phone" mask="(000) 000 00 00"
-          [showMaskTyped]="true" [dropSpecialCharacters]="false" placeholder="(___) ___ __ __" [ngClass]="{
-      'is-invalid':
-        form.controls['phone'].invalid &&
-        (form.controls['phone'].dirty || form.controls['phone'].touched)
-    }" />
-
-        <!-- REQUIRED -->
-        <div class="invalid-feedback d-block" *ngIf="
-      form.controls['phone'].errors?.['required'] &&
-      (form.controls['phone'].dirty || form.controls['phone'].touched)
-    ">
+        <label class="form-label fw-bolder">{{ 'CONTRACT_PHONE' | translate }}</label>
+        <input
+          type="tel"
+          class="form-control form-control-lg"
+          formControlName="phone"
+          mask="(000) 000 00 00"
+          [showMaskTyped]="true"
+          [dropSpecialCharacters]="false"
+          placeholder="(___) ___ __ __"
+          [ngClass]="{
+            'is-invalid': form.controls['phone'].invalid && (form.controls['phone'].dirty || form.controls['phone'].touched)
+          }"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="form.controls['phone'].errors?.['required'] && (form.controls['phone'].dirty || form.controls['phone'].touched)"
+        >
           {{ 'CONTRACT_PHONE' | translate }} {{ 'IS_REQUIRED' | translate }}
         </div>
-
-        <!-- MASK / PATTERN -->
-        <div class="invalid-feedback d-block" *ngIf="
-      form.controls['phone'].errors?.['pattern'] &&
-      (form.controls['phone'].dirty || form.controls['phone'].touched)
-    ">
+        <div
+          class="invalid-feedback"
+          *ngIf="form.controls['phone'].errors?.['pattern'] && (form.controls['phone'].dirty || form.controls['phone'].touched)"
+        >
           {{ 'INVALID_PHONE' | translate }}
         </div>
       </div>
-
     </div>
 
-    <div class="d-flex justify-content-end mt-8">
+    <div class="profile-form__actions">
       <button type="button" class="btn btn-primary" (click)="saveSettings()">
         {{ 'SAVE_CHANGES' | translate }}
       </button>
     </div>
-
   </form>
 </div>

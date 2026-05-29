@@ -43,27 +43,27 @@
   <div class="card-body p-5 p-lg-6">
     <div class="row g-4 align-items-end">
       <div class="col-12 col-md-6 col-xl-3">
-        <label class="form-label">{{ 'DASHBOARD.FILTER.START_DATE' | translate }}</label>
+        <label class="form-label fw-bolder">{{ 'DASHBOARD.FILTER.START_DATE' | translate }}</label>
         <input
           type="date"
-          class="form-control"
+          class="form-control form-control-lg"
           [(ngModel)]="filters.startDate"
           (ngModelChange)="clearActiveRange()"
         />
       </div>
 
       <div class="col-12 col-md-6 col-xl-3">
-        <label class="form-label">{{ 'DASHBOARD.FILTER.END_DATE' | translate }}</label>
+        <label class="form-label fw-bolder">{{ 'DASHBOARD.FILTER.END_DATE' | translate }}</label>
         <input
           type="date"
-          class="form-control"
+          class="form-control form-control-lg"
           [(ngModel)]="filters.endDate"
           (ngModelChange)="clearActiveRange()"
         />
       </div>
 
       <div class="col-12 col-md-6 col-xl-2">
-        <label class="form-label">{{ 'DASHBOARD.FILTER.CUSTOMER_TYPE' | translate }}</label>
+        <label class="form-label fw-bolder">{{ 'DASHBOARD.FILTER.CUSTOMER_TYPE' | translate }}</label>
 
         <app-custom-select
           [size]="'lg'"
@@ -78,7 +78,7 @@
       </div>
 
       <div class="col-12 col-md-6 col-xl-2">
-        <label class="form-label">{{ 'DASHBOARD.FILTER.CHANNEL' | translate }}</label>
+        <label class="form-label fw-bolder">{{ 'DASHBOARD.FILTER.CHANNEL' | translate }}</label>
 
         <app-custom-select
           [size]="'lg'"

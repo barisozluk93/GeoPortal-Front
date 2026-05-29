@@ -2,50 +2,74 @@
   display: block;
 }
 
+/* QUICK FILTERS */
+.badge {
+  transition: all 0.2s ease;
+}
+
+.badge.active {
+  background-color: var(--bs-primary) !important;
+  color: var(--bs-white) !important;
+}
+
+.badge.badge-light-primary:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.15);
+  color: var(--bs-primary);
+}
+
+/* LIVE INDICATOR */
 .live-dot {
-  width: 8px;
-  height: 8px;
+  width: 0.55rem;
+  height: 0.55rem;
   border-radius: 50%;
   background: var(--bs-success);
-  box-shadow: 0 0 0 4px rgba(var(--bs-success-rgb), 0.15);
+  position: relative;
+  flex-shrink: 0;
 }
 
-.badge.cursor-pointer {
-  transition: all 0.2s ease;
-  user-select: none;
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 1px solid rgba(var(--bs-success-rgb), 0.35);
 }
 
-.badge.cursor-pointer:hover {
-  transform: translateY(-1px);
-  background-color: var(--bs-primary) !important;
-  color: #fff !important;
-}
-
-.badge.cursor-pointer.active {
-  background-color: var(--bs-primary) !important;
-  color: #fff !important;
-  box-shadow: 0 6px 16px rgba(var(--bs-primary-rgb), 0.24);
-}
-
+/* FILTER CARD */
 .card {
-  background: var(--glass-surface);
-  border: 1px solid var(--bs-card-border-color, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--bs-border-color);
+  background: var(--bs-card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--bs-border-color);
 }
 
-app-custom-select {
-  display: block;
+/* CUSTOM SELECT */
+:host ::ng-deep .ng-select-container {
+  min-height: calc(1.5em + 1.65rem + 2px);
+  border-color: var(--bs-border-color);
+  background: var(--bs-body-bg);
 }
 
-app-custom-select .form-control {
-  height: 46px;
+:host ::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border-color: rgba(var(--bs-primary-rgb), 0.45);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.12);
 }
 
-app-custom-select .form-control.open {
-  box-shadow: 0 0 0 2px rgba(var(--bs-primary-rgb), 0.15);
+/* RESPONSIVE */
+@media (max-width: 991.98px) {
+  .card-body {
+    padding: 1.5rem !important;
+  }
 }
 
-@media (max-width: 767px) {
-  .d-md-flex {
-    flex-direction: column !important;
+@media (max-width: 767.98px) {
+  .badge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .d-grid.d-md-flex {
+    grid-template-columns: 1fr;
   }
 }

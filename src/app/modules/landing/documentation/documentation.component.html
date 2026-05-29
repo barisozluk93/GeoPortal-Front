@@ -1,57 +1,58 @@
 <div class="api-doc-page">
   <section class="api-doc-hero">
     <div class="container-fluid">
-      <div class="card border-0 hero-main-card position-relative overflow-hidden">
-        <div class="hero-bg"></div>
-        <div class="hero-overlay"></div>
+      <div class="card api-doc-shell border-0 overflow-hidden">
+        <div class="card-body p-0">
+          <div class="row g-0 api-doc-hero-row">
 
-        <div class="card-body p-6 p-lg-10 position-relative z-index-1">
-          <div class="row g-7 align-items-stretch">
-            <div class="col-12 col-xl-8">
-              <div class="hero-content-wrap">
-                <div class="badge badge-light-primary mb-5">
+            <div class="col-12 col-xl-7">
+              <div class="api-doc-hero-content h-100 p-8 p-lg-12 d-flex flex-column justify-content-center">
+                <div class="badge badge-light-primary api-doc-hero-badge mb-5">
                   {{ 'API_DOC.HERO.KICKER' | translate }}
                 </div>
 
-                <h1 class="text-white fw-bolder lh-sm fs-1 fs-lg-3x mb-5 hero-title">
+                <h1 class="fw-bolder fs-2x fs-lg-4x mb-5">
                   {{ 'API_DOC.HERO.TITLE' | translate }}
                 </h1>
 
-                <p class="text-muted fs-5 mb-6 hero-copy">
+                <p class="text-muted fs-4 fw-semibold mw-700px mb-8">
                   {{ 'API_DOC.HERO.DESCRIPTION' | translate }}
                 </p>
 
-                <div class="card bg-transparent border border-white border-opacity-10 shadow-none hero-search-card">
-                  <div class="card-body p-4 p-lg-5">
+                <div class="api-doc-search card border-0 mw-800px">
+                  <div class="card-body p-4">
                     <div class="row g-4">
                       <div class="col-12 col-md-4">
-                        <div class="rounded-4 border border-white border-opacity-10 p-4 h-100 hero-meta-item">
-                          <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
+                        <div class="api-doc-meta-card">
+                          <div class="api-doc-meta-label text-primary">
                             {{ 'API_DOC.HERO.BASE_URL' | translate }}
                           </div>
-                          <div class="endpoint-code rounded-3 px-3 py-2">
+
+                          <div class="api-doc-url">
                             <code>{{ baseUrl }}</code>
                           </div>
                         </div>
                       </div>
 
                       <div class="col-12 col-md-4">
-                        <div class="rounded-4 border border-white border-opacity-10 p-4 h-100 hero-meta-item">
-                          <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
+                        <div class="api-doc-meta-card">
+                          <div class="api-doc-meta-label text-primary">
                             {{ 'API_DOC.HERO.AUTHENTICATION' | translate }}
                           </div>
-                          <div class="text-white fw-bolder fs-4">
+
+                          <div class="api-doc-meta-value">
                             x-api-key
                           </div>
                         </div>
                       </div>
 
                       <div class="col-12 col-md-4">
-                        <div class="rounded-4 border border-white border-opacity-10 p-4 h-100 hero-meta-item">
-                          <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
+                        <div class="api-doc-meta-card">
+                          <div class="api-doc-meta-label text-primary">
                             {{ 'API_DOC.HERO.AVAILABLE_ENDPOINTS' | translate }}
                           </div>
-                          <div class="text-white fw-bolder fs-2">
+
+                          <div class="api-doc-meta-value fs-2">
                             {{ endpoints.length }}
                           </div>
                         </div>
@@ -63,35 +64,32 @@
               </div>
             </div>
 
-            <div class="col-12 col-xl-4">
-              <div class="card h-100 border border-white border-opacity-10 bg-transparent hero-side-card">
-                <div class="card-body p-6">
-                  <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
+            <div class="col-12 col-xl-5">
+              <div class="api-doc-panel h-100 p-8 p-lg-10">
+                <div class="api-doc-panel-header mb-8">
+                  <div class="api-doc-panel-kicker">
                     {{ 'API_DOC.SIDEBAR.KICKER' | translate }}
                   </div>
 
-                  <h3 class="text-white fw-bolder fs-2 mb-2">
+                  <h3 class="api-doc-panel-title">
                     {{ 'API_DOC.SIDEBAR.TITLE' | translate }}
                   </h3>
+                </div>
 
-                  <p class="text-muted fs-6 mb-6">
-                    {{ 'API_DOC.SIDEBAR.SUBTITLE' | translate }}
-                  </p>
+                <div class="api-doc-mini-list">
+                  <div class="api-doc-mini-card" *ngFor="let item of navItems | slice:0:4">
+                    <div class="api-doc-mini-icon">
+                      <i class="ki-outline ki-code fs-2"></i>
+                    </div>
 
-                  <div class="d-flex flex-column gap-3">
-                    <div
-                      class="rounded-4 border border-white border-opacity-10 p-4 hero-nav-preview-item"
-                      *ngFor="let item of navItems | slice:0:4"
-                    >
-                      <div class="d-flex align-items-center gap-3">
-                        <span class="bullet bullet-dot bg-primary"></span>
-                        <span class="text-white fw-semibold fs-7">
-                          {{ item.labelKey | translate }}
-                        </span>
+                    <div>
+                      <div class="api-doc-mini-title">
+                        {{ item.labelKey | translate }}
                       </div>
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
 
@@ -101,72 +99,65 @@
     </div>
   </section>
 
-  <section class="api-doc-content" #contentSection>
+  <section class="api-doc-content">
     <div class="container-fluid">
       <div class="row g-7 align-items-start">
-        <div class="col-12 col-xl-3" #sidebarColumn>
-          <div class="api-doc-sidebar-placeholder"></div>
 
-          <div
-            #sidebarCard
-            class="card border-0 api-doc-sidebar-card"
-            [class.is-fixed]="sidebarMode === 'fixed'"
-            [class.is-bottom]="sidebarMode === 'bottom'"
-            [ngStyle]="sidebarStyles"
-          >
-            <div class="card-body p-6">
-              <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
-                {{ 'API_DOC.SIDEBAR.KICKER' | translate }}
+        <div class="col-12 col-xl-3 api-doc-sidebar-col">
+          <aside class="api-doc-sidebar-sticky">
+            <div class="card border-0 api-doc-sidebar-card">
+              <div class="card-body p-6">
+                <div class="api-doc-sidebar-kicker text-primary">
+                  {{ 'API_DOC.SIDEBAR.KICKER' | translate }}
+                </div>
+
+                <div class="api-doc-sidebar-title">
+                  {{ 'API_DOC.SIDEBAR.TITLE' | translate }}
+                </div>
+
+                <div class="api-doc-sidebar-desc">
+                  {{ 'API_DOC.SIDEBAR.SUBTITLE' | translate }}
+                </div>
+
+                <nav class="api-doc-nav">
+                  <button
+                    type="button"
+                    class="api-doc-nav-btn"
+                    *ngFor="let item of navItems"
+                    (click)="scrollTo(item.id)"
+                  >
+                    <span class="api-doc-nav-bullet"></span>
+                    <span>{{ item.labelKey | translate }}</span>
+                  </button>
+                </nav>
               </div>
-
-              <div class="text-white fw-bolder fs-3 mb-2">
-                {{ 'API_DOC.SIDEBAR.TITLE' | translate }}
-              </div>
-
-              <div class="text-muted fs-7">
-                {{ 'API_DOC.SIDEBAR.SUBTITLE' | translate }}
-              </div>
-
-              <nav class="d-flex flex-column gap-2 mt-5">
-                <button
-                  type="button"
-                  class="btn btn-active-light-primary btn-color-gray-300 btn-flex justify-content-start text-start px-4 py-3 nav-doc-btn"
-                  *ngFor="let item of navItems"
-                  (click)="scrollTo(item.id)"
-                >
-                  <span class="bullet bullet-dot bg-primary me-3"></span>
-                  <span class="fw-semibold fs-7">
-                    {{ item.labelKey | translate }}
-                  </span>
-                </button>
-              </nav>
             </div>
-          </div>
+          </aside>
         </div>
 
-        <div class="col-12 col-xl-9" #mainContent>
+        <div class="col-12 col-xl-9">
           <div class="d-flex flex-column gap-7">
 
             <section id="overview" class="card border-0 api-doc-section">
-              <div class="card-body p-6 p-lg-7">
-                <div class="text-primary fw-bold fs-8 text-uppercase mb-3">
+              <div class="card-body p-6 p-lg-8">
+                <div class="section-kicker text-primary">
                   {{ 'API_DOC.NAV.OVERVIEW' | translate }}
                 </div>
 
-                <h2 class="text-white fw-bolder fs-2 mb-4">
+                <h2>
                   {{ 'API_DOC.HERO.TITLE' | translate }}
                 </h2>
 
-                <p class="text-muted fs-6 lh-lg mb-5">
+                <p class="text-muted fs-6 lh-lg mb-6">
                   {{ 'API_DOC.HERO.DESCRIPTION' | translate }}
                 </p>
 
-                <div class="rounded-4 border border-white border-opacity-10 p-4 section-note">
-                  <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
+                <div class="api-doc-info-box">
+                  <div class="api-doc-info-label text-primary">
                     {{ 'API_DOC.HERO.BASE_URL' | translate }}
                   </div>
 
-                  <div class="endpoint-code rounded-3 px-3 py-2">
+                  <div class="api-doc-url">
                     <code>{{ baseUrl }}</code>
                   </div>
                 </div>
@@ -174,18 +165,18 @@
             </section>
 
             <section id="authentication" class="card border-0 api-doc-section">
-              <div class="card-body p-6 p-lg-7">
-                <div class="text-primary fw-bold fs-8 text-uppercase mb-3">
+              <div class="card-body p-6 p-lg-8">
+                <div class="section-kicker text-primary">
                   {{ 'API_DOC.AUTH.KICKER' | translate }}
                 </div>
 
-                <h2 class="text-white fw-bolder fs-2 mb-4">
+                <h2>
                   {{ 'API_DOC.AUTH.TITLE' | translate }}
                 </h2>
 
-                <p class="text-muted fs-6 lh-lg mb-5">
+                <p class="text-muted fs-6 lh-lg mb-6">
                   {{ 'API_DOC.AUTH.DESCRIPTION' | translate }}
-                  <code>x-api-key</code>
+                  <code class="text-primary fw-bold">x-api-key</code>
                   {{ 'API_DOC.AUTH.DESCRIPTION_CONTINUE' | translate }}
                 </p>
 
@@ -196,16 +187,16 @@
             </section>
 
             <section id="response-format" class="card border-0 api-doc-section">
-              <div class="card-body p-6 p-lg-7">
-                <div class="text-primary fw-bold fs-8 text-uppercase mb-3">
+              <div class="card-body p-6 p-lg-8">
+                <div class="section-kicker text-primary">
                   {{ 'API_DOC.RESPONSE.KICKER' | translate }}
                 </div>
 
-                <h2 class="text-white fw-bolder fs-2 mb-4">
+                <h2>
                   {{ 'API_DOC.RESPONSE.TITLE' | translate }}
                 </h2>
 
-                <p class="text-muted fs-6 lh-lg mb-5">
+                <p class="text-muted fs-6 lh-lg mb-6">
                   {{ 'API_DOC.RESPONSE.DESCRIPTION' | translate }}
                 </p>
 
@@ -224,70 +215,82 @@
               [id]="endpoint.id"
               class="card border-0 api-doc-section"
             >
-              <div class="card-body p-6 p-lg-7">
-                <div class="d-flex flex-column flex-lg-row align-items-lg-start justify-content-between gap-4 mb-4">
+              <div class="card-body p-6 p-lg-8">
+                <div class="api-doc-endpoint-head">
                   <div class="min-w-0">
-                    <div class="text-primary fw-bold fs-8 text-uppercase mb-3">
+                    <div class="section-kicker text-primary">
                       {{ endpoint.titleKey | translate }}
                     </div>
 
-                    <h2 class="text-white fw-bolder fs-2 mb-0 endpoint-title">
+                    <h2 class="api-doc-endpoint-title">
                       {{ baseUrl }}{{ endpoint.path }}
                     </h2>
                   </div>
 
-                  <span [class]="getMethodClass(endpoint.method)">
+                  <span [class]="getMethodClass(endpoint.method)" class="text-white">
                     {{ endpoint.method }}
                   </span>
                 </div>
 
-                <p class="text-muted fs-6 lh-lg mb-5">
+                <p class="text-muted fs-6 lh-lg mb-6">
                   {{ endpoint.descriptionKey | translate }}
                 </p>
 
-                <div class="row g-5 mb-6">
+                <div class="row g-5 mb-7">
                   <div class="col-12 col-lg-6">
-                    <div class="rounded-4 border border-white border-opacity-10 p-4 h-100 section-note">
-                      <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
+                    <div class="api-doc-info-box h-100">
+                      <div class="api-doc-info-label text-primary">
                         {{ 'API_DOC.COMMON.ENDPOINT' | translate }}
                       </div>
-                      <div class="text-white fw-semibold fs-6 text-break">
-                        {{ endpoint.method }} {{ endpoint.path }}
+
+                      <div class="api-doc-url">
+                        <code>{{ endpoint.method }} {{ endpoint.path }}</code>
                       </div>
                     </div>
                   </div>
 
                   <div class="col-12 col-lg-6">
-                    <div class="rounded-4 border border-white border-opacity-10 p-4 h-100 section-note">
-                      <div class="text-primary fw-bold fs-8 text-uppercase mb-2">
+                    <div class="api-doc-info-box h-100">
+                      <div class="api-doc-info-label text-primary">
                         {{ 'API_DOC.COMMON.AUTHENTICATION' | translate }}
                       </div>
-                      <div class="text-white fw-semibold fs-6">
+
+                      <div class="text-dark fw-bold fs-6">
                         {{ endpoint.authKey | translate }}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <h3 class="text-white fw-bolder fs-4 mb-4">
+                <h3>
                   {{ 'API_DOC.COMMON.HEADERS' | translate }}
                 </h3>
 
-                <div class="table-responsive mb-6">
+                <div class="table-responsive mb-7">
                   <table class="table align-middle gs-0 gy-4 api-doc-table">
                     <thead>
-                      <tr class="fw-bold text-muted bg-transparent">
-                        <th class="min-w-125px">{{ 'API_DOC.TABLE.KEY' | translate }}</th>
-                        <th class="min-w-125px">{{ 'API_DOC.TABLE.VALUE' | translate }}</th>
-                        <th class="min-w-100px">{{ 'API_DOC.TABLE.REQUIRED' | translate }}</th>
+                      <tr>
+                        <th>{{ 'API_DOC.TABLE.KEY' | translate }}</th>
+                        <th>{{ 'API_DOC.TABLE.VALUE' | translate }}</th>
+                        <th>{{ 'API_DOC.TABLE.REQUIRED' | translate }}</th>
                       </tr>
                     </thead>
+
                     <tbody>
                       <tr *ngFor="let header of endpoint.requestHeaders">
-                        <td class="text-white fw-semibold">{{ header.key }}</td>
-                        <td class="text-muted">{{ header.value }}</td>
+                        <td class="text-dark fw-semibold">
+                          {{ header.key }}
+                        </td>
+
+                        <td class="text-muted">
+                          {{ header.value }}
+                        </td>
+
                         <td>
-                          <span class="badge" [ngClass]="header.required ? 'badge-light-primary' : 'badge-light'">
+                          <span
+                            class="badge"
+                            [ngClass]="header.required ? 'badge-light-primary' : 'badge-light'"
+                          >
                             {{
                               header.required
                                 ? ('API_DOC.COMMON.YES' | translate)
@@ -301,51 +304,47 @@
                 </div>
 
                 <ng-container *ngIf="endpoint.requestBody">
-                  <h3 class="text-white fw-bolder fs-4 mb-4">
+                  <h3>
                     {{ 'API_DOC.COMMON.REQUEST_BODY' | translate }}
                   </h3>
 
-                  <div class="api-doc-codeblock mb-6">
+                  <div class="api-doc-codeblock mb-7">
 <pre><code>{{ endpoint.requestBody }}</code></pre>
                   </div>
                 </ng-container>
 
                 <ng-container *ngIf="endpoint.responseBody">
-                  <h3 class="text-white fw-bolder fs-4 mb-4">
+                  <h3>
                     {{ 'API_DOC.COMMON.RESPONSE_EXAMPLE' | translate }}
                   </h3>
 
-                  <div class="api-doc-codeblock mb-6">
+                  <div class="api-doc-codeblock mb-7">
 <pre><code>{{ endpoint.responseBody }}</code></pre>
                   </div>
                 </ng-container>
 
                 <ng-container *ngIf="endpoint.curlExample">
-                  <h3 class="text-white fw-bolder fs-4 mb-4">
+                  <h3>
                     {{ 'API_DOC.COMMON.CURL_EXAMPLE' | translate }}
                   </h3>
 
-                  <div class="api-doc-codeblock mb-6">
+                  <div class="api-doc-codeblock mb-7">
 <pre><code>{{ endpoint.curlExample }}</code></pre>
                   </div>
                 </ng-container>
 
                 <ng-container *ngIf="endpoint.notesKeys?.length">
-                  <h3 class="text-white fw-bolder fs-4 mb-4">
+                  <h3>
                     {{ 'API_DOC.COMMON.NOTES' | translate }}
                   </h3>
 
                   <div class="d-flex flex-column gap-3">
-                    <div
-                      class="rounded-4 border border-white border-opacity-10 p-4 note-item"
-                      *ngFor="let noteKey of endpoint.notesKeys"
-                    >
-                      <div class="d-flex align-items-start gap-3">
-                        <i class="ki-outline ki-information-5 text-primary fs-3 mt-1"></i>
-                        <span class="text-muted fs-6 lh-lg">
-                          {{ noteKey | translate }}
-                        </span>
-                      </div>
+                    <div class="api-doc-note" *ngFor="let noteKey of endpoint.notesKeys">
+                      <i class="ki-outline ki-information-5 text-primary fs-3 mt-1"></i>
+
+                      <span>
+                        {{ noteKey | translate }}
+                      </span>
                     </div>
                   </div>
                 </ng-container>
@@ -353,16 +352,16 @@
             </section>
 
             <section id="product-model" class="card border-0 api-doc-section">
-              <div class="card-body p-6 p-lg-7">
-                <div class="text-primary fw-bold fs-8 text-uppercase mb-3">
+              <div class="card-body p-6 p-lg-8">
+                <div class="section-kicker text-primary">
                   {{ 'API_DOC.MODEL.KICKER' | translate }}
                 </div>
 
-                <h2 class="text-white fw-bolder fs-2 mb-4">
+                <h2>
                   {{ 'API_DOC.MODEL.TITLE' | translate }}
                 </h2>
 
-                <p class="text-muted fs-6 lh-lg mb-5">
+                <p class="text-muted fs-6 lh-lg mb-6">
                   {{ 'API_DOC.MODEL.DESCRIPTION' | translate }}
                 </p>
 
@@ -373,46 +372,52 @@
             </section>
 
             <section id="error-codes" class="card border-0 api-doc-section">
-              <div class="card-body p-6 p-lg-7">
-                <div class="text-primary fw-bold fs-8 text-uppercase mb-3">
+              <div class="card-body p-6 p-lg-8">
+                <div class="section-kicker text-primary">
                   {{ 'API_DOC.ERRORS.KICKER' | translate }}
                 </div>
 
-                <h2 class="text-white fw-bolder fs-2 mb-4">
+                <h2>
                   {{ 'API_DOC.ERRORS.TITLE' | translate }}
                 </h2>
 
                 <div class="table-responsive">
                   <table class="table align-middle gs-0 gy-4 api-doc-table">
                     <thead>
-                      <tr class="fw-bold text-muted bg-transparent">
-                        <th class="min-w-100px">{{ 'API_DOC.TABLE.STATUS_CODE' | translate }}</th>
+                      <tr>
+                        <th>{{ 'API_DOC.TABLE.STATUS_CODE' | translate }}</th>
                         <th>{{ 'API_DOC.TABLE.DESCRIPTION' | translate }}</th>
                       </tr>
                     </thead>
+
                     <tbody>
                       <tr>
-                        <td class="text-white fw-semibold">200</td>
+                        <td class="text-dark fw-semibold">200</td>
                         <td class="text-muted">{{ 'API_DOC.ERRORS.CODES.200' | translate }}</td>
                       </tr>
+
                       <tr>
-                        <td class="text-white fw-semibold">400</td>
+                        <td class="text-dark fw-semibold">400</td>
                         <td class="text-muted">{{ 'API_DOC.ERRORS.CODES.400' | translate }}</td>
                       </tr>
+
                       <tr>
-                        <td class="text-white fw-semibold">401</td>
+                        <td class="text-dark fw-semibold">401</td>
                         <td class="text-muted">{{ 'API_DOC.ERRORS.CODES.401' | translate }}</td>
                       </tr>
+
                       <tr>
-                        <td class="text-white fw-semibold">403</td>
+                        <td class="text-dark fw-semibold">403</td>
                         <td class="text-muted">{{ 'API_DOC.ERRORS.CODES.403' | translate }}</td>
                       </tr>
+
                       <tr>
-                        <td class="text-white fw-semibold">404</td>
+                        <td class="text-dark fw-semibold">404</td>
                         <td class="text-muted">{{ 'API_DOC.ERRORS.CODES.404' | translate }}</td>
                       </tr>
+
                       <tr>
-                        <td class="text-white fw-semibold">500</td>
+                        <td class="text-dark fw-semibold">500</td>
                         <td class="text-muted">{{ 'API_DOC.ERRORS.CODES.500' | translate }}</td>
                       </tr>
                     </tbody>
@@ -423,6 +428,7 @@
 
           </div>
         </div>
+
       </div>
     </div>
   </section>

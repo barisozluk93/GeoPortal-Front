@@ -24,7 +24,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isScrolled: boolean = false;
 
   @ViewChild('ktPageTitle', { static: true }) ktPageTitle!: ElementRef;
+
   isAdmin: boolean = false;
+
   @Input() isUserLoggedIn: boolean = false;
   @Input() isMobile: boolean = false;
 
@@ -39,7 +41,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isAdmin = this.auth.currentUserValue?.roles.includes(RoleEnum.SuperAdmin) ? true : false;
+    this.isAdmin = this.auth.currentUserValue?.roles.includes(
+      RoleEnum.SuperAdmin
+    )
+      ? true
+      : false;
 
     this.headerContainerCssClasses =
       this.layout.getStringCSSClasses('headerContainer');
@@ -67,15 +73,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribe.forEach((sb) => sb.unsubscribe());
+    this.unsubscribe.forEach((subscription) => subscription.unsubscribe());
   }
 
-  onBrandClick() {
-    if(this.isAdmin) {
+  onBrandClick(): void {
+    if (this.isAdmin) {
       this.router.navigate(['/dashboard']);
+      return;
     }
-    else {
-      this.router.navigate(['/landing/marketplace'])
-    }
+
+    this.router.navigate(['/landing/data']);
   }
 }

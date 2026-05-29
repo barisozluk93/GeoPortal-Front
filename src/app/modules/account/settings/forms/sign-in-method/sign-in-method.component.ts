@@ -11,6 +11,7 @@ import { UserManagementService } from 'src/app/modules/user-management/user-mana
 @Component({
   selector: 'app-sign-in-method',
   templateUrl: './sign-in-method.component.html',
+  styleUrls: ['./sign-in-method.component.scss']
 })
 export class SignInMethodComponent implements OnInit, OnDestroy, OnChanges {
   showChangeEmailForm: boolean = false;

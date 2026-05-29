@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslationService } from '../../../../../../modules/i18n';
 import { AuthService } from '../../../../../../modules/auth';
@@ -9,20 +9,23 @@ import { RoleEnum } from 'src/app/enums/role.enum';
 @Component({
   selector: 'app-user-inner',
   templateUrl: './user-inner.component.html',
+  styleUrls: ['./user-inner.component.scss'],
 })
 export class UserInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class')
   class =
-    'menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 fw-semibold py-3 fs-6 w-300px border border-gray-200 bg-body shadow-sm';
+    'user-menu-dropdown menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 fw-semibold py-3 fs-6 w-300px border border-gray-200 bg-body shadow-sm';
 
   @HostBinding('attr.data-kt-menu')
   dataKtMenu = 'true';
 
-  isAdmin: boolean = false;
+  isAdmin = false;
+  langDropdownOpen = false;
 
   language!: LanguageFlag;
   user!: UserModel;
   langs = languages;
+
   private unsubscribe: Subscription[] = [];
 
   constructor(
@@ -34,10 +37,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const authSub = this.auth.currentUserSubject.subscribe((auth) => {
       if (auth?.id) {
-        this.isAdmin = auth.roles.includes(RoleEnum.SuperAdmin) ? true : false;
+        this.isAdmin = auth.roles.includes(RoleEnum.SuperAdmin);
         this.userManagementService.updateUser(auth.id);
-      }
-      else{
+      } else {
         this.isAdmin = false;
       }
     });
@@ -49,28 +51,41 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     });
 
     this.unsubscribe.push(authSub, userSub);
-
     this.setLanguage(this.translationService.getSelectedLanguage());
   }
 
-  logout(): void {
-    this.auth.logout();
+  openLangDropdown(): void {
+    this.langDropdownOpen = true;
+  }
+
+  closeLangDropdown(): void {
+    this.langDropdownOpen = false;
+  }
+
+  toggleLangDropdown(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.langDropdownOpen = !this.langDropdownOpen;
   }
 
   selectLanguage(lang: string): void {
     this.translationService.setLanguage(lang);
     this.setLanguage(lang);
+    this.langDropdownOpen = false;
   }
 
   setLanguage(lang: string): void {
     this.langs.forEach((language: LanguageFlag) => {
+      language.active = language.lang === lang;
+
       if (language.lang === lang) {
-        language.active = true;
         this.language = language;
-      } else {
-        language.active = false;
       }
     });
+  }
+
+  logout(): void {
+    this.auth.logout();
   }
 
   ngOnDestroy(): void {

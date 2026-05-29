@@ -40,7 +40,6 @@ import { LayerMapDrawerComponent } from './layer/map-drawer/layer-map-drawer.com
     InlineSVGModule,
     CustomModalModule,
     CustomSelectModule,
-    LandingModule
   ],
 })
 export class MapManagementModule {}
