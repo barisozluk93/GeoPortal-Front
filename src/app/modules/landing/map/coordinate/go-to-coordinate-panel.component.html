@@ -1,88 +1,59 @@
 <div
-  class="go-coordinate-panel"
+  class="go-coordinate-panel-body"
   (click)="$event.stopPropagation()"
   (mousedown)="$event.stopPropagation()"
   (mouseup)="$event.stopPropagation()"
 >
-  <div class="go-coordinate-panel__header">
-    <div class="go-coordinate-panel__title">
-      <i class="fa-solid fa-location-crosshairs text-primary"></i>
-      {{ 'MAP.COORDINATE_PANEL.TITLE' | translate }}
+  <div class="mb-4">
+    <label class="form-label go-coordinate-label">
+      {{ 'MAP.COORDINATE_PANEL.LATITUDE' | translate }}
+    </label>
+
+    <input
+      type="number"
+      class="form-control form-control-lg"
+      [class.is-invalid]="latitudeRequiredError || coordinateInvalidError"
+      [placeholder]="'MAP.COORDINATE_PANEL.LATITUDE_PLACEHOLDER' | translate"
+      [(ngModel)]="latitude"
+      (ngModelChange)="onLatitudeInput()"
+      (keydown.enter)="goToCoordinate()"
+    />
+
+    <div class="invalid-feedback d-block" *ngIf="latitudeRequiredError">
+      {{ 'MAP.COMMON.REQUIRED' | translate }}
     </div>
   </div>
 
-  <div class="go-coordinate-panel__body">
-    
-    <!-- ENLEM -->
-    <div class="mb-4">
-      <label class="form-label fw-bolder">
-        {{ 'MAP.COORDINATE_PANEL.LATITUDE' | translate }}
-      </label>
+  <div class="mb-4">
+    <label class="form-label go-coordinate-label">
+      {{ 'MAP.COORDINATE_PANEL.LONGITUDE' | translate }}
+    </label>
 
-      <input
-        type="number"
-        class="form-control form-control-lg"
-        [class.is-invalid]="latitudeRequiredError || coordinateInvalidError"
-        [placeholder]="'MAP.COORDINATE_PANEL.LATITUDE_PLACEHOLDER' | translate"
-        [(ngModel)]="latitude"
-        (ngModelChange)="onLatitudeInput()"
-        (keydown.enter)="goToCoordinate()"
-      />
+    <input
+      type="number"
+      class="form-control form-control-lg"
+      [class.is-invalid]="longitudeRequiredError || coordinateInvalidError"
+      [placeholder]="'MAP.COORDINATE_PANEL.LONGITUDE_PLACEHOLDER' | translate"
+      [(ngModel)]="longitude"
+      (ngModelChange)="onLongitudeInput()"
+      (keydown.enter)="goToCoordinate()"
+    />
 
-      <div
-        class="invalid-feedback d-block"
-        *ngIf="latitudeRequiredError"
-      >
-        {{ 'MAP.COMMON.REQUIRED' | translate }}
-      </div>
-
-    </div>
-
-    <!-- BOYLAM -->
-
-    <div class="mb-4">
-      <label class="form-label fw-bolder">
-        {{ 'MAP.COORDINATE_PANEL.LONGITUDE' | translate }}
-      </label>
-
-      <input
-        type="number"
-        class="form-control form-control-lg"
-        [class.is-invalid]="longitudeRequiredError || coordinateInvalidError"
-        [placeholder]="'MAP.COORDINATE_PANEL.LONGITUDE_PLACEHOLDER' | translate"
-        [(ngModel)]="longitude"
-        (ngModelChange)="onLongitudeInput()"
-        (keydown.enter)="goToCoordinate()"
-      />
-
-      <div
-        class="invalid-feedback d-block"
-        *ngIf="longitudeRequiredError"
-      >
-        {{ 'MAP.COMMON.REQUIRED' | translate }}
-      </div>
-    </div>
-
-    <!-- KOORDİNAT FORMAT HATASI -->
-
-    <div
-      class="invalid-feedback d-block mb-4"
-      *ngIf="coordinateInvalidError"
-    >
-      {{ 'MAP.COORDINATE_PANEL.INVALID' | translate }}
-    </div>
-
-    <!-- AKSİYONLAR -->
-
-    <div class="d-flex">
-      <button
-        type="button"
-        class="btn btn-primary w-100"
-        (click)="goToCoordinate()"
-      >
-        <i class="fa-solid fa-crosshairs me-2"></i>
-        {{ 'MAP.COORDINATE_PANEL.GO' | translate }}
-      </button>
+    <div class="invalid-feedback d-block" *ngIf="longitudeRequiredError">
+      {{ 'MAP.COMMON.REQUIRED' | translate }}
     </div>
   </div>
+
+  <div class="invalid-feedback d-block mb-4" *ngIf="coordinateInvalidError">
+    {{ 'MAP.COORDINATE_PANEL.INVALID' | translate }}
+  </div>
+
+  <button
+    type="button"
+    class="btn btn-primary w-100"
+    (click)="goToCoordinate()"
+  >
+    <i class="fa-solid fa-crosshairs me-2"></i>
+    {{ 'MAP.COORDINATE_PANEL.GO' | translate }}
+  </button>
 </div>

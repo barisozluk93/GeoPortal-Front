@@ -1,218 +1,115 @@
-.layer-drawer-overlay {
-  position: fixed;
+
+.map-preview-drawer-backdrop {
+   position: fixed;
   inset: 0;
-  z-index: 1090;
-  background: rgba(3, 10, 22, 0.48);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  animation: layerFadeIn 0.25s ease;
+  z-index: 1040;
+
+  background: rgba(0, 0, 0, 0.55) !important;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  animation: mapPreviewBackdropFade 0.25s ease;
 }
 
 .layer-drawer {
   position: fixed;
   top: 0;
   right: 0;
-  height: 100vh;
-  z-index: 1095;
 
-  transform: translateX(100%);
-  transition: transform 0.35s ease;
+  width: min(950px, 92vw);
+  height: 100vh;
+
+  z-index: 9999;
 
   display: flex;
   flex-direction: column;
-  border-radius: 0;
+
+  background: var(--bs-body-bg);
+
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.18);
+
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+
+  isolation: isolate;
 
   &.open {
     transform: translateX(0);
   }
+}
 
-  &--map {
-    width: min(52vw, 980px);
-    min-width: 420px;
-  }
+.layer-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  &__card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border-radius: 0 !important;
-  
-    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  flex-shrink: 0;
 
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
+  min-height: 56px;
+  padding: 0.75rem 1rem;
 
-    box-shadow:
-      -24px 0 48px rgba(0, 0, 0, 0.28),
-      inset 1px 0 0 rgba(255, 255, 255, 0.04);
+  background: var(--bs-body-bg);
+  border-bottom: 1px solid var(--bs-border-color);
+}
 
+.layer-drawer__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  min-width: 0;
+
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bs-gray-900);
+
+  span {
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  &__header {
-    min-height: auto !important;
-    padding: 1.4rem 1.5rem !important;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
-
-    .card-title {
-      gap: 0.35rem;
-    }
-  }
-
-  &__kicker {
-    margin-bottom: 0.35rem !important;
-    color: var(--bs-primary) !important;
-    font-size: 0.75rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-  }
-
-  &__title {
-    margin: 0;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #ffffff;
-    line-height: 1.35;
-  }
-
-  &__body {
-    flex: 1;
-    padding: 0 !important;
-    overflow: hidden;
+  i {
+    flex-shrink: 0;
+    font-size: 1rem;
   }
 }
 
-/* =========================================================
-   DRAWER CLOSE BUTTON
-========================================================= */
+.layer-drawer__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 
-.layer-drawer {
-  .btn.btn-secondary {
-    width: 42px;
-    height: 42px;
-    padding: 0 !important;
-    border-radius: 14px !important;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-
-    transition: all 0.22s ease;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
-      transform: translateY(-1px);
-    }
-
-    .svg-icon {
-      color: rgba(255, 255, 255, 0.8) !important;
-    }
-
-    svg path {
-      fill: currentColor !important;
-    }
-  }
+  flex-shrink: 0;
 }
 
-/* =========================================================
-   MAP CONTAINER
-========================================================= */
+.layer-drawer__body {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  overflow: hidden;
+}
 
 .layer-map {
-  height: 100%;
+  flex: 1;
   width: 100%;
-
-  overflow: hidden;
-
-  border: 1px solid rgba(255, 255, 255, 0.06);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 16px 36px rgba(0, 0, 0, 0.18);
-
-  position: relative;
-
-  app-map,
-  #map,
-  .map-container,
-  .ol-viewport {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+  height: 100%;
 }
 
-/* =========================================================
-   DATATABLE GLASS ALIGNMENT
-========================================================= */
-
-::ng-deep {
-  app-datatable {
-    display: block;
-
-    .card {
-      background: transparent !important;
-      box-shadow: none !important;
-      border: 0 !important;
-    }
-  }
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width: 1400px) {
-  .layer-drawer {
-    &--map {
-      width: min(62vw, 900px);
-    }
-  }
-}
-
-@media (max-width: 1100px) {
-  .layer-drawer {
-    &--map {
-      width: min(74vw, 760px);
-      min-width: 360px;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .layer-drawer {
-    &--map {
-      width: 100vw;
-      min-width: unset;
-    }
-
-    &__header {
-      padding: 1rem !important;
-    }
-
-    &__body {
-      padding: 0 !important;
-    }
-  }
-}
-
-/* =========================================================
-   ANIMATION
-========================================================= */
-
-@keyframes layerFadeIn {
+@keyframes mapPreviewBackdropFade {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
+  }
+}
+
+@media (max-width: 1200px) {
+  .layer-drawer {
+    width: 100vw;
   }
 }

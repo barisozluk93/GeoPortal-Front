@@ -1,0 +1,179 @@
+<div
+  class="smart-product-filter-panel"
+  (click)="$event.stopPropagation()"
+  (mousedown)="$event.stopPropagation()"
+  (mouseup)="$event.stopPropagation()"
+>
+  <div class="smart-product-filter-panel__body">
+    <div class="filter-field filter-field--full">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.IMAGE_TYPE' | translate }}
+      </label>
+
+      <app-custom-select
+        [items]="imageTypes"
+        bindLabel="label"
+        bindValue="value"
+        [multiple]="false"
+        [clearable]="true"
+        [(ngModel)]="draft.imageType"
+        [ngModelOptions]="{ standalone: true }"
+      >
+      </app-custom-select>
+    </div>
+
+    <div class="filter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.START_DATE' | translate }}
+      </label>
+
+      <input
+        type="date"
+        class="form-control form-control-lg"
+        [(ngModel)]="draft.acquisitionStartDate"
+      />
+    </div>
+
+    <div class="filter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.END_DATE' | translate }}
+      </label>
+
+      <input
+        type="date"
+        class="form-control form-control-lg"
+        [(ngModel)]="draft.acquisitionEndDate"
+      />
+    </div>
+
+    <div class="filter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MIN_CLOUD_RATE' | translate }}
+      </label>
+
+      <div class="input-group input-group-lg">
+        <input
+          type="number"
+          class="form-control"
+          min="0"
+          max="100"
+          step="1"
+          [(ngModel)]="draft.minCloudRate"
+        />
+        <span class="input-group-text">%</span>
+      </div>
+    </div>
+
+    <div class="filter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MAX_CLOUD_RATE' | translate }}
+      </label>
+
+      <div class="input-group input-group-lg">
+        <input
+          type="number"
+          class="form-control"
+          min="0"
+          max="100"
+          step="1"
+          [(ngModel)]="draft.maxCloudRate"
+        />
+        <span class="input-group-text">%</span>
+      </div>
+    </div>
+
+    <div class="filter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MIN_OFF_NADIR' | translate }}
+      </label>
+
+      <div class="input-group input-group-lg">
+        <input
+          type="number"
+          class="form-control"
+          min="0"
+          step="0.1"
+          [(ngModel)]="draft.minOffNadir"
+        />
+        <span class="input-group-text">°</span>
+      </div>
+    </div>
+
+    <div class="filter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MAX_OFF_NADIR' | translate }}
+      </label>
+
+      <div class="input-group input-group-lg">
+        <input
+          type="number"
+          class="form-control"
+          min="0"
+          step="0.1"
+          [(ngModel)]="draft.maxOffNadir"
+        />
+        <span class="input-group-text">°</span>
+      </div>
+    </div>
+
+    <div class="filter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MIN_GSD' | translate }}
+      </label>
+
+      <div class="input-group input-group-lg">
+        <input
+          type="number"
+          class="form-control"
+          min="0"
+          step="0.1"
+          [(ngModel)]="draft.minResolution"
+        />
+        <span class="input-group-text">m</span>
+      </div>
+    </div>
+
+    <div class="filter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MAX_GSD' | translate }}
+      </label>
+
+      <div class="input-group input-group-lg">
+        <input
+          type="number"
+          class="form-control"
+          min="0"
+          step="0.1"
+          [(ngModel)]="draft.maxResolution"
+        />
+        <span class="input-group-text">m</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="smart-product-filter-panel__footer">
+    <button
+      type="button"
+      class="btn btn-lg btn-light"
+      [disabled]="loading"
+      (click)="clear()"
+    >
+      <i class="fa-solid fa-rotate-left me-1"></i>
+      {{ 'MAP.SMART_FILTER.FILTER_PANEL.CLEAR' | translate }}
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-lg btn-primary"
+      [disabled]="loading"
+      (click)="apply()"
+    >
+      <span
+        *ngIf="loading"
+        class="spinner-border spinner-border-lg me-1"
+      ></span>
+      <i *ngIf="!loading" class="fa-solid fa-filter me-1"></i>
+      {{ 'MAP.SMART_FILTER.FILTER_PANEL.APPLY' | translate }}
+    </button>
+  </div>
+</div>

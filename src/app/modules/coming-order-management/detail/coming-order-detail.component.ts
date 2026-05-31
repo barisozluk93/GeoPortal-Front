@@ -149,6 +149,20 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
               orderProduct.orderStatusStr = completedText;
             }
 
+            if (orderProduct.product) {
+              orderProduct.product.acquisitionDate = orderProduct.product.acquisitionDate
+                ? formatDate(orderProduct.product.acquisitionDate, 'dd.MM.yyyy HH:mm', this.locale)
+                : orderProduct.product.acquisitionDate;
+
+                orderProduct.product.acquisitionStartDate = orderProduct.product.acquisitionStartDate
+                ? formatDate(orderProduct.product.acquisitionStartDate, 'dd.MM.yyyy HH:mm', this.locale)
+                : orderProduct.product.acquisitionStartDate;
+
+                orderProduct.product.acquisitionEndDate = orderProduct.product.acquisitionEndDate
+                ? formatDate(orderProduct.product.acquisitionEndDate, 'dd.MM.yyyy HH:mm', this.locale)
+                : orderProduct.product.acquisitionEndDate;
+            }
+
             orderProduct.orderDate = orderProduct.orderDate
               ? formatDate(orderProduct.orderDate, 'dd.MM.yyyy HH:mm', this.locale)
               : orderProduct.orderDate;

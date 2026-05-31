@@ -1,74 +1,100 @@
-<div class="map-export-panel" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()"
-  (mouseup)="$event.stopPropagation()">
-  <div class="map-export-panel__header">
-    <div class="map-export-panel__title">
-      <i class="fa-solid fa-file-export text-primary"></i>
-      {{ 'MAP.EXPORT.TITLE' | translate }}
+<form
+  class="map-export-panel"
+  novalidate
+  (ngSubmit)="submit()"
+  (click)="$event.stopPropagation()"
+  (mousedown)="$event.stopPropagation()"
+  (mouseup)="$event.stopPropagation()"
+>
+  <div class="export-field">
+    <label class="export-label">
+      {{ 'MAP.EXPORT.FILE_NAME' | translate }}
+    </label>
+
+    <input
+      type="text"
+      class="form-control"
+      [class.is-invalid]="isFileNameInvalid"
+      [value]="fileName"
+      (input)="onFileNameInput($event)"
+      [placeholder]="'MAP.EXPORT.FILE_NAME_PLACEHOLDER' | translate"
+    />
+
+    <div class="invalid-feedback d-block" *ngIf="isFileNameInvalid">
+      {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
     </div>
   </div>
 
-  <form class="map-export-panel__body" novalidate (ngSubmit)="submit()">
-    <div class="export-field">
-      <label class="export-label">
-        {{ 'MAP.EXPORT.FILE_NAME' | translate }}
-      </label>
+  <div class="export-field">
+    <label class="export-label">
+      {{ 'MAP.EXPORT.FILE_TYPE' | translate }}
+    </label>
 
-      <input type="text" class="form-control" [class.is-invalid]="isFileNameInvalid" [value]="fileName"
-        (input)="onFileNameInput($event)" [placeholder]="'MAP.EXPORT.FILE_NAME_PLACEHOLDER' | translate" />
+    <app-custom-select
+      [size]="'lg'"
+      [items]="fileTypes"
+      bindLabel="label"
+      bindValue="value"
+      [multiple]="false"
+      [clearable]="true"
+      [placeholder]="'MAP.EXPORT.FILE_TYPE_PLACEHOLDER' | translate"
+      [(ngModel)]="fileType"
+      [ngModelOptions]="{ standalone: true }"
+      [invalid]="isFileTypeInvalid"
+    >
+    </app-custom-select>
 
-      <div class="invalid-feedback d-block" *ngIf="isFileNameInvalid">
-        {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
-      </div>
+    <div class="invalid-feedback d-block" *ngIf="isFileTypeInvalid">
+      {{ 'MAP.EXPORT.FILE_TYPE_REQUIRED' | translate }}
     </div>
+  </div>
 
-    <div class="export-field">
-      <label class="export-label">
-        {{ 'MAP.EXPORT.FILE_TYPE' | translate }}
-      </label>
+  <ng-container *ngIf="isPng">
+    <div class="export-grid">
+      <div class="export-field">
+        <label class="export-label">
+          {{ 'MAP.EXPORT.X' | translate }}
+        </label>
 
-      <app-custom-select [size]="'lg'" [items]="fileTypes" bindLabel="label" bindValue="value" [multiple]="false"
-        [clearable]="true" [placeholder]="'MAP.EXPORT.FILE_TYPE_PLACEHOLDER' | translate" [(ngModel)]="fileType"
-        [ngModelOptions]="{standalone: true}" [invalid]="isFileTypeInvalid">
-      </app-custom-select>
+        <input
+          type="number"
+          min="1"
+          class="form-control"
+          [class.is-invalid]="isXInvalid"
+          [value]="x ?? ''"
+          (input)="onXInput($event)"
+          [placeholder]="'MAP.EXPORT.X_PLACEHOLDER' | translate"
+        />
 
-      <div class="invalid-feedback d-block" *ngIf="isFileTypeInvalid">
-        {{ 'MAP.EXPORT.FILE_TYPE_REQUIRED' | translate }}
-      </div>
-    </div>
-
-    <ng-container *ngIf="isPng">
-      <div class="export-grid">
-        <div class="export-field">
-          <label class="export-label">
-            {{ 'MAP.EXPORT.X' | translate }}
-          </label>
-
-          <input type="number" min="1" class="form-control" [class.is-invalid]="isXInvalid" [value]="x ?? ''"
-            (input)="onXInput($event)" [placeholder]="'MAP.EXPORT.X_PLACEHOLDER' | translate" />
-
-          <div class="invalid-feedback d-block" *ngIf="isXInvalid">
-            {{ 'MAP.EXPORT.X_REQUIRED' | translate }}
-          </div>
-        </div>
-
-        <div class="export-field">
-          <label class="export-label">
-            {{ 'MAP.EXPORT.Y' | translate }}
-          </label>
-
-          <input type="number" min="1" class="form-control" [class.is-invalid]="isYInvalid" [value]="y ?? ''"
-            (input)="onYInput($event)" [placeholder]="'MAP.EXPORT.Y_PLACEHOLDER' | translate" />
-
-          <div class="invalid-feedback d-block" *ngIf="isYInvalid">
-            {{ 'MAP.EXPORT.Y_REQUIRED' | translate }}
-          </div>
+        <div class="invalid-feedback d-block" *ngIf="isXInvalid">
+          {{ 'MAP.EXPORT.X_REQUIRED' | translate }}
         </div>
       </div>
-    </ng-container>
 
-    <button type="submit" class="btn btn-primary w-100">
-      <i class="fa-solid fa-download me-2"></i>
-      {{ 'MAP.EXPORT.SUBMIT' | translate }}
-    </button>
-  </form>
-</div>
+      <div class="export-field">
+        <label class="export-label">
+          {{ 'MAP.EXPORT.Y' | translate }}
+        </label>
+
+        <input
+          type="number"
+          min="1"
+          class="form-control"
+          [class.is-invalid]="isYInvalid"
+          [value]="y ?? ''"
+          (input)="onYInput($event)"
+          [placeholder]="'MAP.EXPORT.Y_PLACEHOLDER' | translate"
+        />
+
+        <div class="invalid-feedback d-block" *ngIf="isYInvalid">
+          {{ 'MAP.EXPORT.Y_REQUIRED' | translate }}
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <button type="submit" class="btn btn-primary w-100">
+    <i class="fa-solid fa-download me-2"></i>
+    {{ 'MAP.EXPORT.SUBMIT' | translate }}
+  </button>
+</form>

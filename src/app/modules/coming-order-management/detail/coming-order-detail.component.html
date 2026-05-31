@@ -1,11 +1,7 @@
 <div class="order-detail-page" *ngIf="!loading && order">
   <div class="order-page-header">
-    <button
-      type="button"
-      class="btn btn-icon btn-light-primary btn-sm"
-      (click)="goBack()"
-      [attr.title]="'BACK' | translate"
-    >
+    <button type="button" class="btn btn-icon btn-light-primary btn-sm" (click)="goBack()"
+      [attr.title]="'BACK' | translate">
       <i class="fa-solid fa-arrow-left"></i>
     </button>
 
@@ -78,9 +74,9 @@
               <div class="info-label">{{ 'COMING_ORDER_DETAIL.AMOUNT_LABEL' | translate }}</div>
               <div class="amount-value">
                 {{
-                  order.price != null
-                    ? (order.price | currency:'₺':'symbol':'1.2-2')
-                    : '-'
+                order.price != null
+                ? (order.price | currency:'₺':'symbol':'1.2-2')
+                : '-'
                 }}
               </div>
             </div>
@@ -89,13 +85,7 @@
               <div class="info-label">{{ 'INVOICE' | translate }}</div>
 
               <div class="invoice-upload-panel">
-                <input
-                  #invoiceInput
-                  type="file"
-                  class="d-none"
-                  accept=".pdf"
-                  (change)="onInvoiceSelected($event)"
-                />
+                <input #invoiceInput type="file" class="d-none" accept=".pdf" (change)="onInvoiceSelected($event)" />
 
                 <ng-container *ngIf="hasAnyOrderFile(); else emptyInvoiceUploader">
                   <div class="invoice-inline-list">
@@ -113,21 +103,13 @@
                       </div>
 
                       <div class="invoice-inline-card__actions">
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-light-primary"
-                          (click)="invoiceInput.click()"
-                          [disabled]="invoiceUploading"
-                        >
+                        <button type="button" class="btn btn-sm btn-light-primary" (click)="invoiceInput.click()"
+                          [disabled]="invoiceUploading">
                           {{ invoiceUploading ? ('PLEASE_WAIT' | translate) : ('UPLOAD_INVOICE' | translate) }}
                         </button>
 
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-light-danger"
-                          (click)="deleteInvoice()"
-                          [disabled]="invoiceDeleting"
-                        >
+                        <button type="button" class="btn btn-sm btn-light-danger" (click)="deleteInvoice()"
+                          [disabled]="invoiceDeleting">
                           {{ invoiceDeleting ? ('PLEASE_WAIT' | translate) : ('DELETE' | translate) }}
                         </button>
                       </div>
@@ -136,10 +118,7 @@
                 </ng-container>
 
                 <ng-template #emptyInvoiceUploader>
-                  <div
-                    class="empty-state-block empty-state-block--actionable"
-                    (click)="invoiceInput.click()"
-                  >
+                  <div class="empty-state-block empty-state-block--actionable" (click)="invoiceInput.click()">
                     <div class="empty-state-icon">
                       <i class="fa-solid fa-file-arrow-up"></i>
                     </div>
@@ -242,9 +221,9 @@
 
                       <div class="product-price">
                         {{
-                          getProductPrice(item) != null
-                            ? (getProductPrice(item)! | currency:'₺':'symbol':'1.2-2')
-                            : '-'
+                        getProductPrice(item) != null
+                        ? (getProductPrice(item)! | currency:'₺':'symbol':'1.2-2')
+                        : '-'
                         }}
                       </div>
                     </div>
@@ -260,21 +239,15 @@
                         </span>
                       </div>
 
-                      <button
-                        *ngIf="canPreviewProduct(item)"
-                        type="button"
-                        class="btn btn-icon btn-sm btn-light-primary"
-                        (click)="openMapPreview(item)"
-                        title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}"
-                      >
+                      <button *ngIf="canPreviewProduct(item)" type="button"
+                        class="btn btn-icon btn-sm btn-light-primary" (click)="openMapPreview(item)"
+                        title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}">
                         <i class="fa-solid fa-map-location-dot"></i>
                       </button>
                     </div>
 
-                    <div
-                      class="d-flex flex-wrap gap-2"
-                      *ngIf="item.product?.isOrthorectified || item.product?.isPansharpened || item.product?.isClassified"
-                    >
+                    <div class="d-flex flex-wrap gap-2"
+                      *ngIf="item.product?.isOrthorectified || item.product?.isPansharpened || item.product?.isClassified">
                       <span *ngIf="item.product?.isOrthorectified" class="badge badge-light-success">
                         {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
                       </span>
@@ -288,7 +261,7 @@
                       </span>
                     </div>
 
-                    <div class="d-flex flex-wrap gap-2">
+                    <div class="d-flex flex-wrap gap-2" *ngIf="item.product?.provider || item.product?.resolution">
                       <span class="badge badge-light-primary" *ngIf="item.product?.provider">
                         {{ 'VENDOR' | translate }}: {{ item.product?.provider }}
                       </span>
@@ -296,13 +269,56 @@
                       <span class="badge badge-light-primary" *ngIf="item.product?.resolution">
                         {{ item.product?.resolution }} m
                       </span>
+                    </div>
 
-                      <span
-                        class="badge badge-light-primary"
-                        *ngIf="item.product?.cloudRate !== undefined && item.product?.cloudRate !== null"
-                      >
-                        {{ 'COMING_ORDER_DETAIL.CLOUD_LABEL' | translate }}: %{{ item.product?.cloudRate }}
-                      </span>
+                    <div class="product-metadata-block" *ngIf="
+    item.product?.acquisitionDate ||
+    item.product?.acquisitionStartDate ||
+    item.product?.acquisitionEndDate ||
+    item.product?.cloudRate !== undefined && item.product?.cloudRate !== null ||
+    item.product?.offNadirAngle !== undefined && item.product?.offNadirAngle !== null ||
+    item.product?.imageType
+  ">
+                      <div class="product-metadata-row" *ngIf="item.product?.acquisitionDate">
+                        <span>
+                          <strong>{{ 'COMING_ORDER_DETAIL.ACQUISITION' | translate }}:</strong>
+                          {{ item.product?.acquisitionDate }}
+                        </span>
+                      </div>
+
+                      <div class="product-metadata-row"
+                        *ngIf="item.product?.acquisitionStartDate || item.product?.acquisitionEndDate">
+                        <span *ngIf="item.product?.acquisitionStartDate">
+                          <strong>{{ 'COMING_ORDER_DETAIL.ACQUISITION_START' | translate }}:</strong>
+                          {{ item.product?.acquisitionStartDate }}
+                        </span>
+
+                        <span *ngIf="item.product?.acquisitionEndDate">
+                          <strong>{{ 'COMING_ORDER_DETAIL.ACQUISITION_END' | translate }}:</strong>
+                          {{ item.product?.acquisitionEndDate }}
+                        </span>
+                      </div>
+
+                      <div class="product-metadata-row" *ngIf="
+      item.product?.cloudRate !== undefined && item.product?.cloudRate !== null ||
+      item.product?.offNadirAngle !== undefined && item.product?.offNadirAngle !== null ||
+      item.product?.imageType
+    ">
+                        <span *ngIf="item.product?.cloudRate !== undefined && item.product?.cloudRate !== null">
+                          <strong>{{ 'COMING_ORDER_DETAIL.CLOUD_LABEL' | translate }}:</strong>
+                          %{{ item.product?.cloudRate }}
+                        </span>
+
+                        <span *ngIf="item.product?.offNadirAngle !== undefined && item.product?.offNadirAngle !== null">
+                          <strong>{{ 'COMING_ORDER_DETAIL.NADIR_ANGLE' | translate }}:</strong>
+                          {{ item.product?.offNadirAngle }}°
+                        </span>
+
+                        <span *ngIf="item.product?.imageType">
+                          <strong>{{ 'COMING_ORDER_DETAIL.IMAGE_TYPE' | translate }}:</strong>
+                          {{ item.product?.imageType }}
+                        </span>
+                      </div>
                     </div>
 
                     <div class="product-description" *ngIf="item.product?.description">
@@ -318,25 +334,15 @@
                     </div>
 
                     <div class="update-status-panel">
-                      <app-custom-select
-                        [items]="getAvailableStatusOptions(item)"
-                        bindLabel="label"
-                        bindValue="value"
-                        [placeholder]="'SELECT_STATUS' | translate"
-                        [clearable]="true"
-                        size="lg"
-                        [disabled]="isStatusUpdateDisabled(item)"
-                        [(ngModel)]="selectedStatusMap[item.id]"
-                      >
+                      <app-custom-select [items]="getAvailableStatusOptions(item)" bindLabel="label" bindValue="value"
+                        [placeholder]="'SELECT_STATUS' | translate" [clearable]="true" size="lg"
+                        [disabled]="isStatusUpdateDisabled(item)" [(ngModel)]="selectedStatusMap[item.id]">
                       </app-custom-select>
 
-                      <button
-                        type="button"
-                        class="btn btn-primary mt-5 w-100"
-                        (click)="updateProductStatus(item)"
-                        [disabled]="isUpdateButtonDisabled(item)"
-                      >
-                        {{ updatingProductId === item.id ? ('PLEASE_WAIT' | translate) : ('UPDATE_STATUS' | translate) }}
+                      <button type="button" class="btn btn-primary mt-5 w-100" (click)="updateProductStatus(item)"
+                        [disabled]="isUpdateButtonDisabled(item)">
+                        {{ updatingProductId === item.id ? ('PLEASE_WAIT' | translate) : ('UPDATE_STATUS' | translate)
+                        }}
                       </button>
 
                       <div class="update-status-note mt-5" *ngIf="isStatusUpdateDisabled(item)">
@@ -362,12 +368,8 @@
     </div>
   </div>
 
-  <app-coming-order-map-preview
-    [isOpen]="mapPreviewDrawerOpen"
-    [title]="selectedPreviewProduct?.product?.name || '-'"
-    [previewWkt]="selectedPreviewWkt"
-    (closeDrawer)="closeMapPreview()"
-  ></app-coming-order-map-preview>
+  <app-coming-order-map-preview [isOpen]="mapPreviewDrawerOpen" [title]="selectedPreviewProduct?.product?.name || '-'"
+    [previewWkt]="selectedPreviewWkt" (closeDrawer)="closeMapPreview()"></app-coming-order-map-preview>
 </div>
 
 <div *ngIf="loading" class="order-loading card">

@@ -1,0 +1,49 @@
+<div
+  class="map-search-panel"
+  (click)="$event.stopPropagation()"
+  (mousedown)="$event.stopPropagation()"
+  (mouseup)="$event.stopPropagation()"
+>
+  <div class="mb-5">
+    <div class="position-relative">
+      <i class="fa-solid fa-search text-primary position-absolute top-50 translate-middle-y ms-4"></i>
+
+      <input
+        type="text"
+        class="form-control form-control-lg ps-12"
+        [value]="searchText"
+        [placeholder]="'MAP.SEARCH.PLACEHOLDER' | translate"
+        autocomplete="off"
+        (input)="onSearchInput($event)"
+      />
+    </div>
+  </div>
+
+  <div class="map-search-panel__loading" *ngIf="isLoading">
+    <span class="spinner-border spinner-border-sm"></span>
+    <span>{{ 'MAP.SEARCH.SEARCHING' | translate }}</span>
+  </div>
+
+  <div
+    class="map-search-panel__results"
+    *ngIf="!isLoading && results.length > 0"
+  >
+    <button
+      type="button"
+      class="map-search-result"
+      *ngFor="let result of results; trackBy: trackResult"
+      (click)="selectResult(result)"
+    >
+      <i class="fa-solid fa-draw-polygon text-primary"></i>
+      <span>{{ result.displayName }}</span>
+    </button>
+  </div>
+
+  <div
+    class="map-search-panel__empty"
+    *ngIf="!isLoading && hasSearched && results.length === 0"
+  >
+    <i class="fa-solid fa-map-location-dot"></i>
+    <span>{{ 'MAP.SEARCH.EMPTY' | translate }}</span>
+  </div>
+</div>

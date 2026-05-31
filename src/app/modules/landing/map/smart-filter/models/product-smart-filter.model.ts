@@ -1,10 +1,12 @@
 export interface ProductSmartFilterRequest {
+  wkt?: string | null;
   imageType?: string | null;
   provider?: string | null;
 
   acquisitionStartDate?: string | null;
   acquisitionEndDate?: string | null;
 
+  minCloudRate?: number | null;
   maxCloudRate?: number | null;
 
   minOffNadir?: number | null;
@@ -35,6 +37,9 @@ export interface ProductSmartFilterResult {
   cloudRate?: number | null;
   nadirAngle?: number | null;
 
+  sunAzimuth?: number | null;
+  sunElevation?: number | null;
+
   bboxMinX?: number | null;
   bboxMinY?: number | null;
   bboxMaxX?: number | null;
@@ -44,4 +49,5 @@ export interface ProductSmartFilterResult {
   thumbnailUrl?: string | null;
 
   wkt?: string | null;
+  price?: number | null;
 }

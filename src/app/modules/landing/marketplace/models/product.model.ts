@@ -12,8 +12,11 @@ export class ProductModel {
   previewPath?: string | null;
   quicklookPath?: string | null;
   metadataPath?: string | null;
-
   downloadLink?: string | null;
+
+  thumbnailUrl?: string | null;
+  previewUrl?: string | null;
+  metadataUrl?: string | null;
 
   // Geo
   geometry?: any | null;
@@ -30,8 +33,11 @@ export class ProductModel {
   city?: string | null;
   district?: string | null;
 
-  // Metadata
+  // Basic metadata
   acquisitionDate?: string | null;
+  acquisitionStartDate?: string | null;
+  acquisitionEndDate?: string | null;
+
   resolution?: number | null;
   cloudRate?: number | null;
 
@@ -46,12 +52,25 @@ export class ProductModel {
   sourceLabel?: string | null;
   provider?: string | null;
 
+  // Satellite / product details
+  orderId?: string | null;
+  stripId?: string | null;
+  catalogId?: string | null;
+  imageDescriptor?: string | null;
+  imageType?: 'Mono' | 'Stereo' | null;
+  sensorMode?: string | null;
+  bandId?: string | null;
+  productType?: string | null;
+  productLevel?: string | null;
+  radiometricLevel?: string | null;
+  outputFormat?: string | null;
+  spatialReference?: string | null;
+  scanDirection?: string | null;
+  dataOwner?: string | null;
+
   isOrthorectified?: boolean | null;
   isPansharpened?: boolean | null;
   isClassified?: boolean | null;
-
-  thumbnailUrl?: string | null;
-  previewUrl?: string | null;
 
   // Price
   price!: number;
@@ -69,10 +88,8 @@ export class ProductModel {
   // Relations
   classes?: ProductClassModel[] | null;
 
-  // Frontend/local basket helper only; backend Product.cs currently has no UserId field.
+  // Frontend/local helpers
   userId?: number | null;
-
-  // Optional frontend helpers, not present in backend Product.cs.
   sourceType?: number | null;
   requestHash?: string | null;
 }

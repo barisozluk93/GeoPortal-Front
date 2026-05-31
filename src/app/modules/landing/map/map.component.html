@@ -1,5 +1,8 @@
-<div class="map-page">
+<div class="map-page" [ngClass]="{ 'map-page--preview': previewMode }">
   <div id="mapCanvas" class="map-canvas"></div>
+
+  <input #areaFileInput type="file" class="d-none" accept=".zip,.geojson,.json,.kml" (change)="uploadAreaFile($event)"
+    (cancel)="activeTool = null" />
 
   <div class="map-coordinate-box">
     <div class="fw-bolder fs-5 text-nowrap">
@@ -10,23 +13,28 @@
     <div class="dropdown position-relative">
       <button type="button" class="btn btn-sm btn-light-primary btn-icon"
         [attr.title]="'MAP.COORDINATE_OPTIONS.TITLE' | translate"
-        [attr.aria-label]="'MAP.COORDINATE_OPTIONS.TITLE' | translate" (click)="toggleCoordinateMenu()">
+        [attr.aria-label]="'MAP.COORDINATE_OPTIONS.TITLE' | translate" (click)="toggleCoordinateMenu($event)">
         <i class="fa-solid fa-ellipsis-vertical fw-bolder fs-5"></i>
       </button>
 
-      <ul class="dropdown-menu dropdown-menu-end map-options-menu" [class.show]="isCoordinateMenuOpen">
+      <ul class="dropdown-menu dropdown-menu-end map-options-menu" [class.show]="isCoordinateMenuOpen"
+        (click)="$event.stopPropagation()">
         <li class="menu-item px-3">
           <button type="button" class="menu-link px-3 d-flex align-items-center w-100 border-0"
-            [ngClass]="{ active: coordinateFormat === 'dd' }" (click)="setCoordinateFormat('dd')">
-            <span class="menu-title">{{ 'MAP.COORDINATE_OPTIONS.DECIMAL_DEGREE' | translate }}</span>
+            [ngClass]="{ active: coordinateFormat === 'dd' }" (click)="setCoordinateFormat('dd', $event)">
+            <span class="menu-title">
+              {{ 'MAP.COORDINATE_OPTIONS.DECIMAL_DEGREE' | translate }}
+            </span>
             <i *ngIf="coordinateFormat === 'dd'" class="fa-solid fa-check text-primary ms-auto"></i>
           </button>
         </li>
 
         <li class="menu-item px-3">
           <button type="button" class="menu-link px-3 d-flex align-items-center w-100 border-0"
-            [ngClass]="{ active: coordinateFormat === 'dms' }" (click)="setCoordinateFormat('dms')">
-            <span class="menu-title">{{ 'MAP.COORDINATE_OPTIONS.DEGREE_MINUTE_SECOND' | translate }}</span>
+            [ngClass]="{ active: coordinateFormat === 'dms' }" (click)="setCoordinateFormat('dms', $event)">
+            <span class="menu-title">
+              {{ 'MAP.COORDINATE_OPTIONS.DEGREE_MINUTE_SECOND' | translate }}
+            </span>
             <i *ngIf="coordinateFormat === 'dms'" class="fa-solid fa-check text-primary ms-auto"></i>
           </button>
         </li>
@@ -37,31 +45,116 @@
   <div class="map-left-tools">
     <app-map-toolbar side="left" [measureText]="lengthMeasureText" [activeTool]="activeTool"
       (layerManagerClicked)="toggleLayerManager()" (goToCoordinateClicked)="toggleGoToCoordinatePanel()"
-      (measureLengthClicked)="toggleLengthMeasure()" (resetClicked)="resetMap()" (exportClicked)="toggleExportPanel()">
+      (measureLengthClicked)="toggleLengthMeasure()" (polygonClicked)="togglePolygonDraw()"
+      (uploadClicked)="openUploadFilePicker()" (resetClicked)="resetMap()" (exportClicked)="toggleExportPanel()"
+      (searchClicked)="toggleSearchPanel()">
     </app-map-toolbar>
 
     <div class="map-panels-container" *ngIf="isLayerManagerOpen">
-      <app-layer-manager [layerGroups]="layerGroups" [baseMapOpacity]="baseMapOpacity"
-        (baseMapOpacityChanged)="setBaseMapOpacity($event)"
-        (layerVisibilityChanged)="setLayerVisibility($event.layer, $event.visible)"
-        (layerOpacityChanged)="setLayerOpacity($event.layer, $event.opacity)"
-        (layerFilterClicked)="openLayerFilter($event)" (layerLegendClicked)="openLayerLegend($event)"
-        (layerInfoClicked)="openLayerInfo($event)"></app-layer-manager>
+      <app-map-panel-shell icon="fa-solid fa-layer-group" [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
+        [minimized]="panelUiState.layerManager.minimized" [maximized]="panelUiState.layerManager.maximized"
+        (closeClicked)="closeLayerManager()" (minimizeClicked)="togglePanelMinimize('layerManager')"
+        (maximizeClicked)="togglePanelMaximize('layerManager')">
+        <app-layer-manager [layerGroups]="layerGroups" [baseMapOpacity]="baseMapOpacity"
+          (baseMapOpacityChanged)="setBaseMapOpacity($event)"
+          (layerVisibilityChanged)="setLayerVisibility($event.layer, $event.visible)"
+          (layerOpacityChanged)="setLayerOpacity($event.layer, $event.opacity)"
+          (layerFilterClicked)="openLayerFilter($event)" (layerLegendClicked)="openLayerLegend($event)"
+          (layerInfoClicked)="openLayerInfo($event)">
+        </app-layer-manager>
+      </app-map-panel-shell>
 
-      <app-layer-legend-panel *ngIf="selectedLegendLayer" [layer]="selectedLegendLayer"
-        (closed)="closeLayerLegend()"></app-layer-legend-panel>
+      <app-map-panel-shell *ngIf="selectedLegendLayer" icon="fa-solid fa-list"
+        [title]="selectedLegendLayer.name || selectedLegendLayer.layerName || 'Legend'"
+        [minimized]="panelUiState.legend.minimized" [maximized]="panelUiState.legend.maximized"
+        (closeClicked)="closeLayerLegend()" (minimizeClicked)="togglePanelMinimize('legend')"
+        (maximizeClicked)="togglePanelMaximize('legend')">
+        <app-layer-legend-panel [layer]="selectedLegendLayer">
+        </app-layer-legend-panel>
+      </app-map-panel-shell>
 
       <app-layer-filter-panel *ngIf="selectedFilterLayer" [layer]="selectedFilterLayer" (closed)="closeLayerFilter()"
         (filterApplied)="applyLayerFilter($event.layer, $event.cqlFilter)"
-        (filterCleared)="clearLayerFilter($event)"></app-layer-filter-panel>
+        (filterCleared)="clearLayerFilter($event)">
+      </app-layer-filter-panel>
+    </div>
+
+    <div class="map-layer-manager-floating" *ngIf="isSmartFilterPanelOpen">
+      <app-map-panel-shell icon="fa-solid fa-satellite" [title]="'MAP.SMART_FILTER.TITLE' | translate"
+        [minimized]="panelUiState.smartFilter.minimized" [maximized]="panelUiState.smartFilter.maximized"
+        (closeClicked)="closeSmartFilterPanel()" (minimizeClicked)="togglePanelMinimize('smartFilter')"
+        (maximizeClicked)="togglePanelMaximize('smartFilter')">
+        <app-smart-filter-panel [results]="smartFilterResults" [request]="smartFilterRequest"
+          [loading]="isSmartFilterLoading" [totalAreaM2]="totalSelectedAreaM2" [areaUnit]="selectedSmartFilterAreaUnit"
+          (areaUnitChanged)="selectedSmartFilterAreaUnit = $event" (filterClicked)="openSmartAdvancedFilterPanel()"
+          (createRequest)="createNewProductRequest()" (metadataClicked)="openSmartProductMetadata($event)"
+          (zoomToExtentClicked)="zoomSmartProductToExtent($event)" (addToCartClicked)="addSmartProductToCart($event)"
+          (selectedProductsChanged)="highlightSelectedSmartProducts($event)"
+          (closeClicked)="closeSmartFilterPanel()">
+        </app-smart-filter-panel>
+      </app-map-panel-shell>
+
+      <app-map-panel-shell *ngIf="isMetadataPanelOpen" icon="fa-solid fa-circle-info"
+        [title]="selectedMetadataProductName || ('MAP.SMART_FILTER.METADATA' | translate)"
+        [minimized]="panelUiState.metadata.minimized" [maximized]="panelUiState.metadata.maximized"
+        (closeClicked)="closeMetadataPanel()" (minimizeClicked)="togglePanelMinimize('metadata')"
+        (maximizeClicked)="togglePanelMaximize('metadata')">
+        <app-smart-product-metadata-panel [loading]="isMetadataLoading" [productName]="selectedMetadataProductName"
+          [metadataRows]="metadataRows" [rawText]="metadataRawText" (closeClicked)="closeMetadataPanel()">
+        </app-smart-product-metadata-panel>
+      </app-map-panel-shell>
+
+      <app-map-panel-shell *ngIf="isSmartAdvancedFilterPanelOpen" icon="fa-solid fa-filter"
+        [title]="'MAP.SMART_FILTER.FILTER' | translate"
+        [minimized]="panelUiState.smartAdvancedFilter.minimized"
+        [maximized]="panelUiState.smartAdvancedFilter.maximized" (closeClicked)="closeSmartAdvancedFilterPanel()"
+        (minimizeClicked)="togglePanelMinimize('smartAdvancedFilter')"
+        (maximizeClicked)="togglePanelMaximize('smartAdvancedFilter')">
+        <app-smart-product-filter-panel [request]="smartFilterRequest" [loading]="isSmartFilterLoading"
+          (filterApplied)="applySmartProductFilter($event)" (filterCleared)="clearSmartProductFilter()"
+          (closeClicked)="closeSmartAdvancedFilterPanel()">
+        </app-smart-product-filter-panel>
+      </app-map-panel-shell>
+
+      <app-map-panel-shell *ngIf="isSmartProductRequestPanelOpen" icon="fa-solid fa-cart-plus"
+        [title]="'MAP.SMART_FILTER.REQUEST_PANEL.TITLE' | translate"
+        [minimized]="panelUiState.smartProductRequest.minimized"
+        [maximized]="panelUiState.smartProductRequest.maximized" (closeClicked)="closeSmartProductRequestPanel()"
+        (minimizeClicked)="togglePanelMinimize('smartProductRequest')"
+        (maximizeClicked)="togglePanelMaximize('smartProductRequest')">
+        <app-smart-product-request-panel [areaM2]="totalSelectedAreaM2" [wkt]="getAoiWkt()"
+          [loading]="isSmartProductRequestLoading" (closeClicked)="closeSmartProductRequestPanel()"
+          (addToCartClicked)="addSmartProductRequestToCart($event)">
+        </app-smart-product-request-panel>
+      </app-map-panel-shell>
+    </div>
+
+    <div class="map-layer-manager-floating" *ngIf="isSearchPanelOpen" (mouseenter)="openSearchPanel()">
+      <app-map-panel-shell icon="fa-solid fa-search" [title]="'MAP.ACTIONS.SEARCH' | translate"
+        [minimized]="panelUiState.search.minimized" [maximized]="panelUiState.search.maximized"
+        (closeClicked)="closeSearchPanel()" (minimizeClicked)="togglePanelMinimize('search')"
+        (maximizeClicked)="togglePanelMaximize('search')">
+        <app-map-search-panel (resultSelected)="selectSearchResult($event)"></app-map-search-panel>
+      </app-map-panel-shell>
     </div>
 
     <div class="map-layer-manager-floating" *ngIf="isGoToCoordinatePanelOpen" (mouseenter)="openGoToCoordinatePanel()">
-      <app-go-to-coordinate-panel (coordinateSelected)="focusCoordinate($event)"></app-go-to-coordinate-panel>
+      <app-map-panel-shell icon="fa-solid fa-location-crosshairs" [title]="'MAP.ACTIONS.GOTO_COORDINATE' | translate"
+        [minimized]="panelUiState.coordinate.minimized" [maximized]="panelUiState.coordinate.maximized"
+        (closeClicked)="closeGoToCoordinatePanel()" (minimizeClicked)="togglePanelMinimize('coordinate')"
+        (maximizeClicked)="togglePanelMaximize('coordinate')">
+        <app-go-to-coordinate-panel (coordinateSelected)="focusCoordinate($event)">
+        </app-go-to-coordinate-panel>
+      </app-map-panel-shell>
     </div>
 
     <div class="map-layer-manager-floating" *ngIf="isExportPanelOpen" (mouseenter)="openExportPanel()">
-      <app-map-export-panel (exportRequested)="exportMap($event)"></app-map-export-panel>
+      <app-map-panel-shell icon="fa-solid fa-file-download" [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate"
+        [minimized]="panelUiState.export.minimized" [maximized]="panelUiState.export.maximized"
+        (closeClicked)="closeExportPanel()" (minimizeClicked)="togglePanelMinimize('export')"
+        (maximizeClicked)="togglePanelMaximize('export')">
+        <app-map-export-panel (exportRequested)="exportMap($event)"></app-map-export-panel>
+      </app-map-panel-shell>
     </div>
   </div>
 

@@ -1,0 +1,32 @@
+<div
+  class="metadata-panel"
+  (click)="$event.stopPropagation()"
+  (mousedown)="$event.stopPropagation()"
+  (mouseup)="$event.stopPropagation()"
+>
+  <div class="metadata-panel__body">
+    <div class="metadata-panel__loading" *ngIf="loading">
+      <span class="spinner-border spinner-border-sm text-primary"></span>
+      <span>{{ 'MAP.SMART_FILTER.METADATA.LOADING' | translate }}</span>
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <div
+        class="metadata-panel__empty"
+        *ngIf="!metadataRows.length && !rawText"
+      >
+        <i class="fa-solid fa-file-lines"></i>
+        <span>{{ 'MAP.SMART_FILTER.METADATA.EMPTY' | translate }}</span>
+      </div>
+
+      <div class="metadata-table" *ngIf="metadataRows.length">
+        <div class="metadata-row" *ngFor="let row of metadataRows">
+          <div class="metadata-row__key">{{ row.key }}</div>
+          <div class="metadata-row__value">{{ row.value || '-' }}</div>
+        </div>
+      </div>
+
+      <pre class="metadata-raw" *ngIf="!metadataRows.length && rawText">{{ rawText }}</pre>
+    </ng-container>
+  </div>
+</div>

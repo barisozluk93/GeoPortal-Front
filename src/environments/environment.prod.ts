@@ -8,8 +8,8 @@ export const environment = {
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
   appUrl: 'https://taiearth.com',
-  apiUrl: 'taiearthApi',
-  signalRUrl: 'https://taiearth.com/NotificationHubForTaiEarth',
+  apiUrl: 'geoPortalApi',
+  signalRUrl: 'https://taiearth.com/NotificationHubForGeoPortal',
   appThemeName: 'Metronic',
   appPurchaseUrl: 'https://1.envato.market/EA4JP',
   appHTMLIntegration:

@@ -1,0 +1,175 @@
+<div class="smart-filter-panel" (click)="closeProductDropdown(); $event.stopPropagation()"
+  (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()">
+  <div class="smart-filter-panel__summary">
+    {{ results.length }} {{ 'MAP.SMART_FILTER.RESULT_FOUND' | translate }}
+    <span *ngIf="selectedCount > 0">
+      • {{ selectedCount }} {{ 'MAP.SMART_FILTER.SELECTED' | translate }}
+    </span>
+  </div>
+
+  <div class="smart-filter-panel__toolbar">
+    <div class="smart-filter-area-box">
+      <span class="smart-filter-area-box__label">
+        {{ 'MAP.SMART_FILTER.AREA' | translate }}
+      </span>
+
+      <span class="smart-filter-area-box__value">
+        {{ formattedArea }}
+      </span>
+
+      <app-custom-select class="smart-filter-area-box__select" [size]="'sm'" [items]="areaUnits" bindLabel="label"
+        bindValue="value" [multiple]="false" [clearable]="false" [(ngModel)]="areaUnit"
+        [ngModelOptions]="{ standalone: true }" (ngModelChange)="onAreaUnitChange($event)">
+      </app-custom-select>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-primary smart-filter-toolbar-btn" (click)="createRequest.emit()">
+      <i class="fa-solid fa-plus me-1"></i>
+      {{ 'MAP.SMART_FILTER.NEW_REQUEST' | translate }}
+    </button>
+
+    <button type="button" class="btn btn-sm btn-light-primary smart-filter-toolbar-btn" (click)="filterClicked.emit()">
+      <i class="fa-solid fa-filter me-1"></i>
+      {{ 'MAP.SMART_FILTER.FILTER' | translate }}
+    </button>
+  </div>
+
+  <div class="smart-filter-panel__body">
+    <div class="smart-filter-loading" *ngIf="loading">
+      <span class="spinner-border spinner-border-sm text-primary"></span>
+      <span>{{ 'MAP.SMART_FILTER.LOADING' | translate }}</span>
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <div class="smart-filter-empty" *ngIf="results.length === 0">
+        <i class="fa-solid fa-satellite-dish"></i>
+        <span>{{ 'MAP.SMART_FILTER.EMPTY' | translate }}</span>
+      </div>
+
+      <div class="smart-product-row" *ngFor="let product of results; trackBy: trackByProduct"
+        [class.smart-product-row--selected]="isSelected(product)">
+        <div class="smart-product-row__main">
+          <div class="smart-product-row__image">
+            <img *ngIf="getProductImage(product); else noImage" [src]="getProductImage(product)!"
+              [alt]="product.name" />
+
+            <ng-template #noImage>
+              <div class="smart-product-row__no-image">
+                <i class="fa-solid fa-image"></i>
+              </div>
+            </ng-template>
+
+            <input type="checkbox" class="form-check-input smart-product-check" [checked]="isSelected(product)"
+              (change)="toggleSelected(product); $event.stopPropagation()" (click)="$event.stopPropagation()" />
+            />
+          </div>
+
+          <div class="smart-product-row__content">
+            <div class="smart-product-row__top">
+              <div class="min-w-0 flex-grow-1">
+                <div class="smart-product-row__line">
+                  <span>
+                    {{ 'MAP.SMART_FILTER.LOCAL_TIME_OF_DAY' | translate }}:
+                  </span>
+                  <strong>{{ getDisplayDate(product) }}</strong>
+                </div>
+
+                <div class="smart-product-row__line">
+                  <span>
+                    {{ 'MAP.SMART_FILTER.IMAGE_ID' | translate }}:
+                  </span>
+                  <strong>{{ product.imageId || product.name || '-' }}</strong>
+                </div>
+              </div>
+
+              <div class="smart-product-dropdown" (click)="$event.stopPropagation()">
+                <button type="button" class="smart-product-more" (click)="toggleProductDropdown(product)">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </button>
+
+                <div class="smart-product-dropdown__menu" *ngIf="openedDropdownId === product.id">
+                  <button type="button" class="smart-product-dropdown__item" (click)="onZoomToExtent(product)">
+                    <i class="fa-solid fa-location-crosshairs"></i>
+                    {{ 'MAP.SMART_FILTER.ZOOM_TO_EXTENT' | translate }}
+                  </button>
+
+                  <button type="button" class="smart-product-dropdown__item" (click)="onViewMetadata(product)">
+                    <i class="fa-solid fa-circle-info"></i>
+                    {{ 'MAP.SMART_FILTER.VIEW_METADATA' | translate }}
+                  </button>
+
+                  <button type="button" class="smart-product-dropdown__item" (click)="onAddToCart(product)">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    {{ 'MAP.SMART_FILTER.ADD_TO_CART' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="smart-product-row__metrics mt-10">
+              <div class="smart-product-metric">
+                <i class="fa-solid fa-cloud"></i>
+                <span>{{ formatPercent(product.cloudRate) }}</span>
+              </div>
+
+              <div class="smart-product-separator"></div>
+
+              <div class="smart-product-metric">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>{{ formatDegree(product.nadirAngle) }}</span>
+              </div>
+
+              <div class="smart-product-separator"></div>
+
+              <div class="smart-product-metric">
+                <i class="fa-solid fa-tower-broadcast"></i>
+                <span>{{ product.sensorMode || product.provider || '-' }}</span>
+              </div>
+
+              <button type="button" class="smart-product-expand"
+                (click)="toggleExpanded(product); $event.stopPropagation()">
+                <i class="fa-solid" [ngClass]="isExpanded(product) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="smart-product-row__details" *ngIf="isExpanded(product)">
+          <div class="smart-product-detail">
+            <span>{{ 'MAP.SMART_FILTER.IMAGE_ID' | translate }}:</span>
+            <strong>{{ product.imageId || '-' }}</strong>
+          </div>
+
+          <div class="smart-product-detail">
+            <span>{{ 'MAP.SMART_FILTER.SUN_ELEVATION' | translate }}:</span>
+            <strong>{{ formatDegree(product.sunElevation) }}</strong>
+          </div>
+
+          <div class="smart-product-detail">
+            <span>{{ 'MAP.SMART_FILTER.SUN_AZIMUTH' | translate }}:</span>
+            <strong>{{ formatDegree(product.sunAzimuth) }}</strong>
+          </div>
+
+          <div class="smart-product-detail">
+            <span>{{ 'MAP.SMART_FILTER.GSD' | translate }}:</span>
+            <strong>{{ formatMeter(product.resolution) }}</strong>
+          </div>
+
+          <div class="smart-product-detail smart-product-detail--full">
+            <span>{{ 'MAP.SMART_FILTER.PREVIEW' | translate }}:</span>
+
+            <a *ngIf="getPreviewUrl(product); else noPreview" class="btn btn-sm btn-light-primary"
+              [href]="getPreviewUrl(product)!" target="_blank" (click)="$event.stopPropagation()">
+              <i class="fa-solid fa-up-right-from-square me-1"></i>
+              {{ 'MAP.SMART_FILTER.VIEW' | translate }}
+            </a>
+
+            <ng-template #noPreview>
+              <strong>-</strong>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

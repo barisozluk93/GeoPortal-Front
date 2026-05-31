@@ -1,24 +1,19 @@
-<div class="layer-legend-panel" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()"
-  (mouseup)="$event.stopPropagation()">
-  <div class="layer-legend-panel__header">
-    <div class="layer-legend-panel__title">
-      <i class="fa-solid fa-list-ul text-primary"></i>
-      {{ layer?.name || layer?.layerName }}
+<div
+  class="layer-legend-panel"
+  (click)="$event.stopPropagation()"
+  (mousedown)="$event.stopPropagation()"
+  (mouseup)="$event.stopPropagation()"
+>
+  <img
+    *ngIf="legendUrl; else emptyLegend"
+    class="layer-legend-panel__image"
+    [src]="legendUrl"
+    [alt]="layer?.name || layer?.layerName || 'Legend'"
+  />
+
+  <ng-template #emptyLegend>
+    <div class="layer-legend-panel__empty">
+      {{ 'MAP.LEGEND.EMPTY' | translate }}
     </div>
-
-    <button type="button" class="layer-legend-panel__close" (click)="closed.emit()">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-
-  <div class="layer-legend-panel__body">
-    <img *ngIf="legendUrl; else emptyLegend" class="layer-legend-panel__image" [src]="legendUrl"
-      [alt]="layer?.name || layer?.layerName || 'Legend'" />
-
-    <ng-template #emptyLegend>
-      <div class="layer-legend-panel__empty">
-        Legend bulunamadı.
-      </div>
-    </ng-template>
-  </div>
+  </ng-template>
 </div>

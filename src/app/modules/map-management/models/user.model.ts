@@ -11,7 +11,7 @@ export class UserModel {
     isSystemData: boolean;
     organizations: number[];
     roles: number[];
-    isProducer: boolean;
+    sector: string;
     fileId?: number;
     fileResult?: any;
 }

@@ -4,25 +4,39 @@
   (click)="close()"
 ></div>
 
-<aside class="map-preview-drawer" [class.open]="isOpen">
+<aside
+  class="map-preview-drawer"
+  [class.open]="isOpen"
+>
   <div class="map-preview-drawer__header">
-    <div class="min-w-0">
-      <div class="map-preview-drawer__kicker text-primary">Preview</div>
-      <div class="map-preview-drawer__title text-truncate">
-        {{ title || '-' }}
-      </div>
+    <div class="map-preview-drawer__title">
+      <i class="fa-solid fa-map-location-dot text-primary"></i>
+
+      <span>
+        {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
+      </span>
     </div>
 
-    <button type="button" class="btn btn-sm btn-icon btn-light" (click)="close()">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
+    <div class="map-preview-drawer__actions">
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-light-danger"
+        (click)="close()"
+      >
+        <i class="fa-solid fa-xmark fs-7"></i>
+      </button>
+    </div>
   </div>
 
-  <div class="map-preview-drawer__body" *ngIf="isOpen">
-    <!-- <app-map
+  <div
+    class="map-preview-drawer__body"
+    *ngIf="isOpen"
+  >
+    <app-map
       class="detail-map-preview"
       [previewWkt]="previewWkt"
       [previewMode]="true"
-    ></app-map> -->
+    >
+    </app-map>
   </div>
 </aside>

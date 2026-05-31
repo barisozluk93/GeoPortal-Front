@@ -583,3 +583,55 @@ app-custom-modal .glass-modal-backdrop {
   color: var(--bs-danger) !important;
   letter-spacing: normal;
 }
+
+/* GLOBAL CHECKBOX FIX */
+input[type='checkbox'],
+.form-check-input {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  position: relative !important;
+
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+
+  margin: 0;
+
+  cursor: pointer;
+
+  border: 1.5px solid var(--bs-gray-400) !important;
+  border-radius: 4px !important;
+
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+input[type='checkbox']:checked,
+.form-check-input:checked {
+  background: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+input[type='checkbox']:checked::after,
+.form-check-input:checked::after {
+  content: '' !important;
+
+  position: absolute !important;
+  left: 5px !important;
+  top: 2px !important;
+
+  width: 6px !important;
+  height: 10px !important;
+
+  border: solid #fff !important;
+  border-width: 0 2px 2px 0 !important;
+
+  transform: rotate(45deg) !important;
+}
+
+input[type='checkbox']:disabled,
+.form-check-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

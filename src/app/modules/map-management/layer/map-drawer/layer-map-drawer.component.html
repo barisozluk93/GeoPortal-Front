@@ -1,35 +1,43 @@
 <div
-  class="layer-drawer-overlay"
+  class="map-preview-drawer-backdrop"
   *ngIf="isOpen"
   (click)="close()"
 ></div>
 
-<aside class="layer-drawer layer-drawer--map" [class.open]="isOpen">
-  <div class="layer-drawer__card card border-0 rounded-0">
-    <div class="layer-drawer__header card-header">
-      <div class="card-title m-0 flex-column align-items-start">
-        <div class="layer-drawer__kicker">
-          {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
-        </div>
-        <h3 class="layer-drawer__title">
-          {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
-        </h3>
-      </div>
+<aside
+  class="layer-drawer"
+  [class.open]="isOpen"
+>
+  <div class="layer-drawer__header">
+    <div class="layer-drawer__title">
+      <i class="fa-solid fa-map-location-dot text-primary"></i>
 
-      <div class="card-toolbar">
-        <button class="btn btn-sm btn-icon btn-secondary" type="button" (click)="close()">
-          <span
-            [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-            class="svg-icon svg-icon-2"
-          ></span>
-        </button>
-      </div>
+      <span>
+        {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
+      </span>
     </div>
 
-    <div class="layer-drawer__body card-body">
-      <div class="layer-map">
-        <!-- <app-map [refreshKey]="refreshKey"></app-map> -->
-      </div>
+    <div class="layer-drawer__actions">
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-light-danger"
+        (click)="close()"
+      >
+        <i class="fa-solid fa-xmark fs-7"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="layer-drawer__body">
+    <div
+      class="layer-map"
+      *ngIf="isOpen"
+    >
+      <app-map
+        [refreshKey]="refreshKey"
+        [previewMode]="true"
+      >
+      </app-map>
     </div>
   </div>
 </aside>

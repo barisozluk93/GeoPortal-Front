@@ -37,7 +37,7 @@ export class ApiComponent {
 
       this.basketManagementService.save(data).subscribe(result => {
         if (result.isSuccess) {
-          this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
+          this.alertService.createAlert('success', this.translate.instant('MESSAGES.ADD_TO_CART_SUCCESS'));
           this.basketService.loadBasketFromDb();
         }
         else {
@@ -62,7 +62,7 @@ export class ApiComponent {
       }
 
       this.basketService.setBasket(basket);
-      this.alertService.createAlert('success', this.translate.instant('MESSAGES.SUCCESS'));
+      this.alertService.createAlert('success', this.translate.instant('MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS'));
     }
   }
 }

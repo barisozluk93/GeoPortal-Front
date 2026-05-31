@@ -1,0 +1,55 @@
+<div
+  class="map-panel-shell"
+  [ngClass]="{
+    'map-panel-shell--minimized': minimized,
+    'map-panel-shell--maximized': maximized
+  }"
+>
+  <div class="map-panel-shell__header">
+    <div class="map-panel-shell__title" [title]="title">
+      <i [class]="icon + ' text-primary fs-2 me-2'"></i>
+      <span>{{ title }}</span>
+    </div>
+
+    <div class="map-panel-shell__actions">
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-light"
+        [attr.title]="minimized ? 'Restore' : 'Minimize'"
+        (click)="onMinimize($event)"
+      >
+        <i
+          class="fa-solid fs-7"
+          [ngClass]="minimized ? 'fa-window-restore' : 'fa-minus'"
+        ></i>
+      </button>
+
+      <!--
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-light"
+        [attr.title]="maximized ? 'Collapse' : 'Maximize'"
+        (click)="onMaximize($event)"
+      >
+        <i
+          class="fa-solid fs-7"
+          [ngClass]="maximized ? 'fa-compress' : 'fa-expand'"
+        ></i>
+      </button>
+      -->
+
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-light-danger"
+        title="Close"
+        (click)="onClose($event)"
+      >
+        <i class="fa-solid fa-xmark fs-7"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="map-panel-shell__body" *ngIf="!minimized">
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -21,6 +21,12 @@ export type RegistrationTabsType =
   | 'bireysel'
   | 'kurumsal';
 
+interface SectorOption {
+  label: string;
+  value: string;
+  translationKey: string;
+}
+
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -34,7 +40,36 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   activeTabId: RegistrationTabsType = 'bireysel';
   organizations: OrganizationModel[] = [];
+  sectors: SectorOption[] = [];
+
   readonly OTHER_ORGANIZATION_ID = -1;
+
+  private readonly sectorDefinitions: Array<Omit<SectorOption, 'label'>> = [
+    { value: 'Defense Industry', translationKey: 'AUTH.REGISTER.SECTORS.DEFENSE_INDUSTRY' },
+    { value: 'Public Institution', translationKey: 'AUTH.REGISTER.SECTORS.PUBLIC_INSTITUTION' },
+    { value: 'Municipality', translationKey: 'AUTH.REGISTER.SECTORS.MUNICIPALITY' },
+    { value: 'Agriculture', translationKey: 'AUTH.REGISTER.SECTORS.AGRICULTURE' },
+    { value: 'Forestry', translationKey: 'AUTH.REGISTER.SECTORS.FORESTRY' },
+    { value: 'Mining', translationKey: 'AUTH.REGISTER.SECTORS.MINING' },
+    { value: 'Energy', translationKey: 'AUTH.REGISTER.SECTORS.ENERGY' },
+    { value: 'Oil and Gas', translationKey: 'AUTH.REGISTER.SECTORS.OIL_AND_GAS' },
+    { value: 'Construction', translationKey: 'AUTH.REGISTER.SECTORS.CONSTRUCTION' },
+    { value: 'Mapping and GIS', translationKey: 'AUTH.REGISTER.SECTORS.MAPPING_AND_GIS' },
+    { value: 'Telecommunication', translationKey: 'AUTH.REGISTER.SECTORS.TELECOMMUNICATION' },
+    { value: 'Transportation and Logistics', translationKey: 'AUTH.REGISTER.SECTORS.TRANSPORTATION_AND_LOGISTICS' },
+    { value: 'Environment and Climate', translationKey: 'AUTH.REGISTER.SECTORS.ENVIRONMENT_AND_CLIMATE' },
+    { value: 'Disaster Management', translationKey: 'AUTH.REGISTER.SECTORS.DISASTER_MANAGEMENT' },
+    { value: 'Academia and Research', translationKey: 'AUTH.REGISTER.SECTORS.ACADEMIA_AND_RESEARCH' },
+    { value: 'Banking and Finance', translationKey: 'AUTH.REGISTER.SECTORS.BANKING_AND_FINANCE' },
+    { value: 'Insurance', translationKey: 'AUTH.REGISTER.SECTORS.INSURANCE' },
+    { value: 'Health', translationKey: 'AUTH.REGISTER.SECTORS.HEALTH' },
+    { value: 'Tourism', translationKey: 'AUTH.REGISTER.SECTORS.TOURISM' },
+    { value: 'Technology', translationKey: 'AUTH.REGISTER.SECTORS.TECHNOLOGY' },
+    { value: 'Software', translationKey: 'AUTH.REGISTER.SECTORS.SOFTWARE' },
+    { value: 'Satellite and Space', translationKey: 'AUTH.REGISTER.SECTORS.SATELLITE_AND_SPACE' },
+    { value: 'Engineering', translationKey: 'AUTH.REGISTER.SECTORS.ENGINEERING' },
+    { value: 'Other', translationKey: 'AUTH.REGISTER.SECTORS.OTHER' },
+  ];
 
   private unsubscribe: Subscription[] = [];
 
@@ -53,10 +88,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.initSectors();
     this.initForm();
     this.getOrganizations();
     this.updateCorporateValidators();
     this.listenOrganizationChanges();
+    this.listenLanguageChanges();
   }
 
   get f() {
@@ -74,6 +111,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   get isOtherSelected(): boolean {
     return Number(this.f['organizationId']?.value) == this.OTHER_ORGANIZATION_ID;
+  }
+
+  initSectors(): void {
+    this.sectors = this.sectorDefinitions.map((sector) => ({
+      ...sector,
+      label: this.translate.instant(sector.translationKey),
+    }));
   }
 
   initForm() {
@@ -129,14 +173,9 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             Validators.required,
           ]),
         ],
-        isProducer: [
-          false,
-          Validators.compose([
-            Validators.required,
-          ]),
-        ],
 
         organizationId: [null],
+        sector: [''],
         orgName: [''],
         taxNo: [''],
         taxOffice: [''],
@@ -157,19 +196,32 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.unsubscribe.push(orgChangeSub);
   }
 
+  listenLanguageChanges(): void {
+    const langChangeSub = this.translate.onLangChange.subscribe(() => {
+      this.initSectors();
+      this.refreshOtherOrganizationLabel();
+    });
+
+    this.unsubscribe.push(langChangeSub);
+  }
+
+  refreshOtherOrganizationLabel(): void {
+    this.organizations = this.organizations.map((organization) => {
+      if (Number(organization.id) !== this.OTHER_ORGANIZATION_ID) {
+        return organization;
+      }
+
+      return {
+        ...organization,
+        name: this.translate.instant('AUTH.REGISTER.OTHER_ORGANIZATION')
+      };
+    });
+  }
+
   getOrganizations() {
     const sub = this.organizationManagementService.all().subscribe({
       next: (result) => {
-        const otherOption: OrganizationModel = {
-          id: this.OTHER_ORGANIZATION_ID,
-          name: this.translate.instant('AUTH.REGISTER.OTHER_ORGANIZATION'),
-          taxNo: '',
-          taxOffice: '',
-          isDeleted: false,
-          isSystemData: false,
-          phone: '',
-          email: ''
-        };
+        const otherOption: OrganizationModel = this.getOtherOrganizationOption();
 
         if (result?.isSuccess && result.data) {
           this.organizations = [...result.data, otherOption];
@@ -178,22 +230,24 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         }
       },
       error: () => {
-        this.organizations = [
-          {
-            id: this.OTHER_ORGANIZATION_ID,
-            name: this.translate.instant('AUTH.REGISTER.OTHER_ORGANIZATION'),
-            taxNo: '',
-            taxOffice: '',
-            isDeleted: false,
-            isSystemData: false,
-            phone: '',
-            email: ''
-          }
-        ];
+        this.organizations = [this.getOtherOrganizationOption()];
       }
     });
 
     this.unsubscribe.push(sub);
+  }
+
+  getOtherOrganizationOption(): OrganizationModel {
+    return {
+      id: this.OTHER_ORGANIZATION_ID,
+      name: this.translate.instant('AUTH.REGISTER.OTHER_ORGANIZATION'),
+      taxNo: '',
+      taxOffice: '',
+      isDeleted: false,
+      isSystemData: false,
+      phone: '',
+      email: ''
+    };
   }
 
   setActiveTabId(tabId: RegistrationTabsType) {
@@ -201,6 +255,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     this.registrationForm.patchValue({
       organizationId: null,
+      sector: '',
       orgName: '',
       taxNo: '',
       taxOffice: '',
@@ -208,20 +263,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       orgEmail: ''
     });
 
-    this.f['organizationId'].markAsPristine();
-    this.f['orgName'].markAsPristine();
-    this.f['taxNo'].markAsPristine();
-    this.f['taxOffice'].markAsPristine();
-    this.f['orgPhone'].markAsPristine();
-    this.f['orgEmail'].markAsPristine();
-
-    this.f['organizationId'].markAsUntouched();
-    this.f['orgName'].markAsUntouched();
-    this.f['taxNo'].markAsUntouched();
-    this.f['taxOffice'].markAsUntouched();
-    this.f['orgPhone'].markAsUntouched();
-    this.f['orgEmail'].markAsUntouched();
-
+    this.resetCorporateControlsState();
     this.updateCorporateValidators();
   }
 
@@ -251,8 +293,26 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.updateCorporateValidators();
   }
 
+  resetCorporateControlsState(): void {
+    const controlNames = [
+      'organizationId',
+      'sector',
+      'orgName',
+      'taxNo',
+      'taxOffice',
+      'orgPhone',
+      'orgEmail'
+    ];
+
+    controlNames.forEach((controlName) => {
+      this.f[controlName].markAsPristine();
+      this.f[controlName].markAsUntouched();
+    });
+  }
+
   updateCorporateValidators() {
     const organizationIdControl = this.f['organizationId'];
+    const sectorControl = this.f['sector'];
     const orgNameControl = this.f['orgName'];
     const taxNoControl = this.f['taxNo'];
     const taxOfficeControl = this.f['taxOffice'];
@@ -260,6 +320,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     const orgEmailControl = this.f['orgEmail'];
 
     organizationIdControl.clearValidators();
+    sectorControl.clearValidators();
     orgNameControl.clearValidators();
     taxNoControl.clearValidators();
     taxOfficeControl.clearValidators();
@@ -268,6 +329,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     if (this.isCorporate) {
       organizationIdControl.setValidators([Validators.required]);
+      sectorControl.setValidators([Validators.required]);
 
       if (this.isOtherSelected) {
         orgNameControl.setValidators([Validators.required]);
@@ -281,6 +343,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
 
     organizationIdControl.updateValueAndValidity({ emitEvent: false });
+    sectorControl.updateValueAndValidity({ emitEvent: false });
     orgNameControl.updateValueAndValidity({ emitEvent: false });
     taxNoControl.updateValueAndValidity({ emitEvent: false });
     taxOfficeControl.updateValueAndValidity({ emitEvent: false });
@@ -303,11 +366,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     newUser.password = formValue.password;
     newUser.phone = formValue.phone;
     newUser.username = formValue.username;
-    newUser.isProducer = formValue.isProducer;
     newUser.organizations = [];
     newUser.roles = [];
 
     if (this.isCorporate) {
+      (newUser as any).sector = formValue.sector;
+
       if (Number(formValue.organizationId) === this.OTHER_ORGANIZATION_ID) {
         newUser.organization = {
           id: 0,

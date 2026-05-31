@@ -36,7 +36,7 @@ import { ComingOrderMapPreviewComponent } from './detail/map-preview/coming-orde
     PdfViewerModule,
     CustomModalModule,
     CustomSelectModule,
-    // LandingModule
+    LandingModule
   ]
 })
 export class ComingOrderManagementModule { }

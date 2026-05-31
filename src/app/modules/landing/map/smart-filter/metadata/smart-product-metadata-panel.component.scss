@@ -1,0 +1,147 @@
+.metadata-panel {
+  width: 600px;
+  max-width: 600px;
+  height: 100%;
+  max-height: calc(100vh - 120px);
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+
+  overflow: hidden;
+}
+
+.metadata-panel__body {
+  flex: 1;
+
+  padding: 16px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.metadata-panel__loading,
+.metadata-panel__empty {
+  min-height: 200px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  color: var(--bs-gray-600);
+  font-size: 13px;
+}
+
+.metadata-panel__empty {
+  flex-direction: column;
+  text-align: center;
+}
+
+.metadata-panel__empty i {
+  font-size: 28px;
+  color: var(--bs-gray-500);
+}
+
+.metadata-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metadata-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 12px;
+
+  padding: 10px 14px;
+
+  border: 1px solid var(--bs-gray-200);
+  border-radius: 6px;
+
+  background: var(--bs-gray-100);
+}
+
+.metadata-row__key {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bs-gray-800);
+
+  word-break: break-word;
+}
+
+.metadata-row__value {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--bs-gray-900);
+
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.metadata-raw {
+  margin: 0;
+  padding: 14px;
+
+  border: 1px solid var(--bs-gray-200);
+  border-radius: 6px;
+
+  background: var(--bs-gray-100);
+
+  font-size: 12px;
+  line-height: 1.6;
+
+  color: var(--bs-gray-900);
+
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.metadata-section {
+  margin-bottom: 20px;
+}
+
+.metadata-section:last-child {
+  margin-bottom: 0;
+}
+
+.metadata-section__title {
+  margin-bottom: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: var(--bs-primary);
+}
+
+.metadata-panel__body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.metadata-panel__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.metadata-panel__body::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+
+.metadata-panel__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 768px) {
+  .metadata-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .metadata-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -15,6 +15,10 @@ export class MapToolbarComponent {
     | 'coordinate'
     | 'measure'
     | 'export'
+    | 'polygon'
+    | 'upload'
+    | 'search'
+    | 'smart-filter'
     | null = null;
 
   @Output() layerManagerHovered = new EventEmitter<void>();

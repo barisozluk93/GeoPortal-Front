@@ -25,7 +25,7 @@ export class ContactComponent {
   });
 
   isSubmitted = false;
-
+  isLoading = false;
 
   get f() {
     return this.contactForm.controls;
@@ -33,24 +33,43 @@ export class ContactComponent {
 
   onSubmit(): void {
     this.isSubmitted = true;
+    this.contactForm.markAllAsTouched();
 
-    if (this.contactForm.invalid) {
-      this.contactForm.markAllAsTouched();
+    if (this.contactForm.invalid || this.isLoading) {
       return;
     }
 
+    this.isLoading = true;
+
     const payload = this.contactForm.value;
 
-    this.contactService.create(payload).subscribe(result => {
-      if(result.isSuccess) {
-        this.alertService.createAlert("success", this.translate.instant("MESSAGES.CONTACT_SUCCESS"));
-      }
-      else {
-        this.alertService.createAlert("danger", this.translate.instant("MESSAGES.ERROR"));
-      }
-    })
+    this.contactService.create(payload).subscribe({
+      next: result => {
+        if (result?.isSuccess) {
+          this.alertService.createAlert(
+            'success',
+            this.translate.instant('MESSAGES.CONTACT_SUCCESS')
+          );
 
-    this.contactForm.reset();
-    this.isSubmitted = false;
+          this.contactForm.reset();
+          this.isSubmitted = false;
+        } else {
+          this.alertService.createAlert(
+            'danger',
+            this.translate.instant('MESSAGES.ERROR')
+          );
+        }
+
+        this.isLoading = false;
+      },
+      error: () => {
+        this.alertService.createAlert(
+          'danger',
+          this.translate.instant('MESSAGES.ERROR')
+        );
+
+        this.isLoading = false;
+      }
+    });
   }
 }
