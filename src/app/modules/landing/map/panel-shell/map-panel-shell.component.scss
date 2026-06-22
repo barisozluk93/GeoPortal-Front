@@ -1,5 +1,8 @@
 .map-panel-shell {
-  min-width: 420px;
+  width: clamp(320px, 30vw, 360px);
+  min-width: 0;
+  max-width: calc(100vw - 116px);
+  box-sizing: border-box;
   max-height: calc(100vh - 130px);
   display: flex;
   flex-direction: column;
@@ -27,6 +30,7 @@
   right: 16px;
   bottom: 16px;
   width: auto;
+  max-width: none;
   max-height: none;
   z-index: 1100;
 }
@@ -62,6 +66,191 @@
 
 .map-panel-shell__body {
   flex: 1;
+  min-width: 0;
   min-height: 0;
   overflow: auto;
+}
+
+@media (max-width: 991.98px) {
+  .map-panel-shell {
+    width: min(360px, calc(100vw - 92px));
+    max-width: calc(100vw - 92px);
+  }
+
+  .map-panel-shell--maximized {
+    left: 76px;
+    right: 12px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .map-panel-shell {
+    width: calc(100vw - 84px);
+    max-width: calc(100vw - 84px);
+  }
+
+  .map-panel-shell__header {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .map-panel-shell--maximized {
+    left: 64px;
+    right: 8px;
+    top: 8px;
+    bottom: 8px;
+  }
+}
+
+/* Panel tiplerine göre daha okunabilir responsive genişlikler */
+.map-panel-shell--smart-results,
+.map-panel-shell--advanced-filter,
+.map-panel-shell--product-request,
+.map-panel-shell--prefilter {
+  width: clamp(420px, 36vw, 480px);
+  max-width: calc(100vw - 116px);
+}
+
+.map-panel-shell--metadata {
+  width: clamp(440px, 38vw, 540px);
+  max-width: calc(100vw - 116px);
+}
+
+/* Metadata panelinde çift scroll oluşmasın; sadece iç body scroll alsın. */
+.map-panel-shell--metadata .map-panel-shell__body {
+  overflow: hidden;
+}
+
+@media (max-width: 991.98px) {
+  .map-panel-shell--smart-results,
+  .map-panel-shell--advanced-filter,
+  .map-panel-shell--product-request,
+  .map-panel-shell--prefilter,
+  .map-panel-shell--metadata {
+    width: min(460px, calc(100vw - 92px));
+    max-width: calc(100vw - 92px);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .map-panel-shell--smart-results,
+  .map-panel-shell--advanced-filter,
+  .map-panel-shell--product-request,
+  .map-panel-shell--prefilter,
+  .map-panel-shell--metadata {
+    width: calc(100vw - 84px);
+    max-width: calc(100vw - 84px);
+  }
+}
+
+/* Metadata için tek scroll: shell body scroll alır, içerik kesilmez. */
+.map-panel-shell--metadata .map-panel-shell__body {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+/* FINAL FIX: metadata scroll sadece metadata body içinde; shell ikinci scrollbar üretmesin. */
+.map-panel-shell--metadata {
+  width: clamp(460px, 40vw, 560px);
+}
+
+.map-panel-shell--metadata .map-panel-shell__body {
+  overflow: hidden !important;
+  min-height: 0 !important;
+}
+
+/* FIX: Metadata panelinde shell ikinci scrollbar üretmesin; iç metadata body tek scroll olsun. */
+.map-panel-shell--metadata .map-panel-shell__body {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
+}
+
+.map-panel-shell--metadata .map-panel-shell__body > * {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+}
+
+/* SCROLL FIX: Metadata panel sabit viewport yüksekliğinde kalsın; içerik tek scroll ile aksın. */
+.map-panel-shell--metadata:not(.map-panel-shell--minimized) {
+  height: calc(100vh - 130px) !important;
+  max-height: calc(100vh - 130px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.map-panel-shell--metadata:not(.map-panel-shell--minimized) .map-panel-shell__body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.map-panel-shell--metadata:not(.map-panel-shell--minimized) .map-panel-shell__body > app-smart-product-metadata-panel {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+}
+
+@media (max-width: 575.98px) {
+  .map-panel-shell--metadata:not(.map-panel-shell--minimized) {
+    height: calc(100vh - 84px) !important;
+    max-height: calc(100vh - 84px) !important;
+  }
+}
+
+/* POSITION/SCROLL FINAL: metadata panel tek scroll ile viewport içinde kalsın. */
+.map-panel-shell--metadata:not(.map-panel-shell--minimized) {
+  height: calc(100vh - 40px) !important;
+  max-height: calc(100vh - 40px) !important;
+}
+
+.map-panel-shell--metadata:not(.map-panel-shell--minimized) .map-panel-shell__body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+}
+
+.map-panel-shell--metadata:not(.map-panel-shell--minimized) .map-panel-shell__body > app-smart-product-metadata-panel {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  display: flex !important;
+}
+
+/* USER FINAL: metadata panel biraz daha dar ve solundaki sonuç paneliyle aynı maksimum yükseklikte kalsın. */
+.map-panel-shell--metadata {
+  width: clamp(430px, 36vw, 520px) !important;
+  max-width: calc(100vw - 116px) !important;
+}
+
+.map-panel-shell--metadata:not(.map-panel-shell--minimized) {
+  height: calc(100vh - 130px) !important;
+  max-height: calc(100vh - 130px) !important;
+}
+
+@media (max-width: 991.98px) {
+  .map-panel-shell--metadata {
+    width: min(440px, calc(100vw - 92px)) !important;
+    max-width: calc(100vw - 92px) !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .map-panel-shell--metadata {
+    width: calc(100vw - 84px) !important;
+    max-width: calc(100vw - 84px) !important;
+  }
+
+  .map-panel-shell--metadata:not(.map-panel-shell--minimized) {
+    height: calc(100vh - 84px) !important;
+    max-height: calc(100vh - 84px) !important;
+  }
 }

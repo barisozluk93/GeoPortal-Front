@@ -1,6 +1,7 @@
 .metadata-panel {
-  width: 600px;
-  max-width: 600px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   height: 100%;
   max-height: calc(100vh - 120px);
 
@@ -18,7 +19,7 @@
 .metadata-panel__body {
   flex: 1;
 
-  padding: 16px;
+  padding: 12px;
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -55,7 +56,7 @@
 
 .metadata-row {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: minmax(110px, 38%) minmax(0, 1fr);
   gap: 12px;
 
   padding: 10px 14px;
@@ -135,7 +136,7 @@
   background: rgba(0, 0, 0, 0.25);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 575.98px) {
   .metadata-panel {
     width: 100%;
     max-width: 100%;
@@ -144,4 +145,140 @@
   .metadata-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* Daralmada okunabilirliği koru ve ekstra yatay/çift scroll oluşturma. */
+.metadata-panel {
+  max-height: 100%;
+}
+
+.metadata-panel__body {
+  min-height: 0;
+}
+
+.metadata-row {
+  grid-template-columns: minmax(130px, 34%) minmax(0, 1fr);
+  align-items: start;
+}
+
+.metadata-row__key,
+.metadata-row__value,
+.metadata-raw {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 420px) {
+  .metadata-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+/* Metadata içeriği parent shell içinde aksın; ayrı iç scroll üretme ve kesme yapma. */
+.metadata-panel {
+  height: auto;
+  min-height: 100%;
+  max-height: none;
+  overflow: visible;
+}
+
+.metadata-panel__body {
+  overflow: visible;
+}
+
+
+/* FINAL FIX: metadata panelde tek scroll olsun ve içerik kesilmesin. */
+.metadata-panel {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.metadata-panel__body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* FIX: Metadata içeriği kesilmesin; tek scrollbar burada çalışsın. */
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  width: 100%;
+}
+
+.metadata-panel {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.metadata-panel__body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
+
+/* SCROLL FIX: Metadata içeriği kesilmeden tek scrollbar burada görünsün. */
+:host {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.metadata-panel {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.metadata-panel__body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-gutter: stable;
+}
+
+/* POSITION/SCROLL FINAL: metadata içeriği kesilmesin, tek scrollbar burada görünsün. */
+:host {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  width: 100% !important;
+}
+
+.metadata-panel {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.metadata-panel__body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }

@@ -1,9 +1,10 @@
 <div
   class="map-panel-shell"
-  [ngClass]="{
-    'map-panel-shell--minimized': minimized,
-    'map-panel-shell--maximized': maximized
-  }"
+  [ngClass]="[
+    panelClass,
+    minimized ? 'map-panel-shell--minimized' : '',
+    maximized ? 'map-panel-shell--maximized' : ''
+  ]"
 >
   <div class="map-panel-shell__header">
     <div class="map-panel-shell__title" [title]="title">

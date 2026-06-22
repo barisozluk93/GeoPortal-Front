@@ -141,13 +141,16 @@
 
 .map-layer-manager-floating {
   position: absolute;
-  top: 24px;
-  left: 90px;
+  top: 20px;
+  left: 72px;
   z-index: 35;
 
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
+  max-width: calc(100vw - 84px);
+  overflow-x: auto;
+  overflow-y: visible;
 
   pointer-events: none;
 
@@ -158,13 +161,16 @@
 
 .map-panels-container {
   position: absolute;
-  left: 88px;
-  top: 24px;
+  left: 72px;
+  top: 20px;
   z-index: 1000;
 
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
+  max-width: calc(100vw - 84px);
+  overflow-x: auto;
+  overflow-y: visible;
 }
 
 /* =========================
@@ -230,14 +236,14 @@
   }
 
   .map-layer-manager-floating {
-    left: 70px;
-    max-width: calc(100vw - 80px);
+    left: 72px;
+    max-width: calc(100vw - 84px);
     overflow-x: auto;
   }
 
   .map-panels-container {
-    left: 70px;
-    max-width: calc(100vw - 80px);
+    left: 72px;
+    max-width: calc(100vw - 84px);
     overflow-x: auto;
   }
 }

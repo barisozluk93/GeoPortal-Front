@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class MapPanelShellComponent {
   @Input() title = '';
   @Input() icon = 'fa-solid fa-window-maximize';
+  @Input() panelClass = '';
 
   @Input() minimized = false;
   @Input() maximized = false;

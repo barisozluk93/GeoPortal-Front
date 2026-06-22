@@ -1,7 +1,7 @@
 .smart-product-filter-panel {
   width: 100%;
   height: 100%;
-  min-width: 420px;
+  min-width: 0;
 
   display: flex;
   flex-direction: column;
@@ -14,7 +14,7 @@
   flex: 1;
 
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 12px;
 
   padding: 16px;
@@ -82,7 +82,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 575.98px) {
   .smart-product-filter-panel {
     min-width: 0;
   }
@@ -98,5 +98,21 @@
 
   .smart-product-filter-panel__footer .btn {
     width: 100%;
+  }
+}
+
+/* Genişletilen panelde inputlar anlamlı şekilde iki sütun kalsın. */
+.smart-product-filter-panel__body {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+}
+
+.filter-field .form-label {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 575.98px) {
+  .smart-product-filter-panel__body {
+    grid-template-columns: 1fr;
   }
 }

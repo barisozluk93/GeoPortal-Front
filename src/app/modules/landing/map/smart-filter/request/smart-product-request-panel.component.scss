@@ -1,7 +1,7 @@
 .smart-product-request-panel {
   width: 100%;
   height: 100%;
-  min-width: 420px;
+  min-width: 0;
   max-height: 100%;
 
   display: flex;
@@ -15,7 +15,7 @@
   flex: 1;
 
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 
   gap: 12px;
 
@@ -150,7 +150,7 @@
   border-radius: 10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 575.98px) {
   .smart-product-request-panel {
     min-width: 0;
   }
@@ -164,4 +164,37 @@
 .request-update-aoi-btn {
   justify-content: center;
   margin-bottom: 14px;
+}
+
+/* Panel genişlediğinde form alanlarını ikili diz; küçük ekranda otomatik tek sütuna düşer. */
+.smart-product-request-panel__body {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+}
+
+.smart-product-request-panel__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.request-area-card,
+.request-checkbox-label,
+.filter-field .form-label {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 575.98px) {
+  .smart-product-request-panel__body {
+    grid-template-columns: 1fr;
+  }
+
+  .smart-product-request-panel__footer {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .smart-product-request-panel__footer .btn {
+    width: 100%;
+  }
 }

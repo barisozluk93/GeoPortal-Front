@@ -71,7 +71,7 @@
     </div>
 
     <div class="map-layer-manager-floating" *ngIf="isSmartPrefilterPanelOpen">
-      <app-map-panel-shell icon="fa-solid fa-filter" [title]="'MAP.SMART_FILTER.PREFILTER.TITLE' | translate"
+      <app-map-panel-shell icon="fa-solid fa-filter" panelClass="map-panel-shell--prefilter" [title]="'MAP.SMART_FILTER.PREFILTER.TITLE' | translate"
         [minimized]="panelUiState.smartPrefilter.minimized" [maximized]="panelUiState.smartPrefilter.maximized"
         (closeClicked)="closeSmartPrefilterPanel()" (minimizeClicked)="togglePanelMinimize('smartPrefilter')"
         (maximizeClicked)="togglePanelMaximize('smartPrefilter')">
@@ -84,7 +84,7 @@
 
 
     <div class="map-layer-manager-floating" *ngIf="isSmartFilterPanelOpen">
-      <app-map-panel-shell icon="fa-solid fa-satellite" [title]="'MAP.SMART_FILTER.TITLE' | translate"
+      <app-map-panel-shell icon="fa-solid fa-satellite" panelClass="map-panel-shell--smart-results" [title]="'MAP.SMART_FILTER.TITLE' | translate"
         [minimized]="panelUiState.smartFilter.minimized" [maximized]="panelUiState.smartFilter.maximized"
         (closeClicked)="closeSmartFilterPanel()" (minimizeClicked)="togglePanelMinimize('smartFilter')"
         (maximizeClicked)="togglePanelMaximize('smartFilter')">
@@ -98,7 +98,7 @@
         </app-smart-filter-panel>
       </app-map-panel-shell>
 
-      <app-map-panel-shell *ngIf="isMetadataPanelOpen" icon="fa-solid fa-circle-info"
+      <app-map-panel-shell *ngIf="isMetadataPanelOpen" icon="fa-solid fa-circle-info" panelClass="map-panel-shell--metadata"
         [title]="selectedMetadataProductName || ('MAP.SMART_FILTER.METADATA' | translate)"
         [minimized]="panelUiState.metadata.minimized" [maximized]="panelUiState.metadata.maximized"
         (closeClicked)="closeMetadataPanel()" (minimizeClicked)="togglePanelMinimize('metadata')"
@@ -108,7 +108,7 @@
         </app-smart-product-metadata-panel>
       </app-map-panel-shell>
 
-      <app-map-panel-shell *ngIf="isSmartAdvancedFilterPanelOpen" icon="fa-solid fa-filter"
+      <app-map-panel-shell *ngIf="isSmartAdvancedFilterPanelOpen" icon="fa-solid fa-filter" panelClass="map-panel-shell--advanced-filter"
         [title]="'MAP.SMART_FILTER.FILTER' | translate"
         [minimized]="panelUiState.smartAdvancedFilter.minimized"
         [maximized]="panelUiState.smartAdvancedFilter.maximized" (closeClicked)="closeSmartAdvancedFilterPanel()"
@@ -120,7 +120,7 @@
         </app-smart-product-filter-panel>
       </app-map-panel-shell>
 
-      <app-map-panel-shell *ngIf="isSmartProductRequestPanelOpen" icon="fa-solid fa-cart-plus"
+      <app-map-panel-shell *ngIf="isSmartProductRequestPanelOpen" icon="fa-solid fa-cart-plus" panelClass="map-panel-shell--product-request"
         [title]="'MAP.SMART_FILTER.REQUEST_PANEL.TITLE' | translate"
         [minimized]="panelUiState.smartProductRequest.minimized"
         [maximized]="panelUiState.smartProductRequest.maximized" (closeClicked)="closeSmartProductRequestPanel()"

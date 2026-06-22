@@ -42,14 +42,18 @@
         </div>
       </div>
 
-      <button type="button" class="btn btn-sm btn-primary smart-filter-toolbar-btn" (click)="createRequest.emit()">
-        <i class="fa-solid fa-plus me-1"></i>
-        {{ 'MAP.SMART_FILTER.NEW_REQUEST' | translate }}
+      <button type="button" class="btn btn-sm btn-primary smart-filter-toolbar-btn smart-filter-icon-btn"
+        [title]="'MAP.SMART_FILTER.NEW_REQUEST' | translate"
+        [attr.aria-label]="'MAP.SMART_FILTER.NEW_REQUEST' | translate"
+        (click)="createRequest.emit()">
+        <i class="fa-solid fa-plus"></i>
       </button>
 
-      <button type="button" class="btn btn-sm btn-light-primary smart-filter-toolbar-btn" (click)="filterClicked.emit()">
-        <i class="fa-solid fa-filter me-1"></i>
-        {{ 'MAP.SMART_FILTER.FILTER' | translate }}
+      <button type="button" class="btn btn-sm btn-light-primary smart-filter-toolbar-btn smart-filter-icon-btn"
+        [title]="'MAP.SMART_FILTER.FILTER' | translate"
+        [attr.aria-label]="'MAP.SMART_FILTER.FILTER' | translate"
+        (click)="filterClicked.emit()">
+        <i class="fa-solid fa-filter"></i>
       </button>
     </div>
   </div>
