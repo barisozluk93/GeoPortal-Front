@@ -132,21 +132,6 @@
         </ng-container>
       </div>
 
-      <!-- GROUP -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.GROUP' | translate }}
-        </label>
-
-        <app-custom-select [size]="'lg'" formControlName="layerGroupId" [items]="layerGroupList" bindLabel="name" bindValue="id"
-          [placeholder]="'LAYER_FORM.SELECT_GROUP' | translate" [invalid]="isInvalid('layerGroupId')" [clearable]="true">
-        </app-custom-select>
-
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('layerGroupId')">
-          {{ 'LAYER_FORM.REQUIRED_GROUP' | translate }}
-        </div>
-      </div>
-
     </div>
 
   </form>

@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import shp from 'shpjs';
+import JSZip from 'jszip';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -31,6 +32,8 @@ import KML from 'ol/format/KML';
 import WKT from 'ol/format/WKT';
 
 import Draw from 'ol/interaction/Draw';
+import Modify from 'ol/interaction/Modify';
+import Snap from 'ol/interaction/Snap';
 import Feature from 'ol/Feature';
 
 import Geometry from 'ol/geom/Geometry';
@@ -41,7 +44,7 @@ import MultiPolygon from 'ol/geom/MultiPolygon';
 import { getArea, getLength } from 'ol/sphere';
 import { Style, Stroke, Circle as CircleStyle, Fill } from 'ol/style';
 
-import { defaults as defaultControls, ScaleLine } from 'ol/control';
+import { defaults as defaultControls } from 'ol/control';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { Extent } from 'ol/extent';
 import { Coordinate } from 'ol/coordinate';
@@ -50,7 +53,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 
 import { LayerModel } from '../../map-management/models/layer.model';
-import { LayerGroupModel } from '../../map-management/models/layergroup.model';
 import { LayerType } from '../../map-management/models/layertype.model';
 import { MapService } from './map.service';
 import { MapExportOptions } from './export-panel/map-export-panel.component';
@@ -67,10 +69,14 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MetadataRow } from './smart-filter/metadata/smart-product-metadata-panel.component';
 import { ProductModel } from '../marketplace/models/product.model';
+import Overlay from 'ol/Overlay';
+import { EventsKey } from 'ol/events';
+import { unByKey } from 'ol/Observable';
+import { createBox } from 'ol/interaction/Draw';
 
 type OlMapLayer = TileLayer<any> | VectorLayer<VectorSource>;
 type CoordinateFormat = 'dd' | 'dms';
-type SupportedAreaFileExtension = 'zip' | 'geojson' | 'json' | 'kml';
+type SupportedAreaFileExtension = 'zip' | 'geojson' | 'json' | 'kml' | 'kmz';
 
 type ActiveTool =
   | 'layer-manager'
@@ -78,6 +84,7 @@ type ActiveTool =
   | 'measure'
   | 'export'
   | 'polygon'
+  | 'rectangle'
   | 'upload'
   | 'search'
   | 'smart-filter'
@@ -85,16 +92,26 @@ type ActiveTool =
 
 type PanelKey =
   | 'layerManager'
-  | 'legend'
   | 'search'
   | 'coordinate'
   | 'export'
   | 'smartFilter'
+  | 'smartPrefilter'
   | 'metadata'
   | 'smartAdvancedFilter'
   | 'smartProductRequest';
 
 type PanelUiState = Record<PanelKey, { minimized: boolean; maximized: boolean }>;
+
+type UserAreaOrigin = 'draw' | 'upload' | 'search' | null;
+
+type AoiPanelSnapshot = {
+  isSmartPrefilterPanelOpen: boolean;
+  isSmartFilterPanelOpen: boolean;
+  isSmartAdvancedFilterPanelOpen: boolean;
+  isSmartProductRequestPanelOpen: boolean;
+  isMetadataPanelOpen: boolean;
+};
 
 @Component({
   selector: 'app-map',
@@ -110,6 +127,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   coordinateFormat: CoordinateFormat = 'dd';
   currentCoordinateText = '-';
+  customScaleText = '3000 km';
   isCoordinateMenuOpen = false;
 
   isLayerManagerOpen = false;
@@ -118,6 +136,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   isExportPanelOpen = false;
   isSmartFilterPanelOpen = false;
   isSmartFilterLoading = false;
+  isSmartPrefilterPanelOpen = false;
 
   smartFilterResults: ProductSmartFilterResult[] = [];
   smartFilterRequest: ProductSmartFilterRequest = {
@@ -128,25 +147,22 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   selectedSmartFilterAreaUnit: 'km2' | 'm2' | 'ha' | 'da' = 'km2';
   totalSelectedAreaM2 = 0;
 
-  selectedLegendLayer?: LayerModel;
-  selectedFilterLayer?: LayerModel;
 
   activeTool: ActiveTool = null;
 
   panelUiState: PanelUiState = {
     layerManager: { minimized: false, maximized: false },
-    legend: { minimized: false, maximized: false },
     search: { minimized: false, maximized: false },
     coordinate: { minimized: false, maximized: false },
     export: { minimized: false, maximized: false },
     smartFilter: { minimized: false, maximized: false },
+    smartPrefilter: { minimized: false, maximized: false },
     metadata: { minimized: false, maximized: false },
     smartAdvancedFilter: { minimized: false, maximized: false },
     smartProductRequest: { minimized: false, maximized: false },
   };
 
-  layerGroups: LayerGroupModel[] = [];
-  baseMapOpacity = 1;
+  layers: LayerModel[] = [];
 
   isLengthMeasureActive = false;
   lengthMeasureText = '';
@@ -160,6 +176,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   metadataRows: MetadataRow[] = [];
   metadataRawText = '';
 
+  isAoiUpdateMode = false;
+  private userAreaOrigin: UserAreaOrigin = null;
+  private aoiUpdatePanelSnapshot?: AoiPanelSnapshot;
+  private aoiUpdateEscHandler?: (event: KeyboardEvent) => void;
+
   private readonly defaultCenter = fromLonLat([35.2433, 38.9637]);
   private readonly defaultZoom = 6;
 
@@ -170,7 +191,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     'geojson',
     'json',
     'kml',
+    'kmz'
   ];
+
+  private readonly scaleBarWidthPx = 276;
+  private readonly maxScaleDistanceMeters = 3_000_000;
+
 
   private map?: Map;
   private dynamicLayers: OlMapLayer[] = [];
@@ -179,6 +205,15 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private measureDraw?: Draw;
   private measureSource = new VectorSource();
+  private measureTooltipElement?: HTMLDivElement;
+  private measureTooltipOverlay?: Overlay;
+  private measureGeometryChangeKey?: EventsKey;
+
+  private areaTooltipOverlays: Overlay[] = [];
+  private areaGeometryChangeKey?: EventsKey;
+  private areaModify?: Modify;
+  private areaSnap?: Snap;
+  private areaModifyGeometryChangeKeys: EventsKey[] = [];
 
   private polygonDraw?: Draw;
   private userAreaSource = new VectorSource();
@@ -199,6 +234,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   });
 
   private selectedSmartProductResultSource = new VectorSource();
+  private selectedSmartProducts: ProductSmartFilterResult[] = [];
+  private hoveredSmartProduct: ProductSmartFilterResult | null = null;
 
   private selectedSmartProductResultLayer = new VectorLayer({
     source: this.selectedSmartProductResultSource,
@@ -291,14 +328,16 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopLengthMeasure(true);
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
+    this.stopAoiUpdateMode(false);
+    this.disableAreaModify();
     this.map?.setTarget(undefined);
     this.clearDynamicLayers();
   }
 
   zoomIn(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     const view = this.map?.getView();
     if (!view) return;
@@ -313,7 +352,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   zoomOut(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     const view = this.map?.getView();
     if (!view) return;
@@ -331,8 +370,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (!view) return;
 
     this.stopLengthMeasure(true);
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
+    this.disableAreaModify();
     this.userAreaSource.clear();
+    this.userAreaOrigin = null;
     this.clearSmartFilterResults();
 
     view.animate({
@@ -355,10 +396,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
     this.closeAllPanels();
 
+    this.disableAreaModify();
     this.userAreaSource.clear();
+    this.userAreaOrigin = null;
     this.clearSmartFilterResults();
 
     this.activeTool = 'measure';
@@ -369,7 +412,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (this.previewMode) return;
 
     if (this.polygonDraw) {
-      this.stopPolygonDraw();
+      this.stopPolygonDraw(true);
       this.activeTool = null;
       return;
     }
@@ -377,7 +420,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.clearMeasure();
     this.closeAllPanels();
 
+    this.disableAreaModify();
     this.userAreaSource.clear();
+    this.userAreaOrigin = null;
     this.clearSmartFilterResults();
 
     this.activeTool = 'polygon';
@@ -388,7 +433,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (this.previewMode) return;
 
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
     this.closeAllPanels();
 
     this.activeTool = 'upload';
@@ -425,10 +470,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
     this.clearMeasure();
 
+    this.disableAreaModify();
     this.userAreaSource.clear();
+    this.userAreaOrigin = null;
     this.clearSmartFilterResults();
 
     try {
@@ -451,12 +498,17 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       }
 
       this.userAreaSource.addFeatures(polygonFeatures);
+      this.userAreaOrigin = 'upload';
+      this.disableAreaModify();
       this.fitToUserAreas();
       this.calculateSelectedArea();
-      this.runSmartProductFilter();
+      this.clearAreaTooltips();
+      this.openSmartPrefilterPanel();
     } catch (error) {
       console.error('Dosya yüklenirken hata oluştu:', error);
+      this.disableAreaModify();
       this.userAreaSource.clear();
+    this.userAreaOrigin = null;
       this.clearSmartFilterResults();
       this.showUploadWarning('MAP.UPLOAD.FILE_READ_ERROR');
     } finally {
@@ -467,7 +519,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   openLayerManager(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.isSearchPanelOpen = false;
     this.isGoToCoordinatePanelOpen = false;
@@ -479,16 +531,13 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   closeLayerManager(): void {
     this.isLayerManagerOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
     this.resetPanelState('layerManager');
-    this.resetPanelState('legend');
     this.activeTool = null;
   }
 
   toggleLayerManager(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.isSearchPanelOpen = false;
     this.isGoToCoordinatePanelOpen = false;
@@ -498,24 +547,20 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.activeTool = this.isLayerManagerOpen ? 'layer-manager' : null;
 
     if (!this.isLayerManagerOpen) {
-      this.selectedLegendLayer = undefined;
-      this.selectedFilterLayer = undefined;
-      this.resetPanelState('layerManager');
-      this.resetPanelState('legend');
-    }
+          this.resetPanelState('layerManager');
+      }
   }
 
   openSearchPanel(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.isLayerManagerOpen = false;
     this.isGoToCoordinatePanelOpen = false;
     this.isExportPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
     this.isSearchPanelOpen = true;
 
     this.activeTool = 'search';
@@ -529,15 +574,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   toggleSearchPanel(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.isLayerManagerOpen = false;
     this.isGoToCoordinatePanelOpen = false;
     this.isExportPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
 
     this.isSearchPanelOpen = !this.isSearchPanelOpen;
     this.activeTool = this.isSearchPanelOpen ? 'search' : null;
@@ -547,9 +591,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (this.previewMode) return;
 
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
+    this.disableAreaModify();
     this.userAreaSource.clear();
+    this.userAreaOrigin = null;
     this.clearSmartFilterResults();
 
     const features = new GeoJSON().readFeatures(result.geoJson, {
@@ -567,25 +613,27 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     this.userAreaSource.addFeatures(polygonFeatures);
+    this.userAreaOrigin = 'search';
+    this.disableAreaModify();
     this.fitToUserAreas();
     this.calculateSelectedArea();
-    this.runSmartProductFilter();
+    this.clearAreaTooltips();
+    this.openSmartPrefilterPanel();
   }
 
   openSmartFilterPanel(): void {
     if (this.previewMode) return;
 
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(false);
 
     this.isLayerManagerOpen = false;
     this.isSearchPanelOpen = false;
     this.isGoToCoordinatePanelOpen = false;
     this.isExportPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
 
     this.isSmartFilterPanelOpen = true;
     this.activeTool = 'smart-filter';
@@ -593,9 +641,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   closeSmartFilterPanel(): void {
     this.stopLengthMeasure(true);
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
+    this.disableAreaModify();
 
     this.userAreaSource.clear();
+    this.userAreaOrigin = null;
     this.clearSmartFilterResults();
 
     this.isMetadataPanelOpen = false;
@@ -605,6 +655,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.metadataRawText = '';
 
     this.resetPanelState('smartFilter');
+    this.resetPanelState('smartPrefilter');
     this.resetPanelState('metadata');
     this.resetPanelState('smartAdvancedFilter');
     this.resetPanelState('smartProductRequest');
@@ -618,6 +669,64 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       rotation: 0,
       duration: 300,
     });
+  }
+
+  openSmartPrefilterPanel(): void {
+    if (this.previewMode) return;
+
+    const wkt = this.getAoiWkt();
+
+    if (!wkt) {
+      this.showUploadWarning('MAP.SMART_FILTER.AOI_REQUIRED');
+      return;
+    }
+
+    this.smartFilterRequest = {
+      wkt,
+      acquisitionStartDate: null,
+      acquisitionEndDate: null,
+      pageNumber: 1,
+      pageSize: this.smartFilterRequest.pageSize ?? 100,
+    };
+
+    this.isLayerManagerOpen = false;
+    this.isSearchPanelOpen = false;
+    this.isGoToCoordinatePanelOpen = false;
+    this.isExportPanelOpen = false;
+    this.isSmartFilterPanelOpen = false;
+    this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
+    this.isSmartProductRequestPanelOpen = false;
+    this.isMetadataPanelOpen = false;
+
+    this.smartFilterResults = [];
+    this.smartProductResultSource.clear();
+    this.selectedSmartProductResultSource.clear();
+    this.selectedSmartProducts = [];
+    this.hoveredSmartProduct = null;
+    this.clearSelectedProductPreviewImages();
+
+    this.isSmartPrefilterPanelOpen = true;
+    this.activeTool = 'smart-filter';
+  }
+
+  closeSmartPrefilterPanel(): void {
+    this.isSmartPrefilterPanelOpen = false;
+    this.resetPanelState('smartPrefilter');
+  }
+
+  applySmartProductPrefilter(request: ProductSmartFilterRequest): void {
+    this.smartFilterRequest = {
+      ...this.smartFilterRequest,
+      ...request,
+      wkt: this.getAoiWkt(),
+      pageNumber: 1,
+      pageSize: request.pageSize ?? this.smartFilterRequest.pageSize ?? 100,
+    };
+
+    this.isSmartPrefilterPanelOpen = false;
+    this.resetPanelState('smartPrefilter');
+    this.runSmartProductFilter();
   }
 
   openSmartAdvancedFilterPanel(): void {
@@ -663,6 +772,108 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isSmartProductRequestPanelOpen = true;
   }
 
+
+  startAoiUpdateFromRequestPanel(): void {
+    if (this.previewMode || this.userAreaSource.isEmpty()) return;
+
+    if (this.userAreaOrigin !== 'draw') {
+      this.alertService.createAlert(
+        'warning',
+        this.translate.instant('MAP.SMART_FILTER.AOI_UPDATE_ONLY_FOR_DRAWINGS')
+      );
+      return;
+    }
+
+    this.clearMeasure();
+    this.stopPolygonDraw(true);
+
+    this.aoiUpdatePanelSnapshot = {
+      isSmartPrefilterPanelOpen: this.isSmartPrefilterPanelOpen,
+      isSmartFilterPanelOpen: this.isSmartFilterPanelOpen,
+      isSmartAdvancedFilterPanelOpen: this.isSmartAdvancedFilterPanelOpen,
+      isSmartProductRequestPanelOpen: this.isSmartProductRequestPanelOpen,
+      isMetadataPanelOpen: this.isMetadataPanelOpen,
+    };
+
+    this.isSmartPrefilterPanelOpen = false;
+    this.isSmartFilterPanelOpen = false;
+    this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartProductRequestPanelOpen = false;
+    this.isMetadataPanelOpen = false;
+
+    this.isAoiUpdateMode = true;
+    this.activeTool = null;
+
+    this.prepareUserAreaForAoiUpdate();
+    this.enableAreaModify();
+    this.bindAoiUpdateEscHandler();
+  }
+
+  private bindAoiUpdateEscHandler(): void {
+    this.unbindAoiUpdateEscHandler();
+
+    this.aoiUpdateEscHandler = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      this.stopAoiUpdateMode(false);
+    };
+
+    window.addEventListener('keydown', this.aoiUpdateEscHandler);
+  }
+
+  private unbindAoiUpdateEscHandler(): void {
+    if (!this.aoiUpdateEscHandler) return;
+
+    window.removeEventListener('keydown', this.aoiUpdateEscHandler);
+    this.aoiUpdateEscHandler = undefined;
+  }
+
+  private stopAoiUpdateMode(areaChanged: boolean): void {
+    if (!this.isAoiUpdateMode) return;
+
+    const shouldReopenRequestPanel =
+      this.aoiUpdatePanelSnapshot?.isSmartProductRequestPanelOpen === true;
+
+    this.isAoiUpdateMode = false;
+    this.activeTool = null;
+    this.unbindAoiUpdateEscHandler();
+    this.disableAreaModify();
+
+    if (areaChanged) {
+      this.calculateSelectedArea();
+      this.clearAreaTooltips();
+      this.smartFilterRequest = {
+        ...this.smartFilterRequest,
+        wkt: this.getAoiWkt(),
+        pageNumber: 1,
+        pageSize: this.smartFilterRequest.pageSize ?? 100,
+      };
+    }
+
+    this.restoreAoiUpdatePanels();
+
+    if (areaChanged) {
+      this.runSmartProductFilter(shouldReopenRequestPanel);
+    }
+  }
+
+  private restoreAoiUpdatePanels(): void {
+    const snapshot = this.aoiUpdatePanelSnapshot;
+    this.aoiUpdatePanelSnapshot = undefined;
+
+    if (!snapshot) return;
+
+    this.isSmartPrefilterPanelOpen = snapshot.isSmartPrefilterPanelOpen;
+    this.isSmartFilterPanelOpen = snapshot.isSmartFilterPanelOpen;
+    this.isSmartAdvancedFilterPanelOpen = snapshot.isSmartAdvancedFilterPanelOpen;
+    this.isSmartProductRequestPanelOpen = snapshot.isSmartProductRequestPanelOpen;
+    this.isMetadataPanelOpen = snapshot.isMetadataPanelOpen;
+
+    this.updateMapSizeAsync();
+  }
+
   closeSmartProductRequestPanel(): void {
     this.isSmartProductRequestPanelOpen = false;
     this.isSmartProductRequestLoading = false;
@@ -685,7 +896,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       categoryId: 3
     };
 
-    if(currentUser) {
+    if (currentUser) {
       const data: BasketModel = {
         id: 0,
         userId: currentUser ? Number(currentUser.id) : 0,
@@ -727,7 +938,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         },
       });
     }
-    else{
+    else {
       var basket = JSON.parse(localStorage.getItem("basket") as string) as BasketModel[];
 
       if (basket) {
@@ -797,6 +1008,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     var metadataUrl = (product as any).metadataUrl;
 
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
     this.isMetadataPanelOpen = true;
     this.isMetadataLoading = true;
@@ -889,34 +1101,61 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   highlightSelectedSmartProducts(products: ProductSmartFilterResult[]): void {
+    this.selectedSmartProducts = products ?? [];
+    this.renderHighlightedSmartProductFootprints();
+  }
+
+  highlightHoveredSmartProduct(product: ProductSmartFilterResult | null): void {
+    this.hoveredSmartProduct = product;
+    this.renderHighlightedSmartProductFootprints();
+  }
+
+  private renderHighlightedSmartProductFootprints(): void {
     this.selectedSmartProductResultSource.clear();
 
-    const selectedProducts = products ?? [];
+    const productsToHighlight = this.getUniqueSmartProducts([
+      ...this.selectedSmartProducts,
+      ...(this.hoveredSmartProduct ? [this.hoveredSmartProduct] : []),
+    ]);
 
-    const features = selectedProducts
+    const features = productsToHighlight
       .map((product) => this.createSmartProductFeature(product))
       .filter((feature): feature is Feature<Geometry> => !!feature);
 
-    if (!features.length) {
+    if (this.selectedSmartProducts.length) {
+      this.renderSelectedProductPreviewImages(this.selectedSmartProducts);
+    } else {
       this.clearSelectedProductPreviewImages();
-      return;
     }
 
-    this.renderSelectedProductPreviewImages(selectedProducts);
+    if (!features.length) return;
+
     this.selectedSmartProductResultSource.addFeatures(features);
+  }
+
+  private getUniqueSmartProducts(
+    products: ProductSmartFilterResult[]
+  ): ProductSmartFilterResult[] {
+    const uniqueProducts = new globalThis.Map<number, ProductSmartFilterResult>();
+
+    products.forEach((product) => {
+      if (!product?.id) return;
+      uniqueProducts.set(product.id, product);
+    });
+
+    return Array.from(uniqueProducts.values());
   }
 
   openGoToCoordinatePanel(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.isLayerManagerOpen = false;
     this.isSearchPanelOpen = false;
     this.isExportPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
     this.isGoToCoordinatePanelOpen = true;
 
     this.activeTool = 'coordinate';
@@ -930,15 +1169,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   toggleGoToCoordinatePanel(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.isLayerManagerOpen = false;
     this.isSearchPanelOpen = false;
     this.isExportPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
 
     this.isGoToCoordinatePanelOpen = !this.isGoToCoordinatePanelOpen;
 
@@ -947,13 +1185,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   openExportPanel(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.isLayerManagerOpen = false;
     this.isSearchPanelOpen = false;
     this.isGoToCoordinatePanelOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
     this.isExportPanelOpen = true;
 
     this.activeTool = 'export';
@@ -967,100 +1203,22 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   toggleExportPanel(): void {
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.isLayerManagerOpen = false;
     this.isSearchPanelOpen = false;
     this.isGoToCoordinatePanelOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
 
     this.isExportPanelOpen = !this.isExportPanelOpen;
 
     this.activeTool = this.isExportPanelOpen ? 'export' : null;
   }
 
-  openLayerFilter(layer: LayerModel): void {
-    this.clearMeasure();
-    this.stopPolygonDraw();
-
-    this.isLayerManagerOpen = true;
-    this.isSearchPanelOpen = false;
-    this.isGoToCoordinatePanelOpen = false;
-    this.isExportPanelOpen = false;
-
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = layer;
-
-    this.activeTool = 'layer-manager';
-  }
-
-  closeLayerFilter(): void {
-    this.selectedFilterLayer = undefined;
-  }
-
-  applyLayerFilter(layer: LayerModel, cqlFilter: string): void {
-    const key = this.getLayerKey(layer);
-    const existingLayer = this.layerRegistry.get(key);
-
-    if (!existingLayer) return;
-
-    const source = existingLayer.getSource();
-
-    if (source instanceof TileWMS) {
-      source.updateParams({
-        CQL_FILTER: cqlFilter,
-      });
-    }
-  }
-
-  clearLayerFilter(layer: LayerModel): void {
-    const key = this.getLayerKey(layer);
-    const existingLayer = this.layerRegistry.get(key);
-
-    if (!existingLayer) return;
-
-    const source = existingLayer.getSource();
-
-    if (source instanceof TileWMS) {
-      source.updateParams({
-        CQL_FILTER: null,
-      });
-    }
-  }
-
-  openLayerLegend(layer: LayerModel): void {
-    this.clearMeasure();
-    this.stopPolygonDraw();
-
-    this.isLayerManagerOpen = true;
-    this.isSearchPanelOpen = false;
-    this.isGoToCoordinatePanelOpen = false;
-    this.isExportPanelOpen = false;
-
-    this.selectedFilterLayer = undefined;
-    this.selectedLegendLayer = layer;
-    this.resetPanelState('legend');
-
-    this.activeTool = 'layer-manager';
-  }
-
-  closeLayerLegend(): void {
-    this.selectedLegendLayer = undefined;
-    this.resetPanelState('legend');
-  }
-
-  openLayerInfo(layer: LayerModel): void {
-    this.clearMeasure();
-    this.stopPolygonDraw();
-    console.log('Layer info:', layer);
-  }
-
   exportMap(options: MapExportOptions): void {
     if (!this.map) return;
 
     this.clearMeasure();
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
     this.isExportPanelOpen = false;
     this.resetPanelState('export');
     this.activeTool = null;
@@ -1080,13 +1238,17 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
       const canvases = this.map
         .getViewport()
-        .querySelectorAll<HTMLCanvasElement>('.ol-layer canvas, canvas.ol-layer');
+        .querySelectorAll<HTMLCanvasElement>(
+          '.ol-layer canvas, canvas.ol-layer'
+        );
 
       canvases.forEach((canvas) => {
         if (canvas.width <= 0 || canvas.height <= 0) return;
 
         const opacity =
-          canvas.parentElement?.style.opacity || canvas.style.opacity || '1';
+          canvas.parentElement?.style.opacity ||
+          canvas.style.opacity ||
+          '1';
 
         sourceContext.globalAlpha = Number(opacity);
 
@@ -1098,7 +1260,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
             .split(',')
             .map(Number);
 
-          if (matrix && matrix.length === 6) {
+          if (matrix?.length === 6) {
             sourceContext.setTransform(
               matrix[0],
               matrix[1],
@@ -1117,12 +1279,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       sourceContext.globalAlpha = 1;
 
       const targetWidth =
-        options.fileType === 'image/png' && options.x
+        options.fileType !== 'pdf' && options.x
           ? options.x
           : sourceCanvas.width;
 
       const targetHeight =
-        options.fileType === 'image/png' && options.y
+        options.fileType !== 'pdf' && options.y
           ? options.y
           : sourceCanvas.height;
 
@@ -1148,7 +1310,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       if (options.fileType === 'pdf') {
         const pdf = new jsPDF({
           orientation:
-            exportCanvas.width > exportCanvas.height ? 'landscape' : 'portrait',
+            exportCanvas.width > exportCanvas.height
+              ? 'landscape'
+              : 'portrait',
           unit: 'px',
           format: [exportCanvas.width, exportCanvas.height],
         });
@@ -1166,9 +1330,29 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         return;
       }
 
+      const mimeType =
+        options.fileType === 'image/jpeg'
+          ? 'image/jpeg'
+          : 'image/png';
+
+      const extension =
+        options.fileType === 'image/jpeg'
+          ? 'jpg'
+          : 'png';
+
+      const quality =
+        options.fileType === 'image/jpeg'
+          ? 0.95
+          : undefined;
+
       const link = document.createElement('a');
-      link.href = exportCanvas.toDataURL('image/png');
-      link.download = `${options.fileName}.png`;
+
+      link.href = exportCanvas.toDataURL(
+        mimeType,
+        quality
+      );
+
+      link.download = `${options.fileName}.${extension}`;
       link.click();
     });
 
@@ -1216,26 +1400,19 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     const [lon, lat] = this.currentLonLat;
+    const labels = this.getCoordinateLabels();
 
     if (this.coordinateFormat === 'dms') {
-      this.currentCoordinateText = `${this.toDms(lat, 'lat')}, ${this.toDms(
-        lon,
-        'lon'
-      )}`;
+      this.currentCoordinateText = `${labels.lat}: ${this.toDms(
+        lat,
+        'lat'
+      )}, ${labels.lng}: ${this.toDms(lon, 'lon')}`;
       return;
     }
 
-    this.currentCoordinateText = `${lat.toFixed(6)}°, ${lon.toFixed(6)}°`;
-  }
-
-  setBaseMapOpacity(opacity: number): void {
-    this.clearMeasure();
-
-    this.baseMapOpacity = this.normalizeOpacity(opacity);
-
-    this.getBaseMapLayers().forEach((layer) => {
-      layer.setOpacity(this.baseMapOpacity);
-    });
+    this.currentCoordinateText = `${labels.lat}: ${lat.toFixed(
+      6
+    )}°, ${labels.lng}: ${lon.toFixed(6)}°`;
   }
 
   setLayerVisibility(layer: LayerModel, visible: boolean): void {
@@ -1253,15 +1430,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           (mapLayer) => mapLayer !== existingLayer
         );
         this.layerRegistry.delete(key);
-      }
-
-      if (this.selectedLegendLayer === layer) {
-        this.selectedLegendLayer = undefined;
-        this.resetPanelState('legend');
-      }
-
-      if (this.selectedFilterLayer === layer) {
-        this.selectedFilterLayer = undefined;
       }
 
       return;
@@ -1283,32 +1451,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.dynamicLayers.push(olLayer);
     this.layerRegistry.set(key, olLayer);
   }
-
-  setLayerOpacity(layer: LayerModel, opacity: number): void {
-    this.clearMeasure();
-
-    const normalizedOpacity = this.normalizeOpacity(opacity);
-    layer.opacity = normalizedOpacity;
-
-    const key = this.getLayerKey(layer);
-    const existingLayer = this.layerRegistry.get(key);
-
-    if (existingLayer) {
-      existingLayer.setOpacity(normalizedOpacity);
-      return;
-    }
-
-    const olLayer = this.createOpenLayersLayer(layer);
-    if (!olLayer) return;
-
-    olLayer.setOpacity(normalizedOpacity);
-    olLayer.setVisible(layer.isVisible === true);
-
-    this.map?.addLayer(olLayer);
-    this.dynamicLayers.push(olLayer);
-    this.layerRegistry.set(key, olLayer);
-  }
-
 
   togglePanelMinimize(key: PanelKey, event?: MouseEvent): void {
     event?.preventDefault();
@@ -1365,12 +1507,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         zoom: false,
         rotate: false,
         attribution: false,
-      }).extend([
-        new ScaleLine({
-          units: 'metric',
-          minWidth: 110,
-        }),
-      ]),
+      }),
       layers: [
         this.smartProductResultLayer,
         this.selectedSmartProductResultLayer,
@@ -1380,9 +1517,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       view: new View({
         center: this.defaultCenter,
         zoom: this.defaultZoom,
+        maxResolution: this.maxScaleDistanceMeters / this.scaleBarWidthPx,
         projection: 'EPSG:3857',
       }),
     });
+
+    this.updateCustomScaleBar();
   }
 
   private registerMapEvents(): void {
@@ -1394,6 +1534,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       this.setCoordinate(event.coordinate);
       this.isCoordinateMenuOpen = false;
     });
+
+    this.map?.getView().on('change:resolution', () => {
+      this.updateCustomScaleBar();
+    });
   }
 
   private startLengthMeasure(): void {
@@ -1404,6 +1548,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isLengthMeasureActive = true;
     this.lengthMeasureText = '';
     this.measureSource.clear();
+
+    this.createMeasureTooltip();
 
     this.measureDraw = new Draw({
       source: this.measureSource,
@@ -1427,6 +1573,29 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       }),
     });
 
+    this.measureDraw.on('drawstart', (event) => {
+      const feature = event.feature as Feature<LineString>;
+
+      this.measureGeometryChangeKey = feature.getGeometry()?.on('change', (geometryEvent) => {
+        const geometry = geometryEvent.target as LineString;
+        const coordinates = geometry.getCoordinates();
+
+        if (!coordinates.length) return;
+
+        const length = getLength(geometry, {
+          projection: 'EPSG:3857',
+        });
+
+        const text = this.formatLength(length);
+        this.lengthMeasureText = text;
+
+        this.updateMeasureTooltip(
+          text,
+          coordinates[coordinates.length - 1]
+        );
+      });
+    });
+
     this.measureDraw.on('drawend', (event) => {
       const feature = event.feature as Feature<LineString>;
       const geometry = feature.getGeometry();
@@ -1437,7 +1606,21 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         projection: 'EPSG:3857',
       });
 
-      this.lengthMeasureText = this.formatLength(length);
+      const coordinates = geometry.getCoordinates();
+      const text = this.formatLength(length);
+
+      this.lengthMeasureText = text;
+
+      this.updateMeasureTooltip(
+        text,
+        coordinates[coordinates.length - 1]
+      );
+
+      if (this.measureGeometryChangeKey) {
+        unByKey(this.measureGeometryChangeKey);
+        this.measureGeometryChangeKey = undefined;
+      }
+
       this.stopLengthMeasure(false);
     });
 
@@ -1449,12 +1632,18 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       this.map.removeInteraction(this.measureDraw);
     }
 
+    if (this.measureGeometryChangeKey) {
+      unByKey(this.measureGeometryChangeKey);
+      this.measureGeometryChangeKey = undefined;
+    }
+
     this.measureDraw = undefined;
     this.isLengthMeasureActive = false;
 
     if (clearResult) {
       this.lengthMeasureText = '';
       this.measureSource.clear();
+      this.removeMeasureTooltip();
     }
   }
 
@@ -1467,63 +1656,42 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private startPolygonDraw(): void {
     if (!this.map) return;
 
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
 
     this.polygonDraw = new Draw({
       source: this.userAreaSource,
       type: 'Polygon',
       stopClick: true,
-      style: new Style({
-        stroke: new Stroke({
-          color: this.drawColor,
-          width: 3,
-        }),
-        fill: new Fill({
-          color: this.drawFillColor,
-        }),
-        image: new CircleStyle({
-          radius: 5,
-          fill: new Fill({
-            color: this.drawColor,
-          }),
-          stroke: new Stroke({
-            color: '#ffffff',
-            width: 2,
-          }),
-        }),
-      }),
+      style: this.getAreaDrawStyle(),
     });
 
-    this.polygonDraw.on('drawstart', () => {
-      this.userAreaSource.clear();
-      this.clearSmartFilterResults();
-    });
-
-    this.polygonDraw.on('drawend', () => {
-      setTimeout(() => {
-        this.stopPolygonDraw();
-        this.fitToUserAreas();
-        this.calculateSelectedArea();
-        this.runSmartProductFilter();
-        this.activeTool = null;
-      });
-    });
+    this.bindAreaDrawEvents();
 
     this.map.addInteraction(this.polygonDraw);
   }
 
-  private stopPolygonDraw(): void {
+  private stopPolygonDraw(clearTooltips = false): void {
     if (this.polygonDraw && this.map) {
       this.map.removeInteraction(this.polygonDraw);
     }
 
+    if (this.areaGeometryChangeKey) {
+      unByKey(this.areaGeometryChangeKey);
+      this.areaGeometryChangeKey = undefined;
+    }
+
     this.polygonDraw = undefined;
+
+    if (clearTooltips) {
+      this.clearAreaTooltips();
+    }
   }
 
   private async readAreaFile(
     file: File,
     extension: SupportedAreaFileExtension
   ): Promise<Feature<Geometry>[]> {
+
     if (extension === 'zip') {
       const arrayBuffer = await file.arrayBuffer();
       const geoJsonResult = await shp(arrayBuffer);
@@ -1537,10 +1705,33 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       return this.readGeoJsonFeatures(geoJsonResult);
     }
 
+    if (extension === 'kmz') {
+      const zip = await JSZip.loadAsync(file);
+
+      const kmlEntry = Object.values(zip.files).find(
+        (entry) =>
+          !entry.dir &&
+          entry.name.toLowerCase().endsWith('.kml')
+      );
+
+      if (!kmlEntry) {
+        throw new Error('KMZ içerisinde KML bulunamadı.');
+      }
+
+      const kmlText = await kmlEntry.async('text');
+
+      return new KML({
+        extractStyles: false,
+      }).readFeatures(kmlText, {
+        featureProjection: 'EPSG:3857',
+      }) as Feature<Geometry>[];
+    }
+
     const text = await file.text();
 
     if (extension === 'geojson' || extension === 'json') {
       const parsedGeoJson = JSON.parse(text);
+
       return this.readGeoJsonFeatures(parsedGeoJson);
     }
 
@@ -1624,9 +1815,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isGoToCoordinatePanelOpen = false;
     this.isExportPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
-    this.selectedLegendLayer = undefined;
-    this.selectedFilterLayer = undefined;
     this.resetAllPanelStates();
   }
 
@@ -1639,7 +1829,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.updateMapSizeAsync();
   }
 
-  private runSmartProductFilter(): void {
+  private runSmartProductFilter(reopenRequestPanelAfterLoad = false): void {
     if (this.previewMode) return;
 
     const wkt = this.getAoiWkt();
@@ -1658,16 +1848,21 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.isSmartFilterLoading = true;
     this.openSmartFilterPanel();
+    this.clearAreaTooltips();
 
     this.mapService.smartProductFilter(this.smartFilterRequest).subscribe({
       next: (response) => {
         this.smartFilterResults = response ?? [];
+        this.selectedSmartProducts = [];
+        this.hoveredSmartProduct = null;
         this.selectedSmartProductResultSource.clear();
         this.renderSmartProductResultsOnMap(this.smartFilterResults);
       },
       error: (error) => {
         console.error('Smart product filter çalıştırılırken hata oluştu:', error);
         this.smartFilterResults = [];
+        this.selectedSmartProducts = [];
+        this.hoveredSmartProduct = null;
         this.smartProductResultSource.clear();
         this.selectedSmartProductResultSource.clear();
         this.alertService.createAlert(
@@ -1677,6 +1872,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       },
       complete: () => {
         this.isSmartFilterLoading = false;
+
+        if (reopenRequestPanelAfterLoad) {
+          this.isSmartProductRequestPanelOpen = true;
+          this.isSmartAdvancedFilterPanelOpen = false;
+          this.isMetadataPanelOpen = false;
+        }
       },
     });
   }
@@ -1855,9 +2056,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (!this.previewMode || !this.map) return;
 
     this.stopLengthMeasure(true);
-    this.stopPolygonDraw();
+    this.stopPolygonDraw(true);
     this.clearSmartFilterResults();
     this.userAreaSource.clear();
+    this.userAreaOrigin = null;
 
     const wkt = (this.previewWkt || '').trim();
 
@@ -1874,6 +2076,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       this.userAreaSource.addFeature(feature);
       this.fitToUserAreas();
       this.calculateSelectedArea();
+      this.clearAreaTooltips();
     } catch (error) {
       console.warn('Preview WKT okunamadı:', error, wkt);
     }
@@ -1898,12 +2101,16 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private clearSmartFilterResults(): void {
     this.totalSelectedAreaM2 = 0;
     this.smartFilterResults = [];
+    this.selectedSmartProducts = [];
+    this.hoveredSmartProduct = null;
     this.smartProductResultSource.clear();
     this.selectedSmartProductResultSource.clear();
     this.clearSelectedProductPreviewImages();
     this.isSmartFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartFilterLoading = false;
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
   }
 
@@ -1913,6 +2120,51 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     return `${length.toFixed(2).replace('.', ',')} m`;
+  }
+
+
+  private updateCustomScaleBar(): void {
+    if (!this.map) return;
+
+    const resolution = this.map.getView().getResolution();
+
+    if (!resolution) {
+      this.customScaleText = '3000 km';
+      return;
+    }
+
+    const distanceMeters = resolution * this.scaleBarWidthPx;
+    const limitedDistanceMeters = Math.min(
+      distanceMeters,
+      this.maxScaleDistanceMeters
+    );
+
+    this.customScaleText = this.formatScaleDistance(limitedDistanceMeters);
+  }
+
+  private formatScaleDistance(distanceMeters: number): string {
+    if (distanceMeters >= 1000) {
+      const km = Math.round(distanceMeters / 1000);
+      return `${km} km`;
+    }
+
+    return `${Math.round(distanceMeters)} m`;
+  }
+
+  private getCoordinateLabels(): { lat: string; lng: string } {
+    const lang = (this.translate.currentLang || this.translate.defaultLang || 'en').toLowerCase();
+
+    if (lang.startsWith('tr')) {
+      return {
+        lat: 'Enlem',
+        lng: 'Boylam',
+      };
+    }
+
+    return {
+      lat: 'Lat',
+      lng: 'Lng',
+    };
   }
 
   private setCoordinate(coordinate: Coordinate): void {
@@ -1925,14 +2177,17 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private loadLayers(): void {
     this.mapService.allLayers().subscribe({
       next: (response) => {
-        const groups = response?.data ?? [];
+        const layers = response?.data ?? [];
 
-        this.layerGroups = groups;
+        this.layers = layers
+          .filter((layer) => !layer.isDeleted)
+          .sort((a, b) => (a.orderNo ?? 0) - (b.orderNo ?? 0));
+
         this.clearDynamicLayers();
 
         const visibleLayers = this.previewMode
-          ? this.getPreviewVisibleLayers(groups)
-          : this.getVisibleLayers(groups);
+          ? this.getPreviewVisibleLayers(this.layers)
+          : this.getVisibleLayers(this.layers);
 
         visibleLayers.forEach((layer) => {
           const olLayer = this.createOpenLayersLayer(layer);
@@ -1952,20 +2207,19 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       },
       error: (error) => {
         console.error('Harita katmanları yüklenirken hata oluştu:', error);
+        this.layers = [];
       },
     });
   }
 
-  private getVisibleLayers(groups: LayerGroupModel[]): LayerModel[] {
-    return groups
-      .filter((group) => !group.isDeleted)
-      .reduce((acc, group) => acc.concat(group.layers ?? []), [] as LayerModel[])
+  private getVisibleLayers(layers: LayerModel[]): LayerModel[] {
+    return layers
       .filter((layer) => !layer.isDeleted && layer.isVisible === true)
       .sort((a, b) => (a.orderNo ?? 0) - (b.orderNo ?? 0));
   }
 
-  private getPreviewVisibleLayers(groups: LayerGroupModel[]): LayerModel[] {
-    return this.getVisibleLayers(groups).filter(
+  private getPreviewVisibleLayers(layers: LayerModel[]): LayerModel[] {
+    return this.getVisibleLayers(layers).filter(
       (layer) =>
         layer.type === 1 ||
         layer.type === LayerType.Wms ||
@@ -2138,12 +2392,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private getBaseMapLayers(): OlMapLayer[] {
-    return this.layerGroups
-      .reduce(
-        (layers: LayerModel[], group) => layers.concat(group.layers ?? []),
-        []
-      )
-      .filter((layer) => layer.type === 1)
+    return this.layers
+      .filter((layer) => layer.type === LayerType.BaseMap)
       .map((layer) => this.layerRegistry.get(this.getLayerKey(layer)))
       .filter((layer): layer is OlMapLayer => !!layer);
   }
@@ -2175,5 +2425,347 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           : 'W';
 
     return `${degrees}° ${minutes}' ${seconds.toFixed(2)}" ${direction}`;
+  }
+
+  private createMeasureTooltip(): void {
+    if (!this.map) return;
+
+    this.removeMeasureTooltip();
+
+    this.measureTooltipElement = document.createElement('div');
+    this.measureTooltipElement.className = 'map-measure-tooltip';
+    this.measureTooltipElement.innerHTML = `
+    <div class="map-measure-tooltip__value">0 m</div>
+  `;
+
+    this.measureTooltipOverlay = new Overlay({
+      element: this.measureTooltipElement,
+      offset: [0, -16],
+      positioning: 'bottom-center',
+      stopEvent: false,
+      insertFirst: false,
+    });
+
+    this.map.addOverlay(this.measureTooltipOverlay);
+  }
+
+  private updateMeasureTooltip(text: string, coordinate: Coordinate): void {
+    if (!this.measureTooltipElement || !this.measureTooltipOverlay) return;
+
+    const valueElement = this.measureTooltipElement.querySelector(
+      '.map-measure-tooltip__value'
+    );
+
+    if (valueElement) {
+      valueElement.textContent = text;
+    }
+
+    this.measureTooltipOverlay.setPosition(coordinate);
+  }
+
+  private removeMeasureTooltip(): void {
+    if (this.measureTooltipOverlay) {
+      this.map?.removeOverlay(this.measureTooltipOverlay);
+    }
+
+    this.measureTooltipOverlay = undefined;
+    this.measureTooltipElement = undefined;
+  }
+
+  toggleRectangleDraw(): void {
+    if (this.previewMode) return;
+
+    if (this.polygonDraw) {
+      this.stopPolygonDraw(true);
+      this.activeTool = null;
+      return;
+    }
+
+    this.clearMeasure();
+    this.closeAllPanels();
+
+    this.disableAreaModify();
+    this.userAreaSource.clear();
+    this.userAreaOrigin = null;
+    this.clearSmartFilterResults();
+    this.clearAreaTooltips();
+
+    this.activeTool = 'rectangle';
+    this.startRectangleDraw();
+  }
+
+  private startRectangleDraw(): void {
+    if (!this.map) return;
+
+    this.stopPolygonDraw(true);
+
+    this.polygonDraw = new Draw({
+      source: this.userAreaSource,
+      type: 'Circle',
+      geometryFunction: createBox(),
+      stopClick: true,
+      style: this.getAreaDrawStyle(),
+    });
+
+    this.bindAreaDrawEvents();
+
+    this.map.addInteraction(this.polygonDraw);
+  }
+
+  private getAreaDrawStyle(): Style {
+    return new Style({
+      stroke: new Stroke({
+        color: '#009ef7',
+        width: 3,
+      }),
+      fill: new Fill({
+        color: 'rgba(0, 158, 247, 0.25)',
+      }),
+      image: new CircleStyle({
+        radius: 6,
+        fill: new Fill({
+          color: '#50cd89',
+        }),
+        stroke: new Stroke({
+          color: '#ffffff',
+          width: 2,
+        }),
+      }),
+    });
+  }
+
+  private bindAreaDrawEvents(): void {
+    if (!this.polygonDraw) return;
+
+    this.polygonDraw.on('drawstart', (event) => {
+      const feature = event.feature as Feature<Polygon>;
+
+      this.userAreaSource.clear();
+    this.userAreaOrigin = null;
+      this.clearSmartFilterResults();
+      this.clearAreaTooltips();
+
+      this.areaGeometryChangeKey = feature.getGeometry()?.on('change', (geometryEvent) => {
+        const geometry = geometryEvent.target as Polygon;
+        this.renderAreaTooltips(geometry);
+      });
+    });
+
+    this.polygonDraw.on('drawend', (event) => {
+      const feature = event.feature as Feature<Polygon>;
+      const geometry = feature.getGeometry();
+
+      if (geometry) {
+        this.renderAreaTooltips(geometry);
+      }
+
+      if (this.areaGeometryChangeKey) {
+        unByKey(this.areaGeometryChangeKey);
+        this.areaGeometryChangeKey = undefined;
+      }
+
+      setTimeout(() => {
+        this.userAreaOrigin = 'draw';
+        this.stopPolygonDraw(false);
+        this.disableAreaModify();
+        this.fitToUserAreas();
+        this.calculateSelectedArea();
+        this.clearAreaTooltips();
+        this.openSmartPrefilterPanel();
+        this.activeTool = null;
+      });
+    });
+  }
+
+  private prepareUserAreaForAoiUpdate(): void {
+    // AOI update modunda alanı kesinlikle bbox/rectangle gibi başka bir geometriye çevirmiyoruz.
+    // Kullanıcının çizdiği, dosyadan yüklediği veya aramadan gelen gerçek polygon aynı kalır.
+    // Düzenleme sadece Modify interaction ile mevcut geometri üzerinde yapılır.
+  }
+
+  private enableAreaModify(): void {
+    if (!this.map || this.previewMode || this.userAreaSource.isEmpty()) return;
+
+    this.disableAreaModify();
+
+    this.areaModify = new Modify({
+      source: this.userAreaSource,
+      style: this.getAreaModifyStyle(),
+      pixelTolerance: 30,
+    });
+
+    this.areaSnap = new Snap({
+      source: this.userAreaSource,
+      pixelTolerance: 30,
+    });
+
+    this.areaModify.on('modifystart', (event) => {
+      this.unbindAreaModifyGeometryChanges();
+
+      event.features.forEach((feature) => {
+        const geometry = (feature as Feature<Geometry>).getGeometry();
+        if (!geometry) return;
+
+        const key = geometry.on('change', () => {
+          this.calculateSelectedArea();
+          this.clearAreaTooltips();
+        });
+
+        this.areaModifyGeometryChangeKeys.push(key);
+      });
+    });
+
+    this.areaModify.on('modifyend', () => {
+      this.unbindAreaModifyGeometryChanges();
+      this.calculateSelectedArea();
+      this.clearAreaTooltips();
+
+      if (this.isAoiUpdateMode) {
+        this.stopAoiUpdateMode(true);
+        return;
+      }
+
+      this.openSmartPrefilterPanel();
+    });
+
+    this.map.addInteraction(this.areaModify);
+    this.map.addInteraction(this.areaSnap);
+  }
+
+  private disableAreaModify(): void {
+    if (this.areaModify && this.map) {
+      this.map.removeInteraction(this.areaModify);
+    }
+
+    if (this.areaSnap && this.map) {
+      this.map.removeInteraction(this.areaSnap);
+    }
+
+    this.areaModify = undefined;
+    this.areaSnap = undefined;
+    this.unbindAreaModifyGeometryChanges();
+  }
+
+  private unbindAreaModifyGeometryChanges(): void {
+    if (this.areaModifyGeometryChangeKeys.length) {
+      unByKey(this.areaModifyGeometryChangeKeys);
+      this.areaModifyGeometryChangeKeys = [];
+    }
+  }
+
+  private getAreaModifyStyle(): Style {
+    return new Style({
+      image: new CircleStyle({
+        radius: 7,
+        fill: new Fill({
+          color: '#ffffff',
+        }),
+        stroke: new Stroke({
+          color: this.drawColor,
+          width: 3,
+        }),
+      }),
+    });
+  }
+
+  private renderUserAreaTooltips(): void {
+    this.clearAreaTooltips();
+
+    this.userAreaSource.getFeatures().forEach((feature) => {
+      const geometry = feature.getGeometry();
+
+      if (geometry instanceof Polygon) {
+        this.renderAreaTooltips(geometry, false);
+        return;
+      }
+
+      if (geometry instanceof MultiPolygon) {
+        geometry.getPolygons().forEach((polygon) => {
+          this.renderAreaTooltips(polygon, false);
+        });
+      }
+    });
+  }
+
+  private renderAreaTooltips(geometry: Polygon, clearBeforeRender = true): void {
+    if (clearBeforeRender) {
+      this.clearAreaTooltips();
+    }
+
+    const area = getArea(geometry, {
+      projection: 'EPSG:3857',
+    });
+
+    const interiorPoint = geometry.getInteriorPoint().getCoordinates();
+
+    this.addAreaTooltip(
+      `Alan: ${this.formatArea(area)}`,
+      interiorPoint,
+      'area'
+    );
+
+    const ring = geometry.getCoordinates()[0] ?? [];
+
+    for (let i = 0; i < ring.length - 1; i++) {
+      const start = ring[i];
+      const end = ring[i + 1];
+
+      const line = new LineString([start, end]);
+
+      const length = getLength(line, {
+        projection: 'EPSG:3857',
+      });
+
+      const midpoint: Coordinate = [
+        (start[0] + end[0]) / 2,
+        (start[1] + end[1]) / 2,
+      ];
+
+      this.addAreaTooltip(
+        `Kenar: ${this.formatLength(length)}`,
+        midpoint,
+        'segment'
+      );
+    }
+  }
+
+  private addAreaTooltip(
+    text: string,
+    coordinate: Coordinate,
+    type: 'area' | 'segment'
+  ): void {
+    if (!this.map) return;
+
+    const element = document.createElement('div');
+    element.className = `map-area-tooltip map-area-tooltip--${type}`;
+    element.textContent = text;
+
+    const overlay = new Overlay({
+      element,
+      position: coordinate,
+      positioning: 'bottom-center',
+      offset: [0, -8],
+      stopEvent: false,
+      insertFirst: false,
+    });
+
+    this.map.addOverlay(overlay);
+    this.areaTooltipOverlays.push(overlay);
+  }
+
+  private clearAreaTooltips(): void {
+    this.areaTooltipOverlays.forEach((overlay) => {
+      this.map?.removeOverlay(overlay);
+    });
+
+    this.areaTooltipOverlays = [];
+  }
+
+  private formatArea(areaM2: number): string {
+    if (areaM2 >= 1_000_000) {
+      return `${(areaM2 / 1_000_000).toFixed(2).replace('.', ',')} km²`;
+    }
+
+    return `${areaM2.toFixed(2).replace('.', ',')} m²`;
   }
 }

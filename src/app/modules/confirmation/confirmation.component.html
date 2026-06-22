@@ -7,6 +7,8 @@
     (closed)="isModalOpen = false"
     (submitted)="submit()"
     variant="center"
+    [submitText]="'YES' | translate"
+    [cancelText]="'NO' | translate"
     [showFooter]="true"
   >
     <div class="text-center py-6 fs-6">

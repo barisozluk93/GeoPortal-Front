@@ -341,3 +341,23 @@
     min-width: 30px !important;
   }
 }
+
+:host-context(.landing-map-mode) .modern-header {
+  min-height: 64px !important;
+  height: 64px !important;
+}
+
+:host-context(.landing-map-mode) .modern-header-container {
+  min-height: 64px !important;
+  height: 64px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+:host-context(.landing-map-mode) .app-header__logo-img {
+  height: 36px !important;
+}
+
+:host-context(.landing-map-mode) .app-header__brand-name {
+  font-size: 20px !important;
+}

@@ -712,7 +712,8 @@ export const locale = {
       "ACTIONS": {
         "LAYER_MANAGER": "Layer Manager",
         "SEARCH": "Search",
-        "POLYGON": "Select Area",
+        "POLYGON": "Draw Polygon",
+        "RECTANGLE": "Draw Rectangle",
         "UPLOAD_FILE": "Upload File",
         "RESET": "Reset",
         "ZOOM_IN": "Zoom In",
@@ -888,12 +889,14 @@ export const locale = {
         FILE_TYPE_REQUIRED: 'File type is required.',
         PDF: 'PDF',
         PNG: 'PNG',
-        X: 'X',
-        Y: 'Y',
+        JPEG: 'JPEG',
+        X: 'WIDTH',
+        Y: 'HEIGHT',
         X_PLACEHOLDER: 'Ex: 1920',
         Y_PLACEHOLDER: 'Ex: 1080',
-        X_REQUIRED: 'X is required.',
-        Y_REQUIRED: 'Y is required.',
+        X_REQUIRED: 'Width is required.',
+        Y_REQUIRED: 'Height is required.',
+        DPI: 'DPI',
         SUBMIT: 'Export',
       },
       SMART_FILTER: {
@@ -907,7 +910,7 @@ export const locale = {
         FILTER: 'Filter',
         LOADING: 'Loading results...',
         EMPTY: 'No results found',
-        LOCAL_TIME_OF_DAY: 'Local time of day',
+        LOCAL_TIME_OF_DAY: 'Acquisition Date',
         IMAGE_ID: 'Image ID',
         SUN_ELEVATION: 'Sun Elevation',
         SUN_AZIMUTH: 'Sun Azimuth',
@@ -917,6 +920,21 @@ export const locale = {
         ZOOM_TO_EXTENT: 'Zoom to Extent',
         VIEW_METADATA: 'View Metadata',
         ADD_TO_CART: 'Add to Cart',
+        AOI_UPDATE_HINT: "You can update the area of interest on the map. Press Esc to cancel.",
+        "AOI_UPDATE_ONLY_FOR_DRAWINGS": "Area update is only available for areas created using drawing tools. Areas created from search results or uploaded files cannot be updated.",
+        "PREFILTER": {
+          "TITLE": "Pre-filter",
+          "DESCRIPTION": "You can select an acquisition date range before fetching results.",
+          "START_DATE": "Start Date",
+          "END_DATE": "End Date",
+          "CLEAR": "Clear",
+          "SEARCH": "Search"
+        },
+        "SORT": {
+          "DATE": "Acquisition Date",
+          "AREA_CLOUD_COVER": "Cloud Cover",
+          "AREA_OFF_NADIR_ANGLE": "Off Nadir Angle"
+        },
         METADATA: {
           TITLE: 'Metadata',
           CLOSE: 'Close',
@@ -951,7 +969,8 @@ export const locale = {
           PROCESS_OPTIONS: 'Processing Options',
           ORTHORECTIFICATION: 'Orthorectification',
           PANSHARPEN: 'Pansharpen',
-          ADD_TO_CART: 'Add to Cart'
+          ADD_TO_CART: 'Add to Cart',
+          UPDATE_AOI: "Update Area of Interest"
         }
       },
     },

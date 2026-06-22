@@ -17,14 +17,24 @@
 }
 
 .toolbar-left {
-  top: 24px;
-  left: 24px;
+  top: 20px;
+  left: 12px;
+}
+
+.toolbar-right {
+  top: 20px;
+  right: 12px;
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .left-map-toolbar {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .map-action-btn {
@@ -36,20 +46,31 @@
   border: 1px solid var(--bs-gray-200) !important;
   background: var(--bs-body-bg) !important;
   color: var(--bs-primary) !important;
-  box-shadow:
-    0 8px 20px rgba(15, 23, 42, 0.12),
-    0 2px 6px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 0.1rem 1rem 0.25rem rgba(0, 0, 0, 0.05);
 
   i {
     color: var(--bs-primary);
   }
 
   &:hover {
-    background: rgba(var(--bs-primary-rgb), 0.08) !important;
+    background: var(--bs-light-primary) !important;
+    border-color: var(--bs-primary) !important;
   }
 
   &:active {
-    background: rgba(var(--bs-primary-rgb), 0.14) !important;
+    background: var(--bs-light-primary) !important;
+  }
+}
+
+.map-action-btn--active {
+  i {
+    color: var(--bs-success) !important;
+  }
+}
+
+.map-action-btn--active:hover {
+  i {
+    color: var(--bs-success) !important;
   }
 }
 
@@ -73,7 +94,7 @@
   left: calc(100% + 8px);
   top: 0;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -103,9 +124,7 @@
   gap: 12px;
   white-space: nowrap;
   z-index: 1001;
-  box-shadow:
-    0 8px 20px rgba(15, 23, 42, 0.12),
-    0 2px 6px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 0.1rem 1rem 0.25rem rgba(0, 0, 0, 0.05);
 
   span {
     font-size: 14px;
@@ -115,93 +134,87 @@
 
   i {
     font-size: 18px;
-    color: #50cd89;
+    color: var(--bs-success);
     transform: rotate(-35deg);
   }
 }
 
-.toolbar-right {
-  top: 24px;
-  right: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+/* =========================
+   RIGHT TOOLBAR
+========================= */
 
 .north-compass {
-  width: 45px;
+  position: relative;
+  width: 50px;
   height: 50px;
   min-width: 50px;
   min-height: 50px;
+  padding: 0;
   border: 1px solid var(--bs-gray-200);
-  border-radius: 0;
+  border-radius: 99px;
   background: var(--bs-body-bg);
   color: var(--bs-primary);
-  padding: 0;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow:
-    0 8px 20px rgba(15, 23, 42, 0.12),
-    0 2px 6px rgba(15, 23, 42, 0.08);
-
-  &:hover {
-    background: rgba(var(--bs-primary-rgb), 0.08);
-  }
+  box-shadow: 0 0.1rem 1rem 0.25rem rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease;
 }
 
 .north-compass__label {
   position: absolute;
-  top: 4px;
+  top: 5px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 900;
   line-height: 1;
   color: var(--bs-primary);
 }
 
 .north-compass__icon {
-  margin-top: 10px;
-  font-size: 15px;
+  margin-top: 14px;
+  font-size: 17px;
   line-height: 1;
   color: var(--bs-primary);
 }
 
 .zoom-toolbar {
-  width: 50px;
+  width: 42px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   border: 1px solid var(--bs-gray-200);
   border-radius: 0;
+  overflow: hidden;
   background: var(--bs-body-bg);
-  box-shadow:
-    0 8px 20px rgba(15, 23, 42, 0.12),
-    0 2px 6px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 0.1rem 1rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .zoom-btn {
-  width: 50px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0;
   border: 0;
   border-radius: 0;
-  background: transparent;
+  background: var(--bs-body-bg);
   color: var(--bs-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: all 0.15s ease;
 
   i {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 900;
+    color: var(--bs-primary);
   }
 
   &:hover {
-    background: rgba(var(--bs-primary-rgb), 0.08);
+    background: var(--bs-light-primary);
   }
 
   &:first-child {
@@ -211,19 +224,26 @@
 
 @media (max-width: 768px) {
   .toolbar-left {
-    top: 16px;
-    left: 16px;
+    top: 12px;
+    left: 12px;
   }
 
   .toolbar-right {
-    top: 16px;
-    right: 16px;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    gap: 10px;
   }
 
   .map-action-btn,
-  .measure-wrapper,
-  .north-compass,
-  .zoom-btn {
+  .measure-wrapper {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .north-compass {
     width: 40px;
     height: 40px;
     min-width: 40px;
@@ -231,29 +251,42 @@
   }
 
   .zoom-toolbar {
-    width: 40px;
+    width: 34px;
+  }
+
+  .zoom-btn {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+  }
+
+  .north-compass__label {
+    top: 4px;
+    font-size: 13px;
+  }
+
+  .north-compass__icon {
+    margin-top: 12px;
+    font-size: 16px;
   }
 
   .measure-result {
     left: calc(100% + 8px);
     height: 40px;
     min-width: 125px;
+
+    span {
+      font-size: 13px;
+    }
+
+    i {
+      font-size: 16px;
+    }
   }
 }
 
-.map-action-btn--active {
-  // background-color: var(--bs-light-success) !important;
-  // border-color: var(--bs-success) !important;
-
-  i {
-    color: var(--bs-success) !important;
-  }
-}
-
-.map-action-btn--active:hover {
-  // background-color: var(--bs-light-success) !important;
-
-  i {
-    color: var(--bs-success) !important;
-  }
+.map-action-icon {
+  font-size: 1.75rem;
+  display: block;
 }

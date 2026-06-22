@@ -39,6 +39,7 @@
       [clearable]="true"
       [placeholder]="'MAP.EXPORT.FILE_TYPE_PLACEHOLDER' | translate"
       [(ngModel)]="fileType"
+      (ngModelChange)="onFileTypeChange($event)"
       [ngModelOptions]="{ standalone: true }"
       [invalid]="isFileTypeInvalid"
     >
@@ -49,7 +50,32 @@
     </div>
   </div>
 
-  <ng-container *ngIf="isPng">
+  <ng-container *ngIf="isImage">
+    <div class="export-field">
+      <label class="export-label">
+        {{ 'MAP.EXPORT.DPI' | translate }}
+      </label>
+
+      <app-custom-select
+        [size]="'lg'"
+        [items]="dpiOptions"
+        bindLabel="label"
+        bindValue="value"
+        [multiple]="false"
+        [clearable]="false"
+        [placeholder]="'MAP.EXPORT.DPI_PLACEHOLDER' | translate"
+        [(ngModel)]="dpi"
+        (ngModelChange)="onDpiChange($event)"
+        [ngModelOptions]="{ standalone: true }"
+        [invalid]="isDpiInvalid"
+      >
+      </app-custom-select>
+
+      <div class="invalid-feedback d-block" *ngIf="isDpiInvalid">
+        {{ 'MAP.EXPORT.DPI_REQUIRED' | translate }}
+      </div>
+    </div>
+
     <div class="export-grid">
       <div class="export-field">
         <label class="export-label">
@@ -59,6 +85,7 @@
         <input
           type="number"
           min="1"
+          readonly
           class="form-control"
           [class.is-invalid]="isXInvalid"
           [value]="x ?? ''"
@@ -79,6 +106,7 @@
         <input
           type="number"
           min="1"
+          readonly
           class="form-control"
           [class.is-invalid]="isYInvalid"
           [value]="y ?? ''"

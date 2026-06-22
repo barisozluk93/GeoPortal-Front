@@ -16,6 +16,7 @@ export class MapToolbarComponent {
     | 'measure'
     | 'export'
     | 'polygon'
+    | 'rectangle'
     | 'upload'
     | 'search'
     | 'smart-filter'
@@ -26,6 +27,7 @@ export class MapToolbarComponent {
 
   @Output() searchClicked = new EventEmitter<void>();
   @Output() polygonClicked = new EventEmitter<void>();
+  @Output() rectangleClicked = new EventEmitter<void>();
   @Output() uploadClicked = new EventEmitter<void>();
 
   @Output() measureLengthClicked = new EventEmitter<void>();

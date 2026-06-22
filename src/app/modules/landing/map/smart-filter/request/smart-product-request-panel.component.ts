@@ -19,6 +19,7 @@ export class SmartProductRequestPanelComponent implements OnChanges {
   @Input() loading = false;
 
   @Output() closeClicked = new EventEmitter<void>();
+  @Output() updateAoiClicked = new EventEmitter<void>();
   @Output() addToCartClicked = new EventEmitter<ProductModel>();
 
   submitted = false;

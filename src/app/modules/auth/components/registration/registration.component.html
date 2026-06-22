@@ -129,6 +129,21 @@
         </ng-container>
       </div>
 
+      <div class="col-12">
+        <label class="form-label fw-bolder">
+          {{ 'AUTH.REGISTER.SECTOR' | translate }}
+        </label>
+
+        <app-custom-select [size]="'lg'" formControlName="sector" [items]="sectors" bindLabel="label" bindValue="value"
+          [multiple]="false" [clearable]="true" [placeholder]="'AUTH.REGISTER.SELECT_SECTOR' | translate"
+          [invalid]="isInvalid('sector')">
+        </app-custom-select>
+
+        <ng-container
+          *ngTemplateOutlet="formError; context:{control:f['sector'],validation:'required',message:('AUTH.VALIDATION.SECTOR_REQUIRED'|translate)}">
+        </ng-container>
+      </div>
+
       <ng-container *ngIf="isCorporate">
         <div class="col-12">
           <label class="form-label fw-bolder">
@@ -142,21 +157,6 @@
 
           <ng-container
             *ngTemplateOutlet="formError; context:{control:f['organizationId'],validation:'required',message:('AUTH.VALIDATION.ORGANIZATION_REQUIRED'|translate)}">
-          </ng-container>
-        </div>
-
-        <div class="col-12">
-          <label class="form-label fw-bolder">
-            {{ 'AUTH.REGISTER.SECTOR' | translate }}
-          </label>
-
-          <app-custom-select [size]="'lg'" formControlName="sector" [items]="sectors" bindLabel="label"
-            bindValue="value" [multiple]="false" [clearable]="true"
-            [placeholder]="'AUTH.REGISTER.SELECT_SECTOR' | translate" [invalid]="isInvalid('sector')">
-          </app-custom-select>
-
-          <ng-container
-            *ngTemplateOutlet="formError; context:{control:f['sector'],validation:'required',message:('AUTH.VALIDATION.SECTOR_REQUIRED'|translate)}">
           </ng-container>
         </div>
       </ng-container>

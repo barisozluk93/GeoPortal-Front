@@ -47,7 +47,6 @@ export class LayerComponent implements OnInit, OnDestroy {
     { name: 'Tip', index: 'type', visibility: true },
     { name: 'Katman Adı', index: 'layerName', visibility: true },
     { name: 'Görünür Mü?', index: 'isVisible', visibility: true },
-    { name: 'Katman Grubu', index: 'layerGroupName', visibility: true },
     { name: 'Sıra', index: 'orderNo', visibility: true },
     { name: 'Aktif Mi?', index: 'isDeleted', visibility: true },
     { name: 'İşlemler', index: null, visibility: true },
@@ -59,7 +58,6 @@ export class LayerComponent implements OnInit, OnDestroy {
     { name: 'Type', index: 'type', visibility: true },
     { name: 'Layer Name', index: 'layerName', visibility: true },
     { name: 'Visible', index: 'isVisible', visibility: true },
-    { name: 'Layer Group', index: 'layerGroupName', visibility: true },
     { name: 'Order No', index: 'orderNo', visibility: true },
     { name: 'Is Active?', index: 'isDeleted', visibility: true },
     { name: 'Actions', index: null, visibility: true },
@@ -110,9 +108,6 @@ export class LayerComponent implements OnInit, OnDestroy {
       .layerPaging(this.paginationModel.pageNumber, this.paginationModel.pageSize, filterParams)
       .subscribe(result => {
         if (result.isSuccess) {
-          result.data.items.forEach(item => {
-            item.layerGroupName = item.layerGroup?.name;
-          });
 
           this.dataSource = result.data.items;
           this.totalCount = result.data.totalCount;

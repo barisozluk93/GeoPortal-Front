@@ -5,6 +5,16 @@
   (mouseup)="$event.stopPropagation()"
 >
   <div class="smart-product-request-panel__body">
+    <button
+      type="button"
+      class="request-area-card btn btn-lg btn-light-primary w-100 request-update-aoi-btn"
+      [disabled]="loading"
+      (click)="updateAoiClicked.emit()"
+    >
+      <i class="fa-solid fa-draw-polygon me-2"></i>
+      {{ 'MAP.SMART_FILTER.REQUEST_PANEL.UPDATE_AOI' | translate }}
+    </button>
+
     <div class="request-area-card">
       <span>
         {{ 'MAP.SMART_FILTER.REQUEST_PANEL.AOI_AREA' | translate }}

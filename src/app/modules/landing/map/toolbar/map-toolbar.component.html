@@ -18,21 +18,32 @@
       </button>
 
       <div class="map-action-dropdown">
+
         <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn" [ngClass]="{
-    'map-action-btn--active': activeTool === 'polygon' || activeTool === 'upload'
+    'map-action-btn--active':
+      activeTool === 'polygon' ||
+      activeTool === 'rectangle' ||
+      activeTool === 'upload'
   }" [title]="'MAP.ACTIONS.AREA_TOOLS' | translate">
-          <i class="fa-solid fa-vector-square fs-1"></i>
+          <svg class="map-action-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 2.5L21 9L17.5 20H6.5L3 9L12 2.5Z" />
+          </svg>
         </button>
 
         <div class="map-action-dropdown__menu">
           <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
-            [title]="'MAP.ACTIONS.POLYGON' | translate" (click)="polygonClicked.emit()">
-            <i class="fa-solid fa-draw-polygon fs-1"></i>
+            [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate" (click)="uploadClicked.emit()">
+            <i class="fa-solid fa-upload fs-1"></i>
           </button>
 
           <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
-            [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate" (click)="uploadClicked.emit()">
-            <i class="fa-solid fa-file-upload fs-1"></i>
+            [title]="'MAP.ACTIONS.RECTANGLE' | translate" (click)="rectangleClicked.emit()">
+            <i class="fa-regular fa-square fs-1"></i>
+          </button>
+
+          <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+            [title]="'MAP.ACTIONS.POLYGON' | translate" (click)="polygonClicked.emit()">
+            <i class="fa-solid fa-pen fs-1"></i>
           </button>
         </div>
       </div>

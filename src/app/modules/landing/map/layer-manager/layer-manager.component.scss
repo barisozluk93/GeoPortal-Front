@@ -14,80 +14,9 @@
   overflow-y: auto;
 }
 
-/* =========================
-   GROUP
-========================= */
-
-.layer-group {
-  overflow: hidden;
-  border: 1px solid var(--bs-border-color);
-  background: var(--bs-body-bg);
-  margin-bottom: 10px;
-}
-
-.layer-group:last-child {
-  margin-bottom: 0;
-}
-
-.layer-group__header {
-  width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
-  border: 0;
-  background: var(--bs-gray-100);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: left;
-}
-
-.layer-group__header:hover {
-  background: var(--bs-gray-200);
-}
-
-.layer-group__left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-}
-
-.layer-group__chevron {
-  width: 14px;
-  font-size: 12px;
-  color: var(--bs-gray-600);
-}
-
-.layer-group__title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--bs-gray-800);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.layer-group__count {
-  min-width: 24px;
-  height: 20px;
-  padding: 0 7px;
-  border-radius: 10px;
-  background: var(--bs-primary-light);
-  color: var(--bs-primary);
-  font-size: 11px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.layer-group__content {
+.layer-list__content {
   padding: 8px;
 }
-
-/* =========================
-   LAYER ITEM
-========================= */
 
 .layer-item {
   display: flex;
@@ -95,7 +24,7 @@
   justify-content: space-between;
   gap: 12px;
   min-height: 44px;
-  padding: 8px 8px;
+  padding: 8px;
   border-bottom: 1px dashed var(--bs-border-color);
 }
 
@@ -110,9 +39,14 @@
 .layer-item__left {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 0.75rem;
   min-width: 0;
   flex: 1;
+}
+
+.layer-checkbox {
+  flex-shrink: 0;
+  margin: 0;
 }
 
 .layer-item__name {
@@ -123,38 +57,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.layer-item__actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.layer-checkbox {
-  flex-shrink: 0;
-  margin: 0;
-}
-
-.layer-item__left {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* =========================
-   OPACITY
-========================= */
-
-.layer-opacity-slider {
-  width: 82px;
-  accent-color: var(--bs-primary);
-  cursor: pointer;
-}
-
-/* =========================
-   EMPTY
-========================= */
 
 .layer-manager-panel__empty {
   min-height: 160px;
@@ -180,27 +82,8 @@
   font-weight: 500;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
 @media (max-width: 768px) {
   .layer-manager-panel {
     min-width: 0;
-  }
-
-  .layer-item {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .layer-item__actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
-
-  .layer-opacity-slider {
-    flex: 1;
-    width: 100%;
   }
 }

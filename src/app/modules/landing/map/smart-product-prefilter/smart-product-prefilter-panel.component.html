@@ -1,0 +1,62 @@
+<div
+  class="smart-product-prefilter-panel"
+  (click)="$event.stopPropagation()"
+  (mousedown)="$event.stopPropagation()"
+  (mouseup)="$event.stopPropagation()"
+>
+  <div class="smart-product-prefilter-panel__body">
+    <div class="prefilter-info">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>{{ 'MAP.SMART_FILTER.PREFILTER.DESCRIPTION' | translate }}</span>
+    </div>
+
+    <div class="prefilter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.PREFILTER.START_DATE' | translate }}
+      </label>
+
+      <input
+        type="date"
+        class="form-control form-control-lg"
+        [(ngModel)]="draft.acquisitionStartDate"
+        [disabled]="loading"
+      />
+    </div>
+
+    <div class="prefilter-field">
+      <label class="form-label fw-bolder">
+        {{ 'MAP.SMART_FILTER.PREFILTER.END_DATE' | translate }}
+      </label>
+
+      <input
+        type="date"
+        class="form-control form-control-lg"
+        [(ngModel)]="draft.acquisitionEndDate"
+        [disabled]="loading"
+      />
+    </div>
+  </div>
+
+  <div class="smart-product-prefilter-panel__footer">
+    <button
+      type="button"
+      class="btn btn-lg btn-light"
+      [disabled]="loading"
+      (click)="clearDates()"
+    >
+      <i class="fa-solid fa-rotate-left me-1"></i>
+      {{ 'MAP.SMART_FILTER.PREFILTER.CLEAR' | translate }}
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-lg btn-primary"
+      [disabled]="loading"
+      (click)="search()"
+    >
+      <span *ngIf="loading" class="spinner-border spinner-border-lg me-1"></span>
+      <i *ngIf="!loading" class="fa-solid fa-search me-1"></i>
+      {{ 'MAP.SMART_FILTER.PREFILTER.SEARCH' | translate }}
+    </button>
+  </div>
+</div>

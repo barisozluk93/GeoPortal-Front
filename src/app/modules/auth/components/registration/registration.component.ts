@@ -17,9 +17,7 @@ enum ErrorStates {
   NoError,
 }
 
-export type RegistrationTabsType =
-  | 'bireysel'
-  | 'kurumsal';
+export type RegistrationTabsType = 'bireysel' | 'kurumsal';
 
 interface SectorOption {
   label: string;
@@ -106,11 +104,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   get isCorporate(): boolean {
-    return this.activeTabId == 'kurumsal';
+    return this.activeTabId === 'kurumsal';
   }
 
   get isOtherSelected(): boolean {
-    return Number(this.f['organizationId']?.value) == this.OTHER_ORGANIZATION_ID;
+    return Number(this.f['organizationId']?.value) === this.OTHER_ORGANIZATION_ID;
   }
 
   initSectors(): void {
@@ -120,21 +118,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }));
   }
 
-  initForm() {
+  initForm(): void {
     this.registrationForm = this.fb.group(
       {
-        name: [
-          '',
-          Validators.compose([
-            Validators.required,
-          ]),
-        ],
-        surname: [
-          '',
-          Validators.compose([
-            Validators.required,
-          ]),
-        ],
+        name: ['', Validators.required],
+        surname: ['', Validators.required],
         email: [
           '',
           Validators.compose([
@@ -164,18 +152,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
           '',
           Validators.compose([
             Validators.required,
-            Validators.pattern(/^\(\d{3}\)\s\d{3}\s\d{2}\s\d{2}$/)
+            Validators.pattern(/^\(\d{3}\)\s\d{3}\s\d{2}\s\d{2}$/),
           ]),
         ],
-        username: [
-          '',
-          Validators.compose([
-            Validators.required,
-          ]),
-        ],
+        username: ['', Validators.required],
 
         organizationId: [null],
-        sector: [''],
+        sector: ['', Validators.required],
         orgName: [''],
         taxNo: [''],
         taxOffice: [''],
@@ -188,7 +171,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     );
   }
 
-  listenOrganizationChanges() {
+  listenOrganizationChanges(): void {
     const orgChangeSub = this.f['organizationId'].valueChanges.subscribe(() => {
       this.onOrganizationChange();
     });
@@ -213,12 +196,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
       return {
         ...organization,
-        name: this.translate.instant('AUTH.REGISTER.OTHER_ORGANIZATION')
+        name: this.translate.instant('AUTH.REGISTER.OTHER_ORGANIZATION'),
       };
     });
   }
 
-  getOrganizations() {
+  getOrganizations(): void {
     const sub = this.organizationManagementService.all().subscribe({
       next: (result) => {
         const otherOption: OrganizationModel = this.getOtherOrganizationOption();
@@ -231,7 +214,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.organizations = [this.getOtherOrganizationOption()];
-      }
+      },
     });
 
     this.unsubscribe.push(sub);
@@ -246,36 +229,38 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       isDeleted: false,
       isSystemData: false,
       phone: '',
-      email: ''
+      email: '',
     };
   }
 
-  setActiveTabId(tabId: RegistrationTabsType) {
+  setActiveTabId(tabId: RegistrationTabsType): void {
     this.activeTabId = tabId;
 
     this.registrationForm.patchValue({
       organizationId: null,
-      sector: '',
       orgName: '',
       taxNo: '',
       taxOffice: '',
       orgPhone: '',
-      orgEmail: ''
+      orgEmail: '',
     });
 
     this.resetCorporateControlsState();
     this.updateCorporateValidators();
   }
 
-  onOrganizationChange() {
+  onOrganizationChange(): void {
     if (!this.isOtherSelected) {
-      this.registrationForm.patchValue({
-        orgName: '',
-        taxNo: '',
-        taxOffice: '',
-        orgPhone: '',
-        orgEmail: ''
-      }, { emitEvent: false });
+      this.registrationForm.patchValue(
+        {
+          orgName: '',
+          taxNo: '',
+          taxOffice: '',
+          orgPhone: '',
+          orgEmail: '',
+        },
+        { emitEvent: false }
+      );
 
       this.f['orgName'].markAsPristine();
       this.f['taxNo'].markAsPristine();
@@ -296,12 +281,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   resetCorporateControlsState(): void {
     const controlNames = [
       'organizationId',
-      'sector',
       'orgName',
       'taxNo',
       'taxOffice',
       'orgPhone',
-      'orgEmail'
+      'orgEmail',
     ];
 
     controlNames.forEach((controlName) => {
@@ -310,7 +294,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateCorporateValidators() {
+  updateCorporateValidators(): void {
     const organizationIdControl = this.f['organizationId'];
     const sectorControl = this.f['sector'];
     const orgNameControl = this.f['orgName'];
@@ -327,16 +311,17 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     orgPhoneControl.clearValidators();
     orgEmailControl.clearValidators();
 
+    sectorControl.setValidators([Validators.required]);
+
     if (this.isCorporate) {
       organizationIdControl.setValidators([Validators.required]);
-      sectorControl.setValidators([Validators.required]);
 
       if (this.isOtherSelected) {
         orgNameControl.setValidators([Validators.required]);
         taxNoControl.setValidators([Validators.required]);
         taxOfficeControl.setValidators([Validators.required]);
         orgPhoneControl.setValidators([
-          Validators.pattern(/^\(\d{3}\)\s\d{3}\s\d{2}\s\d{2}$/)
+          Validators.pattern(/^\(\d{3}\)\s\d{3}\s\d{2}\s\d{2}$/),
         ]);
         orgEmailControl.setValidators([Validators.email]);
       }
@@ -351,7 +336,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     orgEmailControl.updateValueAndValidity({ emitEvent: false });
   }
 
-  submit() {
+  submit(): void {
     if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched();
       return;
@@ -369,9 +354,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     newUser.organizations = [];
     newUser.roles = [];
 
-    if (this.isCorporate) {
-      (newUser as any).sector = formValue.sector;
+    // Sector hem bireysel hem kurumsal için zorunlu ve her zaman gönderilir.
+    (newUser as any).sector = formValue.sector;
 
+    if (this.isCorporate) {
       if (Number(formValue.organizationId) === this.OTHER_ORGANIZATION_ID) {
         newUser.organization = {
           id: 0,
@@ -406,11 +392,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.unsubscribe.push(registrationSubscr);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
 
-  onBrandClick() {
+  onBrandClick(): void {
     this.router.navigate(['/landing/data']);
   }
 }

@@ -50,6 +50,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isMobile: boolean = true;
   isAdmin: boolean = false;
+  isLandingMapPage: boolean = false;
 
   private unsubscribe: Subscription[] = [];
 
@@ -113,21 +114,39 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
 
-  routingChanges() {
+  routingChanges(): void {
+    this.updateLandingMapPage(this.router.url);
+    this.updateAdminStatus();
+
     const routerSubscription = this.router.events.subscribe((event) => {
-
-      this.setMobility(window.innerWidth);
-
-      let currentUser = this.authService.currentUserValue;
-
-      if (currentUser?.roles.includes(RoleEnum.SuperAdmin)) {
-        this.isAdmin = true;
+      if (event instanceof NavigationEnd) {
+        this.updateLandingMapPage(event.urlAfterRedirects);
+        this.updateAdminStatus();
+        this.setMobility(window.innerWidth);
       }
-      else {
-        this.isAdmin = false;
+
+      if (event instanceof NavigationCancel) {
+        this.updateLandingMapPage(this.router.url);
+        this.updateAdminStatus();
+        this.setMobility(window.innerWidth);
       }
     });
 
     this.unsubscribe.push(routerSubscription);
+  }
+
+  private updateLandingMapPage(url: string): void {
+    const cleanUrl = url.split('?')[0].split('#')[0];
+
+    this.isLandingMapPage =
+      cleanUrl === '/landing/map' ||
+      cleanUrl.startsWith('/landing/map/');
+
+      console.log('isLandingMapPage:', this.isLandingMapPage);
+  }
+
+  private updateAdminStatus(): void {
+    const currentUser = this.authService.currentUserValue;
+    this.isAdmin = !!currentUser?.roles?.includes(RoleEnum.SuperAdmin);
   }
 }

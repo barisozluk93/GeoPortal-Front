@@ -17,14 +17,13 @@ import { MapToolbarComponent } from './map/toolbar/map-toolbar.component';
 import { MapExportPanelComponent } from './map/export-panel/map-export-panel.component';
 import { LayerManagerComponent } from './map/layer-manager/layer-manager.component';
 import { GoToCoordinatePanelComponent } from './map/coordinate/go-to-coordinate-panel.component';
-import { LayerLegendPanelComponent } from './map/legend/layer-legend-panel.component';
-import { LayerFilterPanelComponent } from './map/layer-filter/layer-filter-panel.component';
 import { MapSearchPanelComponent } from './map/search/map-search-panel.component';
 import { SmartFilterPanelComponent } from './map/smart-filter/smart-filter-panel.component';
 import { SmartProductMetadataPanelComponent } from './map/smart-filter/metadata/smart-product-metadata-panel.component';
 import { SmartProductFilterPanelComponent } from './map/smart-filter/filter/smart-product-filter-panel.component';
 import { SmartProductRequestPanelComponent } from './map/smart-filter/request/smart-product-request-panel.component';
 import { MapPanelShellComponent } from './map/panel-shell/map-panel-shell.component';
+import { SmartProductPrefilterPanelComponent } from './map/smart-product-prefilter/smart-product-prefilter-panel.component';
 
 @NgModule({
   declarations: [
@@ -34,8 +33,6 @@ import { MapPanelShellComponent } from './map/panel-shell/map-panel-shell.compon
     ContactComponent,
     DocumentationComponent,
     MapComponent,
-    LayerLegendPanelComponent,
-    LayerFilterPanelComponent,
     MapToolbarComponent,
     GoToCoordinatePanelComponent,
     MapExportPanelComponent,
@@ -45,7 +42,8 @@ import { MapPanelShellComponent } from './map/panel-shell/map-panel-shell.compon
     SmartProductMetadataPanelComponent,
     SmartProductFilterPanelComponent,
     SmartProductRequestPanelComponent,
-    MapPanelShellComponent
+    MapPanelShellComponent,
+    SmartProductPrefilterPanelComponent
   ],
   imports: [
     CommonModule, 

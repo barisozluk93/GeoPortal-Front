@@ -1,48 +1,17 @@
 <div class="layer-manager-panel" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()"
   (mouseup)="$event.stopPropagation()">
   <div class="layer-manager-panel__body">
-    <ng-container *ngIf="activeGroups.length > 0; else emptyState">
-      <div class="layer-group" *ngFor="let group of activeGroups; trackBy: trackGroup">
-        <button type="button" class="layer-group__header" (click)="toggleGroup(group)">
-          <div class="layer-group__left">
-            <i class="fa-solid layer-group__chevron" [ngClass]="
-                isGroupCollapsed(group)
-                  ? 'fa-chevron-right'
-                  : 'fa-chevron-down'
-              "></i>
+    <ng-container *ngIf="activeLayers.length > 0; else emptyState">
+      <div class="layer-list__content">
+        <div class="layer-item" *ngFor="let layer of activeLayers; trackBy: trackLayer"
+          [class.layer-item--disabled]="!isLayerVisible(layer)">
+          <div class="layer-item__left">
+            <input type="checkbox" class="form-check-input layer-checkbox" [checked]="isLayerVisible(layer)"
+              (change)="onLayerVisibilityToggle(layer)">
 
-            <span class="layer-group__title">
-              {{ group.name }}
+            <span class="layer-item__name">
+              {{ layer.name || layer.layerName }}
             </span>
-
-            <span class="layer-group__count">
-              {{ (group.layers ?? []).length }}
-            </span>
-          </div>
-        </button>
-
-        <div class="layer-group__content" *ngIf="!isGroupCollapsed(group)">
-          <div class="layer-item" *ngFor="let layer of (group.layers ?? []); trackBy: trackLayer"
-            [class.layer-item--disabled]="!isLayerVisible(layer)">
-            <div class="layer-item__left">
-              <input type="checkbox" class="form-check-input" [checked]="isLayerVisible(layer)"
-                (change)="onLayerVisibilityToggle(layer)">
-
-              <span class="layer-item__name">
-                {{ layer.name || layer.layerName }}
-              </span>
-            </div>
-
-            <div class="layer-item__actions">
-              <button *ngIf="canUseLegend(layer)" type="button" class="btn btn-sm btn-light-primary btn-icon"
-                [title]="'MAP.LAYER_MANAGER.LEGEND' | translate" (click)="layerLegendClicked.emit(layer)">
-                <i class="fa-solid fa-list-ul"></i>
-              </button>
-
-              <input class="layer-opacity-slider" type="range" min="0" max="1" step="0.1"
-                [title]="'MAP.LAYER_MANAGER.OPACITY' | translate" [value]="getLayerOpacity(layer)"
-                (input)="onLayerOpacityChange(layer, $event)" />
-            </div>
           </div>
         </div>
       </div>

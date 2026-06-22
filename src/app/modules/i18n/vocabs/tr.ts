@@ -713,7 +713,8 @@ export const locale = {
             "ACTIONS": {
                 "LAYER_MANAGER": "Katman Yöneticisi",
                 "SEARCH": "Ara",
-                "POLYGON": "Alan Seç",
+                "POLYGON": "Polygon Çiz",
+                "RECTANGLE": "Dikdörtgen Çiz",
                 "UPLOAD_FILE": "Dosya Yükle",
                 "RESET": "Sıfırla",
                 "ZOOM_IN": "Yakınlaştır",
@@ -771,12 +772,14 @@ export const locale = {
                 FILE_TYPE_REQUIRED: 'Dosya tipi zorunludur.',
                 PDF: 'PDF',
                 PNG: 'PNG',
-                X: 'X',
-                Y: 'Y',
+                JPEG: 'JPEG',
+                X: 'Genişlik',
+                Y: 'Yükseklik',
                 X_PLACEHOLDER: 'Örn: 1920',
                 Y_PLACEHOLDER: 'Örn: 1080',
-                X_REQUIRED: 'X zorunludur.',
-                Y_REQUIRED: 'Y zorunludur.',
+                X_REQUIRED: 'Genişlik zorunludur.',
+                Y_REQUIRED: 'Yükseklik zorunludur.',
+                DPI: 'DPI',
                 SUBMIT: 'Export Et',
             },
             "SEARCH": {
@@ -908,7 +911,7 @@ export const locale = {
                 FILTER: 'Filtre',
                 LOADING: 'Sonuçlar yükleniyor...',
                 EMPTY: 'Sonuç bulunamadı',
-                LOCAL_TIME_OF_DAY: 'Yerel saat',
+                LOCAL_TIME_OF_DAY: 'Görüntü Alım Tarihi',
                 IMAGE_ID: 'Görüntü ID',
                 SUN_ELEVATION: 'Güneş Yüksekliği',
                 SUN_AZIMUTH: 'Güneş Azimutu',
@@ -918,6 +921,21 @@ export const locale = {
                 ZOOM_TO_EXTENT: 'Haritada Göster',
                 VIEW_METADATA: 'Metadatayı Görüntüle',
                 ADD_TO_CART: 'Sepete Ekle',
+                AOI_UPDATE_HINT: 'İlgi alanını harita üzerinden güncelleyebilirsiniz. İptal etmek için Esc tuşuna basın.',
+                "AOI_UPDATE_ONLY_FOR_DRAWINGS": "İlgi alanı güncelleme yalnızca çizim araçlarıyla oluşturulan alanlarda kullanılabilir. Arama veya dosya yükleme ile oluşturulan alanlar güncellenemez.",
+                "PREFILTER": {
+                    "TITLE": "Ön Filtre",
+                    "DESCRIPTION": "Sonuçları getirmeden önce görüntü alım tarihi aralığını seçebilirsiniz.",
+                    "START_DATE": "Başlangıç Tarihi",
+                    "END_DATE": "Bitiş Tarihi",
+                    "CLEAR": "Temizle",
+                    "SEARCH": "Ara"
+                },
+                "SORT": {
+                    "DATE": "Görüntü Alım Tarihi",
+                    "AREA_CLOUD_COVER": "Bulutluluk Oranı",
+                    "AREA_OFF_NADIR_ANGLE": "Off Nadir Açısı"
+                },
                 METADATA: {
                     TITLE: 'Metadata',
                     CLOSE: 'Kapat',
@@ -952,7 +970,8 @@ export const locale = {
                     PROCESS_OPTIONS: 'İşlem Seçenekleri',
                     ORTHORECTIFICATION: 'Ortorektifikasyon',
                     PANSHARPEN: 'Pansharpen',
-                    ADD_TO_CART: 'Sepete Ekle'
+                    ADD_TO_CART: 'Sepete Ekle',
+                    UPDATE_AOI: "İlgi Alanını Güncelle"
                 }
             },
         },

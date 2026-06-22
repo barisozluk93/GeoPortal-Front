@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MapManagementComponent } from './map-management.component';
 import { LayerComponent } from './layer/layer.component';
-import { LayerGroupComponent } from './layergroup/layergroup.component';
 
 const routes: Routes = [
   {
@@ -17,10 +16,6 @@ const routes: Routes = [
       {
         path: 'layers',
         component: LayerComponent,
-      },
-      {
-        path: 'layergroups',
-        component: LayerGroupComponent,
       },
       { path: '', redirectTo: 'layers', pathMatch: 'full' },
       { path: '**', redirectTo: 'layers', pathMatch: 'full' },

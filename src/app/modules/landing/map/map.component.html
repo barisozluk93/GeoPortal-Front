@@ -1,12 +1,12 @@
 <div class="map-page" [ngClass]="{ 'map-page--preview': previewMode }">
   <div id="mapCanvas" class="map-canvas"></div>
 
-  <input #areaFileInput type="file" class="d-none" accept=".zip,.geojson,.json,.kml" (change)="uploadAreaFile($event)"
+  <input #areaFileInput type="file" class="d-none" accept=".zip,.geojson,.json,.kml,.kmz" (change)="uploadAreaFile($event)"
     (cancel)="activeTool = null" />
 
   <div class="map-coordinate-box">
-    <div class="fw-bolder fs-5 text-nowrap">
-      <i class="fa-solid fa-location-crosshairs fw-bolder fs-5 text-primary me-2"></i>
+    <div class="fw-semibold fs-6 text-nowrap map-coordinate-text">
+      <i class="fa-solid fa-location-crosshairs fw-bolder fs-6 text-primary me-2"></i>
       {{ currentCoordinateText }}
     </div>
 
@@ -42,10 +42,19 @@
     </div>
   </div>
 
+  <div class="custom-scale-line" aria-hidden="true">
+    <div class="custom-scale-line-inner">{{ customScaleText }}</div>
+  </div>
+
+  <div class="map-aoi-update-warning" *ngIf="isAoiUpdateMode">
+    <i class="fa-solid fa-circle-info"></i>
+    <span>{{ 'MAP.SMART_FILTER.AOI_UPDATE_HINT' | translate }}</span>
+  </div>
+
   <div class="map-left-tools">
     <app-map-toolbar side="left" [measureText]="lengthMeasureText" [activeTool]="activeTool"
       (layerManagerClicked)="toggleLayerManager()" (goToCoordinateClicked)="toggleGoToCoordinatePanel()"
-      (measureLengthClicked)="toggleLengthMeasure()" (polygonClicked)="togglePolygonDraw()"
+      (measureLengthClicked)="toggleLengthMeasure()" (polygonClicked)="togglePolygonDraw()" (rectangleClicked)="toggleRectangleDraw()"
       (uploadClicked)="openUploadFilePicker()" (resetClicked)="resetMap()" (exportClicked)="toggleExportPanel()"
       (searchClicked)="toggleSearchPanel()">
     </app-map-toolbar>
@@ -55,29 +64,24 @@
         [minimized]="panelUiState.layerManager.minimized" [maximized]="panelUiState.layerManager.maximized"
         (closeClicked)="closeLayerManager()" (minimizeClicked)="togglePanelMinimize('layerManager')"
         (maximizeClicked)="togglePanelMaximize('layerManager')">
-        <app-layer-manager [layerGroups]="layerGroups" [baseMapOpacity]="baseMapOpacity"
-          (baseMapOpacityChanged)="setBaseMapOpacity($event)"
-          (layerVisibilityChanged)="setLayerVisibility($event.layer, $event.visible)"
-          (layerOpacityChanged)="setLayerOpacity($event.layer, $event.opacity)"
-          (layerFilterClicked)="openLayerFilter($event)" (layerLegendClicked)="openLayerLegend($event)"
-          (layerInfoClicked)="openLayerInfo($event)">
+        <app-layer-manager [layers]="layers"
+          (layerVisibilityChanged)="setLayerVisibility($event.layer, $event.visible)">
         </app-layer-manager>
       </app-map-panel-shell>
-
-      <app-map-panel-shell *ngIf="selectedLegendLayer" icon="fa-solid fa-list"
-        [title]="selectedLegendLayer.name || selectedLegendLayer.layerName || 'Legend'"
-        [minimized]="panelUiState.legend.minimized" [maximized]="panelUiState.legend.maximized"
-        (closeClicked)="closeLayerLegend()" (minimizeClicked)="togglePanelMinimize('legend')"
-        (maximizeClicked)="togglePanelMaximize('legend')">
-        <app-layer-legend-panel [layer]="selectedLegendLayer">
-        </app-layer-legend-panel>
-      </app-map-panel-shell>
-
-      <app-layer-filter-panel *ngIf="selectedFilterLayer" [layer]="selectedFilterLayer" (closed)="closeLayerFilter()"
-        (filterApplied)="applyLayerFilter($event.layer, $event.cqlFilter)"
-        (filterCleared)="clearLayerFilter($event)">
-      </app-layer-filter-panel>
     </div>
+
+    <div class="map-layer-manager-floating" *ngIf="isSmartPrefilterPanelOpen">
+      <app-map-panel-shell icon="fa-solid fa-filter" [title]="'MAP.SMART_FILTER.PREFILTER.TITLE' | translate"
+        [minimized]="panelUiState.smartPrefilter.minimized" [maximized]="panelUiState.smartPrefilter.maximized"
+        (closeClicked)="closeSmartPrefilterPanel()" (minimizeClicked)="togglePanelMinimize('smartPrefilter')"
+        (maximizeClicked)="togglePanelMaximize('smartPrefilter')">
+        <app-smart-product-prefilter-panel [request]="smartFilterRequest" [loading]="isSmartFilterLoading"
+          (searchClicked)="applySmartProductPrefilter($event)"
+          (closeClicked)="closeSmartPrefilterPanel()">
+        </app-smart-product-prefilter-panel>
+      </app-map-panel-shell>
+    </div>
+
 
     <div class="map-layer-manager-floating" *ngIf="isSmartFilterPanelOpen">
       <app-map-panel-shell icon="fa-solid fa-satellite" [title]="'MAP.SMART_FILTER.TITLE' | translate"
@@ -89,7 +93,7 @@
           (areaUnitChanged)="selectedSmartFilterAreaUnit = $event" (filterClicked)="openSmartAdvancedFilterPanel()"
           (createRequest)="createNewProductRequest()" (metadataClicked)="openSmartProductMetadata($event)"
           (zoomToExtentClicked)="zoomSmartProductToExtent($event)" (addToCartClicked)="addSmartProductToCart($event)"
-          (selectedProductsChanged)="highlightSelectedSmartProducts($event)"
+          (selectedProductsChanged)="highlightSelectedSmartProducts($event)" (productHovered)="highlightHoveredSmartProduct($event)"
           (closeClicked)="closeSmartFilterPanel()">
         </app-smart-filter-panel>
       </app-map-panel-shell>
@@ -110,7 +114,7 @@
         [maximized]="panelUiState.smartAdvancedFilter.maximized" (closeClicked)="closeSmartAdvancedFilterPanel()"
         (minimizeClicked)="togglePanelMinimize('smartAdvancedFilter')"
         (maximizeClicked)="togglePanelMaximize('smartAdvancedFilter')">
-        <app-smart-product-filter-panel [request]="smartFilterRequest" [loading]="isSmartFilterLoading"
+        <app-smart-product-filter-panel [request]="smartFilterRequest" [results]="smartFilterResults" [loading]="isSmartFilterLoading"
           (filterApplied)="applySmartProductFilter($event)" (filterCleared)="clearSmartProductFilter()"
           (closeClicked)="closeSmartAdvancedFilterPanel()">
         </app-smart-product-filter-panel>
@@ -124,6 +128,7 @@
         (maximizeClicked)="togglePanelMaximize('smartProductRequest')">
         <app-smart-product-request-panel [areaM2]="totalSelectedAreaM2" [wkt]="getAoiWkt()"
           [loading]="isSmartProductRequestLoading" (closeClicked)="closeSmartProductRequestPanel()"
+          (updateAoiClicked)="startAoiUpdateFromRequestPanel()"
           (addToCartClicked)="addSmartProductRequestToCart($event)">
         </app-smart-product-request-panel>
       </app-map-panel-shell>

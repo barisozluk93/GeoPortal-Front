@@ -1,4 +1,4 @@
-<div class="smart-filter-panel" (click)="closeProductDropdown(); $event.stopPropagation()"
+<div class="smart-filter-panel" (click)="closeProductDropdown(); closeSortMenu(); $event.stopPropagation()"
   (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()">
   <div class="smart-filter-panel__summary">
     {{ results.length }} {{ 'MAP.SMART_FILTER.RESULT_FOUND' | translate }}
@@ -23,15 +23,35 @@
       </app-custom-select>
     </div>
 
-    <button type="button" class="btn btn-sm btn-primary smart-filter-toolbar-btn" (click)="createRequest.emit()">
-      <i class="fa-solid fa-plus me-1"></i>
-      {{ 'MAP.SMART_FILTER.NEW_REQUEST' | translate }}
-    </button>
+    <div class="smart-filter-toolbar-actions">
+      <div class="smart-filter-panel__sort" (click)="$event.stopPropagation()">
+        <button type="button" class="btn btn-sm btn-light-primary smart-filter-toolbar-btn" (click)="toggleSortMenu($event)">
+          <span>{{ selectedSortLabelKey | translate }}</span>
+          <i class="fa-solid ms-2" [ngClass]="sortDirection === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'"></i>
+        </button>
 
-    <button type="button" class="btn btn-sm btn-light-primary smart-filter-toolbar-btn" (click)="filterClicked.emit()">
-      <i class="fa-solid fa-filter me-1"></i>
-      {{ 'MAP.SMART_FILTER.FILTER' | translate }}
-    </button>
+        <div class="smart-filter-sort-menu" *ngIf="isSortMenuOpen">
+          <button type="button" class="smart-filter-sort-menu__item"
+            *ngFor="let option of sortOptions"
+            [class.smart-filter-sort-menu__item--active]="sortField === option.value"
+            (click)="setSortField(option.value, $event)">
+            <span>{{ option.labelKey | translate }}</span>
+            <i class="fa-solid" *ngIf="sortField === option.value"
+              [ngClass]="sortDirection === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-sm btn-primary smart-filter-toolbar-btn" (click)="createRequest.emit()">
+        <i class="fa-solid fa-plus me-1"></i>
+        {{ 'MAP.SMART_FILTER.NEW_REQUEST' | translate }}
+      </button>
+
+      <button type="button" class="btn btn-sm btn-light-primary smart-filter-toolbar-btn" (click)="filterClicked.emit()">
+        <i class="fa-solid fa-filter me-1"></i>
+        {{ 'MAP.SMART_FILTER.FILTER' | translate }}
+      </button>
+    </div>
   </div>
 
   <div class="smart-filter-panel__body">
@@ -41,13 +61,15 @@
     </div>
 
     <ng-container *ngIf="!loading">
-      <div class="smart-filter-empty" *ngIf="results.length === 0">
+      <div class="smart-filter-empty" *ngIf="sortedResults.length === 0">
         <i class="fa-solid fa-satellite-dish"></i>
         <span>{{ 'MAP.SMART_FILTER.EMPTY' | translate }}</span>
       </div>
 
-      <div class="smart-product-row" *ngFor="let product of results; trackBy: trackByProduct"
-        [class.smart-product-row--selected]="isSelected(product)">
+      <div class="smart-product-row" *ngFor="let product of sortedResults; trackBy: trackByProduct"
+        [class.smart-product-row--selected]="isSelected(product)"
+        (mouseenter)="onProductMouseEnter(product)"
+        (mouseleave)="onProductMouseLeave()">
         <div class="smart-product-row__main">
           <div class="smart-product-row__image">
             <img *ngIf="getProductImage(product); else noImage" [src]="getProductImage(product)!"
@@ -61,7 +83,6 @@
 
             <input type="checkbox" class="form-check-input smart-product-check" [checked]="isSelected(product)"
               (change)="toggleSelected(product); $event.stopPropagation()" (click)="$event.stopPropagation()" />
-            />
           </div>
 
           <div class="smart-product-row__content">
@@ -108,14 +129,20 @@
 
             <div class="smart-product-row__metrics mt-10">
               <div class="smart-product-metric">
-                <i class="fa-solid fa-cloud"></i>
+                <i class="fa-solid fa-cloud" style="color: #D6F0FF !important;"></i>
                 <span>{{ formatPercent(product.cloudRate) }}</span>
               </div>
 
               <div class="smart-product-separator"></div>
 
               <div class="smart-product-metric">
-                <i class="fa-solid fa-satellite-dish"></i>
+                <i class="cloud-rate-icon">
+                  <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6.5 0H5.5V8.51858C4.82248 8.54932 4.1472 8.64307 3.48 8.79982C2.66 8.98982 1.85 9.27982 1.04 9.66982C0.69 9.83982 0.34 10.0398 0 10.2398V11.4098C0.044997 11.3798 0.0874943 11.3498 0.129991 11.3198L0.130001 11.3198C0.1725 11.2898 0.215 11.2598 0.26 11.2298C0.66 10.9898 1.07 10.7598 1.47 10.5698C2.21 10.2198 2.96 9.94982 3.71 9.76982C5.23 9.40982 6.78 9.40982 8.29 9.76982C9.04 9.94982 9.79 10.2198 10.53 10.5698C10.93 10.7598 11.34 10.9898 11.74 11.2298C11.795 11.2604 11.8463 11.2985 11.8985 11.3371L11.8985 11.3372C11.9316 11.3617 11.9651 11.3865 12 11.4098V10.2398L11.8553 10.1569C11.5558 9.98507 11.2616 9.81631 10.96 9.66982C10.16 9.28982 9.34 8.99982 8.52 8.79982C7.97443 8.67241 7.42458 8.58663 6.87361 8.54247L6.95007 8.41984L6.5 8.13921V0ZM6.63007 7.03984L7.48007 7.56984L8.01007 6.71984L7.16007 6.18984L6.63007 7.03984ZM7.69007 5.33984L8.54007 5.86984L9.07007 5.01984L8.22007 4.48984L7.69007 5.33984ZM8.75007 3.63984L9.60007 4.16984L10.1301 3.31984L9.28007 2.78984L8.75007 3.63984ZM9.81007 1.93984L10.6601 2.46984L11.1901 1.61984L10.3401 1.08984L9.81007 1.93984Z"
+                      fill="currentColor" />
+                  </svg>
+                </i>
                 <span>{{ formatDegree(product.nadirAngle) }}</span>
               </div>
 

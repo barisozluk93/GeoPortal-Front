@@ -1,4 +1,3 @@
-import { LayerGroupModel } from './layergroup.model';
 import { LayerType } from './layertype.model';
 
 export interface LayerModel {
@@ -13,8 +12,5 @@ export interface LayerModel {
   opacity: number;
   orderNo: number;
   createdAt?: string;
-  layerGroupId: number;
-  layerGroup?: LayerGroupModel;
-  layerGroupName?: string;
   isDeleted: boolean;
 }

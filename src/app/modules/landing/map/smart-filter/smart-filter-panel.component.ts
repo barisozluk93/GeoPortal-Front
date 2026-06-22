@@ -5,6 +5,8 @@ import {
 } from './models/product-smart-filter.model';
 
 type AreaUnit = 'km2' | 'm2' | 'ha' | 'da';
+type SortField = 'date' | 'cloudRate' | 'nadirAngle';
+type SortDirection = 'asc' | 'desc';
 
 @Component({
   selector: 'app-smart-filter-panel',
@@ -25,11 +27,21 @@ export class SmartFilterPanelComponent {
   @Output() zoomToExtentClicked = new EventEmitter<ProductSmartFilterResult>();
   @Output() addToCartClicked = new EventEmitter<ProductSmartFilterResult>();
   @Output() selectedProductsChanged = new EventEmitter<ProductSmartFilterResult[]>();
+  @Output() productHovered = new EventEmitter<ProductSmartFilterResult | null>();
   @Output() closeClicked = new EventEmitter<void>();
 
   selectedProductIds = new Set<number>();
   expandedProductIds = new Set<number>();
   openedDropdownId: number | null = null;
+  isSortMenuOpen = false;
+  sortField: SortField = 'date';
+  sortDirection: SortDirection = 'desc';
+
+  sortOptions: Array<{ labelKey: string; value: SortField }> = [
+    { labelKey: 'MAP.SMART_FILTER.SORT.DATE', value: 'date' },
+    { labelKey: 'MAP.SMART_FILTER.SORT.AREA_CLOUD_COVER', value: 'cloudRate' },
+    { labelKey: 'MAP.SMART_FILTER.SORT.AREA_OFF_NADIR_ANGLE', value: 'nadirAngle' },
+  ];
 
   areaUnits = [
     { label: 'km²', value: 'km2' as AreaUnit },
@@ -47,9 +59,68 @@ export class SmartFilterPanelComponent {
     return `${this.formatNumber(value)}`;
   }
 
+  get sortedResults(): ProductSmartFilterResult[] {
+    const directionMultiplier = this.sortDirection === 'asc' ? 1 : -1;
+
+    return [...(this.results ?? [])].sort((first, second) => {
+      const firstValue = this.getSortValue(first, this.sortField);
+      const secondValue = this.getSortValue(second, this.sortField);
+
+      if (firstValue === null && secondValue === null) return 0;
+      if (firstValue === null) return 1;
+      if (secondValue === null) return -1;
+      if (firstValue === secondValue) return 0;
+
+      return firstValue > secondValue ? directionMultiplier : -directionMultiplier;
+    });
+  }
+
+  get selectedSortLabelKey(): string {
+    return this.sortOptions.find((item) => item.value === this.sortField)?.labelKey ?? 'MAP.SMART_FILTER.SORT.DATE';
+  }
+
   onAreaUnitChange(unit: AreaUnit): void {
     this.areaUnit = unit;
     this.areaUnitChanged.emit(unit);
+  }
+
+  onProductMouseEnter(product: ProductSmartFilterResult): void {
+    this.productHovered.emit(product);
+  }
+
+  onProductMouseLeave(): void {
+    this.productHovered.emit(null);
+  }
+
+  toggleSortMenu(event?: MouseEvent): void {
+    event?.preventDefault();
+    event?.stopPropagation();
+    this.isSortMenuOpen = !this.isSortMenuOpen;
+  }
+
+  closeSortMenu(): void {
+    this.isSortMenuOpen = false;
+  }
+
+  setSortField(field: SortField, event?: MouseEvent): void {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (this.sortField === field) {
+      this.toggleSortDirection(event);
+      return;
+    }
+
+    this.sortField = field;
+    this.sortDirection = field === 'date' ? 'desc' : 'asc';
+    this.isSortMenuOpen = false;
+  }
+
+  toggleSortDirection(event?: MouseEvent): void {
+    event?.preventDefault();
+    event?.stopPropagation();
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    this.isSortMenuOpen = false;
   }
 
   trackByProduct(_: number, product: ProductSmartFilterResult): number {
@@ -138,6 +209,30 @@ export class SmartFilterPanelComponent {
   formatMeter(value: number | null | undefined): string {
     if (value === null || value === undefined) return '-';
     return `${this.formatNumber(value)} m`;
+  }
+
+  private getSortValue(product: ProductSmartFilterResult, field: SortField): number | null {
+    switch (field) {
+      case 'date': {
+        if (!product.acquisitionDate) return null;
+        const time = new Date(product.acquisitionDate).getTime();
+        return Number.isNaN(time) ? null : time;
+      }
+      case 'cloudRate':
+        return this.toSortableNumber(product.cloudRate);
+      case 'nadirAngle':
+        return this.toSortableNumber(product.nadirAngle);
+      default:
+        return null;
+    }
+  }
+
+  private toSortableNumber(value: number | string | null | undefined): number | null {
+    if (value === null || value === undefined || value === '') return null;
+
+    const numericValue = typeof value === 'number' ? value : Number(String(value).replace(',', '.'));
+
+    return Number.isFinite(numericValue) ? numericValue : null;
   }
 
   private convertArea(valueM2: number, unit: AreaUnit): number {

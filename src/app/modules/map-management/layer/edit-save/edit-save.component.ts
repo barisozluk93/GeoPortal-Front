@@ -5,7 +5,6 @@ import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.serv
 import { TranslateService } from '@ngx-translate/core';
 import { MapManagementService } from '../../map-management.service';
 import { LayerModel } from '../../models/layer.model';
-import { LayerGroupModel } from '../../models/layergroup.model';
 import { LayerType } from '../../models/layertype.model';
 
 @Component({
@@ -20,7 +19,6 @@ export class LayerEditSaveComponent implements OnInit, OnDestroy {
   @Output() isSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   form: FormGroup;
-  layerGroupList: LayerGroupModel[] = [];
   typeChangeSubscription: Subscription;
 
   layerTypes = [
@@ -35,7 +33,7 @@ export class LayerEditSaveComponent implements OnInit, OnDestroy {
     private mapManagementService: MapManagementService,
     private alertService: AlertService,
     private translate: TranslateService
-  ) {}
+  ) { }
 
   get f() {
     return this.form.controls;
@@ -69,7 +67,6 @@ export class LayerEditSaveComponent implements OnInit, OnDestroy {
       isBaseMap: [true],
       opacity: [1, [Validators.required, Validators.min(0), Validators.max(1)]],
       orderNo: [null, [Validators.required, Validators.min(1)]],
-      layerGroupId: [null, Validators.required],
       isDeleted: [false],
     });
   }
@@ -95,49 +92,39 @@ export class LayerEditSaveComponent implements OnInit, OnDestroy {
     layerNameControl.updateValueAndValidity({ emitEvent: false });
   }
 
-  private loadLayerGroups(callback?: () => void) {
-    this.mapManagementService.allLayerGroups().subscribe(result => {
-      this.layerGroupList = result?.isSuccess ? (result.data ?? []) : [];
-      callback?.();
-    });
-  }
-
   openModal(layerId?: number) {
     forkJoin([
       this.translate.get(['NEW_RECORD', 'EDIT'])
     ]).subscribe(([translations]) => {
       this.modalTitle = layerId ? translations['EDIT'] : translations['NEW_RECORD'];
 
-      this.loadLayerGroups(() => {
-        if (layerId) {
-          this.mapManagementService.getLayerById(layerId).subscribe(result => {
-            if (result.isSuccess) {
-              this.form.patchValue(result.data);
-              this.applyTypeBasedValidators(this.f['type'].value);
-              this.isModalOpen = true;
-            }
-          });
-        } else {
-          this.form.reset({
-            id: 0,
-            name: '',
-            type: null,
-            url: '',
-            layerName: '',
-            format: '',
-            version: '',
-            isVisible: true,
-            isBaseMap: true,
-            opacity: 1,
-            orderNo: null,
-            layerGroupId: null,
-            isDeleted: false,
-          });
+      if (layerId) {
+        this.mapManagementService.getLayerById(layerId).subscribe(result => {
+          if (result.isSuccess) {
+            this.form.patchValue(result.data);
+            this.applyTypeBasedValidators(this.f['type'].value);
+            this.isModalOpen = true;
+          }
+        });
+      } else {
+        this.form.reset({
+          id: 0,
+          name: '',
+          type: null,
+          url: '',
+          layerName: '',
+          format: '',
+          version: '',
+          isVisible: true,
+          isBaseMap: true,
+          opacity: 1,
+          orderNo: null,
+          isDeleted: false,
+        });
 
-          this.applyTypeBasedValidators(this.f['type'].value);
-          this.isModalOpen = true;
-        }
-      });
+        this.applyTypeBasedValidators(this.f['type'].value);
+        this.isModalOpen = true;
+      }
     });
   }
 
