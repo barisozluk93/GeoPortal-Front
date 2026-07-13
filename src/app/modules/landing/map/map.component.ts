@@ -7,103 +7,123 @@ import {
   OnDestroy,
   SimpleChanges,
   ViewChild,
-} from '@angular/core';
-import { jsPDF } from 'jspdf';
-import shp from 'shpjs';
-import JSZip from 'jszip';
+} from "@angular/core";
+import { jsPDF } from "jspdf";
+import shp, { parseDbf } from "shpjs";
+import JSZip from "jszip";
 
-import Map from 'ol/Map';
-import View from 'ol/View';
+import Map from "ol/Map";
+import View from "ol/View";
 
-import TileLayer from 'ol/layer/Tile';
-import VectorLayer from 'ol/layer/Vector';
-import ImageLayer from 'ol/layer/Image';
+import TileLayer from "ol/layer/Tile";
+import VectorLayer from "ol/layer/Vector";
+import ImageLayer from "ol/layer/Image";
 
-import OSM from 'ol/source/OSM';
-import TileWMS from 'ol/source/TileWMS';
-import WMTS from 'ol/source/WMTS';
-import VectorSource from 'ol/source/Vector';
-import Static from 'ol/source/ImageStatic';
+import OSM from "ol/source/OSM";
+import TileWMS from "ol/source/TileWMS";
+import WMTS from "ol/source/WMTS";
+import VectorSource from "ol/source/Vector";
+import Static from "ol/source/ImageStatic";
 
-import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import WMTSTileGrid from "ol/tilegrid/WMTS";
 
-import GeoJSON from 'ol/format/GeoJSON';
-import KML from 'ol/format/KML';
-import WKT from 'ol/format/WKT';
+import GeoJSON from "ol/format/GeoJSON";
+import KML from "ol/format/KML";
+import WKT from "ol/format/WKT";
 
-import Draw from 'ol/interaction/Draw';
-import Modify from 'ol/interaction/Modify';
-import Snap from 'ol/interaction/Snap';
-import Feature from 'ol/Feature';
+import Draw from "ol/interaction/Draw";
+import Modify from "ol/interaction/Modify";
+import Snap from "ol/interaction/Snap";
+import Feature from "ol/Feature";
+import Collection from "ol/Collection";
 
-import Geometry from 'ol/geom/Geometry';
-import LineString from 'ol/geom/LineString';
-import Polygon from 'ol/geom/Polygon';
-import MultiPolygon from 'ol/geom/MultiPolygon';
+import Geometry from "ol/geom/Geometry";
+import LineString from "ol/geom/LineString";
+import Polygon from "ol/geom/Polygon";
+import MultiPolygon from "ol/geom/MultiPolygon";
 
-import { getArea, getLength } from 'ol/sphere';
-import { Style, Stroke, Circle as CircleStyle, Fill } from 'ol/style';
+import { getArea, getLength } from "ol/sphere";
+import { Style, Stroke, Circle as CircleStyle, Fill } from "ol/style";
 
-import { defaults as defaultControls } from 'ol/control';
-import { fromLonLat, toLonLat } from 'ol/proj';
-import { Extent } from 'ol/extent';
-import { Coordinate } from 'ol/coordinate';
+import { defaults as defaultControls } from "ol/control";
+import { fromLonLat, toLonLat } from "ol/proj";
+import { Extent } from "ol/extent";
+import { Coordinate } from "ol/coordinate";
 
-import { TranslateService } from '@ngx-translate/core';
-import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
+import { TranslateService } from "@ngx-translate/core";
+import { AlertService } from "src/app/_metronic/partials/layout/alert/alert.service";
 
-import { LayerModel } from '../../map-management/models/layer.model';
-import { LayerType } from '../../map-management/models/layertype.model';
-import { MapService } from './map.service';
-import { MapExportOptions } from './export-panel/map-export-panel.component';
-import { MapSearchResult } from './search/map-search-panel.component';
+import { LayerModel } from "../../map-management/models/layer.model";
+import { LayerType } from "../../map-management/models/layertype.model";
+import { MapService } from "./map.service";
+import { MapExportOptions } from "./export-panel/map-export-panel.component";
+import { MapSearchResult } from "./search/map-search-panel.component";
 import {
+  ProductAcquisitionDateRange,
   ProductSmartFilterRequest,
   ProductSmartFilterResult,
-} from './smart-filter/models/product-smart-filter.model';
-import { BasketModel } from '../../basket-management/models/basket.model';
-import { BasketService } from 'src/app/_metronic/partials/layout/basket/basket.service';
-import { AuthService } from '../../auth';
-import { BasketManagementService } from '../../basket-management/basket-management.service';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { MetadataRow } from './smart-filter/metadata/smart-product-metadata-panel.component';
-import { ProductModel } from '../marketplace/models/product.model';
-import Overlay from 'ol/Overlay';
-import { EventsKey } from 'ol/events';
-import { unByKey } from 'ol/Observable';
-import { createBox } from 'ol/interaction/Draw';
+} from "./smart-filter/models/product-smart-filter.model";
+import { BasketModel } from "../../basket-management/models/basket.model";
+import { BasketService } from "src/app/_metronic/partials/layout/basket/basket.service";
+import { AuthService } from "../../auth";
+import { BasketManagementService } from "../../basket-management/basket-management.service";
+import { Router } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
+import { MetadataRow } from "./smart-filter/metadata/smart-product-metadata-panel.component";
+import { ProductModel } from "../marketplace/models/product.model";
+import Overlay from "ol/Overlay";
+import { EventsKey } from "ol/events";
+import { unByKey } from "ol/Observable";
+import { createBox } from "ol/interaction/Draw";
+import { saveAs } from "file-saver";
+import { AskFootprintResult } from "./ask-panel/map-ask-panel.component";
+import { firstValueFrom } from "rxjs";
+import {
+  SmartPrefilterAoiExportEvent,
+  SmartPrefilterAoiItem,
+  SmartPrefilterAoiOrigin,
+  SmartPrefilterAoiRenameEvent,
+  SmartPrefilterNewAreaAction,
+} from "./smart-product-prefilter/smart-product-prefilter-panel.component";
 
 type OlMapLayer = TileLayer<any> | VectorLayer<VectorSource>;
-type CoordinateFormat = 'dd' | 'dms';
-type SupportedAreaFileExtension = 'zip' | 'geojson' | 'json' | 'kml' | 'kmz';
+type CoordinateFormat = "dd" | "dms";
+type MeasureMode = "distance" | "area";
+type SupportedAreaFileExtension = "zip" | "geojson" | "json" | "kml" | "kmz";
 
 type ActiveTool =
-  | 'layer-manager'
-  | 'coordinate'
-  | 'measure'
-  | 'export'
-  | 'polygon'
-  | 'rectangle'
-  | 'upload'
-  | 'search'
-  | 'smart-filter'
+  | "layer-manager"
+  | "coordinate"
+  | "measure"
+  | "export"
+  | "polygon"
+  | "rectangle"
+  | "upload"
+  | "search"
+  | "smart-filter"
+  | "ask"
   | null;
 
 type PanelKey =
-  | 'layerManager'
-  | 'search'
-  | 'coordinate'
-  | 'export'
-  | 'smartFilter'
-  | 'smartPrefilter'
-  | 'metadata'
-  | 'smartAdvancedFilter'
-  | 'smartProductRequest';
+  | "layerManager"
+  | "search"
+  | "coordinate"
+  | "export"
+  | "smartFilter"
+  | "smartPrefilter"
+  | "metadata"
+  | "smartAdvancedFilter"
+  | "smartProductRequest"
+  | "ask";
 
-type PanelUiState = Record<PanelKey, { minimized: boolean; maximized: boolean }>;
+type PanelUiState = Record<
+  PanelKey,
+  { minimized: boolean; maximized: boolean }
+>;
 
-type UserAreaOrigin = 'draw' | 'upload' | 'search' | null;
+type UserAreaOrigin = SmartPrefilterAoiOrigin | null;
+
+type MapAoiItem = SmartPrefilterAoiItem;
 
 type AoiPanelSnapshot = {
   isSmartPrefilterPanelOpen: boolean;
@@ -114,20 +134,21 @@ type AoiPanelSnapshot = {
 };
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  selector: "app-map",
+  templateUrl: "./map.component.html",
+  styleUrls: ["./map.component.scss"],
 })
 export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
-  @ViewChild('areaFileInput') areaFileInput?: ElementRef<HTMLInputElement>;
+  @ViewChild("areaFileInput") areaFileInput?: ElementRef<HTMLInputElement>;
 
   @Input() refreshKey: number | string | null = null;
   @Input() previewMode = false;
   @Input() previewWkt: string | null = null;
 
-  coordinateFormat: CoordinateFormat = 'dd';
-  currentCoordinateText = '-';
-  customScaleText = '3000 km';
+  coordinateFormat: CoordinateFormat = "dd";
+  currentCoordinateText = "-";
+  customScaleText = "3000 km";
+  mapRotationDegree = 0;
   isCoordinateMenuOpen = false;
 
   isLayerManagerOpen = false;
@@ -138,15 +159,33 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   isSmartFilterLoading = false;
   isSmartPrefilterPanelOpen = false;
 
+  isAskPanelOpen = false;
+  isAskLoading = false;
+  askFootprints: AskFootprintResult[] = [];
+  activeAskFootprintIndex = 0;
+  askCoordinateText = "";
+
   smartFilterResults: ProductSmartFilterResult[] = [];
   smartFilterRequest: ProductSmartFilterRequest = {
     pageNumber: 1,
     pageSize: 100,
   };
 
-  selectedSmartFilterAreaUnit: 'km2' | 'm2' | 'ha' | 'da' = 'km2';
-  totalSelectedAreaM2 = 0;
+  // Prefilter alanlarını dolduran, request modelinden bağımsız backend modeli.
+  smartAcquisitionDateRange: ProductAcquisitionDateRange | null = null;
+  private isSmartFilterDateRangeInitialized = false;
 
+  selectedSmartFilterAreaUnit: "km2" | "m2" | "ha" | "da" = "km2";
+  totalSelectedAreaM2 = 0;
+  aoiItems: MapAoiItem[] = [];
+  selectedAoiId: string | null = null;
+  isResultsPanelCollapsed = false;
+  isPrefilterPanelCollapsed = false;
+  hoveredAoiId: string | null = null;
+  editingAoiId: string | null = null;
+
+  private aoiCounter = 0;
+  private aoiRefreshTimer?: ReturnType<typeof setTimeout>;
 
   activeTool: ActiveTool = null;
 
@@ -160,43 +199,49 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     metadata: { minimized: false, maximized: false },
     smartAdvancedFilter: { minimized: false, maximized: false },
     smartProductRequest: { minimized: false, maximized: false },
+    ask: { minimized: false, maximized: false },
   };
 
   layers: LayerModel[] = [];
 
   isLengthMeasureActive = false;
-  lengthMeasureText = '';
+  lengthMeasureText = "";
+  private measureMode: MeasureMode | null = null;
 
   isMetadataPanelOpen = false;
   isSmartAdvancedFilterPanelOpen = false;
+  smartAdvancedFilterPosition = { top: 0, left: 0 };
+  smartMetadataPanelPosition = { top: 0, left: 0 };
   isSmartProductRequestPanelOpen = false;
   isSmartProductRequestLoading = false;
   isMetadataLoading = false;
-  selectedMetadataProductName = '';
+  selectedMetadataProductName = "";
   metadataRows: MetadataRow[] = [];
-  metadataRawText = '';
+  metadataRawText = "";
 
   isAoiUpdateMode = false;
   private userAreaOrigin: UserAreaOrigin = null;
   private aoiUpdatePanelSnapshot?: AoiPanelSnapshot;
   private aoiUpdateEscHandler?: (event: KeyboardEvent) => void;
+  isAreaCreationMode = false;
+  private areaDrawPanelSnapshot?: AoiPanelSnapshot;
+  private areaDrawEscHandler?: (event: KeyboardEvent) => void;
 
   private readonly defaultCenter = fromLonLat([35.2433, 38.9637]);
-  private readonly defaultZoom = 6;
+  private readonly defaultZoom = 3;
 
-  private readonly drawColor = '#50cd89';
-  private readonly drawFillColor = 'rgba(80, 205, 137, 0.18)';
+  private readonly drawColor = "#263685";
+  private readonly drawFillColor = "rgba(38, 54, 133, 0.14)";
   private readonly supportedAreaFileExtensions: SupportedAreaFileExtension[] = [
-    'zip',
-    'geojson',
-    'json',
-    'kml',
-    'kmz'
+    "zip",
+    "geojson",
+    "json",
+    "kml",
+    "kmz",
   ];
 
   private readonly scaleBarWidthPx = 276;
   private readonly maxScaleDistanceMeters = 3_000_000;
-
 
   private map?: Map;
   private dynamicLayers: OlMapLayer[] = [];
@@ -205,8 +250,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private measureDraw?: Draw;
   private measureSource = new VectorSource();
-  private measureTooltipElement?: HTMLDivElement;
-  private measureTooltipOverlay?: Overlay;
+  private measureSegmentTooltipElement?: HTMLDivElement;
+  private measureSegmentTooltipOverlay?: Overlay;
+  private measureTotalTooltipElement?: HTMLDivElement;
+  private measureTotalTooltipOverlay?: Overlay;
   private measureGeometryChangeKey?: EventsKey;
 
   private areaTooltipOverlays: Overlay[] = [];
@@ -217,6 +264,28 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private polygonDraw?: Draw;
   private userAreaSource = new VectorSource();
+  private readonly askHighlightSource = new VectorSource();
+  private readonly askHighlightLayer = new VectorLayer({
+    source: this.askHighlightSource,
+    zIndex: 10002,
+    style: (feature) => {
+      const isActive = feature.get("askActive") === true;
+
+      return new Style({
+        stroke: new Stroke({
+          color: "#f1416c",
+          width: isActive ? 4 : 2,
+          lineDash: isActive ? undefined : [8, 5],
+        }),
+        fill: new Fill({
+          color: isActive
+            ? "rgba(241, 65, 108, 0.20)"
+            : "rgba(241, 65, 108, 0.08)",
+        }),
+      });
+    },
+  });
+
   private smartProductResultSource = new VectorSource();
 
   private smartProductResultLayer = new VectorLayer({
@@ -224,11 +293,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     zIndex: 9997,
     style: new Style({
       stroke: new Stroke({
-        color: '#009ef7',
+        color: this.drawColor,
         width: 2,
       }),
       fill: new Fill({
-        color: 'rgba(0, 158, 247, 0.12)',
+        color: "rgba(38, 54, 133, 0.12)",
       }),
     }),
   });
@@ -240,13 +309,38 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private selectedSmartProductResultLayer = new VectorLayer({
     source: this.selectedSmartProductResultSource,
     zIndex: 9998,
+    style: (feature) => {
+      const highlightType = feature.get("highlightType") as
+        "selected" | "hover" | undefined;
+      const isSelected = highlightType === "selected";
+
+      return new Style({
+        stroke: new Stroke({
+          // Footprint rengi AOI renginden özellikle ayrıdır.
+          color: "#f59e0b",
+          width: isSelected ? 4 : 3,
+          lineDash: isSelected ? undefined : [8, 5],
+        }),
+        fill: new Fill({
+          color: isSelected
+            ? "rgba(245, 158, 11, 0.18)"
+            : "rgba(245, 158, 11, 0.14)",
+        }),
+      });
+    },
+  });
+
+  private smartProductIntersectionSource = new VectorSource();
+
+  private smartProductIntersectionLayer = new VectorLayer({
+    source: this.smartProductIntersectionSource,
+    zIndex: 10000,
     style: new Style({
       stroke: new Stroke({
-        color: '#ffc700',
-        width: 4,
-      }),
-      fill: new Fill({
-        color: 'rgba(255, 199, 0, 0.20)',
+        color: "#16a34a",
+        width: 5,
+        lineCap: "round",
+        lineJoin: "round",
       }),
     }),
   });
@@ -256,25 +350,24 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private userAreaLayer = new VectorLayer({
     source: this.userAreaSource,
     zIndex: 9999,
-    style: new Style({
-      stroke: new Stroke({
-        color: this.drawColor,
-        width: 3,
-      }),
-      fill: new Fill({
-        color: this.drawFillColor,
-      }),
-      image: new CircleStyle({
-        radius: 5,
-        fill: new Fill({
-          color: this.drawColor,
-        }),
+    style: (feature) => {
+      const aoiId = feature.get("aoiId") as string | undefined;
+      const isHovered = !!aoiId && aoiId === this.hoveredAoiId;
+      return new Style({
         stroke: new Stroke({
-          color: '#ffffff',
-          width: 2,
+          color: this.drawColor,
+          width: isHovered ? 5 : 2,
         }),
-      }),
-    }),
+        fill: new Fill({
+          color: isHovered ? "rgba(38,54,133,.22)" : "rgba(38,54,133,.12)",
+        }),
+        image: new CircleStyle({
+          radius: isHovered ? 7 : 5,
+          fill: new Fill({ color: this.drawColor }),
+          stroke: new Stroke({ color: "#fff", width: 2 }),
+        }),
+      });
+    },
   });
 
   private measureLayer = new VectorLayer({
@@ -291,7 +384,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           color: this.drawColor,
         }),
         stroke: new Stroke({
-          color: '#ffffff',
+          color: "#ffffff",
           width: 2,
         }),
       }),
@@ -306,8 +399,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     private basketManagementService: BasketManagementService,
     private basketService: BasketService,
     private router: Router,
-    private http: HttpClient
-  ) { }
+    private http: HttpClient,
+  ) {}
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -317,11 +410,16 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['refreshKey'] && !changes['refreshKey'].firstChange && this.map && !this.previewMode) {
+    if (
+      changes["refreshKey"] &&
+      !changes["refreshKey"].firstChange &&
+      this.map &&
+      !this.previewMode
+    ) {
       this.loadLayers();
     }
 
-    if ((changes['previewWkt'] || changes['previewMode']) && this.map) {
+    if ((changes["previewWkt"] || changes["previewMode"]) && this.map) {
       this.renderPreviewWktIfNeeded();
     }
   }
@@ -330,9 +428,16 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.stopLengthMeasure(true);
     this.stopPolygonDraw(true);
     this.stopAoiUpdateMode(false);
+    this.unbindAreaDrawEscHandler();
     this.disableAreaModify();
+    this.closeAskPanel();
     this.map?.setTarget(undefined);
     this.clearDynamicLayers();
+
+    if (this.aoiRefreshTimer) {
+      clearTimeout(this.aoiRefreshTimer);
+    }
+
   }
 
   zoomIn(): void {
@@ -365,6 +470,23 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     });
   }
 
+  rotateMap(degree: number): void {
+    const view = this.map?.getView();
+    if (!view || !Number.isFinite(degree)) return;
+
+    view.setRotation((this.normalizeDegree(degree) * Math.PI) / 180);
+  }
+
+  resetMapRotation(): void {
+    const view = this.map?.getView();
+    if (!view) return;
+
+    view.animate({
+      rotation: 0,
+      duration: 220,
+    });
+  }
+
   resetMap(): void {
     const view = this.map?.getView();
     if (!view) return;
@@ -374,6 +496,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.disableAreaModify();
     this.userAreaSource.clear();
     this.userAreaOrigin = null;
+    this.aoiItems = [];
+    this.editingAoiId = null;
     this.clearSmartFilterResults();
 
     view.animate({
@@ -387,28 +511,33 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.activeTool = null;
   }
 
-  toggleLengthMeasure(): void {
+  toggleDistanceMeasure(): void {
+    this.toggleMeasure("distance");
+  }
+
+  toggleAreaMeasure(): void {
+    this.toggleMeasure("area");
+  }
+
+  private toggleMeasure(mode: MeasureMode): void {
     if (this.previewMode) return;
 
-    if (this.isLengthMeasureActive || this.lengthMeasureText) {
+    if (this.isLengthMeasureActive && this.measureMode === mode) {
       this.stopLengthMeasure(true);
       this.activeTool = null;
       return;
     }
 
+    this.stopLengthMeasure(true);
     this.stopPolygonDraw(true);
     this.closeAllPanels();
-
     this.disableAreaModify();
-    this.userAreaSource.clear();
-    this.userAreaOrigin = null;
-    this.clearSmartFilterResults();
 
-    this.activeTool = 'measure';
-    this.startLengthMeasure();
+    this.activeTool = "measure";
+    this.startMeasure(mode);
   }
 
-  togglePolygonDraw(): void {
+  togglePolygonDraw(keepSmartPanelOpen = false): void {
     if (this.previewMode) return;
 
     if (this.polygonDraw) {
@@ -418,25 +547,32 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     this.clearMeasure();
-    this.closeAllPanels();
+
+    // Çizim başladığında panel daima kapanır ve newAreaCreationHint görünür.
+    // Mevcut panel durumu snapshot olarak saklanır; çizim bitince/ESC'de geri gelir.
+    this.hideSmartPanelsForAreaDrawing();
 
     this.disableAreaModify();
-    this.userAreaSource.clear();
-    this.userAreaOrigin = null;
-    this.clearSmartFilterResults();
 
-    this.activeTool = 'polygon';
+    // Yeni çizim mevcut AOI geometrilerini ve alan listesini silmez.
+    // Draw interaction yeni feature'ı aynı source'a ekler ve drawend'de
+    // registerCurrentAoi yalnızca aoiId atanmamış yeni feature'ı kaydeder.
+    this.activeTool = "polygon";
     this.startPolygonDraw();
   }
 
-  openUploadFilePicker(): void {
+  openUploadFilePicker(keepSmartPanelOpen = false): void {
     if (this.previewMode) return;
 
     this.clearMeasure();
     this.stopPolygonDraw(true);
-    this.closeAllPanels();
+    if (!keepSmartPanelOpen) {
+      this.closeAllPanels();
+    } else {
+      this.hideSmartPanelsForAreaDrawing();
+    }
 
-    this.activeTool = 'upload';
+    this.activeTool = "upload";
 
     if (!this.areaFileInput?.nativeElement) {
       this.activeTool = null;
@@ -445,19 +581,20 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     const input = this.areaFileInput.nativeElement;
 
-    input.value = '';
+    input.value = "";
 
     const onFocus = () => {
       setTimeout(() => {
-        if (!input.files?.length && this.activeTool === 'upload') {
+        if (!input.files?.length && this.activeTool === "upload") {
           this.activeTool = null;
+          this.restoreAreaDrawPanels();
         }
 
-        window.removeEventListener('focus', onFocus);
+        window.removeEventListener("focus", onFocus);
       }, 300);
     };
 
-    window.addEventListener('focus', onFocus, { once: true });
+    window.addEventListener("focus", onFocus, { once: true });
     input.click();
   }
 
@@ -473,48 +610,327 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.stopPolygonDraw(true);
     this.clearMeasure();
 
+    // Yeni Alan > Dosya Yükle akışında smart paneller geçici olarak kapalıdır.
+    // Bu yüzden panel görünürlüğüne bakarak mevcut AOI'leri temizlemiyoruz;
+    // yüklenen geometri her zaman mevcut alan listesine eklenir.
     this.disableAreaModify();
-    this.userAreaSource.clear();
-    this.userAreaOrigin = null;
-    this.clearSmartFilterResults();
 
     try {
       const extension = this.getAreaFileExtension(file.name);
 
       if (!extension || !this.isSupportedAreaFileExtension(extension)) {
-        this.showUploadWarning('MAP.UPLOAD.FILE_FORMAT_WARNING');
+        this.showUploadWarning("MAP.UPLOAD.FILE_FORMAT_WARNING");
         return;
       }
 
       const features = await this.readAreaFile(file, extension);
 
       const polygonFeatures = features.filter((feature) =>
-        this.isPolygonFeature(feature)
+        this.isPolygonFeature(feature),
       );
 
       if (!polygonFeatures.length) {
-        this.showUploadWarning('MAP.UPLOAD.FILE_UPLOAD_WARNING');
+        this.showUploadWarning("MAP.UPLOAD.FILE_UPLOAD_WARNING");
         return;
       }
 
       this.userAreaSource.addFeatures(polygonFeatures);
-      this.userAreaOrigin = 'upload';
+      this.userAreaOrigin = "upload";
       this.disableAreaModify();
       this.fitToUserAreas();
       this.calculateSelectedArea();
+      this.registerCurrentAoi("upload", this.removeFileExtension(file.name));
       this.clearAreaTooltips();
       this.openSmartPrefilterPanel();
     } catch (error) {
-      console.error('Dosya yüklenirken hata oluştu:', error);
+      console.error("Dosya yüklenirken hata oluştu:", error);
       this.disableAreaModify();
-      this.userAreaSource.clear();
-    this.userAreaOrigin = null;
-      this.clearSmartFilterResults();
-      this.showUploadWarning('MAP.UPLOAD.FILE_READ_ERROR');
+      // Okuma hatası mevcut harita çizimlerini ve alan listesini etkilemez.
+      this.showUploadWarning("MAP.UPLOAD.FILE_READ_ERROR");
     } finally {
-      input.value = '';
+      input.value = "";
+      this.restoreAreaDrawPanels();
       this.activeTool = null;
     }
+  }
+
+  toggleAskTool(): void {
+    if (this.previewMode) return;
+
+    const opening = this.activeTool !== "ask";
+    this.clearMeasure();
+    this.stopPolygonDraw(true);
+
+    if (!opening) {
+      this.closeAskPanel();
+      return;
+    }
+
+    this.closeAllPanels();
+    this.activeTool = "ask";
+    // Panel araç seçildiğinde değil, kullanıcı haritada bir noktaya
+    // tıkladığında açılır.
+    this.isAskPanelOpen = false;
+    this.isAskLoading = false;
+    this.askFootprints = [];
+    this.activeAskFootprintIndex = 0;
+    this.askCoordinateText = "";
+    this.askHighlightSource.clear();
+  }
+
+  private queryFootprintsAtCoordinate(coordinate: Coordinate): void {
+    if (!this.map || this.activeTool !== "ask") return;
+
+    const [longitude, latitude] = toLonLat(coordinate);
+    const pointWkt = `POINT(${longitude} ${latitude})`;
+
+    this.isAskPanelOpen = true;
+    this.isAskLoading = true;
+    this.askCoordinateText = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+    this.askFootprints = [];
+    this.activeAskFootprintIndex = 0;
+    this.askHighlightSource.clear();
+
+    const request: ProductSmartFilterRequest = {
+      ...this.smartFilterRequest,
+      wkt: pointWkt,
+      pageNumber: 1,
+      pageSize: 100,
+    };
+
+    this.mapService.smartProductFilter(request).subscribe({
+      next: async (response) => {
+        try {
+          const footprints = (response ?? [])
+            .map((item: ProductSmartFilterResult) =>
+              this.toAskFootprintResult(item),
+            )
+            .sort(
+              (first, second) =>
+                this.getAskDateValue(second.acquisitionDate) -
+                this.getAskDateValue(first.acquisitionDate),
+            );
+
+          // propertyUrl doğrudan .dbf dosyasını döner. Her footprint'in
+          // öznitelikleri paralel okunur; bir dosya hata verirse diğer
+          // footprint sonuçları yine de panelde gösterilir.
+          this.askFootprints = await Promise.all(
+            footprints.map(async (footprint) => ({
+              ...footprint,
+              ...(await this.loadAskFootprintAttributes(footprint.propertyUrl)),
+            })),
+          );
+
+          this.activeAskFootprintIndex = 0;
+          this.renderAskFootprints();
+        } catch (error) {
+          console.error("Footprint öznitelikleri hazırlanamadı:", error);
+          this.askFootprints = [];
+          this.askHighlightSource.clear();
+          this.alertService.createAlert(
+            "danger",
+            this.translate.instant("MAP.ASK.LOAD_ERROR"),
+          );
+        } finally {
+          this.isAskLoading = false;
+        }
+      },
+      error: (error) => {
+        console.error("Nokta ayak izi sorgusu çalıştırılırken hata oluştu:", error);
+        this.askFootprints = [];
+        this.askHighlightSource.clear();
+        this.isAskLoading = false;
+        this.alertService.createAlert(
+          "danger",
+          this.translate.instant("MAP.ASK.LOAD_ERROR"),
+        );
+      },
+    });
+  }
+
+  private toAskFootprintResult(
+    item: ProductSmartFilterResult,
+  ): AskFootprintResult {
+    const value = item as any;
+
+    return {
+      id: value.id,
+      name: value.name,
+      imageId: value.imageId ?? value.productName ?? value.name,
+      productName: value.productName ?? value.imageId,
+      acquisitionDate:
+        value.acquisitionDate ?? value.date ?? value.createdDate ?? null,
+      propertyUrl: value.propertyUrl,
+      geometry: value.geometry ?? value.geoJsonGeometry ?? null,
+      wkt: value.wkt ?? value.footprintWkt ?? value.geometryWkt ?? null,
+      attributes: {},
+      attributesLoading: true,
+      attributesError: null,
+    };
+  }
+
+  private async loadAskFootprintAttributes(
+    propertyUrl: string | null | undefined,
+  ): Promise<
+    Pick<
+      AskFootprintResult,
+      "attributes" | "attributesLoading" | "attributesError"
+    >
+  > {
+    if (!propertyUrl?.trim()) {
+      return {
+        attributes: {},
+        attributesLoading: false,
+        attributesError: "Property URL bulunamadı.",
+      };
+    }
+
+    try {
+      const dbfBuffer = await firstValueFrom(
+        this.http.get(propertyUrl, { responseType: "arraybuffer" }),
+      );
+
+      if (!dbfBuffer?.byteLength) {
+        throw new Error("DBF dosyası boş döndü.");
+      }
+
+      // @types/shpjs parseDbf için ikinci parametre olarak CPG buffer'ını
+      // zorunlu tutuyor. propertyUrl doğrudan DBF döndüğü için varsayılan
+      // karakter setini UTF-8 olarak gönderiyoruz.
+      const cpgBuffer = new TextEncoder().encode("UTF-8").buffer as ArrayBuffer;
+      const parsedRecords = parseDbf(dbfBuffer, cpgBuffer);
+      const records = Array.isArray(parsedRecords)
+        ? (parsedRecords as Array<Record<string, unknown>>)
+        : [];
+      const firstRecord = records[0] ?? null;
+
+      return {
+        attributes:
+          firstRecord && typeof firstRecord === "object" ? firstRecord : {},
+        attributesLoading: false,
+        attributesError:
+          firstRecord && typeof firstRecord === "object"
+            ? null
+            : "DBF dosyasında öznitelik kaydı bulunamadı.",
+      };
+    } catch (error) {
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "Bilinmeyen DBF okuma hatası";
+
+      console.error(`DBF öznitelikleri okunamadı: ${propertyUrl}`, error);
+
+      return {
+        attributes: {},
+        attributesLoading: false,
+        attributesError: `DBF öznitelikleri okunamadı: ${message}`,
+      };
+    }
+  }
+
+  private getAskDateValue(value: string | Date | null | undefined): number {
+    if (!value) return 0;
+    const timestamp = value instanceof Date ? value.getTime() : new Date(value).getTime();
+    return Number.isFinite(timestamp) ? timestamp : 0;
+  }
+
+  selectAskFootprint(index: number): void {
+    if (index < 0 || index >= this.askFootprints.length) return;
+    this.activeAskFootprintIndex = index;
+    this.renderAskFootprints();
+  }
+
+  /**
+   * Haritada aynı anda yalnızca aktif sekmeye ait footprint gösterilir.
+   * Sonuçlar tarihe göre yeni -> eski sıralandığı için ilk sorguda index 0,
+   * yani en yeni footprint çizilir. Sekme değişince önceki geometri temizlenir
+   * ve yalnızca yeni seçilen footprint haritaya eklenir.
+   */
+  private renderAskFootprints(): void {
+    this.askHighlightSource.clear();
+    if (!this.map || !this.askFootprints.length) return;
+
+    const activeIndex = Math.min(
+      Math.max(this.activeAskFootprintIndex, 0),
+      this.askFootprints.length - 1,
+    );
+    const activeFootprint = this.askFootprints[activeIndex];
+    const feature = this.createAskFootprintFeature(activeFootprint, activeIndex);
+
+    if (feature) {
+      this.askHighlightSource.addFeature(feature);
+    }
+  }
+
+  private createAskFootprintFeature(
+    item: AskFootprintResult,
+    index: number,
+  ): Feature<Geometry> | null {
+    if (!this.map) return null;
+
+    try {
+      let feature: Feature<Geometry> | null = null;
+      const featureProjection = this.map.getView().getProjection();
+
+      if (item.geometry) {
+        feature = new GeoJSON().readFeature(
+          { type: "Feature", geometry: item.geometry, properties: {} },
+          { dataProjection: "EPSG:4326", featureProjection },
+        ) as Feature<Geometry>;
+      } else if (item.wkt) {
+        feature = new WKT().readFeature(item.wkt, {
+          dataProjection: "EPSG:4326",
+          featureProjection,
+        }) as Feature<Geometry>;
+      }
+
+      if (!feature?.getGeometry()) return null;
+
+      feature.set("askIndex", index);
+      feature.set("askActive", index === this.activeAskFootprintIndex);
+      return feature;
+    } catch (error) {
+      console.error("Sor aracı geometrisi çizilemedi:", error);
+      return null;
+    }
+  }
+
+  zoomToAskFootprint(item: AskFootprintResult): void {
+    if (!this.map) return;
+
+    const index = this.askFootprints.indexOf(item);
+    if (index >= 0) {
+      this.activeAskFootprintIndex = index;
+      this.renderAskFootprints();
+    }
+
+    const activeFeature = this.askHighlightSource
+      .getFeatures()
+      .find((feature) => feature.get("askActive") === true);
+    const geometry = activeFeature?.getGeometry();
+    if (!geometry) return;
+
+    // ol.View.fit expects an Extent or a SimpleGeometry. Some Geometry
+    // implementations provide getExtent(), so prefer passing the extent.
+    const fitTarget = (geometry as any).getExtent ? (geometry as any).getExtent() : (geometry as any);
+
+    this.map.getView().fit(fitTarget, {
+      padding: [80, 80, 80, 80],
+      duration: 350,
+      maxZoom: 15,
+    });
+  }
+
+  closeAskPanel(): void {
+    this.isAskPanelOpen = false;
+    this.isAskLoading = false;
+    this.askFootprints = [];
+    this.activeAskFootprintIndex = 0;
+    this.askCoordinateText = "";
+    this.askHighlightSource.clear();
+    this.resetPanelState("ask");
+    if (this.activeTool === "ask") this.activeTool = null;
   }
 
   openLayerManager(): void {
@@ -526,12 +942,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isExportPanelOpen = false;
     this.isLayerManagerOpen = true;
 
-    this.activeTool = 'layer-manager';
+    this.activeTool = "layer-manager";
   }
 
   closeLayerManager(): void {
     this.isLayerManagerOpen = false;
-    this.resetPanelState('layerManager');
+    this.resetPanelState("layerManager");
     this.activeTool = null;
   }
 
@@ -544,11 +960,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isExportPanelOpen = false;
     this.isLayerManagerOpen = !this.isLayerManagerOpen;
 
-    this.activeTool = this.isLayerManagerOpen ? 'layer-manager' : null;
+    this.activeTool = this.isLayerManagerOpen ? "layer-manager" : null;
 
     if (!this.isLayerManagerOpen) {
-          this.resetPanelState('layerManager');
-      }
+      this.resetPanelState("layerManager");
+    }
   }
 
   openSearchPanel(): void {
@@ -563,12 +979,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isSmartProductRequestPanelOpen = false;
     this.isSearchPanelOpen = true;
 
-    this.activeTool = 'search';
+    this.activeTool = "search";
   }
 
   closeSearchPanel(): void {
     this.isSearchPanelOpen = false;
-    this.resetPanelState('search');
+    this.resetPanelState("search");
     this.activeTool = null;
   }
 
@@ -584,7 +1000,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isSmartProductRequestPanelOpen = false;
 
     this.isSearchPanelOpen = !this.isSearchPanelOpen;
-    this.activeTool = this.isSearchPanelOpen ? 'search' : null;
+    this.activeTool = this.isSearchPanelOpen ? "search" : null;
   }
 
   selectSearchResult(result: MapSearchResult): void {
@@ -594,29 +1010,30 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.stopPolygonDraw(true);
 
     this.disableAreaModify();
-    this.userAreaSource.clear();
-    this.userAreaOrigin = null;
-    this.clearSmartFilterResults();
 
+    // Arama sonucu yeni bir AOI olarak eklenir. Mevcut çizimler ve alan
+    // listesi korunur; yalnızca yeni gelen feature'lar aoiId almadan source'a
+    // eklenir ve registerCurrentAoi tarafından ayrı kayıt hâline getirilir.
     const features = new GeoJSON().readFeatures(result.geoJson, {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:3857',
+      dataProjection: "EPSG:4326",
+      featureProjection: "EPSG:3857",
     }) as Feature<Geometry>[];
 
     const polygonFeatures = features.filter((feature) =>
-      this.isPolygonFeature(feature)
+      this.isPolygonFeature(feature),
     );
 
     if (!polygonFeatures.length) {
-      this.showUploadWarning('MAP.SEARCH.EMPTY');
+      this.showUploadWarning("MAP.SEARCH.EMPTY");
       return;
     }
 
     this.userAreaSource.addFeatures(polygonFeatures);
-    this.userAreaOrigin = 'search';
+    this.userAreaOrigin = "search";
     this.disableAreaModify();
     this.fitToUserAreas();
     this.calculateSelectedArea();
+    this.registerCurrentAoi("search", this.getSearchAreaName(result));
     this.clearAreaTooltips();
     this.openSmartPrefilterPanel();
   }
@@ -632,14 +1049,16 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isGoToCoordinatePanelOpen = false;
     this.isExportPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
-    this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
 
+    // Prefilter ve sonuçlar artık aynı birleşik panel içinde birlikte açık kalır.
+    this.isSmartPrefilterPanelOpen = true;
     this.isSmartFilterPanelOpen = true;
-    this.activeTool = 'smart-filter';
+    this.activeTool = "smart-filter";
   }
 
   closeSmartFilterPanel(): void {
+    this.smartProductIntersectionSource.clear();
     this.stopLengthMeasure(true);
     this.stopPolygonDraw(true);
     this.disableAreaModify();
@@ -650,17 +1069,20 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.isMetadataPanelOpen = false;
     this.isMetadataLoading = false;
-    this.selectedMetadataProductName = '';
+    this.selectedMetadataProductName = "";
     this.metadataRows = [];
-    this.metadataRawText = '';
+    this.metadataRawText = "";
 
-    this.resetPanelState('smartFilter');
-    this.resetPanelState('smartPrefilter');
-    this.resetPanelState('metadata');
-    this.resetPanelState('smartAdvancedFilter');
-    this.resetPanelState('smartProductRequest');
+    this.resetPanelState("smartFilter");
+    this.resetPanelState("smartPrefilter");
+    this.resetPanelState("metadata");
+    this.resetPanelState("smartAdvancedFilter");
+    this.resetPanelState("smartProductRequest");
 
     this.isSmartFilterPanelOpen = false;
+    this.isPrefilterPanelCollapsed = false;
+    this.isSmartFilterDateRangeInitialized = false;
+    this.smartAcquisitionDateRange = null;
     this.activeTool = null;
 
     this.map?.getView().animate({
@@ -674,21 +1096,102 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   openSmartPrefilterPanel(): void {
     if (this.previewMode) return;
 
-    const wkt = this.getAoiWkt();
+    const wkt = this.getSelectedAoiWkt();
 
     if (!wkt) {
-      this.showUploadWarning('MAP.SMART_FILTER.AOI_REQUIRED');
+      this.showUploadWarning("MAP.SMART_FILTER.AOI_REQUIRED");
       return;
     }
 
-    this.smartFilterRequest = {
-      wkt,
-      acquisitionStartDate: null,
-      acquisitionEndDate: null,
-      pageNumber: 1,
-      pageSize: this.smartFilterRequest.pageSize ?? 100,
-    };
+    this.prepareSmartPrefilterPanel();
 
+    // Aynı smart-filter oturumunda yeni bir AOI oluşturulduğunda kullanıcının
+    // o anda uyguladığı prefilter/filtre değerlerini koru. Yalnızca WKT'yi
+    // yeni seçilen AOI ile değiştir ve tarih aralığı servisine tekrar gitme.
+    if (this.isSmartFilterDateRangeInitialized) {
+      this.smartFilterRequest = {
+        ...this.smartFilterRequest,
+        wkt,
+        pageNumber: 1,
+        pageSize: this.smartFilterRequest.pageSize ?? 100,
+      };
+
+      this.isSmartPrefilterPanelOpen = true;
+      this.isSmartFilterPanelOpen = true;
+      this.activeTool = "smart-filter";
+      this.runSmartProductFilter();
+      return;
+    }
+
+    this.isSmartFilterLoading = true;
+
+    this.mapService.getMarketAcquisitionDateRange().subscribe({
+      next: (response) => {
+        const dateRange = response?.data as ProductAcquisitionDateRange | null;
+
+        this.isSmartFilterDateRangeInitialized = true;
+        this.smartAcquisitionDateRange = {
+          acquisitionStartDate: this.toDateInputValue(
+            dateRange?.acquisitionStartDate,
+          ),
+          acquisitionEndDate: this.toDateInputValue(
+            dateRange?.acquisitionEndDate,
+          ),
+        };
+
+        // İlk sonuç sorgusu prefilter endpoint'inden gelen tarih aralığıyla yapılır.
+        this.smartFilterRequest = {
+          wkt,
+          acquisitionStartDate: this.smartAcquisitionDateRange.acquisitionStartDate,
+          acquisitionEndDate: this.smartAcquisitionDateRange.acquisitionEndDate,
+          pageNumber: 1,
+          pageSize: this.smartFilterRequest.pageSize ?? 100,
+        };
+
+        this.isSmartPrefilterPanelOpen = true;
+        this.isSmartFilterPanelOpen = true;
+        this.activeTool = "smart-filter";
+
+        // İlk sorgu ProductAcquisitionDateRange değerleri request'e yazılarak yapılır.
+        this.runSmartProductFilter();
+      },
+      error: (error) => {
+        console.error(
+          "Market acquisition tarih aralığı alınırken hata oluştu:",
+          error,
+        );
+
+        this.isSmartFilterDateRangeInitialized = true;
+        this.smartAcquisitionDateRange = {
+          acquisitionStartDate: null,
+          acquisitionEndDate: null,
+        };
+
+        this.smartFilterRequest = {
+          wkt,
+          acquisitionStartDate: null,
+          acquisitionEndDate: null,
+          pageNumber: 1,
+          pageSize: this.smartFilterRequest.pageSize ?? 100,
+        };
+
+        this.isSmartPrefilterPanelOpen = true;
+        this.isSmartFilterPanelOpen = true;
+        this.activeTool = "smart-filter";
+        this.isSmartFilterLoading = false;
+        this.runSmartProductFilter();
+        this.alertService.createAlert(
+          "warning",
+          "Market ürün tarih aralığı alınamadı.",
+        );
+      },
+      complete: () => {
+        this.isSmartFilterLoading = false;
+      },
+    });
+  }
+
+  private prepareSmartPrefilterPanel(): void {
     this.isLayerManagerOpen = false;
     this.isSearchPanelOpen = false;
     this.isGoToCoordinatePanelOpen = false;
@@ -705,14 +1208,32 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.selectedSmartProducts = [];
     this.hoveredSmartProduct = null;
     this.clearSelectedProductPreviewImages();
+  }
 
-    this.isSmartPrefilterPanelOpen = true;
-    this.activeTool = 'smart-filter';
+  private toDateInputValue(
+    value: string | Date | null | undefined,
+  ): string | null {
+    if (!value) return null;
+
+    if (typeof value === "string") {
+      const datePart = value.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
+      if (datePart) return datePart;
+    }
+
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    const day = `${date.getDate()}`.padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
   }
 
   closeSmartPrefilterPanel(): void {
+    this.smartProductIntersectionSource.clear();
     this.isSmartPrefilterPanelOpen = false;
-    this.resetPanelState('smartPrefilter');
+    this.resetPanelState("smartPrefilter");
   }
 
   applySmartProductPrefilter(request: ProductSmartFilterRequest): void {
@@ -724,19 +1245,60 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       pageSize: request.pageSize ?? this.smartFilterRequest.pageSize ?? 100,
     };
 
-    this.isSmartPrefilterPanelOpen = false;
-    this.resetPanelState('smartPrefilter');
+    this.isSmartPrefilterPanelOpen = true;
+    this.isSmartFilterPanelOpen = true;
     this.runSmartProductFilter();
   }
 
-  openSmartAdvancedFilterPanel(): void {
+  toggleSmartAdvancedFilterPanel(anchorRect: DOMRect): void {
+    if (this.isSmartAdvancedFilterPanelOpen) {
+      this.closeSmartAdvancedFilterPanel();
+      return;
+    }
+
+    this.openSmartAdvancedFilterPanel(anchorRect);
+  }
+
+  openSmartAdvancedFilterPanel(anchorRect: DOMRect): void {
     this.isMetadataPanelOpen = false;
+
+    const panelWidth = Math.min(380, Math.max(300, window.innerWidth - 24));
+    const panelHeight = Math.min(500, Math.max(320, window.innerHeight - 24));
+    const gap = 8;
+    const viewportPadding = 12;
+
+    let left = anchorRect.right + gap;
+    if (left + panelWidth > window.innerWidth - viewportPadding) {
+      left = anchorRect.left - panelWidth - gap;
+    }
+
+    this.smartAdvancedFilterPosition = {
+      top: Math.max(
+        viewportPadding,
+        Math.min(anchorRect.top, window.innerHeight - panelHeight - viewportPadding),
+      ),
+      left: Math.max(
+        viewportPadding,
+        Math.min(left, window.innerWidth - panelWidth - viewportPadding),
+      ),
+    };
+
     this.isSmartAdvancedFilterPanelOpen = true;
+  }
+
+  onMapPageClick(): void {
+    if (this.isSmartAdvancedFilterPanelOpen) {
+      this.closeSmartAdvancedFilterPanel();
+    }
+
+    if (this.isMetadataPanelOpen) {
+      this.closeMetadataPanel();
+    }
   }
 
   closeSmartAdvancedFilterPanel(): void {
     this.isSmartAdvancedFilterPanelOpen = false;
-    this.resetPanelState('smartAdvancedFilter');
+    this.resetPanelState("smartAdvancedFilter");
   }
 
   applySmartProductFilter(request: ProductSmartFilterRequest): void {
@@ -761,102 +1323,276 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.runSmartProductFilter();
   }
 
-  createNewProductRequest(): void {
+  createNewProductRequest(area?: MapAoiItem): void {
+    if (area && this.selectedAoiId !== area.id) {
+      this.selectedAoiId = area.id;
+      this.hoveredAoiId = null;
+      this.userAreaLayer.changed();
+      this.calculateSelectedArea();
+      this.smartFilterRequest = {
+        ...this.smartFilterRequest,
+        wkt: this.getSelectedAoiWkt(),
+        pageNumber: 1,
+      };
+    }
+
     if (!this.totalSelectedAreaM2 || !this.getAoiWkt()) {
-      this.showUploadWarning('MAP.SMART_FILTER.AOI_REQUIRED');
+      this.showUploadWarning("MAP.SMART_FILTER.AOI_REQUIRED");
       return;
     }
 
     this.isMetadataPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
+    this.isResultsPanelCollapsed = false;
     this.isSmartProductRequestPanelOpen = true;
+    this.updateMapSizeAsync();
   }
-
 
   startAoiUpdateFromRequestPanel(): void {
     if (this.previewMode || this.userAreaSource.isEmpty()) return;
 
-    if (this.userAreaOrigin !== 'draw') {
-      this.alertService.createAlert(
-        'warning',
-        this.translate.instant('MAP.SMART_FILTER.AOI_UPDATE_ONLY_FOR_DRAWINGS')
-      );
-      return;
+    if (!this.aoiItems.length && this.userAreaOrigin) {
+      this.registerCurrentAoi(this.userAreaOrigin);
     }
+
+    const area =
+      this.aoiItems.find((item) => item.id === this.selectedAoiId) ??
+      this.aoiItems[0];
+    if (!area) return;
+
+    this.editAoi(area);
+  }
+
+  editAoi(area: MapAoiItem): void {
+    if (this.previewMode || this.userAreaSource.isEmpty()) return;
 
     this.clearMeasure();
     this.stopPolygonDraw(true);
 
-    this.aoiUpdatePanelSnapshot = {
+    this.selectedAoiId = area.id;
+    this.hoveredAoiId = null;
+    this.userAreaLayer.changed();
+    this.editingAoiId = area.id;
+    this.isAoiUpdateMode = true;
+    this.activeTool = null;
+
+    // Alan düzenleme sırasında tüm smart paneller kapanır.
+    // ESC veya düzenleme tamamlandığında önceki görünüm geri yüklenir.
+    this.aoiUpdatePanelSnapshot = this.captureSmartPanelSnapshot();
+    this.hideSmartPanels();
+
+    this.prepareUserAreaForAoiUpdate();
+    this.enableAreaModify(area.id);
+    this.bindAoiUpdateEscHandler();
+  }
+
+  finishAoiEdit(): void {
+    this.stopAoiUpdateMode(true);
+  }
+
+  removeAoi(area: MapAoiItem): void {
+    if (!this.aoiItems.some((item) => item.id === area.id)) return;
+
+    this.disableAreaModify();
+    this.unbindAoiUpdateEscHandler();
+    this.isAoiUpdateMode = false;
+    this.editingAoiId = null;
+
+    this.getAoiFeatures(area.id).forEach((feature) =>
+      this.userAreaSource.removeFeature(feature),
+    );
+    this.aoiItems = this.aoiItems.filter((item) => item.id !== area.id);
+    if (this.selectedAoiId === area.id)
+      this.selectedAoiId = this.aoiItems.length
+        ? this.aoiItems[this.aoiItems.length - 1].id
+        : null;
+    this.calculateSelectedArea();
+    this.clearAreaTooltips();
+
+    this.smartFilterRequest = {
+      ...this.smartFilterRequest,
+      wkt: this.getAoiWkt(),
+      pageNumber: 1,
+    };
+
+    if (!this.aoiItems.length) {
+      this.userAreaOrigin = null;
+      this.clearSmartFilterResults();
+      this.closeSmartPrefilterPanel();
+      return;
+    }
+
+    this.scheduleAoiResultRefresh(true);
+  }
+
+  togglePrefilterPanel(): void {
+    this.isPrefilterPanelCollapsed = !this.isPrefilterPanelCollapsed;
+    this.updateMapSizeAsync();
+  }
+
+  toggleResultsPanel(): void {
+    if (this.isSmartProductRequestPanelOpen) {
+      this.isSmartProductRequestPanelOpen = false;
+      this.isResultsPanelCollapsed = false;
+      this.updateMapSizeAsync();
+      return;
+    }
+
+    this.isResultsPanelCollapsed = !this.isResultsPanelCollapsed;
+    this.updateMapSizeAsync();
+  }
+
+  onSmartPrefilterNewArea(action: SmartPrefilterNewAreaAction): void {
+    switch (action) {
+      case "polygon":
+        this.togglePolygonDraw(true);
+        return;
+      case "rectangle":
+        this.toggleRectangleDraw(true);
+        return;
+      case "upload":
+        this.openUploadFilePicker(true);
+        return;
+    }
+  }
+
+  renameAoi(event: SmartPrefilterAoiRenameEvent): void {
+    const name = event.name.trim();
+    if (!name) return;
+
+    this.aoiItems = this.aoiItems.map((area) =>
+      area.id === event.area.id ? { ...area, name } : area,
+    );
+  }
+
+  async exportAoi(event: SmartPrefilterAoiExportEvent): Promise<void> {
+    const { area, format } = event;
+
+    if (!this.aoiItems.some((item) => item.id === area.id)) {
+      return;
+    }
+
+    try {
+      if (format === "kml") {
+        this.exportCurrentAoiAsKml(area);
+        return;
+      }
+
+      await this.exportCurrentAoiAsShp(area);
+    } catch (error) {
+      console.error("Alan dışa aktarılırken hata oluştu:", error);
+
+      this.alertService.createAlert("danger", "Alan dışa aktarılamadı.");
+    }
+  }
+
+  private captureSmartPanelSnapshot(): AoiPanelSnapshot {
+    return {
       isSmartPrefilterPanelOpen: this.isSmartPrefilterPanelOpen,
       isSmartFilterPanelOpen: this.isSmartFilterPanelOpen,
       isSmartAdvancedFilterPanelOpen: this.isSmartAdvancedFilterPanelOpen,
       isSmartProductRequestPanelOpen: this.isSmartProductRequestPanelOpen,
       isMetadataPanelOpen: this.isMetadataPanelOpen,
     };
+  }
 
+  private hideSmartPanels(): void {
     this.isSmartPrefilterPanelOpen = false;
     this.isSmartFilterPanelOpen = false;
     this.isSmartAdvancedFilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
     this.isMetadataPanelOpen = false;
+    this.updateMapSizeAsync();
+  }
 
-    this.isAoiUpdateMode = true;
-    this.activeTool = null;
+  private hideSmartPanelsForAreaDrawing(): void {
+    this.isAreaCreationMode = true;
+    this.areaDrawPanelSnapshot = this.captureSmartPanelSnapshot();
+    this.hideSmartPanels();
+    this.bindAreaDrawEscHandler();
+  }
 
-    this.prepareUserAreaForAoiUpdate();
-    this.enableAreaModify();
-    this.bindAoiUpdateEscHandler();
+  private bindAreaDrawEscHandler(): void {
+    this.unbindAreaDrawEscHandler();
+    this.areaDrawEscHandler = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopPropagation();
+      this.stopPolygonDraw(true);
+      this.activeTool = null;
+      this.restoreAreaDrawPanels();
+    };
+    window.addEventListener("keydown", this.areaDrawEscHandler);
+  }
+
+  private unbindAreaDrawEscHandler(): void {
+    if (!this.areaDrawEscHandler) return;
+    window.removeEventListener("keydown", this.areaDrawEscHandler);
+    this.areaDrawEscHandler = undefined;
+  }
+
+  private restoreAreaDrawPanels(): void {
+    this.isAreaCreationMode = false;
+    this.unbindAreaDrawEscHandler();
+    const snapshot = this.areaDrawPanelSnapshot;
+    this.areaDrawPanelSnapshot = undefined;
+    if (!snapshot) return;
+    this.isSmartPrefilterPanelOpen = snapshot.isSmartPrefilterPanelOpen;
+    this.isSmartFilterPanelOpen = snapshot.isSmartFilterPanelOpen;
+    this.isSmartAdvancedFilterPanelOpen =
+      snapshot.isSmartAdvancedFilterPanelOpen;
+    this.isSmartProductRequestPanelOpen =
+      snapshot.isSmartProductRequestPanelOpen;
+    this.isMetadataPanelOpen = snapshot.isMetadataPanelOpen;
+    this.updateMapSizeAsync();
   }
 
   private bindAoiUpdateEscHandler(): void {
     this.unbindAoiUpdateEscHandler();
 
     this.aoiUpdateEscHandler = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
+      if (event.key !== "Escape") return;
 
       event.preventDefault();
       event.stopPropagation();
       this.stopAoiUpdateMode(false);
     };
 
-    window.addEventListener('keydown', this.aoiUpdateEscHandler);
+    window.addEventListener("keydown", this.aoiUpdateEscHandler);
   }
 
   private unbindAoiUpdateEscHandler(): void {
     if (!this.aoiUpdateEscHandler) return;
 
-    window.removeEventListener('keydown', this.aoiUpdateEscHandler);
+    window.removeEventListener("keydown", this.aoiUpdateEscHandler);
     this.aoiUpdateEscHandler = undefined;
   }
 
   private stopAoiUpdateMode(areaChanged: boolean): void {
     if (!this.isAoiUpdateMode) return;
 
-    const shouldReopenRequestPanel =
-      this.aoiUpdatePanelSnapshot?.isSmartProductRequestPanelOpen === true;
-
     this.isAoiUpdateMode = false;
+    this.editingAoiId = null;
     this.activeTool = null;
     this.unbindAoiUpdateEscHandler();
     this.disableAreaModify();
-
-    if (areaChanged) {
-      this.calculateSelectedArea();
-      this.clearAreaTooltips();
-      this.smartFilterRequest = {
-        ...this.smartFilterRequest,
-        wkt: this.getAoiWkt(),
-        pageNumber: 1,
-        pageSize: this.smartFilterRequest.pageSize ?? 100,
-      };
-    }
-
+    this.panelUiState.smartFilter.minimized = false;
+    this.userAreaLayer.changed();
     this.restoreAoiUpdatePanels();
 
-    if (areaChanged) {
-      this.runSmartProductFilter(shouldReopenRequestPanel);
-    }
+    if (!areaChanged) return;
+
+    this.calculateSelectedArea();
+    this.syncAoiMetric();
+    this.clearAreaTooltips();
+    this.smartFilterRequest = {
+      ...this.smartFilterRequest,
+      wkt: this.getSelectedAoiWkt(),
+      pageNumber: 1,
+      pageSize: this.smartFilterRequest.pageSize ?? 100,
+    };
+
+    this.scheduleAoiResultRefresh(true);
   }
 
   private restoreAoiUpdatePanels(): void {
@@ -867,8 +1603,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.isSmartPrefilterPanelOpen = snapshot.isSmartPrefilterPanelOpen;
     this.isSmartFilterPanelOpen = snapshot.isSmartFilterPanelOpen;
-    this.isSmartAdvancedFilterPanelOpen = snapshot.isSmartAdvancedFilterPanelOpen;
-    this.isSmartProductRequestPanelOpen = snapshot.isSmartProductRequestPanelOpen;
+    this.isSmartAdvancedFilterPanelOpen =
+      snapshot.isSmartAdvancedFilterPanelOpen;
+    this.isSmartProductRequestPanelOpen =
+      snapshot.isSmartProductRequestPanelOpen;
     this.isMetadataPanelOpen = snapshot.isMetadataPanelOpen;
 
     this.updateMapSizeAsync();
@@ -877,7 +1615,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   closeSmartProductRequestPanel(): void {
     this.isSmartProductRequestPanelOpen = false;
     this.isSmartProductRequestLoading = false;
-    this.resetPanelState('smartProductRequest');
+    this.isResultsPanelCollapsed = false;
+    this.resetPanelState("smartProductRequest");
+    this.updateMapSizeAsync();
   }
 
   addSmartProductRequestToCart(product: ProductModel): void {
@@ -892,8 +1632,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       isInMarket: false,
       isDeleted: false,
       price: product.price ?? 0,
-      currency: product.currency || 'TRY',
-      categoryId: 3
+      currency: product.currency || "TRY",
+      categoryId: 3,
     };
 
     if (currentUser) {
@@ -913,8 +1653,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         next: (result) => {
           if (result.isSuccess) {
             this.alertService.createAlert(
-              'success',
-              this.translate.instant('MESSAGES.ADD_TO_CART_SUCCESS')
+              "success",
+              this.translate.instant("MESSAGES.ADD_TO_CART_SUCCESS"),
             );
             this.basketService.loadBasketFromDb();
             this.closeSmartProductRequestPanel();
@@ -922,39 +1662,65 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           }
 
           this.alertService.createAlert(
-            'danger',
-            this.translate.instant('MESSAGES.ERROR')
+            "danger",
+            this.translate.instant("MESSAGES.ERROR"),
           );
         },
         error: (error) => {
-          console.error('Custom ürün talebi sepete eklenirken hata oluştu:', error);
+          console.error(
+            "Custom ürün talebi sepete eklenirken hata oluştu:",
+            error,
+          );
           this.alertService.createAlert(
-            'danger',
-            this.translate.instant('MESSAGES.ERROR')
+            "danger",
+            this.translate.instant("MESSAGES.ERROR"),
           );
         },
         complete: () => {
           this.isSmartProductRequestLoading = false;
         },
       });
-    }
-    else {
-      var basket = JSON.parse(localStorage.getItem("basket") as string) as BasketModel[];
+    } else {
+      var basket = JSON.parse(
+        localStorage.getItem("basket") as string,
+      ) as BasketModel[];
 
       if (basket) {
         if (basket.length < 15) {
-          basket.push({ id: 0, userId: 0, product: customProduct, productId: customProduct.id, isDeleted: false, numberOf: 0, totalPrice: 0 });
+          basket.push({
+            id: 0,
+            userId: 0,
+            product: customProduct,
+            productId: customProduct.id,
+            isDeleted: false,
+            numberOf: 0,
+            totalPrice: 0,
+          });
+        } else {
+          this.alertService.createAlert(
+            "warning",
+            this.translate.instant("MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS"),
+          );
         }
-        else {
-          this.alertService.createAlert("warning", this.translate.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS'));
-        }
-      }
-      else {
-        basket = [{ id: 0, userId: 0, product: customProduct, productId: customProduct.id, isDeleted: false, numberOf: 0, totalPrice: 0 }];
+      } else {
+        basket = [
+          {
+            id: 0,
+            userId: 0,
+            product: customProduct,
+            productId: customProduct.id,
+            isDeleted: false,
+            numberOf: 0,
+            totalPrice: 0,
+          },
+        ];
       }
 
       this.basketService.setBasket(basket);
-      this.alertService.createAlert('success', this.translate.instant('MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS'));
+      this.alertService.createAlert(
+        "success",
+        this.translate.instant("MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS"),
+      );
     }
   }
 
@@ -969,69 +1735,108 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         isDeleted: false,
         product: undefined,
         totalPrice: undefined,
-        numberOf: undefined
+        numberOf: undefined,
       };
 
       this.basketManagementService.save(data).subscribe((result) => {
         if (result.isSuccess) {
-          this.alertService.createAlert('success', this.translate.instant('MESSAGES.ADD_TO_CART_SUCCESS'));
+          this.alertService.createAlert(
+            "success",
+            this.translate.instant("MESSAGES.ADD_TO_CART_SUCCESS"),
+          );
           this.basketService.loadBasketFromDb();
         } else {
-          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
+          this.alertService.createAlert(
+            "danger",
+            this.translate.instant("MESSAGES.ERROR"),
+          );
         }
       });
 
       return;
-    }
-    else {
-      var product: ProductModel = { categoryId: 1, id: productResult.id, name: productResult.name || '-', price: productResult.price ?? 1000, isDeleted: false, userId: 0 };
-      var basket = JSON.parse(localStorage.getItem("basket") as string) as BasketModel[];
+    } else {
+      var product: ProductModel = {
+        categoryId: 1,
+        id: productResult.id,
+        name: productResult.name || "-",
+        price: productResult.price ?? 1000,
+        isDeleted: false,
+        userId: 0,
+      };
+      var basket = JSON.parse(
+        localStorage.getItem("basket") as string,
+      ) as BasketModel[];
 
       if (basket) {
         if (basket.length < 15) {
-          basket.push({ id: 0, userId: 0, product: product, productId: product.id, isDeleted: false, numberOf: 0, totalPrice: 0 });
+          basket.push({
+            id: 0,
+            userId: 0,
+            product: product,
+            productId: product.id,
+            isDeleted: false,
+            numberOf: 0,
+            totalPrice: 0,
+          });
+        } else {
+          this.alertService.createAlert(
+            "warning",
+            this.translate.instant("MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS"),
+          );
         }
-        else {
-          this.alertService.createAlert("warning", this.translate.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS'));
-        }
-      }
-      else {
-        basket = [{ id: 0, userId: 0, product: product, productId: product.id, isDeleted: false, numberOf: 0, totalPrice: 0 }];
+      } else {
+        basket = [
+          {
+            id: 0,
+            userId: 0,
+            product: product,
+            productId: product.id,
+            isDeleted: false,
+            numberOf: 0,
+            totalPrice: 0,
+          },
+        ];
       }
 
       this.basketService.setBasket(basket);
-      this.alertService.createAlert('success', this.translate.instant('MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS'));
+      this.alertService.createAlert(
+        "success",
+        this.translate.instant("MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS"),
+      );
     }
   }
 
-  openSmartProductMetadata(product: ProductSmartFilterResult): void {
-    var metadataUrl = (product as any).metadataUrl;
+  openSmartProductMetadata(payload: {
+    product: ProductSmartFilterResult;
+    anchorRect: DOMRect;
+  }): void {
+    const { product, anchorRect } = payload;
+    const metadataUrl = (product as any).metadataUrl;
 
+    this.setSmartMetadataPanelPosition(anchorRect);
     this.isSmartAdvancedFilterPanelOpen = false;
-    this.isSmartPrefilterPanelOpen = false;
-    this.isSmartProductRequestPanelOpen = false;
     this.isMetadataPanelOpen = true;
     this.isMetadataLoading = true;
-    this.selectedMetadataProductName = product.imageId || product.name || '-';
+    this.selectedMetadataProductName = product.imageId || product.name || "-";
     this.metadataRows = [];
-    this.metadataRawText = '';
+    this.metadataRawText = "";
 
     if (!metadataUrl) {
       this.isMetadataLoading = false;
-      this.alertService.createAlert('warning', 'Metadata URL bulunamadı.');
+      this.alertService.createAlert("warning", "Metadata URL bulunamadı.");
       return;
     }
 
-    this.http.get(metadataUrl, { responseType: 'text' }).subscribe({
+    this.http.get(metadataUrl, { responseType: "text" }).subscribe({
       next: (text) => {
-        this.metadataRawText = text ?? '';
+        this.metadataRawText = text ?? "";
         this.metadataRows = this.parseMetadataText(this.metadataRawText);
       },
       error: (error) => {
-        console.error('Metadata okunamadı:', error);
-        this.alertService.createAlert('danger', 'Metadata okunamadı.');
+        console.error("Metadata okunamadı:", error);
+        this.alertService.createAlert("danger", "Metadata okunamadı.");
         this.metadataRows = [];
-        this.metadataRawText = '';
+        this.metadataRawText = "";
       },
       complete: () => {
         this.isMetadataLoading = false;
@@ -1039,17 +1844,40 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     });
   }
 
+  private setSmartMetadataPanelPosition(anchorRect: DOMRect): void {
+    const panelWidth = Math.min(420, Math.max(300, window.innerWidth - 24));
+    const panelHeight = Math.min(500, Math.max(320, window.innerHeight - 24));
+    const gap = 8;
+    const viewportPadding = 12;
+
+    let left = anchorRect.right + gap;
+    if (left + panelWidth > window.innerWidth - viewportPadding) {
+      left = anchorRect.left - panelWidth - gap;
+    }
+
+    this.smartMetadataPanelPosition = {
+      top: Math.max(
+        viewportPadding,
+        Math.min(anchorRect.top, window.innerHeight - panelHeight - viewportPadding),
+      ),
+      left: Math.max(
+        viewportPadding,
+        Math.min(left, window.innerWidth - panelWidth - viewportPadding),
+      ),
+    };
+  }
+
   closeMetadataPanel(): void {
     this.isMetadataPanelOpen = false;
     this.isMetadataLoading = false;
-    this.selectedMetadataProductName = '';
+    this.selectedMetadataProductName = "";
     this.metadataRows = [];
-    this.metadataRawText = '';
-    this.resetPanelState('metadata');
+    this.metadataRawText = "";
+    this.resetPanelState("metadata");
   }
 
   private parseMetadataText(text: string): MetadataRow[] {
-    return (text || '')
+    return (text || "")
       .split(/\r?\n/)
       .map((line) => line.trim())
       .filter(Boolean)
@@ -1058,7 +1886,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         if (separatorIndex === -1) {
           return {
-            key: 'Info',
+            key: "Info",
             value: line,
           };
         }
@@ -1072,7 +1900,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private getMetadataSeparatorIndex(line: string): number {
-    const separators = [':', '=', '\t'];
+    const separators = [":", "=", "\t"];
 
     const indexes = separators
       .map((separator) => line.indexOf(separator))
@@ -1091,7 +1919,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (!geometry) return;
 
     this.selectedSmartProductResultSource.clear();
-    this.selectedSmartProductResultSource.addFeature(feature as Feature<Geometry>);
+    this.selectedSmartProductResultSource.addFeature(
+      feature as Feature<Geometry>,
+    );
 
     this.map.getView().fit(geometry.getExtent(), {
       padding: [80, 80, 80, 80],
@@ -1112,14 +1942,27 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private renderHighlightedSmartProductFootprints(): void {
     this.selectedSmartProductResultSource.clear();
+    this.smartProductIntersectionSource.clear();
 
+    const selectedIds = new Set(
+      this.selectedSmartProducts.map((product) => product.id),
+    );
     const productsToHighlight = this.getUniqueSmartProducts([
       ...this.selectedSmartProducts,
       ...(this.hoveredSmartProduct ? [this.hoveredSmartProduct] : []),
     ]);
 
     const features = productsToHighlight
-      .map((product) => this.createSmartProductFeature(product))
+      .map((product) => {
+        const feature = this.createSmartProductFeature(product);
+        if (!feature) return null;
+
+        feature.set(
+          "highlightType",
+          selectedIds.has(product.id) ? "selected" : "hover",
+        );
+        return feature;
+      })
       .filter((feature): feature is Feature<Geometry> => !!feature);
 
     if (this.selectedSmartProducts.length) {
@@ -1131,12 +1974,344 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (!features.length) return;
 
     this.selectedSmartProductResultSource.addFeatures(features);
+    this.renderSmartProductAoiIntersectionLines(features);
+  }
+
+  private renderSmartProductAoiIntersectionLines(
+    footprintFeatures: Feature<Geometry>[],
+  ): void {
+    this.smartProductIntersectionSource.clear();
+
+    const aoiFeatures = this.selectedAoiId
+      ? this.getAoiFeatures(this.selectedAoiId)
+      : [];
+
+    const aoiGeometries = aoiFeatures
+      .map((feature) => feature.getGeometry())
+      .filter(
+        (geometry): geometry is Polygon | MultiPolygon =>
+          geometry instanceof Polygon || geometry instanceof MultiPolygon,
+      );
+
+    // Yalnızca seçili ilgi alanı ile kesişim çizilir.
+    if (!aoiGeometries.length) return;
+
+    const overlapLines: Feature<LineString>[] = [];
+    const lineKeys = new Set<string>();
+
+    footprintFeatures
+      .filter((feature) => feature.get("highlightType") === "selected")
+      .forEach((feature) => {
+        const footprintGeometry = feature.getGeometry();
+        if (
+          !(footprintGeometry instanceof Polygon) &&
+          !(footprintGeometry instanceof MultiPolygon)
+        ) {
+          return;
+        }
+
+        /*
+         * Kesişim alanının dış çerçevesi iki parçadan oluşur:
+         * 1) Footprint sınırının AOI içinde kalan parçaları
+         * 2) AOI sınırının footprint içinde kalan parçaları
+         *
+         * Sadece ilkini çizmek, dikdörtgen kesişimlerde üst/alt yeşil çizgilerin
+         * eksik kalmasına; yanlış içeride kontrolü ise footprint'in tamamının
+         * yeşil görünmesine neden oluyordu.
+         */
+        this.collectBoundarySegmentsInsideGeometries(
+          footprintGeometry,
+          aoiGeometries,
+          overlapLines,
+          lineKeys,
+        );
+
+        this.collectBoundarySegmentsInsideGeometries(
+          aoiGeometries,
+          [footprintGeometry],
+          overlapLines,
+          lineKeys,
+        );
+      });
+
+    if (overlapLines.length) {
+      this.smartProductIntersectionSource.addFeatures(overlapLines);
+    }
+  }
+
+  private collectBoundarySegmentsInsideGeometries(
+    subjectGeometry: Polygon | MultiPolygon | Array<Polygon | MultiPolygon>,
+    clippingGeometries: Array<Polygon | MultiPolygon>,
+    target: Feature<LineString>[],
+    lineKeys: Set<string>,
+  ): void {
+    const subjectGeometries = Array.isArray(subjectGeometry)
+      ? subjectGeometry
+      : [subjectGeometry];
+
+    const clippingRings = clippingGeometries.flatMap((geometry) =>
+      this.getPolygonBoundaryRings(geometry),
+    );
+
+    subjectGeometries.forEach((geometry) => {
+      const subjectRings = this.getPolygonBoundaryRings(geometry);
+
+      subjectRings.forEach((subjectRing) => {
+        for (
+          let segmentIndex = 0;
+          segmentIndex < subjectRing.length - 1;
+          segmentIndex += 1
+        ) {
+          const segmentStart = subjectRing[segmentIndex];
+          const segmentEnd = subjectRing[segmentIndex + 1];
+          const splitRatios = [0, 1];
+
+          clippingRings.forEach((clippingRing) => {
+            for (
+              let clippingIndex = 0;
+              clippingIndex < clippingRing.length - 1;
+              clippingIndex += 1
+            ) {
+              const ratio = this.getSegmentIntersectionRatio(
+                segmentStart,
+                segmentEnd,
+                clippingRing[clippingIndex],
+                clippingRing[clippingIndex + 1],
+              );
+
+              if (ratio !== null) splitRatios.push(ratio);
+            }
+          });
+
+          const orderedRatios = Array.from(
+            new Set(splitRatios.map((ratio) => Number(ratio.toFixed(10)))),
+          ).sort((first, second) => first - second);
+
+          for (
+            let ratioIndex = 0;
+            ratioIndex < orderedRatios.length - 1;
+            ratioIndex += 1
+          ) {
+            const fromRatio = orderedRatios[ratioIndex];
+            const toRatio = orderedRatios[ratioIndex + 1];
+            if (toRatio - fromRatio < 1e-9) continue;
+
+            const middlePoint = this.interpolateCoordinate(
+              segmentStart,
+              segmentEnd,
+              (fromRatio + toRatio) / 2,
+            );
+
+            const isInsideClippingGeometry = clippingGeometries.some(
+              (clippingGeometry) =>
+                this.isCoordinateInsidePolygonGeometry(
+                  middlePoint,
+                  clippingGeometry,
+                ),
+            );
+
+            if (!isInsideClippingGeometry) continue;
+
+            const lineStart = this.interpolateCoordinate(
+              segmentStart,
+              segmentEnd,
+              fromRatio,
+            );
+            const lineEnd = this.interpolateCoordinate(
+              segmentStart,
+              segmentEnd,
+              toRatio,
+            );
+
+            const key = this.getNormalizedLineKey(lineStart, lineEnd);
+            if (lineKeys.has(key)) continue;
+
+            lineKeys.add(key);
+            target.push(new Feature(new LineString([lineStart, lineEnd])));
+          }
+        }
+      });
+    });
+  }
+
+  private getNormalizedLineKey(start: Coordinate, end: Coordinate): string {
+    const first = `${start[0].toFixed(3)}:${start[1].toFixed(3)}`;
+    const second = `${end[0].toFixed(3)}:${end[1].toFixed(3)}`;
+    return first < second ? `${first}-${second}` : `${second}-${first}`;
+  }
+
+  /**
+   * OpenLayers intersectsCoordinate sınır üzerindeki ve bazı çoklu polygon
+   * durumlarında beklenen sonucu vermeyebildiği için inclusive point-in-polygon
+   * kontrolünü burada yapıyoruz. Böylece footprint sınırının AOI içinde kalan
+   * tüm parçaları eksiksiz biçimde yeşil çizilir.
+   */
+  private isCoordinateInsidePolygonGeometry(
+    coordinate: Coordinate,
+    geometry: Polygon | MultiPolygon,
+  ): boolean {
+    // Burada yalnızca gerçek polygon içi kontrol edilir. Önceki inclusive
+    // ray-casting kontrolü bazı uzun/dar footprintlerde dış segmentleri de
+    // içeride kabul ederek footprintin tamamını yeşile boyayabiliyordu.
+    if (geometry.intersectsCoordinate(coordinate)) {
+      return true;
+    }
+
+    // Tam sınır üzerinde çakışan çizgiler için çok küçük toleranslı kontrol.
+    // Bu yalnızca gerçekten sınırın üzerinde olan koordinatları kabul eder.
+    return this.getPolygonBoundaryRings(geometry).some((ring) => {
+      for (let index = 0; index < ring.length - 1; index += 1) {
+        if (
+          this.isCoordinateOnSegment(coordinate, ring[index], ring[index + 1])
+        ) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  private isCoordinateInsidePolygonCoordinates(
+    coordinate: Coordinate,
+    rings: Coordinate[][],
+  ): boolean {
+    if (!rings.length) return false;
+
+    // Dış ring sınırı dahil olmalıdır.
+    if (!this.isCoordinateInsideRingInclusive(coordinate, rings[0])) {
+      return false;
+    }
+
+    // Hole sınırında veya hole içinde kalan noktalar polygonun içinde sayılmaz.
+    for (let index = 1; index < rings.length; index += 1) {
+      if (this.isCoordinateInsideRingInclusive(coordinate, rings[index])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private isCoordinateInsideRingInclusive(
+    coordinate: Coordinate,
+    ring: Coordinate[],
+  ): boolean {
+    if (ring.length < 3) return false;
+
+    const [x, y] = coordinate;
+    let inside = false;
+
+    for (
+      let currentIndex = 0, previousIndex = ring.length - 1;
+      currentIndex < ring.length;
+      previousIndex = currentIndex++
+    ) {
+      const current = ring[currentIndex];
+      const previous = ring[previousIndex];
+
+      if (this.isCoordinateOnSegment(coordinate, previous, current)) {
+        return true;
+      }
+
+      const crossesHorizontalRay =
+        current[1] > y !== previous[1] > y &&
+        x <
+          ((previous[0] - current[0]) * (y - current[1])) /
+            (previous[1] - current[1]) +
+            current[0];
+
+      if (crossesHorizontalRay) inside = !inside;
+    }
+
+    return inside;
+  }
+
+  private isCoordinateOnSegment(
+    coordinate: Coordinate,
+    start: Coordinate,
+    end: Coordinate,
+  ): boolean {
+    const segmentLength = Math.hypot(end[0] - start[0], end[1] - start[1]);
+    const tolerance = Math.max(0.01, segmentLength * 1e-9);
+
+    const cross =
+      (coordinate[0] - start[0]) * (end[1] - start[1]) -
+      (coordinate[1] - start[1]) * (end[0] - start[0]);
+
+    if (Math.abs(cross) > tolerance * Math.max(1, segmentLength)) {
+      return false;
+    }
+
+    const dot =
+      (coordinate[0] - start[0]) * (end[0] - start[0]) +
+      (coordinate[1] - start[1]) * (end[1] - start[1]);
+
+    if (dot < -tolerance) return false;
+
+    const squaredLength = (end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2;
+
+    return dot <= squaredLength + tolerance;
+  }
+
+  private getSegmentIntersectionRatio(
+    firstStart: Coordinate,
+    firstEnd: Coordinate,
+    secondStart: Coordinate,
+    secondEnd: Coordinate,
+  ): number | null {
+    const firstDx = firstEnd[0] - firstStart[0];
+    const firstDy = firstEnd[1] - firstStart[1];
+    const secondDx = secondEnd[0] - secondStart[0];
+    const secondDy = secondEnd[1] - secondStart[1];
+    const denominator = firstDx * secondDy - firstDy * secondDx;
+
+    if (Math.abs(denominator) < 1e-9) return null;
+
+    const offsetX = secondStart[0] - firstStart[0];
+    const offsetY = secondStart[1] - firstStart[1];
+    const firstRatio = (offsetX * secondDy - offsetY * secondDx) / denominator;
+    const secondRatio = (offsetX * firstDy - offsetY * firstDx) / denominator;
+
+    if (
+      firstRatio < -1e-9 ||
+      firstRatio > 1 + 1e-9 ||
+      secondRatio < -1e-9 ||
+      secondRatio > 1 + 1e-9
+    ) {
+      return null;
+    }
+
+    return Math.max(0, Math.min(1, firstRatio));
+  }
+
+  private interpolateCoordinate(
+    start: Coordinate,
+    end: Coordinate,
+    ratio: number,
+  ): Coordinate {
+    return [
+      start[0] + (end[0] - start[0]) * ratio,
+      start[1] + (end[1] - start[1]) * ratio,
+    ];
+  }
+
+  private getPolygonBoundaryRings(
+    geometry: Polygon | MultiPolygon,
+  ): Coordinate[][] {
+    if (geometry instanceof Polygon) {
+      return geometry.getCoordinates();
+    }
+
+    return geometry.getCoordinates().flat();
   }
 
   private getUniqueSmartProducts(
-    products: ProductSmartFilterResult[]
+    products: ProductSmartFilterResult[],
   ): ProductSmartFilterResult[] {
-    const uniqueProducts = new globalThis.Map<number, ProductSmartFilterResult>();
+    const uniqueProducts = new globalThis.Map<
+      number,
+      ProductSmartFilterResult
+    >();
 
     products.forEach((product) => {
       if (!product?.id) return;
@@ -1158,12 +2333,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isSmartProductRequestPanelOpen = false;
     this.isGoToCoordinatePanelOpen = true;
 
-    this.activeTool = 'coordinate';
+    this.activeTool = "coordinate";
   }
 
   closeGoToCoordinatePanel(): void {
     this.isGoToCoordinatePanelOpen = false;
-    this.resetPanelState('coordinate');
+    this.resetPanelState("coordinate");
     this.activeTool = null;
   }
 
@@ -1180,7 +2355,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.isGoToCoordinatePanelOpen = !this.isGoToCoordinatePanelOpen;
 
-    this.activeTool = this.isGoToCoordinatePanelOpen ? 'coordinate' : null;
+    this.activeTool = this.isGoToCoordinatePanelOpen ? "coordinate" : null;
   }
 
   openExportPanel(): void {
@@ -1192,12 +2367,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isGoToCoordinatePanelOpen = false;
     this.isExportPanelOpen = true;
 
-    this.activeTool = 'export';
+    this.activeTool = "export";
   }
 
   closeExportPanel(): void {
     this.isExportPanelOpen = false;
-    this.resetPanelState('export');
+    this.resetPanelState("export");
     this.activeTool = null;
   }
 
@@ -1211,7 +2386,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.isExportPanelOpen = !this.isExportPanelOpen;
 
-    this.activeTool = this.isExportPanelOpen ? 'export' : null;
+    this.activeTool = this.isExportPanelOpen ? "export" : null;
   }
 
   exportMap(options: MapExportOptions): void {
@@ -1220,81 +2395,35 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.clearMeasure();
     this.stopPolygonDraw(true);
     this.isExportPanelOpen = false;
-    this.resetPanelState('export');
+    this.resetPanelState("export");
     this.activeTool = null;
 
-    this.map.once('rendercomplete', () => {
+    this.map.once("rendercomplete", () => {
       if (!this.map) return;
 
-      const mapSize = this.map.getSize();
-      if (!mapSize) return;
-
-      const sourceCanvas = document.createElement('canvas');
-      sourceCanvas.width = mapSize[0];
-      sourceCanvas.height = mapSize[1];
-
-      const sourceContext = sourceCanvas.getContext('2d');
-      if (!sourceContext) return;
-
-      const canvases = this.map
-        .getViewport()
-        .querySelectorAll<HTMLCanvasElement>(
-          '.ol-layer canvas, canvas.ol-layer'
-        );
-
-      canvases.forEach((canvas) => {
-        if (canvas.width <= 0 || canvas.height <= 0) return;
-
-        const opacity =
-          canvas.parentElement?.style.opacity ||
-          canvas.style.opacity ||
-          '1';
-
-        sourceContext.globalAlpha = Number(opacity);
-
-        const transform = canvas.style.transform;
-
-        if (transform) {
-          const matrix = transform
-            .match(/^matrix\(([^\)]*)\)$/)?.[1]
-            .split(',')
-            .map(Number);
-
-          if (matrix?.length === 6) {
-            sourceContext.setTransform(
-              matrix[0],
-              matrix[1],
-              matrix[2],
-              matrix[3],
-              matrix[4],
-              matrix[5]
-            );
-          }
-        }
-
-        sourceContext.drawImage(canvas, 0, 0);
-      });
-
-      sourceContext.setTransform(1, 0, 0, 1, 0, 0);
-      sourceContext.globalAlpha = 1;
+      const sourceCanvas = this.createMapExportCanvas();
+      if (!sourceCanvas) return;
 
       const targetWidth =
-        options.fileType !== 'pdf' && options.x
+        options.fileType === "image/jpeg" && options.x
           ? options.x
           : sourceCanvas.width;
 
       const targetHeight =
-        options.fileType !== 'pdf' && options.y
+        options.fileType === "image/jpeg" && options.y
           ? options.y
           : sourceCanvas.height;
 
-      const exportCanvas = document.createElement('canvas');
+      const exportCanvas = document.createElement("canvas");
       exportCanvas.width = targetWidth;
       exportCanvas.height = targetHeight;
 
-      const exportContext = exportCanvas.getContext('2d');
+      const exportContext = exportCanvas.getContext("2d");
       if (!exportContext) return;
 
+      // JPG çıktıda şeffaf alanların siyah görünmesini engeller.
+      exportContext.fillStyle = "#ffffff";
+      exportContext.fillRect(0, 0, targetWidth, targetHeight);
       exportContext.drawImage(
         sourceCanvas,
         0,
@@ -1304,59 +2433,167 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         0,
         0,
         targetWidth,
-        targetHeight
+        targetHeight,
       );
 
-      if (options.fileType === 'pdf') {
+      if (options.fileType === "print") {
+        this.printMapCanvas(exportCanvas);
+        return;
+      }
+
+      const fileName = options.fileName || "map";
+
+      if (options.fileType === "pdf") {
         const pdf = new jsPDF({
           orientation:
-            exportCanvas.width > exportCanvas.height
-              ? 'landscape'
-              : 'portrait',
-          unit: 'px',
+            exportCanvas.width > exportCanvas.height ? "landscape" : "portrait",
+          unit: "px",
           format: [exportCanvas.width, exportCanvas.height],
         });
 
         pdf.addImage(
-          exportCanvas.toDataURL('image/png'),
-          'PNG',
+          exportCanvas.toDataURL("image/jpeg", 0.95),
+          "JPEG",
           0,
           0,
           exportCanvas.width,
-          exportCanvas.height
+          exportCanvas.height,
         );
 
-        pdf.save(`${options.fileName}.pdf`);
+        pdf.save(`${fileName}.pdf`);
         return;
       }
 
-      const mimeType =
-        options.fileType === 'image/jpeg'
-          ? 'image/jpeg'
-          : 'image/png';
-
-      const extension =
-        options.fileType === 'image/jpeg'
-          ? 'jpg'
-          : 'png';
-
-      const quality =
-        options.fileType === 'image/jpeg'
-          ? 0.95
-          : undefined;
-
-      const link = document.createElement('a');
-
-      link.href = exportCanvas.toDataURL(
-        mimeType,
-        quality
-      );
-
-      link.download = `${options.fileName}.${extension}`;
+      const link = document.createElement("a");
+      link.href = exportCanvas.toDataURL("image/jpeg", 0.95);
+      link.download = `${fileName}.jpg`;
       link.click();
     });
 
     this.map.renderSync();
+  }
+
+  private createMapExportCanvas(): HTMLCanvasElement | null {
+    if (!this.map) return null;
+
+    const mapSize = this.map.getSize();
+    if (!mapSize) return null;
+
+    const sourceCanvas = document.createElement("canvas");
+    sourceCanvas.width = mapSize[0];
+    sourceCanvas.height = mapSize[1];
+
+    const sourceContext = sourceCanvas.getContext("2d");
+    if (!sourceContext) return null;
+
+    sourceContext.fillStyle = "#ffffff";
+    sourceContext.fillRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+
+    const canvases = this.map
+      .getViewport()
+      .querySelectorAll<HTMLCanvasElement>(".ol-layer canvas, canvas.ol-layer");
+
+    canvases.forEach((canvas) => {
+      if (canvas.width <= 0 || canvas.height <= 0) return;
+
+      const opacity =
+        canvas.parentElement?.style.opacity || canvas.style.opacity || "1";
+
+      sourceContext.globalAlpha = Number(opacity);
+
+      const transform = canvas.style.transform;
+
+      if (transform) {
+        const matrix = transform
+          .match(/^matrix\(([^\)]*)\)$/)?.[1]
+          .split(",")
+          .map(Number);
+
+        if (matrix?.length === 6) {
+          sourceContext.setTransform(
+            matrix[0],
+            matrix[1],
+            matrix[2],
+            matrix[3],
+            matrix[4],
+            matrix[5],
+          );
+        }
+      }
+
+      sourceContext.drawImage(canvas, 0, 0);
+    });
+
+    sourceContext.setTransform(1, 0, 0, 1, 0, 0);
+    sourceContext.globalAlpha = 1;
+
+    return sourceCanvas;
+  }
+
+  private printMapCanvas(canvas: HTMLCanvasElement): void {
+    const printWindow = window.open("", "_blank", "width=1200,height=800");
+
+    if (!printWindow) {
+      this.alertService.createAlert(
+        "warning",
+        this.translate.instant("MAP.EXPORT.POPUP_BLOCKED"),
+      );
+      return;
+    }
+
+    const imageUrl = canvas.toDataURL("image/jpeg", 0.95);
+    const isLandscape = canvas.width > canvas.height;
+
+    printWindow.document.open();
+    printWindow.document.write(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>${this.translate.instant("MAP.EXPORT.PRINT")}</title>
+          <style>
+            @page {
+              size: ${isLandscape ? "landscape" : "portrait"};
+              margin: 0;
+            }
+
+            html,
+            body {
+              width: 100%;
+              height: 100%;
+              margin: 0;
+              padding: 0;
+              background: #fff;
+            }
+
+            body {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            img {
+              display: block;
+              max-width: 100%;
+              max-height: 100%;
+              object-fit: contain;
+            }
+          </style>
+        </head>
+        <body>
+          <img src="${imageUrl}" alt="Map" />
+          <script>
+            const image = document.querySelector('img');
+            image.addEventListener('load', () => {
+              window.focus();
+              window.print();
+              window.onafterprint = () => window.close();
+            });
+          <\/script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
   }
 
   focusCoordinate(event: { lat: number; lon: number }): void {
@@ -1373,7 +2610,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     });
 
     this.isGoToCoordinatePanelOpen = false;
-    this.resetPanelState('coordinate');
+    this.resetPanelState("coordinate");
     this.activeTool = null;
   }
 
@@ -1395,23 +2632,23 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   updateCoordinateText(): void {
     if (!this.currentLonLat) {
-      this.currentCoordinateText = '-';
+      this.currentCoordinateText = "-";
       return;
     }
 
     const [lon, lat] = this.currentLonLat;
     const labels = this.getCoordinateLabels();
 
-    if (this.coordinateFormat === 'dms') {
+    if (this.coordinateFormat === "dms") {
       this.currentCoordinateText = `${labels.lat}: ${this.toDms(
         lat,
-        'lat'
-      )}, ${labels.lng}: ${this.toDms(lon, 'lon')}`;
+        "lat",
+      )}, ${labels.lng}: ${this.toDms(lon, "lon")}`;
       return;
     }
 
     this.currentCoordinateText = `${labels.lat}: ${lat.toFixed(
-      6
+      6,
     )}°, ${labels.lng}: ${lon.toFixed(6)}°`;
   }
 
@@ -1427,7 +2664,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       if (existingLayer) {
         this.map?.removeLayer(existingLayer);
         this.dynamicLayers = this.dynamicLayers.filter(
-          (mapLayer) => mapLayer !== existingLayer
+          (mapLayer) => mapLayer !== existingLayer,
         );
         this.layerRegistry.delete(key);
       }
@@ -1500,9 +2737,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }, 100);
   }
 
+  private normalizeDegree(degree: number): number {
+    const normalized = degree % 360;
+    return normalized < 0 ? normalized + 360 : normalized;
+  }
+
   private initMap(): void {
     this.map = new Map({
-      target: 'mapCanvas',
+      target: "mapCanvas",
       controls: defaultControls({
         zoom: false,
         rotate: false,
@@ -1512,13 +2754,15 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         this.smartProductResultLayer,
         this.selectedSmartProductResultLayer,
         this.userAreaLayer,
+        this.smartProductIntersectionLayer,
         this.measureLayer,
+        this.askHighlightLayer,
       ],
       view: new View({
         center: this.defaultCenter,
         zoom: this.defaultZoom,
         maxResolution: this.maxScaleDistanceMeters / this.scaleBarWidthPx,
-        projection: 'EPSG:3857',
+        projection: "EPSG:3857",
       }),
     });
 
@@ -1526,95 +2770,73 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private registerMapEvents(): void {
-    this.map?.on('pointermove', (event) => {
+    this.map?.on("pointermove", (event) => {
       this.setCoordinate(event.coordinate);
     });
 
-    this.map?.on('click', (event) => {
+    this.map?.on("click", (event) => {
       this.setCoordinate(event.coordinate);
       this.isCoordinateMenuOpen = false;
+
+      if (this.activeTool === "ask") {
+        this.queryFootprintsAtCoordinate(event.coordinate);
+      }
     });
 
-    this.map?.getView().on('change:resolution', () => {
+    this.map?.getView().on("change:resolution", () => {
       this.updateCustomScaleBar();
+    });
+
+    this.map?.getView().on("change:rotation", () => {
+      const rotationRadian = this.map?.getView().getRotation() ?? 0;
+      this.mapRotationDegree = this.normalizeDegree(
+        (rotationRadian * 180) / Math.PI,
+      );
     });
   }
 
-  private startLengthMeasure(): void {
+  private startMeasure(mode: MeasureMode): void {
     if (!this.map) return;
 
     this.stopLengthMeasure(true);
 
+    this.measureMode = mode;
     this.isLengthMeasureActive = true;
-    this.lengthMeasureText = '';
+    this.lengthMeasureText = "";
     this.measureSource.clear();
-
-    this.createMeasureTooltip();
+    this.createMeasureTooltips();
 
     this.measureDraw = new Draw({
       source: this.measureSource,
-      type: 'LineString',
-      maxPoints: 2,
+      type: mode === "distance" ? "LineString" : "Polygon",
       style: new Style({
-        stroke: new Stroke({
-          color: this.drawColor,
-          width: 3,
-        }),
+        stroke: new Stroke({ color: this.drawColor, width: 3 }),
+        fill: new Fill({ color: this.drawFillColor }),
         image: new CircleStyle({
           radius: 5,
-          fill: new Fill({
-            color: this.drawColor,
-          }),
-          stroke: new Stroke({
-            color: '#ffffff',
-            width: 2,
-          }),
+          fill: new Fill({ color: this.drawColor }),
+          stroke: new Stroke({ color: "#ffffff", width: 2 }),
         }),
       }),
     });
 
-    this.measureDraw.on('drawstart', (event) => {
-      const feature = event.feature as Feature<LineString>;
+    this.measureDraw.on("drawstart", (event) => {
+      const feature = event.feature as Feature<Geometry>;
 
-      this.measureGeometryChangeKey = feature.getGeometry()?.on('change', (geometryEvent) => {
-        const geometry = geometryEvent.target as LineString;
-        const coordinates = geometry.getCoordinates();
-
-        if (!coordinates.length) return;
-
-        const length = getLength(geometry, {
-          projection: 'EPSG:3857',
+      this.measureGeometryChangeKey = feature
+        .getGeometry()
+        ?.on("change", (geometryEvent) => {
+          const geometry = geometryEvent.target as Geometry;
+          this.renderMeasureLabels(geometry, mode);
         });
-
-        const text = this.formatLength(length);
-        this.lengthMeasureText = text;
-
-        this.updateMeasureTooltip(
-          text,
-          coordinates[coordinates.length - 1]
-        );
-      });
     });
 
-    this.measureDraw.on('drawend', (event) => {
-      const feature = event.feature as Feature<LineString>;
-      const geometry = feature.getGeometry();
+    this.measureDraw.on("drawend", (event) => {
+      const geometry = (event.feature as Feature<Geometry>).getGeometry();
 
-      if (!geometry) return;
-
-      const length = getLength(geometry, {
-        projection: 'EPSG:3857',
-      });
-
-      const coordinates = geometry.getCoordinates();
-      const text = this.formatLength(length);
-
-      this.lengthMeasureText = text;
-
-      this.updateMeasureTooltip(
-        text,
-        coordinates[coordinates.length - 1]
-      );
+      if (geometry) {
+        this.renderMeasureLabels(geometry, mode);
+      }
 
       if (this.measureGeometryChangeKey) {
         unByKey(this.measureGeometryChangeKey);
@@ -1622,9 +2844,90 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       }
 
       this.stopLengthMeasure(false);
+      this.activeTool = null;
     });
 
     this.map.addInteraction(this.measureDraw);
+  }
+
+  private renderMeasureLabels(geometry: Geometry, mode: MeasureMode): void {
+    if (mode === "distance" && geometry instanceof LineString) {
+      const coordinates = geometry.getCoordinates();
+      if (coordinates.length < 2) return;
+
+      const start = coordinates[coordinates.length - 2];
+      const end = coordinates[coordinates.length - 1];
+      const lastSegment = new LineString([start, end]);
+
+      const segmentText = this.formatLength(
+        getLength(lastSegment, { projection: "EPSG:3857" }),
+      );
+      const totalText = this.formatLength(
+        getLength(geometry, { projection: "EPSG:3857" }),
+      );
+
+      this.lengthMeasureText = `Toplam: ${totalText}`;
+
+      this.updateMeasureTooltip(
+        this.measureSegmentTooltipElement,
+        this.measureSegmentTooltipOverlay,
+        segmentText,
+        this.getCoordinateMidpoint(start, end),
+      );
+
+      this.updateMeasureTooltip(
+        this.measureTotalTooltipElement,
+        this.measureTotalTooltipOverlay,
+        `Toplam: ${totalText}`,
+        end,
+      );
+
+      return;
+    }
+
+    if (mode === "area" && geometry instanceof Polygon) {
+      const ring = geometry.getCoordinates()[0] ?? [];
+      if (ring.length < 4) return;
+
+      // Son eleman polygonun kapanış noktasıdır. Son çizilen gerçek kenar,
+      // kapanış noktasından önceki son iki koordinat arasındadır.
+      const effectiveRing = ring.slice(0, -1);
+      if (effectiveRing.length < 2) return;
+
+      const start = effectiveRing[effectiveRing.length - 2];
+      const end = effectiveRing[effectiveRing.length - 1];
+      const lastSegment = new LineString([start, end]);
+
+      const segmentText = this.formatLength(
+        getLength(lastSegment, { projection: "EPSG:3857" }),
+      );
+      const areaText = this.formatArea(
+        getArea(geometry, { projection: "EPSG:3857" }),
+      );
+
+      this.lengthMeasureText = `Alan: ${areaText}`;
+
+      this.updateMeasureTooltip(
+        this.measureSegmentTooltipElement,
+        this.measureSegmentTooltipOverlay,
+        segmentText,
+        this.getCoordinateMidpoint(start, end),
+      );
+
+      this.updateMeasureTooltip(
+        this.measureTotalTooltipElement,
+        this.measureTotalTooltipOverlay,
+        `Alan: ${areaText}`,
+        geometry.getInteriorPoint().getCoordinates(),
+      );
+    }
+  }
+
+  private getCoordinateMidpoint(
+    start: Coordinate,
+    end: Coordinate,
+  ): Coordinate {
+    return [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
   }
 
   private stopLengthMeasure(clearResult: boolean): void {
@@ -1639,11 +2942,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.measureDraw = undefined;
     this.isLengthMeasureActive = false;
+    this.measureMode = null;
 
     if (clearResult) {
-      this.lengthMeasureText = '';
+      this.lengthMeasureText = "";
       this.measureSource.clear();
-      this.removeMeasureTooltip();
+      this.removeMeasureTooltips();
     }
   }
 
@@ -1660,7 +2964,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.polygonDraw = new Draw({
       source: this.userAreaSource,
-      type: 'Polygon',
+      type: "Polygon",
       stopClick: true,
       style: this.getAreaDrawStyle(),
     });
@@ -1689,57 +2993,54 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private async readAreaFile(
     file: File,
-    extension: SupportedAreaFileExtension
+    extension: SupportedAreaFileExtension,
   ): Promise<Feature<Geometry>[]> {
-
-    if (extension === 'zip') {
+    if (extension === "zip") {
       const arrayBuffer = await file.arrayBuffer();
       const geoJsonResult = await shp(arrayBuffer);
 
       if (Array.isArray(geoJsonResult)) {
         return geoJsonResult.flatMap((geoJson) =>
-          this.readGeoJsonFeatures(geoJson)
+          this.readGeoJsonFeatures(geoJson),
         );
       }
 
       return this.readGeoJsonFeatures(geoJsonResult);
     }
 
-    if (extension === 'kmz') {
+    if (extension === "kmz") {
       const zip = await JSZip.loadAsync(file);
 
       const kmlEntry = Object.values(zip.files).find(
-        (entry) =>
-          !entry.dir &&
-          entry.name.toLowerCase().endsWith('.kml')
+        (entry) => !entry.dir && entry.name.toLowerCase().endsWith(".kml"),
       );
 
       if (!kmlEntry) {
-        throw new Error('KMZ içerisinde KML bulunamadı.');
+        throw new Error("KMZ içerisinde KML bulunamadı.");
       }
 
-      const kmlText = await kmlEntry.async('text');
+      const kmlText = await kmlEntry.async("text");
 
       return new KML({
         extractStyles: false,
       }).readFeatures(kmlText, {
-        featureProjection: 'EPSG:3857',
+        featureProjection: "EPSG:3857",
       }) as Feature<Geometry>[];
     }
 
     const text = await file.text();
 
-    if (extension === 'geojson' || extension === 'json') {
+    if (extension === "geojson" || extension === "json") {
       const parsedGeoJson = JSON.parse(text);
 
       return this.readGeoJsonFeatures(parsedGeoJson);
     }
 
-    if (extension === 'kml') {
+    if (extension === "kml") {
       return new KML({
         extractStyles: false,
       }).readFeatures(text, {
-        featureProjection: 'EPSG:3857',
+        featureProjection: "EPSG:3857",
       }) as Feature<Geometry>[];
     }
 
@@ -1748,44 +3049,44 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private readGeoJsonFeatures(geoJson: any): Feature<Geometry>[] {
     if (!this.isValidGeoJsonObject(geoJson)) {
-      throw new Error('Geçersiz GeoJSON formatı');
+      throw new Error("Geçersiz GeoJSON formatı");
     }
 
     return new GeoJSON().readFeatures(geoJson, {
-      featureProjection: 'EPSG:3857',
+      featureProjection: "EPSG:3857",
     }) as Feature<Geometry>[];
   }
 
   private isValidGeoJsonObject(value: any): boolean {
-    if (!value || typeof value !== 'object') return false;
+    if (!value || typeof value !== "object") return false;
 
     return [
-      'FeatureCollection',
-      'Feature',
-      'Polygon',
-      'MultiPolygon',
-      'GeometryCollection',
+      "FeatureCollection",
+      "Feature",
+      "Polygon",
+      "MultiPolygon",
+      "GeometryCollection",
     ].includes(value.type);
   }
 
   private getAreaFileExtension(fileName: string): string | null {
-    const extension = fileName.split('.').pop()?.toLowerCase();
+    const extension = fileName.split(".").pop()?.toLowerCase();
 
     return extension || null;
   }
 
   private isSupportedAreaFileExtension(
-    extension: string
+    extension: string,
   ): extension is SupportedAreaFileExtension {
     return this.supportedAreaFileExtensions.includes(
-      extension as SupportedAreaFileExtension
+      extension as SupportedAreaFileExtension,
     );
   }
 
   private showUploadWarning(translationKey: string): void {
     this.alertService.createAlert(
-      'warning',
-      this.translate.instant(translationKey)
+      "warning",
+      this.translate.instant(translationKey),
     );
   }
 
@@ -1817,6 +3118,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isSmartAdvancedFilterPanelOpen = false;
     this.isSmartPrefilterPanelOpen = false;
     this.isSmartProductRequestPanelOpen = false;
+    this.isAskPanelOpen = false;
+    this.isAskLoading = false;
+    this.askFootprints = [];
+    this.askHighlightSource.clear();
     this.resetAllPanelStates();
   }
 
@@ -1832,10 +3137,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private runSmartProductFilter(reopenRequestPanelAfterLoad = false): void {
     if (this.previewMode) return;
 
-    const wkt = this.getAoiWkt();
+    const wkt = this.getSelectedAoiWkt();
 
     if (!wkt) {
-      this.showUploadWarning('MAP.SMART_FILTER.AOI_REQUIRED');
+      this.showUploadWarning("MAP.SMART_FILTER.AOI_REQUIRED");
       return;
     }
 
@@ -1855,19 +3160,26 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         this.smartFilterResults = response ?? [];
         this.selectedSmartProducts = [];
         this.hoveredSmartProduct = null;
+        // Sonuçlar yalnızca birleşik panelde listelenir; harita katmanına basılmaz.
+        this.smartProductResultSource.clear();
         this.selectedSmartProductResultSource.clear();
-        this.renderSmartProductResultsOnMap(this.smartFilterResults);
+        this.smartProductIntersectionSource.clear();
+        this.clearSelectedProductPreviewImages();
       },
       error: (error) => {
-        console.error('Smart product filter çalıştırılırken hata oluştu:', error);
+        console.error(
+          "Smart product filter çalıştırılırken hata oluştu:",
+          error,
+        );
         this.smartFilterResults = [];
         this.selectedSmartProducts = [];
         this.hoveredSmartProduct = null;
         this.smartProductResultSource.clear();
         this.selectedSmartProductResultSource.clear();
+        this.smartProductIntersectionSource.clear();
         this.alertService.createAlert(
-          'danger',
-          this.translate.instant('MAP.SMART_FILTER.LOAD_ERROR')
+          "danger",
+          this.translate.instant("MAP.SMART_FILTER.LOAD_ERROR"),
         );
       },
       complete: () => {
@@ -1883,7 +3195,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private renderSmartProductResultsOnMap(
-    results: ProductSmartFilterResult[]
+    results: ProductSmartFilterResult[],
   ): void {
     this.smartProductResultSource.clear();
 
@@ -1897,7 +3209,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private renderSelectedProductPreviewImages(
-    products: ProductSmartFilterResult[]
+    products: ProductSmartFilterResult[],
   ): void {
     this.clearSelectedProductPreviewImages();
 
@@ -1916,10 +3228,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         source: new Static({
           url: imageUrl,
           imageExtent: geometry.getExtent(),
-          projection: 'EPSG:3857',
-          crossOrigin: 'anonymous',
+          projection: "EPSG:3857",
+          crossOrigin: "anonymous",
         }),
-        opacity: 0.75,
+        opacity: 0.88,
         zIndex: 9997,
       });
 
@@ -1942,9 +3254,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private getSmartProductPreviewImageUrl(
-    product: ProductSmartFilterResult
+    product: ProductSmartFilterResult,
   ): string | null {
-    const imageUrl = product.previewUrl || product.thumbnailUrl || null;
+    const imageUrl = product.previewUrl || null;
 
     if (!imageUrl) return null;
 
@@ -1952,19 +3264,19 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private createSmartProductFeature(
-    product: ProductSmartFilterResult
+    product: ProductSmartFilterResult,
   ): Feature<Geometry> | null {
     if (product.wkt) {
       try {
         const feature = new WKT().readFeature(product.wkt, {
-          dataProjection: 'EPSG:4326',
-          featureProjection: 'EPSG:3857',
+          dataProjection: "EPSG:4326",
+          featureProjection: "EPSG:3857",
         }) as Feature<Geometry>;
 
-        feature.set('product', product);
+        feature.set("product", product);
         return feature;
       } catch (error) {
-        console.warn('Ürün WKT okunamadı:', error, product);
+        console.warn("Ürün WKT okunamadı:", error, product);
       }
     }
 
@@ -1980,8 +3292,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     if (!hasBbox) return null;
 
-    const min = fromLonLat([Number(product.bboxMinX), Number(product.bboxMinY)]);
-    const max = fromLonLat([Number(product.bboxMaxX), Number(product.bboxMaxY)]);
+    const min = fromLonLat([
+      Number(product.bboxMinX),
+      Number(product.bboxMinY),
+    ]);
+    const max = fromLonLat([
+      Number(product.bboxMaxX),
+      Number(product.bboxMaxY),
+    ]);
 
     const geometry = new Polygon([
       [
@@ -1994,29 +3312,29 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     ]);
 
     const feature = new Feature<Geometry>(geometry);
-    feature.set('product', product);
+    feature.set("product", product);
 
     return feature;
   }
 
   getAoiWkt(): string | null {
-    const features = this.userAreaSource.getFeatures().filter((feature) =>
-      this.isPolygonFeature(feature)
-    );
+    const features = this.userAreaSource
+      .getFeatures()
+      .filter((feature) => this.isPolygonFeature(feature));
 
     if (!features.length) {
       return null;
     }
 
     const geoJson = new GeoJSON().writeFeaturesObject(features, {
-      featureProjection: 'EPSG:3857',
-      dataProjection: 'EPSG:4326',
+      featureProjection: "EPSG:3857",
+      dataProjection: "EPSG:4326",
     }) as any;
 
     if (features.length === 1) {
       return new WKT().writeFeature(features[0], {
-        featureProjection: 'EPSG:3857',
-        dataProjection: 'EPSG:4326',
+        featureProjection: "EPSG:3857",
+        dataProjection: "EPSG:4326",
       });
     }
 
@@ -2024,7 +3342,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       ?.map((feature: any) => feature.geometry)
       ?.filter(
         (geometry: any) =>
-          geometry?.type === 'Polygon' || geometry?.type === 'MultiPolygon'
+          geometry?.type === "Polygon" || geometry?.type === "MultiPolygon",
       );
 
     if (!polygons?.length) {
@@ -2032,7 +3350,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     const multiPolygonCoordinates = polygons.flatMap((geometry: any) => {
-      if (geometry.type === 'Polygon') {
+      if (geometry.type === "Polygon") {
         return [geometry.coordinates];
       }
 
@@ -2041,16 +3359,15 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     return new WKT().writeGeometry(
       new MultiPolygon(multiPolygonCoordinates).transform(
-        'EPSG:4326',
-        'EPSG:3857'
+        "EPSG:4326",
+        "EPSG:3857",
       ),
       {
-        featureProjection: 'EPSG:3857',
-        dataProjection: 'EPSG:4326',
-      }
+        featureProjection: "EPSG:3857",
+        dataProjection: "EPSG:4326",
+      },
     );
   }
-
 
   private renderPreviewWktIfNeeded(): void {
     if (!this.previewMode || !this.map) return;
@@ -2061,14 +3378,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.userAreaSource.clear();
     this.userAreaOrigin = null;
 
-    const wkt = (this.previewWkt || '').trim();
+    const wkt = (this.previewWkt || "").trim();
 
     if (!wkt) return;
 
     try {
       const feature = new WKT().readFeature(wkt, {
-        dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857',
+        dataProjection: "EPSG:4326",
+        featureProjection: "EPSG:3857",
       }) as Feature<Geometry>;
 
       if (!this.isPolygonFeature(feature)) return;
@@ -2078,24 +3395,314 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       this.calculateSelectedArea();
       this.clearAreaTooltips();
     } catch (error) {
-      console.warn('Preview WKT okunamadı:', error, wkt);
+      console.warn("Preview WKT okunamadı:", error, wkt);
     }
   }
 
-  private calculateSelectedArea(): void {
-    let totalArea = 0;
+  private registerCurrentAoi(
+    origin: Exclude<UserAreaOrigin, null>,
+    preferredName?: string,
+  ): void {
+    const id = this.createAoiId();
+    const unassignedFeatures = this.userAreaSource
+      .getFeatures()
+      .filter((feature) => !feature.get("aoiId"));
 
-    this.userAreaSource.getFeatures().forEach((feature) => {
+    unassignedFeatures.forEach((feature) => feature.set("aoiId", id));
+
+    const areaM2 = this.calculateAreaForAoi(id);
+    this.aoiItems = [
+      ...this.aoiItems,
+      {
+        id,
+        origin,
+        name: preferredName?.trim() || this.createAoiName(origin),
+        areaM2,
+        areaText: this.formatAoiArea(areaM2),
+      },
+    ];
+
+    this.selectedAoiId = id;
+    this.hoveredAoiId = null;
+    this.userAreaLayer.changed();
+    this.calculateSelectedArea();
+  }
+
+  selectAoi(area: MapAoiItem): void {
+    if (this.selectedAoiId === area.id) return;
+    this.selectedAoiId = area.id;
+    this.hoveredAoiId = null;
+    this.userAreaLayer.changed();
+    this.calculateSelectedArea();
+    this.smartFilterRequest = {
+      ...this.smartFilterRequest,
+      wkt: this.getSelectedAoiWkt(),
+      pageNumber: 1,
+    };
+    this.runSmartProductFilter();
+  }
+
+  hoverAoi(area: MapAoiItem | null): void {
+    this.hoveredAoiId = area?.id ?? null;
+    this.userAreaLayer.changed();
+  }
+
+  private getSelectedAoiWkt(): string | null {
+    if (!this.selectedAoiId) return null;
+    const features = this.getAoiFeatures(this.selectedAoiId).filter((f) =>
+      this.isPolygonFeature(f),
+    );
+    if (!features.length) return null;
+    if (features.length === 1)
+      return new WKT().writeFeature(features[0], {
+        featureProjection: "EPSG:3857",
+        dataProjection: "EPSG:4326",
+      });
+    const geoms = features
+      .map((f) => f.getGeometry())
+      .filter(
+        (g): g is Polygon | MultiPolygon =>
+          g instanceof Polygon || g instanceof MultiPolygon,
+      );
+    const coords = geoms.flatMap((g) =>
+      g instanceof Polygon
+        ? [g.clone().transform("EPSG:3857", "EPSG:4326").getCoordinates()]
+        : g.clone().transform("EPSG:3857", "EPSG:4326").getCoordinates(),
+    );
+    return new WKT().writeGeometry(new MultiPolygon(coords));
+  }
+
+  private syncAoiMetric(): void {
+    this.aoiItems = this.aoiItems.map((area) => {
+      const areaM2 = this.calculateAreaForAoi(area.id);
+      return {
+        ...area,
+        areaM2,
+        areaText: this.formatAoiArea(areaM2),
+      };
+    });
+  }
+
+  private calculateAreaForAoi(aoiId: string): number {
+    return this.getAoiFeatures(aoiId).reduce((total, feature) => {
       const geometry = feature.getGeometry();
-
-      if (geometry instanceof Polygon || geometry instanceof MultiPolygon) {
-        totalArea += getArea(geometry, {
-          projection: 'EPSG:3857',
-        });
+      if (!(geometry instanceof Polygon || geometry instanceof MultiPolygon)) {
+        return total;
       }
+      return total + getArea(geometry, { projection: "EPSG:3857" });
+    }, 0);
+  }
+
+  private getAoiFeatures(aoiId: string): Feature<Geometry>[] {
+    return this.userAreaSource
+      .getFeatures()
+      .filter((feature) => feature.get("aoiId") === aoiId);
+  }
+
+  private createAoiId(): string {
+    this.aoiCounter += 1;
+    return `aoi-${Date.now()}-${this.aoiCounter}`;
+  }
+
+  private createAoiName(origin: Exclude<UserAreaOrigin, null>): string {
+    if (origin === "polygon" || origin === "rectangle") {
+      const drawingCount = this.aoiItems.filter(
+        (item) => item.origin === "polygon" || item.origin === "rectangle",
+      ).length;
+      return `Area ${drawingCount + 1}`;
+    }
+
+    const names: Record<"upload" | "search", string> = {
+      upload: "Yüklenen Alan",
+      search: "Arama Alanı",
+    };
+
+    const sameOriginCount = this.aoiItems.filter(
+      (item) => item.origin === origin,
+    ).length;
+    return `${names[origin]} ${sameOriginCount + 1}`;
+  }
+
+  private formatAoiArea(areaM2: number): string {
+    if (areaM2 >= 1_000_000) {
+      return `${(areaM2 / 1_000_000).toFixed(2).replace(".", ",")} km²`;
+    }
+
+    if (areaM2 >= 10_000) {
+      return `${(areaM2 / 10_000).toFixed(2).replace(".", ",")} ha`;
+    }
+
+    return `${areaM2.toFixed(2).replace(".", ",")} m²`;
+  }
+
+  private scheduleAoiResultRefresh(immediately = false): void {
+    if (this.aoiRefreshTimer) {
+      clearTimeout(this.aoiRefreshTimer);
+    }
+
+    this.aoiRefreshTimer = setTimeout(
+      () => {
+        const shouldRefresh =
+          this.isSmartFilterPanelOpen ||
+          this.smartFilterResults.length > 0 ||
+          this.isSmartProductRequestPanelOpen;
+
+        if (!shouldRefresh) return;
+
+        const keepRequestPanelOpen = this.isSmartProductRequestPanelOpen;
+        this.runSmartProductFilter(keepRequestPanelOpen);
+      },
+      immediately ? 0 : 450,
+    );
+  }
+
+  private removeFileExtension(fileName: string): string {
+    return fileName.replace(/\\.[^/.]+$/, "");
+  }
+
+  private getSearchAreaName(result: MapSearchResult): string | undefined {
+    const candidate = result as MapSearchResult & {
+      address?: string;
+      displayName?: string;
+      display_name?: string;
+      formattedAddress?: string;
+      formatted_address?: string;
+      fullAddress?: string;
+      placeName?: string;
+      text?: string;
+      name?: string;
+      label?: string;
+      title?: string;
+      properties?: {
+        address?: string;
+        displayName?: string;
+        display_name?: string;
+        formattedAddress?: string;
+        formatted_address?: string;
+        fullAddress?: string;
+        placeName?: string;
+        text?: string;
+        name?: string;
+        label?: string;
+        title?: string;
+      };
+    };
+
+    const properties = candidate.properties;
+
+    const addressName =
+      candidate.address ||
+      candidate.formattedAddress ||
+      candidate.formatted_address ||
+      candidate.fullAddress ||
+      candidate.displayName ||
+      candidate.display_name ||
+      candidate.placeName ||
+      candidate.label ||
+      candidate.title ||
+      candidate.name ||
+      candidate.text ||
+      properties?.address ||
+      properties?.formattedAddress ||
+      properties?.formatted_address ||
+      properties?.fullAddress ||
+      properties?.displayName ||
+      properties?.display_name ||
+      properties?.placeName ||
+      properties?.label ||
+      properties?.title ||
+      properties?.name ||
+      properties?.text;
+
+    return addressName?.trim() || undefined;
+  }
+
+  private exportCurrentAoiAsKml(area: MapAoiItem): void {
+    const features = this.getAoiFeatures(area.id);
+    if (!features.length) return;
+    const areaName = area.name;
+
+    const kml = new KML({ extractStyles: false }).writeFeatures(features, {
+      featureProjection: "EPSG:3857",
+      dataProjection: "EPSG:4326",
     });
 
-    this.totalSelectedAreaM2 = totalArea;
+    saveAs(
+      new Blob([kml], {
+        type: "application/vnd.google-earth.kml+xml;charset=utf-8",
+      }),
+      `${this.safeFileName(areaName)}.kml`,
+    );
+  }
+
+  private async exportCurrentAoiAsShp(area: MapAoiItem): Promise<void> {
+    const features = this.getAoiFeatures(area.id);
+    if (!features.length) return;
+    const areaName = area.name;
+
+    const geoJson = new GeoJSON().writeFeaturesObject(features, {
+      featureProjection: "EPSG:3857",
+      dataProjection: "EPSG:4326",
+    });
+
+    const shpWrite = await import("@mapbox/shp-write");
+    const zipResult = (await shpWrite.zip(geoJson as any, {
+      folder: this.safeFileName(areaName),
+      types: { polygon: this.safeFileName(areaName) },
+      compression: "DEFLATE",
+      outputType: "blob",
+    })) as unknown;
+
+    if (zipResult instanceof Blob) {
+      saveAs(zipResult, `${this.safeFileName(areaName)}.zip`);
+      return;
+    }
+
+    if (zipResult instanceof ArrayBuffer) {
+      saveAs(
+        new Blob([zipResult], { type: "application/zip" }),
+        `${this.safeFileName(areaName)}.zip`,
+      );
+      return;
+    }
+
+    const base64 = String(zipResult).replace(/^data:.*;base64,/, "");
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+
+    saveAs(
+      new Blob([bytes], { type: "application/zip" }),
+      `${this.safeFileName(areaName)}.zip`,
+    );
+  }
+
+  private safeFileName(value: string): string {
+    return (
+      value
+        .trim()
+        .replace(/[^a-zA-Z0-9ğüşöçıİĞÜŞÖÇ_-]+/g, "_")
+        .replace(/^_+|_+$/g, "") || "ilgi_alani"
+    );
+  }
+
+  private calculateSelectedArea(): void {
+    const features = this.selectedAoiId
+      ? this.getAoiFeatures(this.selectedAoiId)
+      : [];
+
+    this.totalSelectedAreaM2 = features.reduce((total, feature) => {
+      const geometry = feature.getGeometry();
+      if (geometry instanceof Polygon || geometry instanceof MultiPolygon) {
+        return total + getArea(geometry, { projection: "EPSG:3857" });
+      }
+      return total;
+    }, 0);
+
+    this.syncAoiMetric();
   }
 
   private clearSmartFilterResults(): void {
@@ -2105,6 +3712,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.hoveredSmartProduct = null;
     this.smartProductResultSource.clear();
     this.selectedSmartProductResultSource.clear();
+    this.smartProductIntersectionSource.clear();
     this.clearSelectedProductPreviewImages();
     this.isSmartFilterPanelOpen = false;
     this.isSmartPrefilterPanelOpen = false;
@@ -2116,12 +3724,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private formatLength(length: number): string {
     if (length >= 1000) {
-      return `${(length / 1000).toFixed(2).replace('.', ',')} km`;
+      return `${(length / 1000).toFixed(2).replace(".", ",")} km`;
     }
 
-    return `${length.toFixed(2).replace('.', ',')} m`;
+    return `${length.toFixed(2).replace(".", ",")} m`;
   }
-
 
   private updateCustomScaleBar(): void {
     if (!this.map) return;
@@ -2129,14 +3736,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     const resolution = this.map.getView().getResolution();
 
     if (!resolution) {
-      this.customScaleText = '3000 km';
+      this.customScaleText = "3000 km";
       return;
     }
 
     const distanceMeters = resolution * this.scaleBarWidthPx;
     const limitedDistanceMeters = Math.min(
       distanceMeters,
-      this.maxScaleDistanceMeters
+      this.maxScaleDistanceMeters,
     );
 
     this.customScaleText = this.formatScaleDistance(limitedDistanceMeters);
@@ -2152,18 +3759,22 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private getCoordinateLabels(): { lat: string; lng: string } {
-    const lang = (this.translate.currentLang || this.translate.defaultLang || 'en').toLowerCase();
+    const lang = (
+      this.translate.currentLang ||
+      this.translate.defaultLang ||
+      "en"
+    ).toLowerCase();
 
-    if (lang.startsWith('tr')) {
+    if (lang.startsWith("tr")) {
       return {
-        lat: 'Enlem',
-        lng: 'Boylam',
+        lat: "E",
+        lng: "B",
       };
     }
 
     return {
-      lat: 'Lat',
-      lng: 'Lng',
+      lat: "Lat",
+      lng: "Lng",
     };
   }
 
@@ -2203,10 +3814,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         this.selectedSmartProductResultLayer.setZIndex(9998);
         this.userAreaLayer.setZIndex(9999);
-        this.measureLayer.setZIndex(10000);
+        this.smartProductIntersectionLayer.setZIndex(10000);
+        this.measureLayer.setZIndex(10001);
       },
       error: (error) => {
-        console.error('Harita katmanları yüklenirken hata oluştu:', error);
+        console.error("Harita katmanları yüklenirken hata oluştu:", error);
         this.layers = [];
       },
     });
@@ -2224,7 +3836,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         layer.type === 1 ||
         layer.type === LayerType.Wms ||
         layer.type === LayerType.Wfs ||
-        layer.type === LayerType.Wmts
+        layer.type === LayerType.Wmts,
     );
   }
 
@@ -2254,7 +3866,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       zIndex: layer.orderNo ?? 0,
       source: new OSM({
         url: layer.url || undefined,
-        crossOrigin: 'anonymous',
+        crossOrigin: "anonymous",
       }),
     });
   }
@@ -2271,12 +3883,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         params: {
           LAYERS: layer.layerName,
           TILED: true,
-          VERSION: layer.version || '1.1.1',
-          FORMAT: layer.format || 'image/png',
+          VERSION: layer.version || "1.1.1",
+          FORMAT: layer.format || "image/png",
           TRANSPARENT: true,
         },
-        serverType: 'geoserver',
-        crossOrigin: 'anonymous',
+        serverType: "geoserver",
+        crossOrigin: "anonymous",
       }),
     });
   }
@@ -2284,16 +3896,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private createWfsLayer(layer: LayerModel): VectorLayer<VectorSource> | null {
     if (!layer.url || !layer.layerName) return null;
 
-    const separator = layer.url.includes('?') ? '&' : '?';
+    const separator = layer.url.includes("?") ? "&" : "?";
 
     const wfsUrl =
       `${layer.url}${separator}` +
-      `service=WFS&version=${layer.version || '1.0.0'}` +
+      `service=WFS&version=${layer.version || "1.0.0"}` +
       `&request=GetFeature` +
       `&typeName=${encodeURIComponent(layer.layerName)}` +
-      `&outputFormat=${encodeURIComponent(
-        layer.format || 'application/json'
-      )}`;
+      `&outputFormat=${encodeURIComponent(layer.format || "application/json")}`;
 
     return new VectorLayer({
       opacity: this.normalizeOpacity(layer.opacity),
@@ -2310,16 +3920,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (!layer.url || !layer.layerName) return null;
 
     const projectionExtent: Extent = [
-      -20037508.342789244,
-      -20037508.342789244,
-      20037508.342789244,
+      -20037508.342789244, -20037508.342789244, 20037508.342789244,
       20037508.342789244,
     ];
 
     const maxResolution = 156543.03392804097;
     const resolutions = Array.from(
       { length: 19 },
-      (_, z) => maxResolution / Math.pow(2, z)
+      (_, z) => maxResolution / Math.pow(2, z),
     );
     const matrixIds = Array.from({ length: 19 }, (_, z) => z.toString());
 
@@ -2330,17 +3938,17 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       source: new WMTS({
         url: layer.url,
         layer: layer.layerName,
-        matrixSet: 'EPSG:3857',
-        format: layer.format || 'image/png',
-        projection: 'EPSG:3857',
-        style: 'default',
+        matrixSet: "EPSG:3857",
+        format: layer.format || "image/png",
+        projection: "EPSG:3857",
+        style: "default",
         tileGrid: new WMTSTileGrid({
           origin: [projectionExtent[0], projectionExtent[3]],
           resolutions,
           matrixIds,
         }),
         wrapX: true,
-        crossOrigin: 'anonymous',
+        crossOrigin: "anonymous",
       }),
     });
   }
@@ -2379,6 +3987,16 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     if (
       this.map &&
+      !this.map
+        .getLayers()
+        .getArray()
+        .includes(this.smartProductIntersectionLayer)
+    ) {
+      this.map.addLayer(this.smartProductIntersectionLayer);
+    }
+
+    if (
+      this.map &&
       !this.map.getLayers().getArray().includes(this.measureLayer)
     ) {
       this.map.addLayer(this.measureLayer);
@@ -2387,7 +4005,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private getLayerKey(layer: LayerModel): number | string {
     return (
-      layer.id ?? layer.layerName ?? layer.name ?? `${layer.type}-${layer.orderNo}`
+      layer.id ??
+      layer.layerName ??
+      layer.name ??
+      `${layer.type}-${layer.orderNo}`
     );
   }
 
@@ -2408,7 +4029,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     return Math.max(opacity, 0);
   }
 
-  private toDms(value: number, type: 'lat' | 'lon'): string {
+  private toDms(value: number, type: "lat" | "lon"): string {
     const absolute = Math.abs(value);
     const degrees = Math.floor(absolute);
     const minutesFloat = (absolute - degrees) * 60;
@@ -2416,63 +4037,87 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     const seconds = (minutesFloat - minutes) * 60;
 
     const direction =
-      type === 'lat'
-        ? value >= 0
-          ? 'N'
-          : 'S'
-        : value >= 0
-          ? 'E'
-          : 'W';
+      type === "lat" ? (value >= 0 ? "N" : "S") : value >= 0 ? "E" : "W";
 
     return `${degrees}° ${minutes}' ${seconds.toFixed(2)}" ${direction}`;
   }
 
-  private createMeasureTooltip(): void {
+  private createMeasureTooltips(): void {
     if (!this.map) return;
 
-    this.removeMeasureTooltip();
+    this.removeMeasureTooltips();
 
-    this.measureTooltipElement = document.createElement('div');
-    this.measureTooltipElement.className = 'map-measure-tooltip';
-    this.measureTooltipElement.innerHTML = `
-    <div class="map-measure-tooltip__value">0 m</div>
-  `;
+    const segmentTooltip = this.createMeasureTooltipOverlay(
+      "map-measure-tooltip map-measure-tooltip--segment",
+      [0, -10],
+      "bottom-center",
+    );
+    this.measureSegmentTooltipElement = segmentTooltip.element;
+    this.measureSegmentTooltipOverlay = segmentTooltip.overlay;
 
-    this.measureTooltipOverlay = new Overlay({
-      element: this.measureTooltipElement,
-      offset: [0, -16],
-      positioning: 'bottom-center',
+    const totalTooltip = this.createMeasureTooltipOverlay(
+      "map-measure-tooltip map-measure-tooltip--total",
+      [10, -10],
+      "bottom-left",
+    );
+    this.measureTotalTooltipElement = totalTooltip.element;
+    this.measureTotalTooltipOverlay = totalTooltip.overlay;
+  }
+
+  private createMeasureTooltipOverlay(
+    className: string,
+    offset: [number, number],
+    positioning: "bottom-center" | "bottom-left" | "center-center",
+  ): { element: HTMLDivElement; overlay: Overlay } {
+    const element = document.createElement("div");
+    element.className = className;
+    element.innerHTML = '<div class="map-measure-tooltip__value"></div>';
+
+    const overlay = new Overlay({
+      element,
+      offset,
+      positioning,
       stopEvent: false,
       insertFirst: false,
     });
 
-    this.map.addOverlay(this.measureTooltipOverlay);
+    this.map?.addOverlay(overlay);
+
+    return { element, overlay };
   }
 
-  private updateMeasureTooltip(text: string, coordinate: Coordinate): void {
-    if (!this.measureTooltipElement || !this.measureTooltipOverlay) return;
+  private updateMeasureTooltip(
+    element: HTMLDivElement | undefined,
+    overlay: Overlay | undefined,
+    text: string,
+    coordinate: Coordinate,
+  ): void {
+    if (!element || !overlay) return;
 
-    const valueElement = this.measureTooltipElement.querySelector(
-      '.map-measure-tooltip__value'
-    );
-
+    const valueElement = element.querySelector(".map-measure-tooltip__value");
     if (valueElement) {
       valueElement.textContent = text;
     }
 
-    this.measureTooltipOverlay.setPosition(coordinate);
+    overlay.setPosition(coordinate);
   }
 
-  private removeMeasureTooltip(): void {
-    if (this.measureTooltipOverlay) {
-      this.map?.removeOverlay(this.measureTooltipOverlay);
+  private removeMeasureTooltips(): void {
+    if (this.measureSegmentTooltipOverlay) {
+      this.map?.removeOverlay(this.measureSegmentTooltipOverlay);
     }
 
-    this.measureTooltipOverlay = undefined;
-    this.measureTooltipElement = undefined;
+    if (this.measureTotalTooltipOverlay) {
+      this.map?.removeOverlay(this.measureTotalTooltipOverlay);
+    }
+
+    this.measureSegmentTooltipElement = undefined;
+    this.measureSegmentTooltipOverlay = undefined;
+    this.measureTotalTooltipElement = undefined;
+    this.measureTotalTooltipOverlay = undefined;
   }
 
-  toggleRectangleDraw(): void {
+  toggleRectangleDraw(keepSmartPanelOpen = false): void {
     if (this.previewMode) return;
 
     if (this.polygonDraw) {
@@ -2482,15 +4127,17 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     this.clearMeasure();
-    this.closeAllPanels();
+
+    // Çizim başladığında panel daima kapanır ve newAreaCreationHint görünür.
+    // Mevcut panel durumu snapshot olarak saklanır; çizim bitince/ESC'de geri gelir.
+    this.hideSmartPanelsForAreaDrawing();
 
     this.disableAreaModify();
-    this.userAreaSource.clear();
-    this.userAreaOrigin = null;
-    this.clearSmartFilterResults();
+
+    // Yeni dikdörtgen mevcut AOI geometrilerini ve alan listesini silmez.
     this.clearAreaTooltips();
 
-    this.activeTool = 'rectangle';
+    this.activeTool = "rectangle";
     this.startRectangleDraw();
   }
 
@@ -2501,7 +4148,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.polygonDraw = new Draw({
       source: this.userAreaSource,
-      type: 'Circle',
+      type: "Circle",
       geometryFunction: createBox(),
       stopClick: true,
       style: this.getAreaDrawStyle(),
@@ -2515,19 +4162,19 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private getAreaDrawStyle(): Style {
     return new Style({
       stroke: new Stroke({
-        color: '#009ef7',
+        color: this.drawColor,
         width: 3,
       }),
       fill: new Fill({
-        color: 'rgba(0, 158, 247, 0.25)',
+        color: "rgba(38, 54, 133, 0.22)",
       }),
       image: new CircleStyle({
         radius: 6,
         fill: new Fill({
-          color: '#50cd89',
+          color: this.drawColor,
         }),
         stroke: new Stroke({
-          color: '#ffffff',
+          color: "#ffffff",
           width: 2,
         }),
       }),
@@ -2537,21 +4184,20 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private bindAreaDrawEvents(): void {
     if (!this.polygonDraw) return;
 
-    this.polygonDraw.on('drawstart', (event) => {
+    this.polygonDraw.on("drawstart", (event) => {
       const feature = event.feature as Feature<Polygon>;
 
-      this.userAreaSource.clear();
-    this.userAreaOrigin = null;
-      this.clearSmartFilterResults();
       this.clearAreaTooltips();
 
-      this.areaGeometryChangeKey = feature.getGeometry()?.on('change', (geometryEvent) => {
-        const geometry = geometryEvent.target as Polygon;
-        this.renderAreaTooltips(geometry);
-      });
+      this.areaGeometryChangeKey = feature
+        .getGeometry()
+        ?.on("change", (geometryEvent) => {
+          const geometry = geometryEvent.target as Polygon;
+          this.renderAreaTooltips(geometry);
+        });
     });
 
-    this.polygonDraw.on('drawend', (event) => {
+    this.polygonDraw.on("drawend", (event) => {
       const feature = event.feature as Feature<Polygon>;
       const geometry = feature.getGeometry();
 
@@ -2565,12 +4211,17 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       }
 
       setTimeout(() => {
-        this.userAreaOrigin = 'draw';
+        const origin: Exclude<UserAreaOrigin, null> =
+          this.activeTool === "rectangle" ? "rectangle" : "polygon";
+
+        this.userAreaOrigin = origin;
         this.stopPolygonDraw(false);
         this.disableAreaModify();
         this.fitToUserAreas();
         this.calculateSelectedArea();
+        this.registerCurrentAoi(origin);
         this.clearAreaTooltips();
+        this.restoreAreaDrawPanels();
         this.openSmartPrefilterPanel();
         this.activeTool = null;
       });
@@ -2583,13 +4234,17 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     // Düzenleme sadece Modify interaction ile mevcut geometri üzerinde yapılır.
   }
 
-  private enableAreaModify(): void {
+  private enableAreaModify(aoiId?: string): void {
     if (!this.map || this.previewMode || this.userAreaSource.isEmpty()) return;
 
     this.disableAreaModify();
+    const editableFeatures = aoiId
+      ? this.getAoiFeatures(aoiId)
+      : this.userAreaSource.getFeatures();
+    if (!editableFeatures.length) return;
 
     this.areaModify = new Modify({
-      source: this.userAreaSource,
+      features: new Collection(editableFeatures),
       style: this.getAreaModifyStyle(),
       pixelTolerance: 30,
     });
@@ -2599,33 +4254,39 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       pixelTolerance: 30,
     });
 
-    this.areaModify.on('modifystart', (event) => {
+    this.areaModify.on("modifystart", (event) => {
       this.unbindAreaModifyGeometryChanges();
 
       event.features.forEach((feature) => {
         const geometry = (feature as Feature<Geometry>).getGeometry();
         if (!geometry) return;
 
-        const key = geometry.on('change', () => {
+        const key = geometry.on("change", () => {
           this.calculateSelectedArea();
+          this.syncAoiMetric();
           this.clearAreaTooltips();
+          this.scheduleAoiResultRefresh();
         });
 
         this.areaModifyGeometryChangeKeys.push(key);
       });
     });
 
-    this.areaModify.on('modifyend', () => {
+    this.areaModify.on("modifyend", () => {
       this.unbindAreaModifyGeometryChanges();
       this.calculateSelectedArea();
+      this.syncAoiMetric();
       this.clearAreaTooltips();
 
-      if (this.isAoiUpdateMode) {
-        this.stopAoiUpdateMode(true);
-        return;
-      }
+      this.smartFilterRequest = {
+        ...this.smartFilterRequest,
+        wkt: this.getSelectedAoiWkt(),
+        pageNumber: 1,
+        pageSize: this.smartFilterRequest.pageSize ?? 100,
+      };
 
-      this.openSmartPrefilterPanel();
+      // Düzenleme tamamlanınca paneli yeniden aç ve seçili AOI sonuçlarını yenile.
+      setTimeout(() => this.stopAoiUpdateMode(true));
     });
 
     this.map.addInteraction(this.areaModify);
@@ -2658,7 +4319,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       image: new CircleStyle({
         radius: 7,
         fill: new Fill({
-          color: '#ffffff',
+          color: "#ffffff",
         }),
         stroke: new Stroke({
           color: this.drawColor,
@@ -2687,63 +4348,91 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     });
   }
 
-  private renderAreaTooltips(geometry: Polygon, clearBeforeRender = true): void {
+  private renderAreaTooltips(
+    geometry: Polygon,
+    clearBeforeRender = true,
+  ): void {
     if (clearBeforeRender) {
       this.clearAreaTooltips();
     }
 
-    const area = getArea(geometry, {
-      projection: 'EPSG:3857',
-    });
+    const ring = geometry.getCoordinates()[0] ?? [];
+    if (ring.length < 3) return;
 
-    const interiorPoint = geometry.getInteriorPoint().getCoordinates();
+    const area = getArea(geometry, {
+      projection: "EPSG:3857",
+    });
 
     this.addAreaTooltip(
       `Alan: ${this.formatArea(area)}`,
-      interiorPoint,
-      'area'
+      geometry.getInteriorPoint().getCoordinates(),
+      "area",
     );
 
-    const ring = geometry.getCoordinates()[0] ?? [];
-
-    for (let i = 0; i < ring.length - 1; i++) {
-      const start = ring[i];
-      const end = ring[i + 1];
-
-      const line = new LineString([start, end]);
-
-      const length = getLength(line, {
-        projection: 'EPSG:3857',
-      });
-
-      const midpoint: Coordinate = [
-        (start[0] + end[0]) / 2,
-        (start[1] + end[1]) / 2,
-      ];
-
-      this.addAreaTooltip(
-        `Kenar: ${this.formatLength(length)}`,
-        midpoint,
-        'segment'
-      );
+    if (this.activeTool === "rectangle") {
+      this.renderRectangleEdgeTooltips(ring);
+      return;
     }
+
+    this.renderLastPolygonEdgeTooltip(ring);
+  }
+
+  /**
+   * Alan Oluştur (Çokgen): sadece kullanıcının anlık çizdiği son gerçek
+   * kenarı etiketler. Ring'in son koordinatı kapanış koordinatıdır.
+   */
+  private renderLastPolygonEdgeTooltip(ring: Coordinate[]): void {
+    const effectiveRing = ring.slice(0, -1);
+    if (effectiveRing.length < 2) return;
+
+    const start = effectiveRing[effectiveRing.length - 2];
+    const end = effectiveRing[effectiveRing.length - 1];
+
+    this.addEdgeLengthTooltip(start, end);
+  }
+
+  /**
+   * Dikdörtgen Çiz: ekran kirliliğini önlemek için dört kenarın tamamı yerine
+   * yalnızca birbirine komşu bir kısa ve bir uzun kenarı etiketler.
+   */
+  private renderRectangleEdgeTooltips(ring: Coordinate[]): void {
+    const corners = ring.slice(0, -1);
+    if (corners.length < 4) return;
+
+    // createBox() çıktısında ilk iki kenar birbirine komşudur ve dikdörtgenin
+    // kısa/uzun kenar çiftini temsil eder. Böylece karşı kenarlar tekrarlanmaz.
+    this.addEdgeLengthTooltip(corners[0], corners[1]);
+    this.addEdgeLengthTooltip(corners[1], corners[2]);
+  }
+
+  private addEdgeLengthTooltip(start: Coordinate, end: Coordinate): void {
+    const line = new LineString([start, end]);
+    const length = getLength(line, {
+      projection: "EPSG:3857",
+    });
+
+    this.addAreaTooltip(
+      `Kenar: ${this.formatLength(length)}`,
+      this.getCoordinateMidpoint(start, end),
+      "segment",
+    );
   }
 
   private addAreaTooltip(
     text: string,
     coordinate: Coordinate,
-    type: 'area' | 'segment'
+    type: "area" | "segment",
   ): void {
     if (!this.map) return;
 
-    const element = document.createElement('div');
+    const element = document.createElement("div");
     element.className = `map-area-tooltip map-area-tooltip--${type}`;
     element.textContent = text;
 
     const overlay = new Overlay({
       element,
       position: coordinate,
-      positioning: 'bottom-center',
+      positioning: "bottom-center",
       offset: [0, -8],
       stopEvent: false,
       insertFirst: false,
@@ -2763,9 +4452,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private formatArea(areaM2: number): string {
     if (areaM2 >= 1_000_000) {
-      return `${(areaM2 / 1_000_000).toFixed(2).replace('.', ',')} km²`;
+      return `${(areaM2 / 1_000_000).toFixed(2).replace(".", ",")} km²`;
     }
 
-    return `${areaM2.toFixed(2).replace('.', ',')} m²`;
+    return `${areaM2.toFixed(2).replace(".", ",")} m²`;
   }
 }

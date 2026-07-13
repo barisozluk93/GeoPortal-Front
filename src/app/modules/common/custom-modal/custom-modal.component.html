@@ -16,14 +16,13 @@
   >
     <div class="modal-content glass-modal-content">
 
+      <!-- Modal Header -->
       <div class="modal-header glass-modal-header">
         <div class="d-flex align-items-center gap-3 min-w-0">
+
           <div class="symbol symbol-40px glass-modal-symbol">
             <span class="symbol-label">
-              <i class="ki-duotone ki-abstract-28">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i>
+              <i class="fas fa-folder-open fs-2 text-primary"></i>
             </span>
           </div>
 
@@ -38,29 +37,37 @@
           </div>
         </div>
 
+        <!-- Açık ve anlaşılır kapatma butonu -->
         <button
           type="button"
-          class="btn btn-icon btn-sm btn-light"
+          class="btn btn-sm btn-light-danger d-flex align-items-center gap-2"
           (click)="close()"
-          aria-label="Close"
+          [attr.aria-label]="'CLOSE' | translate"
         >
-          <i class="ki-duotone ki-cross">
-            <span class="path1"></span>
-            <span class="path2"></span>
-          </i>
+          <i class="fas fa-times"></i>
+
+          <span>
+            {{ 'CLOSE' | translate }}
+          </span>
         </button>
       </div>
 
+      <!-- Modal Body -->
       <div class="modal-body glass-modal-body">
         <ng-content></ng-content>
       </div>
 
-      <div class="modal-footer glass-modal-footer" *ngIf="showFooter">
+      <!-- Modal Footer -->
+      <div
+        class="modal-footer glass-modal-footer"
+        *ngIf="showFooter"
+      >
         <button
           type="button"
-          class="btn btn-light me-2"
+          class="btn btn-light"
           (click)="close()"
         >
+          <i class="fas fa-times me-2"></i>
           {{ cancelText | translate }}
         </button>
 
@@ -70,6 +77,7 @@
           [disabled]="submitDisabled"
           (click)="onSubmit()"
         >
+          <i class="fas fa-check me-2"></i>
           {{ submitText | translate }}
         </button>
       </div>

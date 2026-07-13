@@ -4,7 +4,7 @@
 
 .map-toolbar-wrapper {
   position: absolute;
-  z-index: 10;
+  z-index: 1200;
   pointer-events: none;
 
   button,
@@ -17,31 +17,32 @@
 }
 
 .toolbar-left {
-  top: 20px;
-  left: 12px;
+  top: 13px;
+  left: 5px;
 }
 
 .toolbar-right {
-  top: 20px;
-  right: 12px;
-  width: 50px;
+  top: auto;
+  right: 5px;
+  bottom: 44px;
+  width: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 }
 
 .left-map-toolbar {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 .map-action-btn {
-  width: 50px;
-  height: 50px;
-  min-width: 50px;
-  min-height: 50px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 0 !important;
   border: 1px solid var(--bs-gray-200) !important;
   background: var(--bs-body-bg) !important;
@@ -91,10 +92,10 @@
 
 .map-action-dropdown__menu {
   position: absolute;
-  left: calc(100% + 8px);
+  left: calc(100%);
   top: 0;
   display: flex;
-  gap: 10px;
+  gap: 0px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -105,15 +106,15 @@
 
 .measure-wrapper {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 
 .measure-result {
   position: absolute;
-  left: calc(100% + 8px);
+  left: calc(100%);
   top: 0;
-  height: 50px;
+  height: 40px;
   min-width: 135px;
   padding: 0 12px;
   background: var(--bs-body-bg);
@@ -140,18 +141,27 @@
 }
 
 /* =========================
-   RIGHT TOOLBAR
+   RIGHT TOOLBAR / COMPASS
 ========================= */
 
-.north-compass {
+.map-navigation-control {
   position: relative;
-  width: 50px;
-  height: 50px;
-  min-width: 50px;
-  min-height: 50px;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.north-compass {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   padding: 0;
   border: 1px solid var(--bs-gray-200);
-  border-radius: 99px;
+  border-radius: 0;
   background: var(--bs-body-bg);
   color: var(--bs-primary);
   display: flex;
@@ -159,7 +169,38 @@
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 0.1rem 1rem 0.25rem rgba(0, 0, 0, 0.05);
-  transition: all 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease, box-shadow 0.15s ease;
+
+  i {
+    color: var(--bs-primary);
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: var(--bs-light-primary);
+    border-color: var(--bs-primary);
+    outline: 0;
+  }
+}
+
+.north-compass {
+  position: relative;
+  overflow: hidden;
+}
+
+.north-compass--active {
+  background: var(--bs-light-primary);
+  border-color: var(--bs-primary);
+}
+
+.north-compass__direction {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform-origin: 50% 50%;
+  transition: transform 0.12s linear;
 }
 
 .north-compass__label {
@@ -167,21 +208,147 @@
   top: 5px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 900;
   line-height: 1;
   color: var(--bs-primary);
 }
 
 .north-compass__icon {
-  margin-top: 14px;
-  font-size: 17px;
+  position: absolute;
+  top: 19px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
   line-height: 1;
   color: var(--bs-primary);
 }
 
+.compass-popover {
+  position: absolute;
+  top: auto;
+  bottom: 92px;
+  right: calc(100% + 12px);
+  width: 138px;
+  padding: 8px;
+  border: 1px solid var(--bs-gray-200);
+  background: var(--bs-body-bg);
+  box-shadow: var(--bs-box-shadow, 0 0.5rem 1.5rem rgba(0, 0, 0, 0.14));
+  animation: compass-popover-in 0.14s ease-out;
+  user-select: none;
+  z-index: 1002;
+}
+
+.rotation-compass {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  overflow: hidden;
+  border: 3px solid var(--bs-primary);
+  border-radius: 50%;
+  background: var(--bs-gray-900, #181c32);
+  color: #fff;
+  cursor: grab;
+  touch-action: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0.35rem 1rem rgba(var(--bs-primary-rgb), 0.24);
+
+  &:focus-visible {
+    outline: 3px solid rgba(var(--bs-primary-rgb), 0.28);
+    outline-offset: 3px;
+  }
+}
+
+.compass-popover--dragging .rotation-compass {
+  cursor: grabbing;
+}
+
+.rotation-compass__ticks {
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  opacity: 0.42;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.85) 0deg 1deg,
+    transparent 1deg 15deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 0 44px, #000 45px 100%);
+  mask: radial-gradient(circle, transparent 0 44px, #000 45px 100%);
+}
+
+.rotation-compass__north {
+  position: absolute;
+  inset: 8px;
+  transform-origin: 50% 50%;
+  transition: transform 0.12s linear;
+  pointer-events: none;
+}
+
+.rotation-compass__north-label {
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.rotation-compass__needle {
+  position: absolute;
+  top: 19px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-45deg);
+  font-size: 17px;
+  color: var(--bs-primary);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+}
+
+.rotation-compass__degree {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 9px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+  pointer-events: none;
+}
+
+.compass-reset-btn {
+  width: 100%;
+  height: 34px;
+  margin-top: 7px;
+  padding: 0 10px;
+  border: 1px solid var(--bs-gray-200);
+  border-radius: 0.45rem;
+  background: var(--bs-light);
+  color: var(--bs-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+
+  i {
+    color: var(--bs-primary);
+    transform: rotate(-45deg);
+  }
+
+  &:hover {
+    border-color: var(--bs-primary);
+    background: var(--bs-light-primary);
+  }
+}
+
 .zoom-toolbar {
-  width: 42px;
+  width: 40px;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--bs-gray-200);
@@ -192,10 +359,10 @@
 }
 
 .zoom-btn {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  min-height: 42px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -222,17 +389,29 @@
   }
 }
 
+@keyframes compass-popover-in {
+  from {
+    opacity: 0;
+    transform: translateX(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
 @media (max-width: 768px) {
   .toolbar-left {
-    top: 12px;
-    left: 12px;
+    top: 5px;
+    left: 5px;
   }
 
   .toolbar-right {
-    top: 12px;
-    right: 12px;
+    top: auto;
+    right: 5px;
+    bottom: 44px;
     width: 40px;
-    gap: 10px;
+    gap: 8px;
   }
 
   .map-action-btn,
@@ -248,6 +427,12 @@
     height: 40px;
     min-width: 40px;
     min-height: 40px;
+  }
+
+
+  .compass-popover {
+    bottom: 82px;
+    right: calc(100% + 10px);
   }
 
   .zoom-toolbar {
@@ -287,6 +472,414 @@
 }
 
 .map-action-icon {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   display: block;
 }
+
+.measure-dropdown-menu {
+  flex-direction: row !important;
+  align-items: center;
+  width: max-content;
+  min-width: max-content;
+  gap: 0;
+  padding: 0;
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-gray-200);
+  box-shadow: 0 0.1rem 1rem 0.25rem rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+
+.measure-option-icon-btn {
+  flex: 0 0 40px !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: var(--bs-primary) !important;
+  border: 0 !important;
+  border-right: 1px solid var(--bs-gray-200) !important;
+  background: var(--bs-body-bg) !important;
+
+  &:last-child {
+    border-right: 0 !important;
+  }
+
+  &:hover {
+    color: var(--bs-primary) !important;
+    background: var(--bs-light-primary) !important;
+  }
+}
+
+.measure-tool-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  color: var(--bs-primary) !important;
+}
+
+.measure-wrapper:hover .measure-result {
+  opacity: 0;
+  visibility: hidden;
+}
+
+
+@media (max-width: 576px) {
+  .compass-popover {
+    right: calc(100% + 8px);
+    width: 126px;
+    padding: 6px;
+  }
+
+  .rotation-compass {
+    width: 112px;
+    height: 112px;
+  }
+}
+
+/* =========================================================
+   FINAL: RIGHT NAVIGATION BUTTONS = ZOOM BUTTONS
+   - Always white background
+   - Primary colored icons
+   - No glass/blur/active fill on hover, focus or click
+========================================================= */
+.navigation-toggle-btn,
+.north-compass,
+.zoom-btn,
+.compass-reset-btn {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: var(--bs-primary) !important;
+  border: 1px solid var(--bs-gray-200) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0.1rem 1rem 0.25rem rgba(0, 0, 0, 0.05) !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  outline: 0 !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.navigation-toggle-btn:hover,
+.navigation-toggle-btn:focus,
+.navigation-toggle-btn:focus-visible,
+.navigation-toggle-btn:active,
+.navigation-toggle-btn--active,
+.north-compass:hover,
+.north-compass:focus,
+.north-compass:focus-visible,
+.north-compass:active,
+.zoom-btn:hover,
+.zoom-btn:focus,
+.zoom-btn:focus-visible,
+.zoom-btn:active,
+.compass-reset-btn:hover,
+.compass-reset-btn:focus,
+.compass-reset-btn:focus-visible,
+.compass-reset-btn:active {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: var(--bs-primary) !important;
+  border-color: var(--bs-gray-200) !important;
+  box-shadow: 0 0.1rem 1rem 0.25rem rgba(0, 0, 0, 0.05) !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  outline: 0 !important;
+}
+
+.navigation-toggle-btn::before,
+.navigation-toggle-btn::after,
+.north-compass::before,
+.north-compass::after,
+.zoom-btn::before,
+.zoom-btn::after,
+.compass-reset-btn::before,
+.compass-reset-btn::after {
+  content: none !important;
+  display: none !important;
+}
+
+.navigation-toggle-btn i,
+.north-compass i,
+.zoom-btn i,
+.compass-reset-btn i,
+.north-compass__label,
+.north-compass__icon,
+.navigation-rotate-icon {
+  color: var(--bs-primary) !important;
+  fill: currentColor !important;
+}
+
+.navigation-rotate-icon {
+  width: 23px !important;
+  height: 23px !important;
+  display: block;
+  pointer-events: none;
+}
+
+/* Compact compass and white degree text */
+.compass-popover {
+  width: 96px !important;
+  padding: 6px !important;
+  right: calc(100% + 8px) !important;
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.rotation-compass {
+  width: 82px !important;
+  height: 82px !important;
+  border-width: 2px !important;
+}
+
+.rotation-compass__ticks {
+  inset: 5px !important;
+  -webkit-mask: radial-gradient(circle, transparent 0 28px, #000 29px 100%) !important;
+  mask: radial-gradient(circle, transparent 0 28px, #000 29px 100%) !important;
+}
+
+.rotation-compass__north {
+  inset: 5px !important;
+}
+
+.rotation-compass__degree {
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* =========================================================
+   RIGHT-SIDE TOOLBAR OVERRIDES
+========================================================= */
+
+/* The toolbar formerly named "left" now lives on the right. */
+.toolbar-left {
+  top: 13px;
+  right: 5px;
+  left: auto;
+}
+
+/* Keep navigation controls directly below the main action toolbar. */
+.toolbar-right {
+  top: 13px;
+  right: 50px;
+  left: auto;
+}
+
+/* Flyout actions open toward the map instead of outside the viewport. */
+.map-action-dropdown {
+  justify-content: flex-end;
+}
+
+.map-action-dropdown__menu {
+  right: 100%;
+  left: auto;
+  flex-direction: row-reverse;
+  transform: translateX(6px);
+}
+
+.map-action-dropdown:hover .map-action-dropdown__menu {
+  transform: translateX(0);
+}
+
+.measure-result {
+  right: calc(100% + 8px);
+  left: auto;
+}
+
+/* Zoom controls sit immediately above the coordinate/status box. */
+.zoom-toolbar {
+  position: fixed;
+  right: 5px;
+  bottom: 44px;
+  z-index: 1010;
+  width: 30px;
+  border-radius: 0;
+}
+
+.zoom-btn {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.zoom-btn i {
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .toolbar-left {
+    top: 5px;
+    right: 5px;
+    left: auto;
+  }
+
+  .toolbar-right {
+    top: 5px;
+    right: 50px;
+    left: auto;
+  }
+
+  .zoom-toolbar {
+    right: 8px;
+    bottom: 45px;
+    width: 28px;
+  }
+
+  .zoom-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+}
+
+/* =========================================================
+   NORTH COMPASS + ZOOM: BOTTOM-RIGHT STACK
+   Coordinate/status box sits at bottom: 5px with 34px height.
+   This stack starts 5px above it.
+========================================================= */
+.toolbar-right {
+  top: auto !important;
+  right: 5px !important;
+  bottom: 44px !important;
+  left: auto !important;
+  width: 30px !important;
+}
+
+.map-navigation-control {
+  width: 30px !important;
+  gap: 0 !important;
+}
+
+.north-compass {
+  position: relative !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  margin: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.north-compass__label {
+  top: 3px !important;
+  font-size: 10px !important;
+}
+
+.north-compass__icon {
+  top: 14px !important;
+  font-size: 11px !important;
+}
+
+.zoom-toolbar {
+  position: static !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 30px !important;
+  margin: 0 !important;
+}
+
+.compass-popover {
+  top: 0 !important;
+  right: calc(100% + 8px) !important;
+}
+
+@media (max-width: 768px) {
+  .toolbar-right {
+    top: auto !important;
+    right: 8px !important;
+    bottom: 45px !important;
+    width: 28px !important;
+  }
+
+  .map-navigation-control,
+  .north-compass,
+  .zoom-toolbar {
+    width: 28px !important;
+  }
+
+  .north-compass {
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+  }
+
+  .zoom-btn {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+  }
+}
+
+
+/* =========================================================
+   COMPASS POSITION FIX ONLY
+   Toolbar positions are intentionally untouched.
+========================================================= */
+.compass-control {
+  position: relative !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  flex: 0 0 30px !important;
+  pointer-events: auto !important;
+  margin-bottom: 5px !important;
+}
+
+.compass-control .north-compass {
+  position: relative !important;
+  inset: auto !important;
+}
+
+.compass-control .compass-popover {
+  top: auto !important;
+  right: 0 !important;
+  bottom: calc(100% + 10px) !important;
+  left: auto !important;
+  margin: 0 !important;
+  background: #ffffff !important;
+  z-index: 1300 !important;
+}
+
+@media (max-width: 768px) {
+  .compass-control {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    flex-basis: 28px !important;
+  }
+
+  .compass-control .compass-popover {
+    top: auto !important;
+    right: 0 !important;
+    bottom: calc(100% + 10px) !important;
+    left: auto !important;
+  }
+}
+
+
+.map-action-btn--ask { font-size: 0; }
+.map-action-btn__ask-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--bs-primary);
+}
+.map-action-btn--active .map-action-btn__ask-label { color: var(--bs-success) !important; }

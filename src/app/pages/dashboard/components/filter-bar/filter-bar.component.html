@@ -1,34 +1,22 @@
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-6">
   <div class="d-flex flex-wrap gap-2">
-    <span
-      class="badge badge-light-primary cursor-pointer px-4 py-2"
-      [class.active]="activeRange === '7d'"
-      (click)="onQuickRange('7d')"
-    >
+    <span class="badge badge-light-primary cursor-pointer px-4 py-2" [class.active]="activeRange === '7d'"
+      (click)="onQuickRange('7d')">
       {{ 'DASHBOARD.FILTER.QUICK_LAST_7_DAYS' | translate }}
     </span>
 
-    <span
-      class="badge badge-light-primary cursor-pointer px-4 py-2"
-      [class.active]="activeRange === '30d'"
-      (click)="onQuickRange('30d')"
-    >
+    <span class="badge badge-light-primary cursor-pointer px-4 py-2" [class.active]="activeRange === '30d'"
+      (click)="onQuickRange('30d')">
       {{ 'DASHBOARD.FILTER.QUICK_LAST_30_DAYS' | translate }}
     </span>
 
-    <span
-      class="badge badge-light-primary cursor-pointer px-4 py-2"
-      [class.active]="activeRange === '3m'"
-      (click)="onQuickRange('3m')"
-    >
+    <span class="badge badge-light-primary cursor-pointer px-4 py-2" [class.active]="activeRange === '3m'"
+      (click)="onQuickRange('3m')">
       {{ 'DASHBOARD.FILTER.QUICK_LAST_3_MONTHS' | translate }}
     </span>
 
-    <span
-      class="badge badge-light-primary cursor-pointer px-4 py-2"
-      [class.active]="activeRange === '6m'"
-      (click)="onQuickRange('6m')"
-    >
+    <span class="badge badge-light-primary cursor-pointer px-4 py-2" [class.active]="activeRange === '6m'"
+      (click)="onQuickRange('6m')">
       {{ 'DASHBOARD.FILTER.QUICK_LAST_6_MONTHS' | translate }}
     </span>
   </div>
@@ -44,51 +32,29 @@
     <div class="row g-4 align-items-end">
       <div class="col-12 col-md-6 col-xl-3">
         <label class="form-label fw-bolder">{{ 'DASHBOARD.FILTER.START_DATE' | translate }}</label>
-        <input
-          type="date"
-          class="form-control form-control-lg"
-          [(ngModel)]="filters.startDate"
-          (ngModelChange)="clearActiveRange()"
-        />
+        <input type="date" class="form-control form-control-lg" [(ngModel)]="filters.startDate"
+          [max]="getMaxStartDate()" (ngModelChange)="onStartDateChange($event)" />
       </div>
 
       <div class="col-12 col-md-6 col-xl-3">
         <label class="form-label fw-bolder">{{ 'DASHBOARD.FILTER.END_DATE' | translate }}</label>
-        <input
-          type="date"
-          class="form-control form-control-lg"
-          [(ngModel)]="filters.endDate"
-          (ngModelChange)="clearActiveRange()"
-        />
+        <input type="date" class="form-control form-control-lg" [(ngModel)]="filters.endDate" [min]="getMinEndDate()"
+          (ngModelChange)="onEndDateChange($event)" />
       </div>
 
       <div class="col-12 col-md-6 col-xl-2">
         <label class="form-label fw-bolder">{{ 'DASHBOARD.FILTER.CUSTOMER_TYPE' | translate }}</label>
 
-        <app-custom-select
-          [size]="'lg'"
-          [items]="customerTypeItems"
-          bindLabel="label"
-          bindValue="value"
-          [clearable]="true"
-          [placeholder]="'DASHBOARD.FILTER.SELECT' | translate"
-          [(ngModel)]="filters.customerType"
-        >
+        <app-custom-select [size]="'lg'" [items]="customerTypeItems" bindLabel="label" bindValue="value"
+          [clearable]="true" [placeholder]="'DASHBOARD.FILTER.SELECT' | translate" [(ngModel)]="filters.customerType">
         </app-custom-select>
       </div>
 
       <div class="col-12 col-md-6 col-xl-2">
         <label class="form-label fw-bolder">{{ 'DASHBOARD.FILTER.CHANNEL' | translate }}</label>
 
-        <app-custom-select
-          [size]="'lg'"
-          [items]="channelItems"
-          bindLabel="label"
-          bindValue="value"
-          [clearable]="true"
-          [placeholder]="'DASHBOARD.FILTER.SELECT' | translate"
-          [(ngModel)]="filters.channel"
-        >
+        <app-custom-select [size]="'lg'" [items]="channelItems" bindLabel="label" bindValue="value" [clearable]="true"
+          [placeholder]="'DASHBOARD.FILTER.SELECT' | translate" [(ngModel)]="filters.channel">
         </app-custom-select>
       </div>
 

@@ -19,12 +19,17 @@
 
     <div class="layer-drawer__actions">
       <button
-        type="button"
-        class="btn btn-sm btn-icon btn-light-danger"
-        (click)="close()"
-      >
-        <i class="fa-solid fa-xmark fs-7"></i>
-      </button>
+          type="button"
+          class="btn btn-sm btn-light-danger d-flex align-items-center gap-2"
+          (click)="close()"
+          [attr.aria-label]="'CLOSE' | translate"
+        >
+          <i class="fas fa-times"></i>
+
+          <span>
+            {{ 'CLOSE' | translate }}
+          </span>
+        </button>
     </div>
   </div>
 

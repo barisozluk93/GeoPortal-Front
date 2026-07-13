@@ -1,0 +1,217 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+.map-ask-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bs-body-bg);
+}
+
+.map-ask-panel__location {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--bs-gray-200);
+  background: var(--bs-gray-100);
+  white-space: nowrap;
+}
+
+.map-ask-panel__location i {
+  color: var(--bs-warning);
+  font-size: 12px;
+}
+
+.map-ask-panel__location span {
+  color: var(--bs-gray-500);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.map-ask-panel__location strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--bs-gray-800);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+}
+
+.map-ask-panel__tabs {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  gap: 5px;
+  margin: 0;
+  padding: 7px 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 1px solid var(--bs-gray-300);
+  background: var(--bs-body-bg);
+  scrollbar-width: thin;
+}
+
+.map-ask-panel__tabs .nav-item {
+  flex: 0 0 auto;
+}
+
+.map-ask-panel__tab.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 150px;
+  min-height: 28px;
+  margin: 0;
+  padding: 4px 8px 4px 5px;
+  border: 1px solid var(--bs-gray-300);
+  border-radius: 4px;
+  color: var(--bs-gray-600);
+  background: var(--bs-gray-100);
+  box-shadow: none;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.map-ask-panel__tab.nav-link:hover {
+  color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  background: var(--bs-primary-light);
+}
+
+.map-ask-panel__tab.nav-link.active {
+  color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  background: var(--bs-primary-light);
+  box-shadow: inset 0 -2px 0 var(--bs-primary);
+  font-weight: 800;
+}
+
+.map-ask-panel__tab-index {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  color: var(--bs-gray-700);
+  background: var(--bs-gray-300);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.map-ask-panel__tab.active .map-ask-panel__tab-index {
+  color: #fff;
+  background: var(--bs-primary);
+}
+
+.map-ask-panel__tab-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-ask-panel__body {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+.map-ask-panel__actions {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 14px 0;
+  background: var(--bs-body-bg);
+}
+
+.map-ask-panel__zoom {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 3px;
+}
+
+.map-ask-panel__attribute-list {
+  padding: 6px 14px 16px;
+}
+
+.map-ask-panel__attribute {
+  display: grid;
+  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr);
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--bs-gray-300);
+  font-size: 11px;
+}
+
+.map-ask-panel__attribute-key {
+  color: var(--bs-gray-600);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.map-ask-panel__attribute-value {
+  color: var(--bs-gray-900);
+  overflow-wrap: anywhere;
+}
+
+.map-ask-panel__state {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--bs-gray-600);
+}
+
+.map-ask-panel__state--empty,
+.map-ask-panel__state--error {
+  flex-direction: column;
+  padding: 20px;
+  text-align: center;
+}
+
+.map-ask-panel__state--empty i {
+  color: var(--bs-gray-400);
+  font-size: 24px;
+}
+
+.map-ask-panel__state--error {
+  color: var(--bs-danger);
+}
+
+.map-ask-panel__state--error i {
+  font-size: 24px;
+}
+
+@media (max-width: 640px) {
+  :host {
+    width: calc(100vw - 20px);
+    min-width: 0;
+  }
+
+  .map-ask-panel__attribute {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+}

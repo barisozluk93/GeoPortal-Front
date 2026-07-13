@@ -12,52 +12,28 @@
     </div>
 
     <div class="card-toolbar d-flex align-items-center gap-2 flex-wrap">
-      <button
-        *ngIf="hasMapPreviewPermission"
-        type="button"
-        class="btn btn-icon btn-sm btn-light-info"
-        (click)="onMapPreviewClick()"
-        title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}"
-      >
+      <button *ngIf="hasMapPreviewPermission" type="button" class="btn btn-icon btn-sm btn-light-info"
+        (click)="onMapPreviewClick()" title="{{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}">
         <i class="fa-solid fa-map"></i>
       </button>
 
-      <button
-        *ngIf="hasExportPermission"
-        type="button"
-        class="btn btn-icon btn-sm btn-light-success"
-        (click)="onExportExcelClick()"
-        title="{{ 'EXPORT' | translate }}"
-      >
+      <button *ngIf="hasExportPermission" type="button" class="btn btn-icon btn-sm btn-light-success"
+        (click)="onExportExcelClick()" title="{{ 'EXPORT' | translate }}">
         <i class="fa-solid fa-file-excel"></i>
       </button>
 
-      <button
-        type="button"
-        class="btn btn-icon btn-sm"
-        [ngClass]="showFilters ? 'btn-light-primary active' : 'btn-light'"
-        (click)="toggleFilters()"
-        title="{{ 'FILTERS' | translate }}"
-      >
+      <button type="button" class="btn btn-icon btn-sm"
+        [ngClass]="showFilters ? 'btn-light-primary active' : 'btn-light'" (click)="toggleFilters()"
+        title="{{ 'FILTERS' | translate }}">
         <i class="fa-solid fa-filter"></i>
       </button>
 
-      <button
-        *ngIf="showFilters"
-        type="button"
-        class="btn btn-sm btn-light"
-        (click)="clearAllFilters()"
-      >
+      <button *ngIf="showFilters" type="button" class="btn btn-sm btn-light" (click)="clearAllFilters()">
         <i class="fa-solid fa-xmark me-2"></i>
         {{ 'CLEAR_FILTERS' | translate }}
       </button>
 
-      <button
-        *ngIf="hasNewRecordPermission"
-        type="button"
-        class="btn btn-sm btn-primary"
-        (click)="openSaveModal()"
-      >
+      <button *ngIf="hasNewRecordPermission" type="button" class="btn btn-sm btn-primary" (click)="openSaveModal()">
         <i class="fa-solid fa-plus me-2"></i>
         {{ 'MENU.NEW' | translate }}
       </button>
@@ -65,23 +41,17 @@
   </div>
 
   <!-- BODY -->
-  <div class="card-body pt-0 pb-4">
+  <div class="card-body pt-4 pb-4">
     <div class="table-responsive">
       <table class="table table-row-dashed table-hover align-middle gs-0 gy-0 mb-0 datatable-table">
         <thead>
           <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
             <ng-container *ngFor="let column of columnList">
-              <th
-                *ngIf="column.visibility && column.index != null"
-                class="min-w-125px"
-              >
+              <th *ngIf="column.visibility && column.index != null" class="min-w-125px">
                 {{ column.name | translate }}
               </th>
 
-              <th
-                *ngIf="column.visibility && column.index == null"
-                class="text-end min-w-125px"
-              >
+              <th *ngIf="column.visibility && column.index == null" class="text-end min-w-125px">
                 {{ column.name | translate }}
               </th>
             </ng-container>
@@ -92,136 +62,102 @@
               <th *ngIf="column.visibility && column.index != null">
                 <ng-container [ngSwitch]="column.index">
                   <ng-container *ngSwitchCase="'orderStatusStr'">
-                    <app-custom-select
-                      size="sm"
-                      [items]="orderStatusFilterOptions"
-                      bindLabel="label"
-                      bindValue="value"
-                      [placeholder]="'ALL' | translate"
-                      [clearable]="true"
-                      [ngModel]="getFilterValue(column.index)"
-                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
-                    >
+                    <app-custom-select size="sm" [items]="orderStatusFilterOptions" bindLabel="label" bindValue="value"
+                      [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)">
                     </app-custom-select>
                   </ng-container>
 
                   <ng-container *ngSwitchCase="'type'">
-                    <app-custom-select
-                      size="sm"
-                      [items]="typeFilterOptions"
-                      bindLabel="label"
-                      bindValue="value"
-                      [placeholder]="'ALL' | translate"
-                      [clearable]="true"
-                      [ngModel]="getFilterValue(column.index)"
-                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
-                    >
+                    <app-custom-select size="sm" [items]="typeFilterOptions" bindLabel="label" bindValue="value"
+                      [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)">
                     </app-custom-select>
                   </ng-container>
 
                   <ng-container *ngSwitchCase="'isVisible'">
-                    <app-custom-select
-                      size="sm"
-                      [items]="booleanFilterOptions"
-                      bindLabel="label"
-                      bindValue="value"
-                      [placeholder]="'ALL' | translate"
-                      [clearable]="true"
-                      [ngModel]="getFilterValue(column.index)"
-                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
-                    >
+                    <app-custom-select size="sm" [items]="booleanFilterOptions" bindLabel="label" bindValue="value"
+                      [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)">
                     </app-custom-select>
                   </ng-container>
 
                   <ng-container *ngSwitchCase="'isDeleted'">
-                    <app-custom-select
-                      size="sm"
-                      [items]="statusFilterOptions"
-                      bindLabel="label"
-                      bindValue="value"
-                      [placeholder]="'ALL' | translate"
-                      [clearable]="true"
-                      [ngModel]="getFilterValue(column.index)"
-                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
-                    >
+                    <app-custom-select size="sm" [items]="statusFilterOptions" bindLabel="label" bindValue="value"
+                      [placeholder]="'ALL' | translate" [clearable]="true" [ngModel]="getFilterValue(column.index)"
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)">
                     </app-custom-select>
                   </ng-container>
 
                   <ng-container *ngSwitchCase="'status'">
-                    <app-custom-select
-                      size="sm"
-                      [items]="supportStatusFilterOptions"
-                      bindLabel="label"
-                      bindValue="value"
-                      [placeholder]="'ALL' | translate"
-                      [clearable]="true"
+                    <app-custom-select size="sm" [items]="supportStatusFilterOptions" bindLabel="label"
+                      bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
                       [ngModel]="getFilterValue(column.index)"
-                      (ngModelChange)="onColumnFilterChange(column.index, $event)"
-                    >
+                      (ngModelChange)="onColumnFilterChange(column.index, $event)">
                     </app-custom-select>
                   </ng-container>
 
                   <ng-container *ngSwitchCase="'lastMessageAtDisplay'">
                     <div class="d-flex flex-column gap-2">
-                      <input
-                        type="datetime-local"
-                        class="form-control form-control-sm"
-                        [value]="getFilterValue('lastMessageAtUtcFrom')"
-                        (change)="onColumnFilterChange('lastMessageAtUtcFrom', $any($event.target).value)"
-                        [placeholder]="'START_DATE' | translate"
-                      />
+                      <input type="date" class="form-control form-control-sm"
+                        [value]="getFilterValue('lastMessageAtUtcFrom') || ''"
+                        [max]="getMaxStartDate('lastMessageAtUtcTo')"
+                        (change)="onDateFilterChange(
+                          'lastMessageAtUtcFrom',
+                          'lastMessageAtUtcTo',
+                          'from',
+                          $event
+                        )"
+                        [placeholder]="'START_DATE' | translate" />
 
-                      <input
-                        type="datetime-local"
-                        class="form-control form-control-sm"
-                        [value]="getFilterValue('lastMessageAtUtcTo')"
-                        (change)="onColumnFilterChange('lastMessageAtUtcTo', $any($event.target).value)"
-                        [placeholder]="'END_DATE' | translate"
-                      />
+                      <input type="date" class="form-control form-control-sm"
+                        [value]="getFilterValue('lastMessageAtUtcTo') || ''"
+                        [min]="getMinEndDate('lastMessageAtUtcFrom')"
+                        (change)="onDateFilterChange(
+                          'lastMessageAtUtcTo',
+                          'lastMessageAtUtcFrom',
+                          'to',
+                          $event
+                        )"
+                        [placeholder]="'END_DATE' | translate" />
                     </div>
                   </ng-container>
 
                   <ng-container *ngSwitchCase="'orderDate'">
                     <div class="d-flex flex-column gap-2">
-                      <input
-                        type="datetime-local"
-                        class="form-control form-control-sm"
-                        [value]="getFilterValue('orderDateFrom')"
-                        (change)="onColumnFilterChange('orderDateFrom', $any($event.target).value)"
-                        [placeholder]="'START_DATE' | translate"
-                      />
+                      <input type="date" class="form-control form-control-sm"
+                        [value]="getFilterValue('orderDateFrom') || ''"
+                        [max]="getMaxStartDate('orderDateTo')"
+                        (change)="onDateFilterChange(
+                          'orderDateFrom',
+                          'orderDateTo',
+                          'from',
+                          $event
+                        )"
+                        [placeholder]="'START_DATE' | translate" />
 
-                      <input
-                        type="datetime-local"
-                        class="form-control form-control-sm"
-                        [value]="getFilterValue('orderDateTo')"
-                        (change)="onColumnFilterChange('orderDateTo', $any($event.target).value)"
-                        [placeholder]="'END_DATE' | translate"
-                      />
+                      <input type="date" class="form-control form-control-sm"
+                        [value]="getFilterValue('orderDateTo') || ''"
+                        [min]="getMinEndDate('orderDateFrom')"
+                        (change)="onDateFilterChange(
+                          'orderDateTo',
+                          'orderDateFrom',
+                          'to',
+                          $event
+                        )"
+                        [placeholder]="'END_DATE' | translate" />
                     </div>
                   </ng-container>
 
                   <ng-container *ngSwitchCase="'priceStr'">
                     <div class="d-flex flex-column gap-2">
-                      <input
-                        type="number"
-                        class="form-control form-control-sm"
-                        [value]="getFilterValue('priceMin')"
+                      <input type="number" class="form-control form-control-sm" [value]="getFilterValue('priceMin')"
                         (input)="onColumnFilterChange('priceMin', toNumberOrNull($any($event.target).value))"
-                        placeholder="{{ 'MIN_PRICE' | translate }}"
-                        min="0"
-                        step="0.01"
-                      />
+                        placeholder="{{ 'MIN_PRICE' | translate }}" min="0" step="0.01" />
 
-                      <input
-                        type="number"
-                        class="form-control form-control-sm"
-                        [value]="getFilterValue('priceMax')"
+                      <input type="number" class="form-control form-control-sm" [value]="getFilterValue('priceMax')"
                         (input)="onColumnFilterChange('priceMax', toNumberOrNull($any($event.target).value))"
-                        placeholder="{{ 'MAX_PRICE' | translate }}"
-                        min="0"
-                        step="0.01"
-                      />
+                        placeholder="{{ 'MAX_PRICE' | translate }}" min="0" step="0.01" />
                     </div>
                   </ng-container>
 
@@ -230,21 +166,14 @@
                   </ng-container>
 
                   <ng-container *ngSwitchDefault>
-                    <input
-                      type="text"
-                      class="form-control form-control-sm"
-                      [value]="getFilterValue(column.index)"
+                    <input type="text" class="form-control form-control-sm" [value]="getFilterValue(column.index)"
                       (input)="onColumnFilterChange(column.index, $any($event.target).value)"
-                      [placeholder]="column.name | translate"
-                    />
+                      [placeholder]="column.name | translate" />
                   </ng-container>
                 </ng-container>
               </th>
 
-              <th
-                *ngIf="column.visibility && column.index == null"
-                class="text-end min-w-125px"
-              >
+              <th *ngIf="column.visibility && column.index == null" class="text-end min-w-125px">
                 <div class="datatable-filter-empty"></div>
               </th>
             </ng-container>
@@ -287,8 +216,7 @@
                 </span>
               </td>
 
-              <td
-                *ngIf="
+              <td *ngIf="
                   column.visibility &&
                   column.index != null &&
                   column.index != 'fileResult' &&
@@ -297,8 +225,7 @@
                   column.index != 'isDeleted' &&
                   column.index != 'status' &&
                   column.index != 'orderStatusStr'
-                "
-              >
+                ">
                 <span class="text-gray-800 fw-bolder">
                   {{ data[column.index] }}
                 </span>
@@ -316,32 +243,19 @@
               <td *ngIf="column.visibility && column.index == null" class="text-end">
                 <div
                   *ngIf="!data['isSystemData'] && !data['isDeleted'] && (hasEditPermission || hasDeletePermission || hasShowPermission)"
-                  class="d-inline-flex align-items-center justify-content-end gap-1"
-                >
-                  <button
-                    *ngIf="hasShowPermission"
-                    (click)="onRowClick(data['id'])"
-                    class="btn btn-icon btn-light btn-sm"
-                    type="button"
-                  >
+                  class="d-inline-flex align-items-center justify-content-end gap-1">
+                  <button *ngIf="hasShowPermission" (click)="onRowClick(data['id'])"
+                    class="btn btn-icon btn-light btn-sm" type="button">
                     <i class="fa-solid fa-eye"></i>
                   </button>
 
-                  <button
-                    *ngIf="hasEditPermission"
-                    (click)="openEditModal(data['id'])"
-                    class="btn btn-icon btn-light btn-sm"
-                    type="button"
-                  >
+                  <button *ngIf="hasEditPermission" (click)="openEditModal(data['id'])"
+                    class="btn btn-icon btn-light btn-sm" type="button">
                     <i class="fa-solid fa-pen"></i>
                   </button>
 
-                  <button
-                    *ngIf="hasDeletePermission"
-                    (click)="openDeleteModal(data['id'])"
-                    class="btn btn-icon btn-light-danger btn-sm"
-                    type="button"
-                  >
+                  <button *ngIf="hasDeletePermission" (click)="openDeleteModal(data['id'])"
+                    class="btn btn-icon btn-light-danger btn-sm" type="button">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </div>
@@ -363,20 +277,11 @@
       </table>
     </div>
 
-    <div
-      *ngIf="totalCount > 0"
-      class="d-flex flex-column flex-md-row justify-content-end align-items-center pt-5"
-    >
-      <ngb-pagination
-        [collectionSize]="totalCount"
-        [(page)]="paginationModel.pageNumber"
-        [maxSize]="5"
-        [pageSize]="paginationModel.pageSize"
-        [rotate]="true"
-        [ellipses]="true"
-        [boundaryLinks]="true"
-        (pageChange)="onPageChanges()"
-      >
+    <div *ngIf="totalCount > paginationModel.pageSize"
+      class="d-flex flex-column flex-md-row justify-content-end align-items-center pt-5">
+      <ngb-pagination [collectionSize]="totalCount" [(page)]="paginationModel.pageNumber"
+        [pageSize]="paginationModel.pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="false"
+        (pageChange)="onPageChanges()">
       </ngb-pagination>
     </div>
   </div>

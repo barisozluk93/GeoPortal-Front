@@ -4,13 +4,15 @@
   (mousedown)="$event.stopPropagation()"
   (mouseup)="$event.stopPropagation()"
 >
-  <div class="mb-5">
+  <div class="mb-2">
     <div class="position-relative">
-      <i class="fa-solid fa-search text-primary position-absolute top-50 translate-middle-y ms-4"></i>
+      <i
+        class="fa-solid fa-search text-primary position-absolute top-50 translate-middle-y ms-3 fs-7"
+      ></i>
 
       <input
         type="text"
-        class="form-control form-control-lg ps-12"
+        class="form-control form-control-sm ps-10"
         [value]="searchText"
         [placeholder]="'MAP.SEARCH.PLACEHOLDER' | translate"
         autocomplete="off"

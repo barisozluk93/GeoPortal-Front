@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   
   onBrandClick() {
-    this.router.navigate(['/landing/data'])
+    this.router.navigate(['/landing/map'])
   }
 
   // convenience getter for easy access to form fields
@@ -99,7 +99,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.returnUrl = "/dashboard";
           }
           else{
-            this.returnUrl = "/landing/data";
+            this.returnUrl = "/landing/map";
           }
 
           const data = JSON.parse(localStorage.getItem('basket') as string) as BasketModel[];

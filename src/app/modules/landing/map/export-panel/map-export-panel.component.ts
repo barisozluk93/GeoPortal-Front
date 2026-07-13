@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
-export type MapExportFileType = 'pdf' | 'image/png' | 'image/jpeg';
+export type MapExportFileType = 'pdf' | 'image/jpeg' | 'print';
 
 export interface MapExportOptions {
-  fileName: string;
+  fileName?: string;
   fileType: MapExportFileType;
   dpi?: number;
   x?: number;
@@ -31,20 +32,10 @@ export class MapExportPanelComponent {
 
   readonly screenDpi = 96;
 
-  fileTypes = [
-    {
-      label: 'PDF',
-      value: 'pdf',
-    },
-    {
-      label: 'PNG',
-      value: 'image/png',
-    },
-    {
-      label: 'JPEG',
-      value: 'image/jpeg',
-    },
-  ];
+  fileTypes: Array<{
+    label: string;
+    value: MapExportFileType;
+  }> = [];
 
   dpiOptions = [
     {
@@ -69,12 +60,24 @@ export class MapExportPanelComponent {
     },
   ];
 
-  get isImage(): boolean {
-    return this.fileType === 'image/png' || this.fileType === 'image/jpeg';
+  constructor(private translate: TranslateService) {
+    this.setFileTypes();
+
+    this.translate.onLangChange.subscribe(() => {
+      this.setFileTypes();
+    });
+  }
+
+  get isJpg(): boolean {
+    return this.fileType === 'image/jpeg';
+  }
+
+  get isDownload(): boolean {
+    return this.fileType === 'image/jpeg' || this.fileType === 'pdf';
   }
 
   get isFileNameInvalid(): boolean {
-    return this.submitted && !this.fileName.trim();
+    return this.submitted && this.isDownload && !this.fileName.trim();
   }
 
   get isFileTypeInvalid(): boolean {
@@ -82,15 +85,15 @@ export class MapExportPanelComponent {
   }
 
   get isDpiInvalid(): boolean {
-    return this.submitted && this.isImage && (!this.dpi || this.dpi <= 0);
+    return this.submitted && this.isJpg && (!this.dpi || this.dpi <= 0);
   }
 
   get isXInvalid(): boolean {
-    return this.submitted && this.isImage && (!this.x || this.x <= 0);
+    return this.submitted && this.isJpg && (!this.x || this.x <= 0);
   }
 
   get isYInvalid(): boolean {
-    return this.submitted && this.isImage && (!this.y || this.y <= 0);
+    return this.submitted && this.isJpg && (!this.y || this.y <= 0);
   }
 
   onFileNameInput(event: Event): void {
@@ -100,7 +103,7 @@ export class MapExportPanelComponent {
   onFileTypeChange(value: MapExportFileType | ''): void {
     this.fileType = value;
 
-    if (!this.isImage) {
+    if (!this.isJpg) {
       this.dpi = null;
       this.x = null;
       this.y = null;
@@ -114,7 +117,7 @@ export class MapExportPanelComponent {
   onDpiChange(value: number | null): void {
     this.dpi = Number(value);
 
-    if (!this.isImage) return;
+    if (!this.isJpg) return;
 
     this.updateSizeByDpi();
   }
@@ -132,7 +135,7 @@ export class MapExportPanelComponent {
   submit(): void {
     this.submitted = true;
 
-    if (this.isImage) {
+    if (this.isJpg) {
       this.dpi = this.dpi || this.screenDpi;
       this.updateSizeByDpi();
     }
@@ -148,12 +151,39 @@ export class MapExportPanelComponent {
     }
 
     this.exportRequested.emit({
-      fileName: this.normalizeFileName(this.fileName),
+      fileName: this.isDownload
+        ? this.normalizeFileName(this.fileName)
+        : undefined,
       fileType: this.fileType as MapExportFileType,
-      dpi: this.isImage ? Number(this.dpi) : undefined,
-      x: this.isImage ? Number(this.x) : undefined,
-      y: this.isImage ? Number(this.y) : undefined,
+      dpi: this.isJpg ? Number(this.dpi) : undefined,
+      x: this.isJpg ? Number(this.x) : undefined,
+      y: this.isJpg ? Number(this.y) : undefined,
     });
+  }
+
+  private setFileTypes(): void {
+    this.fileTypes = [
+      {
+        label: this.translate.instant('MAP.EXPORT.JPEG'),
+        value: 'image/jpeg',
+      },
+      {
+        label: this.translate.instant('MAP.EXPORT.PDF'),
+        value: 'pdf',
+      },
+      {
+        label: this.translate.instant('MAP.EXPORT.EXPORT'),
+        value: 'print',
+      },
+    ];
+  }
+
+  get isPrint(): boolean {
+    return this.fileType === 'print';
+  }
+
+  get requiresFileName(): boolean {
+    return this.fileType === 'pdf' || this.fileType === 'image/jpeg';
   }
 
   private updateSizeByDpi(): void {

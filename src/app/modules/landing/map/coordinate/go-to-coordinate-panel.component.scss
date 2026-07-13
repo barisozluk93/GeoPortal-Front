@@ -1,17 +1,24 @@
 .go-coordinate-panel-body {
-  width: 100%;
-  padding: 16px;
-  background: var(--bs-body-bg);
+  padding: 8px;
 }
 
 .go-coordinate-label {
-  color: var(--bs-gray-700);
-  font-size: 12px;
+  margin-bottom: 3px;
+  font-size: 11px;
   font-weight: 600;
-  margin-bottom: 6px;
+  color: var(--bs-gray-700);
 }
 
-.invalid-feedback {
-  font-size: 12px;
-  font-weight: 500;
+@media (max-width: 576px) {
+  .go-coordinate-panel-body {
+    padding: 6px;
+  }
+
+  .go-coordinate-label {
+    font-size: 10px;
+  }
+
+  .btn-sm {
+    font-size: 10px;
+  }
 }

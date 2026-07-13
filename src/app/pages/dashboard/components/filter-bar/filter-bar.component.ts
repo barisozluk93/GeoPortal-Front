@@ -28,7 +28,7 @@ export class FilterBarComponent implements OnInit, OnDestroy {
 
   private langChangeSub?: Subscription;
 
-  constructor(private translate: TranslateService) {}
+  constructor(private translate: TranslateService) { }
 
   ngOnInit(): void {
     this.buildSelectItems();
@@ -94,5 +94,93 @@ export class FilterBarComponent implements OnInit, OnDestroy {
         value: 'Özel Talep',
       },
     ];
+  }
+
+  onStartDateChange(value: string): void {
+    this.clearActiveRange();
+
+    if (!value) {
+      this.filters.startDate = null;
+      return;
+    }
+
+    if (!this.filters.endDate) {
+      this.filters.startDate = value;
+      return;
+    }
+
+    const start = this.parseDate(value);
+    const end = this.parseDate(this.filters.endDate);
+
+    if (!start || !end || start.getTime() >= end.getTime()) {
+      return;
+    }
+
+    this.filters.startDate = value;
+  }
+
+  onEndDateChange(value: string): void {
+    this.clearActiveRange();
+
+    if (!value) {
+      this.filters.endDate = null;
+      return;
+    }
+
+    if (!this.filters.startDate) {
+      this.filters.endDate = value;
+      return;
+    }
+
+    const start = this.parseDate(this.filters.startDate);
+    const end = this.parseDate(value);
+
+    if (!start || !end || end.getTime() <= start.getTime()) {
+      return;
+    }
+
+    this.filters.endDate = value;
+  }
+
+  getMinEndDate(): string | null {
+    if (!this.filters?.startDate) {
+      return null;
+    }
+
+    return this.addDays(this.filters.startDate, 1);
+  }
+
+  getMaxStartDate(): string | null {
+    if (!this.filters?.endDate) {
+      return null;
+    }
+
+    return this.addDays(this.filters.endDate, -1);
+  }
+
+  private addDays(value: string, days: number): string {
+    const date = this.parseDate(value)!;
+
+    date.setDate(date.getDate() + days);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  private parseDate(value: string): Date | null {
+    if (!value) {
+      return null;
+    }
+
+    const parts = value.split('-').map(Number);
+
+    if (parts.length !== 3) {
+      return null;
+    }
+
+    return new Date(parts[0], parts[1] - 1, parts[2]);
   }
 }

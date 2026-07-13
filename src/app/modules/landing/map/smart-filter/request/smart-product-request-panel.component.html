@@ -5,16 +5,6 @@
   (mouseup)="$event.stopPropagation()"
 >
   <div class="smart-product-request-panel__body">
-    <button
-      type="button"
-      class="request-area-card btn btn-lg btn-light-primary w-100 request-update-aoi-btn"
-      [disabled]="loading"
-      (click)="updateAoiClicked.emit()"
-    >
-      <i class="fa-solid fa-draw-polygon me-2"></i>
-      {{ 'MAP.SMART_FILTER.REQUEST_PANEL.UPDATE_AOI' | translate }}
-    </button>
-
     <div class="request-area-card">
       <span>
         {{ 'MAP.SMART_FILTER.REQUEST_PANEL.AOI_AREA' | translate }}
@@ -26,77 +16,78 @@
     </div>
 
     <div class="filter-field filter-field--full">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.REQUEST_PANEL.IMAGE_TYPE' | translate }}
       </label>
 
       <app-custom-select
+        [size]="'sm'"
         [items]="imageTypes"
         bindLabel="label"
         bindValue="value"
         [multiple]="false"
         [clearable]="false"
         [(ngModel)]="product.imageType"
+        (ngModelChange)="onDraftChanged()"
         [ngModelOptions]="{ standalone: true }"
       >
       </app-custom-select>
 
-      <div
-        class="invalid-feedback d-block"
-        *ngIf="submitted && !product.imageType"
-      >
-        {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
+      <div class="invalid-feedback d-block" *ngIf="submitted && !product.imageType">
+        {{ 'MAP.SMART_FILTER.REQUEST_PANEL.IMAGE_TYPE_REQUIRED' | translate }}
       </div>
     </div>
 
     <div class="filter-field">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.REQUEST_PANEL.START_DATE' | translate }}
       </label>
 
       <input
         type="date"
-        class="form-control form-control-lg"
-        [class.is-invalid]="submitted && !product.acquisitionStartDate"
+        class="form-control form-control-sm"
+        [class.is-invalid]="submitted && (!product.acquisitionStartDate || !isDateRangeValid())"
         [(ngModel)]="product.acquisitionStartDate"
+        (ngModelChange)="onStartDateChange($event)"
+        [max]="product.acquisitionEndDate || null"
         [ngModelOptions]="{ standalone: true }"
       />
 
-      <div
-        class="invalid-feedback d-block"
-        *ngIf="submitted && !product.acquisitionStartDate"
-      >
-        {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
+      <div class="invalid-feedback d-block" *ngIf="submitted && !product.acquisitionStartDate">
+        {{ 'MAP.SMART_FILTER.REQUEST_PANEL.START_DATE_REQUIRED' | translate }}
       </div>
     </div>
 
     <div class="filter-field">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.REQUEST_PANEL.END_DATE' | translate }}
       </label>
 
       <input
         type="date"
-        class="form-control form-control-lg"
-        [class.is-invalid]="submitted && !product.acquisitionEndDate"
+        class="form-control form-control-sm"
+        [class.is-invalid]="submitted && (!product.acquisitionEndDate || !isDateRangeValid())"
         [(ngModel)]="product.acquisitionEndDate"
+        (ngModelChange)="onEndDateChange($event)"
+        [min]="product.acquisitionStartDate || null"
         [ngModelOptions]="{ standalone: true }"
       />
 
-      <div
-        class="invalid-feedback d-block"
-        *ngIf="submitted && !product.acquisitionEndDate"
-      >
-        {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
+      <div class="invalid-feedback d-block" *ngIf="submitted && !product.acquisitionEndDate">
+        {{ 'MAP.SMART_FILTER.REQUEST_PANEL.END_DATE_REQUIRED' | translate }}
+      </div>
+
+      <div class="invalid-feedback d-block" *ngIf="submitted && product.acquisitionStartDate && product.acquisitionEndDate && !isDateRangeValid()">
+        Başlangıç tarihi bitiş tarihinden sonra olamaz.
       </div>
     </div>
 
     <div class="filter-field">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.REQUEST_PANEL.MAX_CLOUD_RATE' | translate }}
       </label>
 
-      <div class="input-group input-group-lg">
+      <div class="input-group input-group-sm">
         <input
           type="number"
           class="form-control"
@@ -104,6 +95,7 @@
           max="100"
           step="1"
           [(ngModel)]="product.cloudRate"
+          (ngModelChange)="onDraftChanged()"
           [ngModelOptions]="{ standalone: true }"
         />
 
@@ -112,17 +104,18 @@
     </div>
 
     <div class="filter-field">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.REQUEST_PANEL.MAX_OFF_NADIR' | translate }}
       </label>
 
-      <div class="input-group input-group-lg">
+      <div class="input-group input-group-sm">
         <input
           type="number"
           class="form-control"
           min="0"
           step="0.1"
           [(ngModel)]="product.offNadirAngle"
+          (ngModelChange)="onDraftChanged()"
           [ngModelOptions]="{ standalone: true }"
         />
 
@@ -131,7 +124,26 @@
     </div>
 
     <div class="filter-field filter-field--full">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
+        {{ 'MAP.SMART_FILTER.REQUEST_PANEL.PLATFORM' | translate }}
+      </label>
+
+      <app-custom-select
+        [size]="'sm'"
+        [items]="platforms"
+        bindLabel="label"
+        bindValue="value"
+        [multiple]="false"
+        [clearable]="true"
+        [(ngModel)]="product.platform"
+        (ngModelChange)="onDraftChanged()"
+        [ngModelOptions]="{ standalone: true }"
+      >
+      </app-custom-select>
+    </div>
+
+    <div class="filter-field filter-field--full">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.REQUEST_PANEL.PROCESS_OPTIONS' | translate }}
       </label>
 
@@ -140,12 +152,25 @@
           <input
             type="checkbox"
             class="request-check-input"
-            [(ngModel)]="product.isOrthorectified"
+            [(ngModel)]="product.isPansharpened"
+            (ngModelChange)="onDraftChanged()"
             [ngModelOptions]="{ standalone: true }"
           />
-
           <span class="request-check-mark"></span>
+          <span class="request-checkbox-label">
+            {{ 'MAP.SMART_FILTER.REQUEST_PANEL.PANSHARPENING' | translate }}
+          </span>
+        </label>
 
+        <label class="request-checkbox">
+          <input
+            type="checkbox"
+            class="request-check-input"
+            [(ngModel)]="product.isOrthorectified"
+            (ngModelChange)="onDraftChanged()"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <span class="request-check-mark"></span>
           <span class="request-checkbox-label">
             {{ 'MAP.SMART_FILTER.REQUEST_PANEL.ORTHORECTIFICATION' | translate }}
           </span>
@@ -155,14 +180,27 @@
           <input
             type="checkbox"
             class="request-check-input"
-            [(ngModel)]="product.isPansharpened"
+            [(ngModel)]="product.isNdviAnalysis"
+            (ngModelChange)="onDraftChanged()"
             [ngModelOptions]="{ standalone: true }"
           />
-
           <span class="request-check-mark"></span>
-
           <span class="request-checkbox-label">
-            {{ 'MAP.SMART_FILTER.REQUEST_PANEL.PANSHARPEN' | translate }}
+            {{ 'MAP.SMART_FILTER.REQUEST_PANEL.NDVI_ANALYSIS' | translate }}
+          </span>
+        </label>
+
+        <label class="request-checkbox">
+          <input
+            type="checkbox"
+            class="request-check-input"
+            [(ngModel)]="product.isClassified"
+            (ngModelChange)="onDraftChanged()"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <span class="request-check-mark"></span>
+          <span class="request-checkbox-label">
+            {{ 'MAP.SMART_FILTER.REQUEST_PANEL.CLASSIFICATION' | translate }}
           </span>
         </label>
       </div>
@@ -171,11 +209,13 @@
         class="invalid-feedback d-block"
         *ngIf="
           submitted &&
+          !product.isPansharpened &&
           !product.isOrthorectified &&
-          !product.isPansharpened
+          !product.isNdviAnalysis &&
+          !product.isClassified
         "
       >
-        {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
+        {{ 'MAP.SMART_FILTER.REQUEST_PANEL.PROCESS_OPTION_REQUIRED' | translate }}
       </div>
     </div>
   </div>
@@ -183,20 +223,12 @@
   <div class="smart-product-request-panel__footer">
     <button
       type="button"
-      class="btn btn-lg btn-primary w-100"
+      class="btn btn-sm btn-primary w-100"
       [disabled]="loading"
       (click)="addToCart()"
     >
-      <span
-        *ngIf="loading"
-        class="spinner-border spinner-border-sm me-2"
-      ></span>
-
-      <i
-        *ngIf="!loading"
-        class="fa-solid fa-cart-plus me-2"
-      ></i>
-
+      <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+      <i *ngIf="!loading" class="fa-solid fa-cart-plus me-1"></i>
       {{ 'MAP.SMART_FILTER.REQUEST_PANEL.ADD_TO_CART' | translate }}
     </button>
   </div>

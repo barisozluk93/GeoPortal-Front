@@ -8,30 +8,11 @@
 >
   <div class="export-field">
     <label class="export-label">
-      {{ 'MAP.EXPORT.FILE_NAME' | translate }}
-    </label>
-
-    <input
-      type="text"
-      class="form-control"
-      [class.is-invalid]="isFileNameInvalid"
-      [value]="fileName"
-      (input)="onFileNameInput($event)"
-      [placeholder]="'MAP.EXPORT.FILE_NAME_PLACEHOLDER' | translate"
-    />
-
-    <div class="invalid-feedback d-block" *ngIf="isFileNameInvalid">
-      {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
-    </div>
-  </div>
-
-  <div class="export-field">
-    <label class="export-label">
       {{ 'MAP.EXPORT.FILE_TYPE' | translate }}
     </label>
 
     <app-custom-select
-      [size]="'lg'"
+      [size]="'sm'"
       [items]="fileTypes"
       bindLabel="label"
       bindValue="value"
@@ -50,14 +31,33 @@
     </div>
   </div>
 
-  <ng-container *ngIf="isImage">
+  <div class="export-field" *ngIf="requiresFileName">
+    <label class="export-label">
+      {{ 'MAP.EXPORT.FILE_NAME' | translate }}
+    </label>
+
+    <input
+      type="text"
+      class="form-control form-control-sm"
+      [class.is-invalid]="isFileNameInvalid"
+      [value]="fileName"
+      (input)="onFileNameInput($event)"
+      [placeholder]="'MAP.EXPORT.FILE_NAME_PLACEHOLDER' | translate"
+    />
+
+    <div class="invalid-feedback d-block" *ngIf="isFileNameInvalid">
+      {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
+    </div>
+  </div>
+
+  <ng-container *ngIf="isJpg">
     <div class="export-field">
       <label class="export-label">
         {{ 'MAP.EXPORT.DPI' | translate }}
       </label>
 
       <app-custom-select
-        [size]="'lg'"
+        [size]="'sm'"
         [items]="dpiOptions"
         bindLabel="label"
         bindValue="value"
@@ -82,16 +82,18 @@
           {{ 'MAP.EXPORT.X' | translate }}
         </label>
 
-        <input
-          type="number"
-          min="1"
-          readonly
-          class="form-control"
-          [class.is-invalid]="isXInvalid"
-          [value]="x ?? ''"
-          (input)="onXInput($event)"
-          [placeholder]="'MAP.EXPORT.X_PLACEHOLDER' | translate"
-        />
+        <div class="input-group input-group-sm">
+          <input
+            type="number"
+            min="1"
+            readonly
+            class="form-control"
+            [class.is-invalid]="isXInvalid"
+            [value]="x ?? ''"
+            [placeholder]="'MAP.EXPORT.X_PLACEHOLDER' | translate"
+          />
+          <span class="input-group-text">px</span>
+        </div>
 
         <div class="invalid-feedback d-block" *ngIf="isXInvalid">
           {{ 'MAP.EXPORT.X_REQUIRED' | translate }}
@@ -103,16 +105,18 @@
           {{ 'MAP.EXPORT.Y' | translate }}
         </label>
 
-        <input
-          type="number"
-          min="1"
-          readonly
-          class="form-control"
-          [class.is-invalid]="isYInvalid"
-          [value]="y ?? ''"
-          (input)="onYInput($event)"
-          [placeholder]="'MAP.EXPORT.Y_PLACEHOLDER' | translate"
-        />
+        <div class="input-group input-group-sm">
+          <input
+            type="number"
+            min="1"
+            readonly
+            class="form-control"
+            [class.is-invalid]="isYInvalid"
+            [value]="y ?? ''"
+            [placeholder]="'MAP.EXPORT.Y_PLACEHOLDER' | translate"
+          />
+          <span class="input-group-text">px</span>
+        </div>
 
         <div class="invalid-feedback d-block" *ngIf="isYInvalid">
           {{ 'MAP.EXPORT.Y_REQUIRED' | translate }}
@@ -121,8 +125,11 @@
     </div>
   </ng-container>
 
-  <button type="submit" class="btn btn-primary w-100">
-    <i class="fa-solid fa-download me-2"></i>
-    {{ 'MAP.EXPORT.SUBMIT' | translate }}
+  <button type="submit" class="btn btn-sm btn-primary w-100">
+    <i
+      class="fa-solid me-1"
+      [ngClass]="isPrint ? 'fa-print' : 'fa-download'"
+    ></i>
+    {{ (isPrint ? 'MAP.EXPORT.PRINT' : 'MAP.EXPORT.SUBMIT') | translate }}
   </button>
 </form>

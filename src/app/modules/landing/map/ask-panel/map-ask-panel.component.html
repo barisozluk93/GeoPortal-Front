@@ -1,0 +1,86 @@
+<div class="map-ask-panel" (click)="$event.stopPropagation()">
+  <div class="map-ask-panel__location" *ngIf="coordinateText">
+    <i class="fa-solid fa-location-dot"></i>
+    <span>{{ 'MAP.ASK.CLICKED_LOCATION' | translate }}</span>
+    <strong>{{ coordinateText }}</strong>
+  </div>
+
+  <div *ngIf="loading" class="map-ask-panel__state">
+    <span class="spinner-border spinner-border-sm"></span>
+    <span>{{ 'MAP.ASK.LOADING' | translate }}</span>
+  </div>
+
+  <div
+    *ngIf="!loading && footprints.length === 0"
+    class="map-ask-panel__state map-ask-panel__state--empty"
+  >
+    <i class="fa-regular fa-map"></i>
+    <span>{{ 'MAP.ASK.NO_RESULT' | translate }}</span>
+  </div>
+
+  <ng-container *ngIf="!loading && footprints.length > 0">
+    <ul class="nav map-ask-panel__tabs" role="tablist">
+      <li
+        class="nav-item"
+        *ngFor="let footprint of footprints; let i = index; trackBy: trackByFootprint"
+        role="presentation"
+      >
+        <button
+          type="button"
+          role="tab"
+          class="nav-link map-ask-panel__tab"
+          [class.active]="i === activeIndex"
+          [attr.aria-selected]="i === activeIndex"
+          [title]="footprint.imageId || footprint.productName || footprint.name || ('MAP.ASK.FOOTPRINT' | translate)"
+          (click)="selectTab(i)"
+        >
+          <span class="map-ask-panel__tab-index">{{ i + 1 }}</span>
+          <span class="map-ask-panel__tab-label">
+            {{ footprint.imageId || footprint.productName || footprint.name || ('MAP.ASK.FOOTPRINT' | translate) }}
+          </span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="map-ask-panel__body" *ngIf="activeFootprint as footprint">
+      <div *ngIf="footprint.attributesLoading" class="map-ask-panel__state">
+        <span class="spinner-border spinner-border-sm"></span>
+        <span>Öznitelikler okunuyor...</span>
+      </div>
+
+      <div
+        *ngIf="!footprint.attributesLoading && footprint.attributesError"
+        class="map-ask-panel__state map-ask-panel__state--error"
+      >
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>{{ footprint.attributesError }}</span>
+      </div>
+
+      <div
+        *ngIf="!footprint.attributesLoading && !footprint.attributesError && activeAttributeRows.length === 0"
+        class="map-ask-panel__state map-ask-panel__state--empty"
+      >
+        <i class="fa-regular fa-rectangle-list"></i>
+        <span>Öznitelik bulunamadı.</span>
+      </div>
+
+      <div
+        class="map-ask-panel__attribute-list"
+        *ngIf="!footprint.attributesLoading && !footprint.attributesError && activeAttributeRows.length > 0"
+      >
+        <div
+          class="map-ask-panel__attribute"
+          *ngFor="let row of activeAttributeRows; let i = index; trackBy: trackByAttribute"
+        >
+          <span class="map-ask-panel__attribute-key">{{ row.key }}</span>
+          <span
+            class="map-ask-panel__attribute-value"
+            [title]="formatAttributeValue(row.value)"
+          >
+            {{ formatAttributeValue(row.value) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

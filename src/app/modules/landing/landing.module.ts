@@ -24,6 +24,8 @@ import { SmartProductFilterPanelComponent } from './map/smart-filter/filter/smar
 import { SmartProductRequestPanelComponent } from './map/smart-filter/request/smart-product-request-panel.component';
 import { MapPanelShellComponent } from './map/panel-shell/map-panel-shell.component';
 import { SmartProductPrefilterPanelComponent } from './map/smart-product-prefilter/smart-product-prefilter-panel.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MapAskPanelComponent } from './map/ask-panel/map-ask-panel.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { SmartProductPrefilterPanelComponent } from './map/smart-product-prefilt
     SmartProductFilterPanelComponent,
     SmartProductRequestPanelComponent,
     MapPanelShellComponent,
-    SmartProductPrefilterPanelComponent
+    SmartProductPrefilterPanelComponent,
+    MapAskPanelComponent
   ],
   imports: [
     CommonModule, 
@@ -56,7 +59,8 @@ import { SmartProductPrefilterPanelComponent } from './map/smart-product-prefilt
     NgbPaginationModule,
     InlineSVGModule,
     CustomSelectModule,
-    CustomModalModule
+    CustomModalModule,
+    DragDropModule
   ],
   exports: [
     MapComponent

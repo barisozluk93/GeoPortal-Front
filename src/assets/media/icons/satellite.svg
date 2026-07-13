@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+
+    <g stroke="#000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+
+        <!-- Sol panel -->
+        <path d="M16 18 L30 18 L24 24 L10 24 Z"></path>
+
+        <!-- Sağ panel -->
+        <path d="M48 18 L34 18 L40 24 L54 24 Z"></path>
+
+        <!-- Gövde -->
+        <path d="M32 18 L32 48"></path>
+
+        <!-- Alt ayak -->
+        <path d="M24 48 L40 48"></path>
+        <path d="M32 48 L32 58"></path>
+
+        <!-- Sol destek -->
+        <path d="M24 24 L32 18"></path>
+        <path d="M24 24 L24 48"></path>
+
+        <!-- Sağ destek -->
+        <path d="M40 24 L32 18"></path>
+
+        <!-- Ayaklar -->
+        <path d="M24 58 L18 58"></path>
+        <path d="M40 58 L46 58"></path>
+    </g>
+</svg>

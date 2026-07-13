@@ -1,41 +1,48 @@
+:host {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
 .metadata-panel {
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  height: 100%;
-  max-height: calc(100vh - 120px);
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
 
-  display: flex;
+  display: flex !important;
+  flex: 1 1 auto !important;
   flex-direction: column;
 
-  background: #ffffff;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-
-  overflow: hidden;
+  background: var(--bs-body-bg);
+  overflow: hidden !important;
 }
 
 .metadata-panel__body {
-  flex: 1;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
 
-  padding: 12px;
+  padding: 6px 8px;
 
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-gutter: stable;
 }
 
 .metadata-panel__loading,
 .metadata-panel__empty {
-  min-height: 200px;
+  min-height: 120px;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 6px;
 
   color: var(--bs-gray-600);
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .metadata-panel__empty {
@@ -44,66 +51,75 @@
 }
 
 .metadata-panel__empty i {
-  font-size: 28px;
+  font-size: 18px;
   color: var(--bs-gray-500);
 }
 
 .metadata-table {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .metadata-row {
   display: grid;
-  grid-template-columns: minmax(110px, 38%) minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: minmax(115px, 34%) minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
 
-  padding: 10px 14px;
+  padding: 5px 7px;
 
-  border: 1px solid var(--bs-gray-200);
-  border-radius: 6px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0;
 
   background: var(--bs-gray-100);
 }
 
 .metadata-row__key {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--bs-gray-800);
+  min-width: 0;
 
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--bs-gray-700);
+
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 .metadata-row__value {
-  font-size: 12px;
+  min-width: 0;
+
+  font-size: 10px;
   font-weight: 400;
+  line-height: 1.3;
   color: var(--bs-gray-900);
 
-  word-break: break-word;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .metadata-raw {
   margin: 0;
-  padding: 14px;
+  padding: 7px 8px;
 
-  border: 1px solid var(--bs-gray-200);
-  border-radius: 6px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0;
 
   background: var(--bs-gray-100);
 
-  font-size: 12px;
-  line-height: 1.6;
-
+  font-size: 10px;
+  line-height: 1.4;
   color: var(--bs-gray-900);
 
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 .metadata-section {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .metadata-section:last-child {
@@ -111,16 +127,16 @@
 }
 
 .metadata-section__title {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
 
   color: var(--bs-primary);
 }
 
 .metadata-panel__body::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .metadata-panel__body::-webkit-scrollbar-track {
@@ -128,157 +144,22 @@
 }
 
 .metadata-panel__body::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
+  background: var(--bs-gray-400);
+  border-radius: 20px;
 }
 
 .metadata-panel__body::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--bs-gray-500);
 }
 
 @media (max-width: 575.98px) {
-  .metadata-panel {
-    width: 100%;
-    max-width: 100%;
+  .metadata-panel__body {
+    padding: 6px;
   }
 
   .metadata-row {
     grid-template-columns: 1fr;
+    gap: 3px;
+    padding: 5px 6px;
   }
-}
-
-/* Daralmada okunabilirliği koru ve ekstra yatay/çift scroll oluşturma. */
-.metadata-panel {
-  max-height: 100%;
-}
-
-.metadata-panel__body {
-  min-height: 0;
-}
-
-.metadata-row {
-  grid-template-columns: minmax(130px, 34%) minmax(0, 1fr);
-  align-items: start;
-}
-
-.metadata-row__key,
-.metadata-row__value,
-.metadata-raw {
-  overflow-wrap: anywhere;
-}
-
-@media (max-width: 420px) {
-  .metadata-row {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-}
-
-/* Metadata içeriği parent shell içinde aksın; ayrı iç scroll üretme ve kesme yapma. */
-.metadata-panel {
-  height: auto;
-  min-height: 100%;
-  max-height: none;
-  overflow: visible;
-}
-
-.metadata-panel__body {
-  overflow: visible;
-}
-
-
-/* FINAL FIX: metadata panelde tek scroll olsun ve içerik kesilmesin. */
-.metadata-panel {
-  height: 100% !important;
-  min-height: 0 !important;
-  max-height: 100% !important;
-  overflow: hidden !important;
-}
-
-.metadata-panel__body {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-}
-
-/* FIX: Metadata içeriği kesilmesin; tek scrollbar burada çalışsın. */
-:host {
-  display: flex;
-  flex: 1 1 auto;
-  min-height: 0;
-  max-height: 100%;
-  width: 100%;
-}
-
-.metadata-panel {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  max-height: 100% !important;
-  overflow: hidden !important;
-}
-
-.metadata-panel__body {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  height: auto !important;
-  max-height: 100% !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain;
-}
-
-/* SCROLL FIX: Metadata içeriği kesilmeden tek scrollbar burada görünsün. */
-:host {
-  display: flex !important;
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  width: 100% !important;
-}
-
-.metadata-panel {
-  display: flex !important;
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  max-height: 100% !important;
-  overflow: hidden !important;
-}
-
-.metadata-panel__body {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  height: auto !important;
-  max-height: none !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  scrollbar-gutter: stable;
-}
-
-/* POSITION/SCROLL FINAL: metadata içeriği kesilmesin, tek scrollbar burada görünsün. */
-:host {
-  display: flex !important;
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  max-height: 100% !important;
-  width: 100% !important;
-}
-
-.metadata-panel {
-  display: flex !important;
-  flex: 1 1 auto !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  max-height: 100% !important;
-  overflow: hidden !important;
-}
-
-.metadata-panel__body {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  max-height: 100% !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
 }

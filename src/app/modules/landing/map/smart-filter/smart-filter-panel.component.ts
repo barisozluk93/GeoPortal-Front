@@ -7,6 +7,7 @@ import {
 type AreaUnit = 'km2' | 'm2' | 'ha' | 'da';
 type SortField = 'date' | 'cloudRate' | 'nadirAngle';
 type SortDirection = 'asc' | 'desc';
+type ViewMode = 'card' | 'table';
 
 @Component({
   selector: 'app-smart-filter-panel',
@@ -15,39 +16,84 @@ type SortDirection = 'asc' | 'desc';
 })
 export class SmartFilterPanelComponent {
   @Input() results: ProductSmartFilterResult[] = [];
-  @Input() request: ProductSmartFilterRequest = { pageNumber: 1, pageSize: 100 };
+
+  @Input() request: ProductSmartFilterRequest = {
+    pageNumber: 1,
+    pageSize: 100,
+  };
+
   @Input() loading = false;
   @Input() totalAreaM2 = 0;
   @Input() areaUnit: AreaUnit = 'km2';
 
   @Output() areaUnitChanged = new EventEmitter<AreaUnit>();
-  @Output() filterClicked = new EventEmitter<void>();
+  @Output() filterClicked = new EventEmitter<DOMRect>();
   @Output() createRequest = new EventEmitter<void>();
-  @Output() metadataClicked = new EventEmitter<ProductSmartFilterResult>();
-  @Output() zoomToExtentClicked = new EventEmitter<ProductSmartFilterResult>();
-  @Output() addToCartClicked = new EventEmitter<ProductSmartFilterResult>();
-  @Output() selectedProductsChanged = new EventEmitter<ProductSmartFilterResult[]>();
-  @Output() productHovered = new EventEmitter<ProductSmartFilterResult | null>();
+
+  @Output() metadataClicked = new EventEmitter<{
+    product: ProductSmartFilterResult;
+    anchorRect: DOMRect;
+  }>();
+
+  @Output() zoomToExtentClicked =
+    new EventEmitter<ProductSmartFilterResult>();
+
+  @Output() addToCartClicked =
+    new EventEmitter<ProductSmartFilterResult>();
+
+  @Output() selectedProductsChanged =
+    new EventEmitter<ProductSmartFilterResult[]>();
+
+  @Output() productHovered =
+    new EventEmitter<ProductSmartFilterResult | null>();
+
   @Output() closeClicked = new EventEmitter<void>();
 
   selectedProductIds = new Set<number>();
   expandedProductIds = new Set<number>();
+
   openedDropdownId: number | null = null;
   isSortMenuOpen = false;
+
   sortField: SortField = 'date';
   sortDirection: SortDirection = 'desc';
+  viewMode: ViewMode = 'card';
 
-  sortOptions: Array<{ labelKey: string; value: SortField }> = [
-    { labelKey: 'MAP.SMART_FILTER.SORT.DATE', value: 'date' },
-    { labelKey: 'MAP.SMART_FILTER.SORT.AREA_CLOUD_COVER', value: 'cloudRate' },
-    { labelKey: 'MAP.SMART_FILTER.SORT.AREA_OFF_NADIR_ANGLE', value: 'nadirAngle' },
+  sortOptions: Array<{
+    labelKey: string;
+    value: SortField;
+  }> = [
+    {
+      labelKey: 'MAP.SMART_FILTER.SORT.DATE',
+      value: 'date',
+    },
+    {
+      labelKey: 'MAP.SMART_FILTER.SORT.AREA_CLOUD_COVER',
+      value: 'cloudRate',
+    },
+    {
+      labelKey: 'MAP.SMART_FILTER.SORT.AREA_OFF_NADIR_ANGLE',
+      value: 'nadirAngle',
+    },
   ];
 
   areaUnits = [
-    { label: 'km²', value: 'km2' as AreaUnit },
-    { label: 'm²', value: 'm2' as AreaUnit },
-    { label: 'ha', value: 'ha' as AreaUnit },
-    { label: 'da', value: 'da' as AreaUnit },
+    {
+      label: 'km²',
+      value: 'km2' as AreaUnit,
+    },
+    {
+      label: 'm²',
+      value: 'm2' as AreaUnit,
+    },
+    {
+      label: 'ha',
+      value: 'ha' as AreaUnit,
+    },
+    {
+      label: 'da',
+      value: 'da' as AreaUnit,
+    },
   ];
 
   get selectedCount(): number {
@@ -55,28 +101,83 @@ export class SmartFilterPanelComponent {
   }
 
   get formattedArea(): string {
-    const value = this.convertArea(this.totalAreaM2, this.areaUnit);
+    const value = this.convertArea(
+      this.totalAreaM2,
+      this.areaUnit,
+    );
+
     return `${this.formatNumber(value)}`;
   }
 
   get sortedResults(): ProductSmartFilterResult[] {
-    const directionMultiplier = this.sortDirection === 'asc' ? 1 : -1;
+    const directionMultiplier =
+      this.sortDirection === 'asc' ? 1 : -1;
 
-    return [...(this.results ?? [])].sort((first, second) => {
-      const firstValue = this.getSortValue(first, this.sortField);
-      const secondValue = this.getSortValue(second, this.sortField);
+    return [...(this.results ?? [])].sort(
+      (first, second) => {
+        const firstValue = this.getSortValue(
+          first,
+          this.sortField,
+        );
 
-      if (firstValue === null && secondValue === null) return 0;
-      if (firstValue === null) return 1;
-      if (secondValue === null) return -1;
-      if (firstValue === secondValue) return 0;
+        const secondValue = this.getSortValue(
+          second,
+          this.sortField,
+        );
 
-      return firstValue > secondValue ? directionMultiplier : -directionMultiplier;
-    });
+        if (firstValue === null && secondValue === null) {
+          return 0;
+        }
+
+        if (firstValue === null) {
+          return 1;
+        }
+
+        if (secondValue === null) {
+          return -1;
+        }
+
+        if (firstValue === secondValue) {
+          return 0;
+        }
+
+        return firstValue > secondValue
+          ? directionMultiplier
+          : -directionMultiplier;
+      },
+    );
   }
 
   get selectedSortLabelKey(): string {
-    return this.sortOptions.find((item) => item.value === this.sortField)?.labelKey ?? 'MAP.SMART_FILTER.SORT.DATE';
+    return (
+      this.sortOptions.find(
+        (item) => item.value === this.sortField,
+      )?.labelKey ??
+      'MAP.SMART_FILTER.SORT.DATE'
+    );
+  }
+
+  setViewMode(
+    mode: ViewMode,
+    event?: MouseEvent,
+  ): void {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    this.viewMode = mode;
+    this.closeProductDropdown();
+  }
+
+  setSort(
+    field: SortField,
+    direction: SortDirection,
+    event?: MouseEvent,
+  ): void {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    this.sortField = field;
+    this.sortDirection = direction;
   }
 
   onAreaUnitChange(unit: AreaUnit): void {
@@ -84,7 +185,9 @@ export class SmartFilterPanelComponent {
     this.areaUnitChanged.emit(unit);
   }
 
-  onProductMouseEnter(product: ProductSmartFilterResult): void {
+  onProductMouseEnter(
+    product: ProductSmartFilterResult,
+  ): void {
     this.productHovered.emit(product);
   }
 
@@ -92,9 +195,22 @@ export class SmartFilterPanelComponent {
     this.productHovered.emit(null);
   }
 
+  onDetailFilterClick(
+    event: MouseEvent,
+    button: HTMLElement,
+  ): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.filterClicked.emit(
+      button.getBoundingClientRect(),
+    );
+  }
+
   toggleSortMenu(event?: MouseEvent): void {
     event?.preventDefault();
     event?.stopPropagation();
+
     this.isSortMenuOpen = !this.isSortMenuOpen;
   }
 
@@ -102,7 +218,10 @@ export class SmartFilterPanelComponent {
     this.isSortMenuOpen = false;
   }
 
-  setSortField(field: SortField, event?: MouseEvent): void {
+  setSortField(
+    field: SortField,
+    event?: MouseEvent,
+  ): void {
     event?.preventDefault();
     event?.stopPropagation();
 
@@ -112,22 +231,36 @@ export class SmartFilterPanelComponent {
     }
 
     this.sortField = field;
-    this.sortDirection = field === 'date' ? 'desc' : 'asc';
+    this.sortDirection =
+      field === 'date' ? 'desc' : 'asc';
+
     this.isSortMenuOpen = false;
   }
 
-  toggleSortDirection(event?: MouseEvent): void {
+  toggleSortDirection(
+    event?: MouseEvent,
+  ): void {
     event?.preventDefault();
     event?.stopPropagation();
-    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+
+    this.sortDirection =
+      this.sortDirection === 'asc'
+        ? 'desc'
+        : 'asc';
+
     this.isSortMenuOpen = false;
   }
 
-  trackByProduct(_: number, product: ProductSmartFilterResult): number {
+  trackByProduct(
+    _: number,
+    product: ProductSmartFilterResult,
+  ): number {
     return product.id;
   }
 
-  toggleSelected(product: ProductSmartFilterResult): void {
+  toggleSelected(
+    product: ProductSmartFilterResult,
+  ): void {
     if (this.selectedProductIds.has(product.id)) {
       this.selectedProductIds.delete(product.id);
     } else {
@@ -135,15 +268,21 @@ export class SmartFilterPanelComponent {
     }
 
     this.selectedProductsChanged.emit(
-      this.results.filter((item) => this.selectedProductIds.has(item.id))
+      this.results.filter((item) =>
+        this.selectedProductIds.has(item.id),
+      ),
     );
   }
 
-  isSelected(product: ProductSmartFilterResult): boolean {
+  isSelected(
+    product: ProductSmartFilterResult,
+  ): boolean {
     return this.selectedProductIds.has(product.id);
   }
 
-  toggleExpanded(product: ProductSmartFilterResult): void {
+  toggleExpanded(
+    product: ProductSmartFilterResult,
+  ): void {
     if (this.expandedProductIds.has(product.id)) {
       this.expandedProductIds.delete(product.id);
       return;
@@ -152,110 +291,223 @@ export class SmartFilterPanelComponent {
     this.expandedProductIds.add(product.id);
   }
 
-  isExpanded(product: ProductSmartFilterResult): boolean {
+  isExpanded(
+    product: ProductSmartFilterResult,
+  ): boolean {
     return this.expandedProductIds.has(product.id);
   }
 
-  toggleProductDropdown(product: ProductSmartFilterResult): void {
-    this.openedDropdownId = this.openedDropdownId === product.id ? null : product.id;
+  toggleProductDropdown(
+    product: ProductSmartFilterResult,
+  ): void {
+    this.openedDropdownId =
+      this.openedDropdownId === product.id
+        ? null
+        : product.id;
   }
 
   closeProductDropdown(): void {
     this.openedDropdownId = null;
   }
 
-  onZoomToExtent(product: ProductSmartFilterResult): void {
+  onZoomToExtent(
+    product: ProductSmartFilterResult,
+  ): void {
     this.openedDropdownId = null;
     this.zoomToExtentClicked.emit(product);
   }
 
-  onViewMetadata(product: ProductSmartFilterResult): void {
+  onViewMetadata(
+    product: ProductSmartFilterResult,
+    event: MouseEvent,
+    button: HTMLElement,
+  ): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const anchorRect = button.getBoundingClientRect();
     this.openedDropdownId = null;
-    this.metadataClicked.emit(product);
+    this.metadataClicked.emit({ product, anchorRect });
   }
 
-  onAddToCart(product: ProductSmartFilterResult): void {
+  onAddToCart(
+    product: ProductSmartFilterResult,
+  ): void {
     this.openedDropdownId = null;
     this.addToCartClicked.emit(product);
   }
 
-  getProductImage(product: ProductSmartFilterResult): string | null {
-    return product.thumbnailUrl || product.previewUrl || null;
+  getProductImage(
+    product: ProductSmartFilterResult,
+  ): string | null {
+    return product.thumbnailUrl || null;
   }
 
-  getPreviewUrl(product: ProductSmartFilterResult): string | null {
-    return product.previewUrl || product.thumbnailUrl || null;
+  getPreviewUrl(
+    product: ProductSmartFilterResult,
+  ): string | null {
+    return product.previewUrl || null;
   }
 
-  getDisplayDate(product: ProductSmartFilterResult): string {
-    if (!product.acquisitionDate) return '-';
+  getDisplayDate(
+    product: ProductSmartFilterResult,
+  ): string {
+    if (!product.acquisitionDate) {
+      return '-';
+    }
 
-    const date = new Date(product.acquisitionDate);
-    if (Number.isNaN(date.getTime())) return product.acquisitionDate;
+    const date = new Date(
+      product.acquisitionDate,
+    );
+
+    if (Number.isNaN(date.getTime())) {
+      return product.acquisitionDate;
+    }
 
     return date.toLocaleString();
   }
 
-  formatPercent(value: number | null | undefined): string {
-    if (value === null || value === undefined) return '-';
+  getDisplayDateOnly(
+    product: ProductSmartFilterResult,
+  ): string {
+    if (!product.acquisitionDate) {
+      return '-';
+    }
+
+    const date = new Date(
+      product.acquisitionDate,
+    );
+
+    if (Number.isNaN(date.getTime())) {
+      return product.acquisitionDate;
+    }
+
+    return date.toLocaleDateString();
+  }
+
+  formatPercent(
+    value: number | null | undefined,
+  ): string {
+    if (value === null || value === undefined) {
+      return '-';
+    }
+
     return `%${this.formatNumber(value)}`;
   }
 
-  formatDegree(value: number | null | undefined): string {
-    if (value === null || value === undefined) return '-';
+  formatDegree(
+    value: number | null | undefined,
+  ): string {
+    if (value === null || value === undefined) {
+      return '-';
+    }
+
     return `${this.formatNumber(value)}°`;
   }
 
-  formatMeter(value: number | null | undefined): string {
-    if (value === null || value === undefined) return '-';
+  formatMeter(
+    value: number | null | undefined,
+  ): string {
+    if (value === null || value === undefined) {
+      return '-';
+    }
+
     return `${this.formatNumber(value)} m`;
   }
 
-  private getSortValue(product: ProductSmartFilterResult, field: SortField): number | null {
+  private getSortValue(
+    product: ProductSmartFilterResult,
+    field: SortField,
+  ): number | null {
     switch (field) {
       case 'date': {
-        if (!product.acquisitionDate) return null;
-        const time = new Date(product.acquisitionDate).getTime();
-        return Number.isNaN(time) ? null : time;
+        if (!product.acquisitionDate) {
+          return null;
+        }
+
+        const time = new Date(
+          product.acquisitionDate,
+        ).getTime();
+
+        return Number.isNaN(time)
+          ? null
+          : time;
       }
+
       case 'cloudRate':
-        return this.toSortableNumber(product.cloudRate);
+        return this.toSortableNumber(
+          product.cloudRate,
+        );
+
       case 'nadirAngle':
-        return this.toSortableNumber(product.nadirAngle);
+        return this.toSortableNumber(
+          product.nadirAngle,
+        );
+
       default:
         return null;
     }
   }
 
-  private toSortableNumber(value: number | string | null | undefined): number | null {
-    if (value === null || value === undefined || value === '') return null;
+  private toSortableNumber(
+    value: number | string | null | undefined,
+  ): number | null {
+    if (
+      value === null ||
+      value === undefined ||
+      value === ''
+    ) {
+      return null;
+    }
 
-    const numericValue = typeof value === 'number' ? value : Number(String(value).replace(',', '.'));
+    const numericValue =
+      typeof value === 'number'
+        ? value
+        : Number(
+            String(value).replace(',', '.'),
+          );
 
-    return Number.isFinite(numericValue) ? numericValue : null;
+    return Number.isFinite(numericValue)
+      ? numericValue
+      : null;
   }
 
-  private convertArea(valueM2: number, unit: AreaUnit): number {
+  private convertArea(
+    valueM2: number,
+    unit: AreaUnit,
+  ): number {
     switch (unit) {
       case 'km2':
         return valueM2 / 1_000_000;
+
       case 'ha':
         return valueM2 / 10_000;
+
       case 'da':
         return valueM2 / 1_000;
+
       case 'm2':
       default:
         return valueM2;
     }
   }
 
-  private getAreaUnitLabel(unit: AreaUnit): string {
-    return this.areaUnits.find((item) => item.value === unit)?.label ?? unit;
+  private getAreaUnitLabel(
+    unit: AreaUnit,
+  ): string {
+    return (
+      this.areaUnits.find(
+        (item) => item.value === unit,
+      )?.label ?? unit
+    );
   }
 
-  private formatNumber(value: number): string {
+  private formatNumber(
+    value: number,
+  ): string {
     return new Intl.NumberFormat(undefined, {
-      maximumFractionDigits: value >= 100 ? 0 : 2,
+      maximumFractionDigits:
+        value >= 100 ? 0 : 2,
     }).format(value);
   }
 }

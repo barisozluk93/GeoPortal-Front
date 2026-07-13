@@ -397,6 +397,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   onBrandClick(): void {
-    this.router.navigate(['/landing/data']);
+    this.router.navigate(['/landing/map']);
   }
 }

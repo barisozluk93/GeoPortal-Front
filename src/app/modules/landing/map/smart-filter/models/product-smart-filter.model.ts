@@ -1,8 +1,14 @@
+export interface ProductAcquisitionDateRange {
+  acquisitionStartDate: string | null;
+  acquisitionEndDate: string | null;
+}
+
 export interface ProductSmartFilterRequest {
   wkt?: string | null;
   imageType?: string | null;
   provider?: string | null;
-
+  satellite?: string | null;
+  
   acquisitionStartDate?: string | null;
   acquisitionEndDate?: string | null;
 
@@ -28,9 +34,12 @@ export interface ProductSmartFilterResult {
   imageId?: string | null;
   sensorMode?: string | null;
   provider?: string | null;
-
+  satellite?: string | null;
+  
+  acquisitionStartDate?: string | null;
+  acquisitionEndDate?: string | null;
   acquisitionDate?: string | null;
-
+  
   resolution?: number | null;
   spectralResolution?: string | null;
 
@@ -50,4 +59,5 @@ export interface ProductSmartFilterResult {
 
   wkt?: string | null;
   price?: number | null;
+  propertyUrl?: string | null;
 }

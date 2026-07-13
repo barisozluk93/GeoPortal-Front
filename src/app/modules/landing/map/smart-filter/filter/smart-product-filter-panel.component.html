@@ -1,178 +1,130 @@
-<div
-  class="smart-product-filter-panel"
-  (click)="$event.stopPropagation()"
-  (mousedown)="$event.stopPropagation()"
-  (mouseup)="$event.stopPropagation()"
->
+<div class="smart-product-filter-panel" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()"
+  (mouseup)="$event.stopPropagation()">
   <div class="smart-product-filter-panel__body">
     <div class="filter-field filter-field--full">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.FILTER_PANEL.IMAGE_TYPE' | translate }}
       </label>
 
-      <app-custom-select
-        [items]="imageTypes"
-        bindLabel="label"
-        bindValue="value"
-        [multiple]="false"
-        [clearable]="true"
-        [(ngModel)]="draft.imageType"
-        [ngModelOptions]="{ standalone: true }"
-      >
-      </app-custom-select>
+      <app-custom-select [size]="'sm'" [items]="imageTypes" bindLabel="label" bindValue="value" [multiple]="false"
+        [clearable]="true" [(ngModel)]="draft.imageType" (ngModelChange)="onDraftChange()"
+        [ngModelOptions]="{ standalone: true }"></app-custom-select>
     </div>
 
     <div class="filter-field">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.FILTER_PANEL.START_DATE' | translate }}
       </label>
-
-      <input
-        type="date"
-        class="form-control form-control-lg"
-        [(ngModel)]="draft.acquisitionStartDate"
-      />
+      <input type="date" class="form-control form-control-sm" [(ngModel)]="draft.acquisitionStartDate"
+        (ngModelChange)="onStartDateChange($event)"
+        [max]="draft.acquisitionEndDate || null" />
     </div>
 
     <div class="filter-field">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.FILTER_PANEL.END_DATE' | translate }}
       </label>
-
-      <input
-        type="date"
-        class="form-control form-control-lg"
-        [(ngModel)]="draft.acquisitionEndDate"
-      />
+      <input type="date" class="form-control form-control-sm" [(ngModel)]="draft.acquisitionEndDate"
+        (ngModelChange)="onEndDateChange($event)"
+        [min]="draft.acquisitionStartDate || null" />
     </div>
 
-    <div class="filter-field">
-      <label class="form-label fw-bolder">
-        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MIN_CLOUD_RATE' | translate }}
+    <div class="filter-field filter-field--full slider-field">
+      <label class="form-label filter-label slider-field__title">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.CLOUD_RATE' | translate }}
       </label>
 
-      <div class="input-group input-group-lg">
-        <input
-          type="number"
-          class="form-control"
-          min="0"
-          max="100"
-          step="1"
-          [(ngModel)]="draft.minCloudRate"
-        />
-        <span class="input-group-text">%</span>
+      <div class="single-range-row">
+        <span class="single-range-row__icon single-range-row__icon--cloud" aria-hidden="true">
+          <i class="fa-solid fa-cloud smart-cloud-icon"></i>
+        </span>
+
+        <span class="single-range-row__minimum">{{ cloudSliderMin }}%</span>
+
+        <div class="single-range" [style.--range-value.%]="cloudPercent">
+          <div class="single-range__value" [style.left.%]="cloudPercent">
+            {{ cloudValue | number:'1.0-0' }}%
+          </div>
+          <input type="range" class="single-range__input" [min]="cloudSliderMin" [max]="cloudSliderMax" step="1"
+            [ngModel]="cloudValue" (ngModelChange)="onCloudChange($event)" [ngModelOptions]="{ standalone: true }"
+            [attr.aria-label]="'MAP.SMART_FILTER.FILTER_PANEL.MAX_CLOUD_RATE' | translate" />
+        </div>
+
+        <span class="single-range-row__maximum">{{ cloudSliderMax }}%</span>
+      </div>
+    </div>
+
+    <div class="filter-field filter-field--full slider-field">
+      <label class="form-label filter-label slider-field__title">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.OFF_NADIR' | translate }}
+      </label>
+
+      <div class="single-range-row">
+        <span class="single-range-row__icon single-range-row__icon--nadir" aria-hidden="true">
+          <i class="smart-nadir-icon" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M6.5 0H5.5V8.51858C4.82248 8.54932 4.1472 8.64307 3.48 8.79982C2.66 8.98982 1.85 9.27982 1.04 9.66982C0.69 9.83982 0.34 10.0398 0 10.2398V11.4098C0.044997 11.3798 0.0874943 11.3498 0.129991 11.3198L0.130001 11.3198C0.1725 11.2898 0.215 11.2598 0.26 11.2298C0.66 10.9898 1.07 10.7598 1.47 10.5698C2.21 10.2198 2.96 9.94982 3.71 9.76982C5.23 9.40982 6.78 9.40982 8.29 9.76982C9.04 9.94982 9.79 10.2198 10.53 10.5698C10.93 10.7598 11.34 10.9898 11.74 11.2298C11.795 11.2604 11.8463 11.2985 11.8985 11.3371L11.8985 11.3372C11.9316 11.3617 11.9651 11.3865 12 11.4098V10.2398L11.8553 10.1569C11.5558 9.98507 11.2616 9.81631 10.96 9.66982C10.16 9.28982 9.34 8.99982 8.52 8.79982C7.97443 8.67241 7.42458 8.58663 6.87361 8.54247L6.95007 8.41984L6.5 8.13921V0ZM6.63007 7.03984L7.48007 7.56984L8.01007 6.71984L7.16007 6.18984L6.63007 7.03984ZM7.69007 5.33984L8.54007 5.86984L9.07007 5.01984L8.22007 4.48984L7.69007 5.33984ZM8.75007 3.63984L9.60007 4.16984L10.1301 3.31984L9.28007 2.78984L8.75007 3.63984ZM9.81007 1.93984L10.6601 2.46984L11.1901 1.61984L10.3401 1.08984L9.81007 1.93984Z"
+                fill="currentColor" />
+            </svg>
+          </i>
+        </span>
+
+        <span class="single-range-row__minimum">{{ nadirSliderMin }}°</span>
+
+        <div class="single-range" [style.--range-value.%]="nadirPercent">
+          <div class="single-range__value" [style.left.%]="nadirPercent">
+            {{ nadirValue | number:'1.0-1' }}°
+          </div>
+          <input type="range" class="single-range__input" [min]="nadirSliderMin" [max]="nadirSliderMax" step="0.1"
+            [ngModel]="nadirValue" (ngModelChange)="onNadirChange($event)" [ngModelOptions]="{ standalone: true }"
+            [attr.aria-label]="'MAP.SMART_FILTER.FILTER_PANEL.MAX_OFF_NADIR' | translate" />
+        </div>
+
+        <span class="single-range-row__maximum">{{ nadirSliderMax }}°</span>
       </div>
     </div>
 
     <div class="filter-field">
-      <label class="form-label fw-bolder">
-        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MAX_CLOUD_RATE' | translate }}
-      </label>
-
-      <div class="input-group input-group-lg">
-        <input
-          type="number"
-          class="form-control"
-          min="0"
-          max="100"
-          step="1"
-          [(ngModel)]="draft.maxCloudRate"
-        />
-        <span class="input-group-text">%</span>
-      </div>
-    </div>
-
-    <div class="filter-field">
-      <label class="form-label fw-bolder">
-        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MIN_OFF_NADIR' | translate }}
-      </label>
-
-      <div class="input-group input-group-lg">
-        <input
-          type="number"
-          class="form-control"
-          min="0"
-          step="0.1"
-          [(ngModel)]="draft.minOffNadir"
-        />
-        <span class="input-group-text">°</span>
-      </div>
-    </div>
-
-    <div class="filter-field">
-      <label class="form-label fw-bolder">
-        {{ 'MAP.SMART_FILTER.FILTER_PANEL.MAX_OFF_NADIR' | translate }}
-      </label>
-
-      <div class="input-group input-group-lg">
-        <input
-          type="number"
-          class="form-control"
-          min="0"
-          step="0.1"
-          [(ngModel)]="draft.maxOffNadir"
-        />
-        <span class="input-group-text">°</span>
-      </div>
-    </div>
-
-    <div class="filter-field">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.FILTER_PANEL.MIN_GSD' | translate }}
       </label>
-
-      <div class="input-group input-group-lg">
-        <input
-          type="number"
-          class="form-control"
-          min="0"
-          step="0.1"
-          [(ngModel)]="draft.minResolution"
-        />
+      <div class="input-group input-group-sm">
+        <input type="number" class="form-control" min="0" step="0.1" [(ngModel)]="draft.minResolution"
+          (ngModelChange)="onDraftChange()" />
         <span class="input-group-text">m</span>
       </div>
     </div>
 
     <div class="filter-field">
-      <label class="form-label fw-bolder">
+      <label class="form-label filter-label">
         {{ 'MAP.SMART_FILTER.FILTER_PANEL.MAX_GSD' | translate }}
       </label>
-
-      <div class="input-group input-group-lg">
-        <input
-          type="number"
-          class="form-control"
-          min="0"
-          step="0.1"
-          [(ngModel)]="draft.maxResolution"
-        />
+      <div class="input-group input-group-sm">
+        <input type="number" class="form-control" min="0" step="0.1" [(ngModel)]="draft.maxResolution"
+          (ngModelChange)="onDraftChange()" />
         <span class="input-group-text">m</span>
       </div>
+    </div>
+
+    <div class="filter-field filter-field--full">
+      <label class="form-label filter-label">
+        {{ 'MAP.SMART_FILTER.FILTER_PANEL.PLATFORM' | translate }}
+      </label>
+
+      <app-custom-select [size]="'sm'" [items]="platforms" bindLabel="label" bindValue="value" [multiple]="false"
+        [clearable]="true" [(ngModel)]="draft.provider" (ngModelChange)="onDraftChange()"
+        [ngModelOptions]="{ standalone: true }"></app-custom-select>
     </div>
   </div>
 
   <div class="smart-product-filter-panel__footer">
-    <button
-      type="button"
-      class="btn btn-lg btn-light"
-      [disabled]="loading"
-      (click)="clear()"
-    >
-      <i class="fa-solid fa-rotate-left me-1"></i>
+    <button type="button" class="btn btn-sm btn-light" [disabled]="loading" (click)="clear()">
       {{ 'MAP.SMART_FILTER.FILTER_PANEL.CLEAR' | translate }}
     </button>
 
-    <button
-      type="button"
-      class="btn btn-lg btn-primary"
-      [disabled]="loading"
-      (click)="apply()"
-    >
-      <span
-        *ngIf="loading"
-        class="spinner-border spinner-border-lg me-1"
-      ></span>
-      <i *ngIf="!loading" class="fa-solid fa-filter me-1"></i>
+    <button type="button" class="btn btn-sm btn-primary" [disabled]="loading" (click)="apply()">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
       {{ 'MAP.SMART_FILTER.FILTER_PANEL.APPLY' | translate }}
     </button>
   </div>

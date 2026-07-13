@@ -37,7 +37,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   onBrandClick() {
-    this.router.navigate(['/landing/data'])
+    this.router.navigate(['/landing/map'])
   }
 
   // convenience getter for easy access to form fields

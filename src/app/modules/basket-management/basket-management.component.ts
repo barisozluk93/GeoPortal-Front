@@ -122,7 +122,7 @@ export class BasketManagementComponent implements OnInit, OnDestroy {
   }
 
   routeToShopping() {
-    this.router.navigate(['/landing/data']);
+    this.router.navigate(['/landing/map']);
   }
 
   ngOnDestroy(): void {

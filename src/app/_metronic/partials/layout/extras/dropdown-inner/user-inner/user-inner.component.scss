@@ -30,11 +30,7 @@
 }
 
 .user-menu__profile-card {
-  background: linear-gradient(
-    135deg,
-    rgba(var(--bs-primary-rgb), 0.08),
-    rgba(var(--bs-primary-rgb), 0.025)
-  ) !important;
+  background: var(--bs-primary-light) !important;
 
   border: 1px solid rgba(var(--bs-primary-rgb), 0.12) !important;
   border-radius: 14px !important;
@@ -70,10 +66,9 @@
   border: 1px solid transparent !important;
 
   background: transparent !important;
-  color: #000 !important;
 
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
 
   transition:
     background-color 0.18s ease,
@@ -82,19 +77,16 @@
     transform 0.18s ease;
 }
 
-.menu-link .menu-title,
-.menu-link .menu-icon i,
-.menu-link .menu-icon .ki-duotone,
-.menu-link span,
-.menu-link i {
-  color: inherit !important;
+.menu-title:hover,
+.menu-title.show > .menu-link {
+  background: var(--bs-primary-light) !important;
+  color: var(--bs-primary) !important;
 }
 
 .menu-link:hover,
 .menu-item.show > .menu-link {
-  background: rgba(var(--bs-primary-rgb), 0.08) !important;
+  background: var(--bs-primary-light) !important;
   color: var(--bs-primary) !important;
-  border-color: rgba(var(--bs-primary-rgb), 0.12) !important;
 }
 
 .menu-link:hover {
@@ -121,38 +113,33 @@
   overflow: visible !important;
 }
 
-/* Hover geçiş alanı: dropdowna giderken kapanmayı engeller */
+/* Menü ile alt dropdown arasındaki hover boşluğunu kapatır. */
 .user-menu__lang-item::before {
   content: '';
   position: absolute;
   top: 0;
   right: 100%;
-  width: 16px;
+  width: 12px;
   height: 100%;
   z-index: 999998;
 }
 
 .user-menu__subdropdown {
   display: none !important;
-
   position: absolute !important;
-  top: -6px !important;
-  right: calc(100% + 10px) !important;
+  top: 0 !important;
+  right: calc(100% + 8px) !important;
   left: auto !important;
-
   z-index: 999999 !important;
 
   width: 224px !important;
   min-width: 224px !important;
-  padding: 8px !important;
+  padding: 6px !important;
 
   background: #ffffff !important;
-  border: 1px solid #eef0f4 !important;
-  border-radius: 14px !important;
-
-  box-shadow:
-    0 14px 34px rgba(15, 23, 42, 0.12),
-    0 2px 8px rgba(15, 23, 42, 0.04) !important;
+  border: 1px solid #e4e6ef !important;
+  border-radius: 6px !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14) !important;
 
   overflow: visible !important;
 }
@@ -164,30 +151,46 @@
 }
 
 .user-menu__subdropdown .menu-item {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.user-menu__subdropdown .menu-item + .menu-item {
+  margin-top: 2px !important;
 }
 
 .user-menu__subdropdown .menu-link {
-  min-height: 42px;
+  width: 100%;
+  min-height: 36px !important;
+  padding: 7px 10px !important;
+
+  display: flex;
+  align-items: center;
 
   background: transparent !important;
-  color:#000 !important;
+  color: #181c32 !important;
+  border: 0 !important;
+  border-radius: 4px !important;
 
-  border-radius: 10px !important;
-  border: 1px solid transparent !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.2;
+
+  transform: none !important;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease !important;
 }
 
 .user-menu__subdropdown .menu-link:hover {
-  background: rgba(var(--bs-primary-rgb), 0.08) !important;
+  background: var(--bs-primary-light) !important;
   color: var(--bs-primary) !important;
-  border-color: rgba(var(--bs-primary-rgb), 0.12) !important;
+  transform: none !important;
 }
 
 .user-menu__subdropdown .menu-link.active {
-  background: rgba(var(--bs-primary-rgb), 0.1) !important;
+  background: var(--bs-primary-light) !important;
   color: var(--bs-primary) !important;
-  border-color: rgba(var(--bs-primary-rgb), 0.16) !important;
 }
 
 .user-menu__subdropdown .menu-link.active .menu-title,
@@ -195,6 +198,19 @@
 .user-menu__subdropdown .menu-link.active i,
 .user-menu__subdropdown .menu-link.active .fa-check {
   color: var(--bs-primary) !important;
+}
+
+.user-menu__subdropdown .symbol {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+}
+
+.user-menu__subdropdown .symbol img {
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 3px !important;
+  object-fit: cover;
 }
 
 .user-menu__logout {

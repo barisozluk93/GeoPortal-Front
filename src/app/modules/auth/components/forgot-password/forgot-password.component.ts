@@ -63,6 +63,6 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   onBrandClick() {
-    this.router.navigate(['/landing/data'])
+    this.router.navigate(['/landing/map'])
   }
 }

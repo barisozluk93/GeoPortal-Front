@@ -192,13 +192,147 @@ export class DataTableComponent implements OnInit, OnDestroy {
     this.paginationModelChange.emit(this.paginationModel);
   }
 
+
+  onDateFilterChange(
+    columnKey: string,
+    relatedColumnKey: string,
+    type: 'from' | 'to',
+    event: Event
+  ): void {
+    const input = event.target as HTMLInputElement;
+    const selectedValue = input.value;
+    const previousValue = this.getFilterValue(columnKey) || '';
+    const relatedValue = this.getFilterValue(relatedColumnKey);
+
+    input.setCustomValidity('');
+
+    if (!selectedValue) {
+      this.onColumnFilterChange(columnKey, null);
+      return;
+    }
+
+    if (!relatedValue) {
+      this.onColumnFilterChange(columnKey, selectedValue);
+      return;
+    }
+
+    const selectedDate = this.parseLocalDate(selectedValue);
+    const relatedDate = this.parseLocalDate(relatedValue);
+
+    const isInvalidDate = !selectedDate || !relatedDate;
+
+    // Aynı gün dahil olmak üzere geçersiz aralıkları reddeder.
+    const isInvalidRange =
+      !isInvalidDate &&
+      (type === 'from'
+        ? selectedDate!.getTime() >= relatedDate!.getTime()
+        : selectedDate!.getTime() <= relatedDate!.getTime());
+
+    if (isInvalidDate || isInvalidRange) {
+      input.value = previousValue;
+
+      const message =
+        type === 'from'
+          ? this.translate.currentLang === 'tr'
+            ? 'Başlangıç tarihi bitiş tarihinden önce olmalı; aynı gün seçilemez.'
+            : 'Start date must be before end date; the same day cannot be selected.'
+          : this.translate.currentLang === 'tr'
+            ? 'Bitiş tarihi başlangıç tarihinden sonra olmalı; aynı gün seçilemez.'
+            : 'End date must be after start date; the same day cannot be selected.';
+
+      input.setCustomValidity(message);
+      input.reportValidity();
+
+      setTimeout(() => {
+        input.setCustomValidity('');
+      });
+
+      return;
+    }
+
+    this.onColumnFilterChange(columnKey, selectedValue);
+  }
+
+  getMinEndDate(startColumnKey: string): string | null {
+    const startValue = this.getFilterValue(startColumnKey);
+
+    if (!startValue) {
+      return null;
+    }
+
+    // Başlangıç günü ve öncesi bitiş takviminde disable olur.
+    return this.addDaysToDateValue(startValue, 1);
+  }
+
+  getMaxStartDate(endColumnKey: string): string | null {
+    const endValue = this.getFilterValue(endColumnKey);
+
+    if (!endValue) {
+      return null;
+    }
+
+    // Bitiş günü ve sonrası başlangıç takviminde disable olur.
+    return this.addDaysToDateValue(endValue, -1);
+  }
+
+  private addDaysToDateValue(value: string, days: number): string | null {
+    const date = this.parseLocalDate(value);
+
+    if (!date) {
+      return null;
+    }
+
+    date.setDate(date.getDate() + days);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  private parseLocalDate(value: string): Date | null {
+    if (!value) {
+      return null;
+    }
+
+    const parts = value.split('-').map(Number);
+
+    if (
+      parts.length !== 3 ||
+      parts.some((part) => Number.isNaN(part))
+    ) {
+      return null;
+    }
+
+    const [year, month, day] = parts;
+    const date = new Date(year, month - 1, day);
+
+    if (
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day
+    ) {
+      return null;
+    }
+
+    return date;
+  }
+
   onColumnFilterChange(columnKey: string, value: any): void {
+    const normalizedValue =
+      typeof value === 'string' ? value.trim() : value;
+
     const nextFilterModel: DatatableFilterModel = {
       ...(this.filterModel || {}),
-      [columnKey]: value,
+      [columnKey]: normalizedValue,
     };
 
-    if (value === '' || value === null || value === undefined) {
+    if (
+      normalizedValue === '' ||
+      normalizedValue === null ||
+      normalizedValue === undefined
+    ) {
       delete nextFilterModel[columnKey];
     }
 

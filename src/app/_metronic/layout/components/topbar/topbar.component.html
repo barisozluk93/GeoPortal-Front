@@ -1,66 +1,82 @@
-
-<app-basket *ngIf="!isAdmin && isCurrentUserExist" class="d-flex align-items-center me-3"></app-basket>
+<app-basket *ngIf="!isAdmin && isCurrentUserExist" class="d-flex align-items-center me-3">
+</app-basket>
 
 <div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3">
-  <button (click)="routeToLogin()" class="btn btn-primary">
-        {{'LOG_IN' | translate}}
+  <button type="button" class="btn btn-primary" (click)="routeToLogin()">
+    {{ 'LOG_IN' | translate }}
   </button>
 </div>
 
-<div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3" id="kt_header_user_menu_toggle">
-  <!--begin::Menu wrapper-->
+<div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3" id="kt_header_language_menu_toggle">
   <div class="cursor-pointer symbol symbol-40px" data-kt-menu-trigger="{default: 'hover'}"
-    data-kt-menu-placement="bottom-end" title="{{'LANGUAGE' | translate}}">
-    <img *ngIf="language" [src]="language.flag" />
+    data-kt-menu-placement="bottom-end" title="{{ 'LANGUAGE' | translate }}">
+    <img *ngIf="language?.flag" [src]="language.flag" alt="{{ 'LANGUAGE' | translate }}" />
   </div>
-  <!--end::Menu wrapper-->
-    <app-language-inner></app-language-inner>
+
+  <app-language-inner></app-language-inner>
 </div>
 
-<div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-3" id="kt_header_user_menu_toggle">
-  <!--begin::Menu wrapper-->
-  <div class="cursor-pointer symbol symbol-40px" data-kt-menu-trigger="{default: 'hover'}"
-    data-kt-menu-placement="bottom-end" title="{{'USER_PROFILE' | translate}}"  >
-    <img *ngIf="user?.fileId == undefined" src="./assets/media/avatars/blank.png" />
-    <img *ngIf="user?.fileId != undefined" [src]="user?.fileResult?.fileContents" alt="image" />
+<div
+  *ngIf="isCurrentUserExist"
+  class="d-flex align-items-center me-3"
+  id="kt_header_user_menu_toggle"
+>
+  <div
+    class="cursor-pointer symbol symbol-40px user-profile-symbol"
+    data-kt-menu-trigger="{default: 'hover'}"
+    data-kt-menu-placement="bottom-end"
+    title="{{ 'USER_PROFILE' | translate }}"
+  >
+    <ng-container
+      *ngIf="
+        user?.fileId != null &&
+        user?.fileResult?.fileContents;
+        else defaultUserIcon
+      "
+    >
+      <img
+        class="user-profile-image"
+        [src]="user?.fileResult?.fileContents"
+        alt="{{ 'USER_PROFILE' | translate }}"
+      />
+    </ng-container>
+
+    <ng-template #defaultUserIcon>
+      <div class="user-profile-placeholder">
+        <i class="fa-solid fa-user"></i>
+      </div>
+    </ng-template>
   </div>
-  <!--end::Menu wrapper-->
+
   <app-user-inner></app-user-inner>
 </div>
 
-<div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-3">
-  <div
-    class="cursor-pointer symbol symbol-40px notification-symbol"
-    [ngClass]="{ 'has-unread': unreadedNotificationCount > 0, 'is-animating': isNotificationAnimating }"
-    (mouseenter)="loadNotifications()"
-    data-kt-menu-trigger="{default: 'hover'}"
-    data-kt-menu-placement="bottom-end"
-    title="Notifications"
-  >
+<div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-3" id="kt_header_notification_menu_toggle">
+  <div class="cursor-pointer symbol symbol-40px notification-symbol" [ngClass]="{
+      'has-unread': unreadedNotificationCount > 0,
+      'is-animating': isNotificationAnimating
+    }" (mouseenter)="loadNotifications()" data-kt-menu-trigger="{default: 'hover'}" data-kt-menu-placement="bottom-end"
+    title="{{ 'NOTIFICATIONS' | translate }}">
     <span class="symbol-label position-relative notification-symbol-label">
-      <i
-        class="fa-bell notification-bell"
-        [ngClass]="unreadedNotificationCount > 0 ? 'fa-solid' : 'fa-regular'"
-      ></i>
+      <i class="fa-bell notification-bell" [ngClass]="
+          unreadedNotificationCount > 0
+            ? 'fa-solid'
+            : 'fa-regular'
+        "></i>
 
-      <span
-        *ngIf="unreadedNotificationCount > 0"
-        class="notification-badge"
-      >
-        {{ unreadedNotificationCount > 99 ? '99+' : unreadedNotificationCount }}
+      <span *ngIf="unreadedNotificationCount > 0" class="notification-badge">
+        {{
+        unreadedNotificationCount > 99
+        ? '99+'
+        : unreadedNotificationCount
+        }}
       </span>
 
-      <span
-        *ngIf="unreadedNotificationCount > 0"
-        class="notification-pulse"
-      ></span>
+      <span *ngIf="unreadedNotificationCount > 0" class="notification-pulse"></span>
     </span>
   </div>
 
-  <app-notifications-inner
-    [notifications]="notifications"
-    [totalNotificationCount]="totalNotificationCount"
-    [unreadedNotificationCount]="unreadedNotificationCount"
-  >
+  <app-notifications-inner [notifications]="notifications" [totalNotificationCount]="totalNotificationCount"
+    [unreadedNotificationCount]="unreadedNotificationCount">
   </app-notifications-inner>
 </div>

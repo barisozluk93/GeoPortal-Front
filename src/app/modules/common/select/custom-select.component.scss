@@ -42,8 +42,8 @@ app-custom-select {
 
   &.form-control-sm {
     min-height: 34px;
-    padding: .45rem .7rem;
-    font-size: .825rem;
+    padding: .55rem .75rem;
+    font-size: .95rem;
   }
 
   &.form-control-lg {
@@ -113,73 +113,99 @@ app-custom-select {
 
 /* body'ye append edildiği için global çalışır */
 .custom-select-dropdown {
-  background: var(--app-bg, #fff) !important;
-  border: 1px solid var(--app-border, #e5e7eb) !important;
-  border-radius: 12px !important;
-  padding: .35rem;
+  z-index: 32000 !important;
+  width: max-content;
+  min-width: var(--custom-select-trigger-width, 190px);
+  max-width: 300px;
+  padding: 8px 0 !important;
   overflow: hidden auto;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, .12) !important;
+
+  background-color: var(--bs-body-bg) !important;
+  border: 1px solid var(--bs-gray-200) !important;
+  border-radius: 0.475rem !important;
+  box-shadow: var(--bs-dropdown-box-shadow) !important;
+
   animation: customSelectDropdownFade .14s ease;
 }
 
 .custom-select-dropdown-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0;
+  width: 100%;
   background: transparent !important;
 }
 
 .custom-select-dropdown-item {
-  min-height: 38px;
-  padding: .625rem .75rem;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  color: var(--app-text-soft, #111827) !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
+  width: calc(100% - 12px);
+  min-height: 36px;
+  margin: 0 6px;
+  padding: 0 12px;
+  gap: 10px;
+
+  color: var(--app-soft-text) !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0.475rem !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  text-align: left;
+  white-space: nowrap;
   cursor: pointer;
 
-  transition: background-color .18s ease, color .18s ease;
+  transition:
+    color .2s ease,
+    background-color .2s ease !important;
 
-  &:hover {
-    background: var(--app-soft-bg, #f3f4f6) !important;
-    color: var(--app-primary, #263685) !important;
-    border: 1px solid rgba(var(--bs-primary-rgb), 0.16) !important;
-  }
-
+  &:hover,
+  &:focus,
+  &:focus-visible,
   &.active {
-    background: rgba(var(--bs-primary-rgb, 38, 54, 133), .08) !important;
-    color: var(--app-primary, #263685) !important;
-    border: 1px solid rgba(var(--bs-primary-rgb), 0.16) !important;
+    color: var(--bs-primary) !important;
+    background-color: var(--bs-primary-light) !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    outline: 0 !important;
   }
 }
 
 .custom-select-dropdown-item__label {
   min-width: 0;
   overflow: hidden;
+  color: inherit !important;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: inherit !important;
 }
 
 .custom-select-dropdown-item__check {
-  margin-left: .75rem;
+  width: 16px;
+  min-width: 16px;
+  margin-left: auto;
   flex-shrink: 0;
+  color: inherit !important;
   font-size: 13px;
-  color: var(--app-primary, #263685) !important;
+  text-align: center;
 }
 
 .custom-select-dropdown-empty {
-  min-height: 56px;
-  padding: .85rem;
+  min-height: 36px;
+  margin: 0 6px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--app-muted, #6b7280) !important;
+  color: var(--bs-gray-600) !important;
   background: transparent !important;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 @keyframes customSelectDropdownFade {
@@ -193,4 +219,3 @@ app-custom-select {
     transform: translateY(0);
   }
 }
-

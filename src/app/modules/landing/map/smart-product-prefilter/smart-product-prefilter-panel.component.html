@@ -1,62 +1,129 @@
-<div
-  class="smart-product-prefilter-panel"
-  (click)="$event.stopPropagation()"
-  (mousedown)="$event.stopPropagation()"
-  (mouseup)="$event.stopPropagation()"
->
-  <div class="smart-product-prefilter-panel__body">
-    <div class="prefilter-info">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>{{ 'MAP.SMART_FILTER.PREFILTER.DESCRIPTION' | translate }}</span>
-    </div>
-
-    <div class="prefilter-field">
-      <label class="form-label fw-bolder">
-        {{ 'MAP.SMART_FILTER.PREFILTER.START_DATE' | translate }}
-      </label>
-
-      <input
-        type="date"
-        class="form-control form-control-lg"
-        [(ngModel)]="draft.acquisitionStartDate"
-        [disabled]="loading"
-      />
-    </div>
-
-    <div class="prefilter-field">
-      <label class="form-label fw-bolder">
-        {{ 'MAP.SMART_FILTER.PREFILTER.END_DATE' | translate }}
-      </label>
-
-      <input
-        type="date"
-        class="form-control form-control-lg"
-        [(ngModel)]="draft.acquisitionEndDate"
-        [disabled]="loading"
-      />
-    </div>
+<div class="smart-product-prefilter-panel" (click)="onPanelClick($event)" (mousedown)="stopEvent($event)"
+  (mouseup)="stopEvent($event)">
+  <div class="prefilter-panel-toolbar">
+    <button type="button" class="prefilter-collapse-button btn btn-icon btn-sm btn-light-primary"
+      [title]="'MAP.SMART_FILTER.PREFILTER.HIDE' | translate"
+      [attr.aria-label]="'MAP.SMART_FILTER.PREFILTER.HIDE' | translate"
+      (click)="togglePrefilter($event)">
+      <i class="fa-solid fa-angles-left"></i>
+    </button>
   </div>
+  <div class="smart-product-prefilter-panel__body">
+    <div class="prefilter-date-range">
+      <div class="prefilter-field">
+        <label class="form-label prefilter-label">{{ "MAP.SMART_FILTER.PREFILTER.START_DATE" | translate }}</label>
+        <input type="date" class="form-control form-control-sm" [(ngModel)]="draft.acquisitionStartDate"
+          (ngModelChange)="onStartDateChange($event)" [max]="draft.acquisitionEndDate || null" [disabled]="loading" />
+      </div>
+      <span class="prefilter-date-separator">—</span>
+      <div class="prefilter-field">
+        <label class="form-label prefilter-label">{{ "MAP.SMART_FILTER.PREFILTER.END_DATE" | translate }}</label>
+        <input type="date" class="form-control form-control-sm" [(ngModel)]="draft.acquisitionEndDate"
+          (ngModelChange)="onEndDateChange($event)" [min]="draft.acquisitionStartDate || null" [disabled]="loading" />
+      </div>
+    </div>
 
-  <div class="smart-product-prefilter-panel__footer">
-    <button
-      type="button"
-      class="btn btn-lg btn-light"
-      [disabled]="loading"
-      (click)="clearDates()"
-    >
-      <i class="fa-solid fa-rotate-left me-1"></i>
-      {{ 'MAP.SMART_FILTER.PREFILTER.CLEAR' | translate }}
-    </button>
+    <div class="prefilter-section-title prefilter-section-title--areas">
+      <div class="d-flex align-items-center gap-1">
+        <span>{{ "MAP.SMART_FILTER.PREFILTER.AREAS" | translate }}</span>
+        <span class="badge badge-light-primary">{{ areas.length }}</span>
+        <span class="spinner-border spinner-border-sm text-primary ms-1" *ngIf="loading"></span>
+      </div>
 
-    <button
-      type="button"
-      class="btn btn-lg btn-primary"
-      [disabled]="loading"
-      (click)="search()"
-    >
-      <span *ngIf="loading" class="spinner-border spinner-border-lg me-1"></span>
-      <i *ngIf="!loading" class="fa-solid fa-search me-1"></i>
-      {{ 'MAP.SMART_FILTER.PREFILTER.SEARCH' | translate }}
-    </button>
+      <!-- <div class="new-area-wrapper" (click)="stopEvent($event)">
+        <button type="button" class="btn btn-sm btn-primary new-area-button" (click)="toggleNewAreaMenu($event)">
+          <span>{{ "MAP.SMART_FILTER.PREFILTER.NEW_AREA" | translate }}</span><i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="new-area-menu map-options-menu" *ngIf="isNewAreaMenuOpen">
+          <button type="button" (click)="selectNewAreaAction('polygon', $event)"><i
+              class="fa-solid fa-draw-polygon"></i><span>{{ "MAP.SMART_FILTER.PREFILTER.DRAW_POLYGON" | translate
+              }}</span></button>
+          <button type="button" (click)="selectNewAreaAction('rectangle', $event)"><i
+              class="fa-solid fa-vector-square"></i><span>{{ "MAP.SMART_FILTER.PREFILTER.DRAW_RECTANGLE" | translate
+              }}</span></button>
+          <button type="button" (click)="selectNewAreaAction('upload', $event)"><i
+              class="fa-solid fa-file-arrow-up"></i><span>{{ "MAP.SMART_FILTER.PREFILTER.UPLOAD_FILE" | translate
+              }}</span></button>
+        </div>
+      </div> -->
+    </div>
+
+    <div class="aoi-list" *ngIf="areas.length > 0">
+      <div class="aoi-item" *ngFor="let area of areas; trackBy: trackByAreaId"
+        [class.aoi-item--selected]="internalSelectedAreaId === area.id"
+        [class.aoi-item--menu-open]="openedMenuAreaId === area.id" [class.aoi-item--editing]="editingAreaId === area.id"
+        (click)="selectArea(area, $event)" (mouseenter)="hoverArea(area)" (mouseleave)="leaveArea()">
+        <div class="aoi-item__select">
+          <input type="radio" class="form-check-input" name="selected-smart-aoi"
+            [checked]="internalSelectedAreaId === area.id" (change)="selectArea(area, $event)" />
+        </div>
+        <div class="aoi-item__content">
+          <ng-container *ngIf="renamingAreaId !== area.id; else renameTemplate">
+            <button type="button" class="aoi-item__name-button" [title]="area.name"
+              (dblclick)="beginRename(area, $event)">{{ area.name }}</button>
+          </ng-container>
+          <ng-template #renameTemplate>
+            <div class="aoi-rename" (click)="stopEvent($event)">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="renameDraft"
+                (keyup.enter)="saveRename(area, $event)" (keyup.escape)="cancelRename($event)" />
+              <button type="button" class="btn btn-icon btn-sm btn-light-success" (click)="saveRename(area, $event)"><i
+                  class="fa-solid fa-check"></i></button>
+              <button type="button" class="btn btn-icon btn-sm btn-light-danger" (click)="cancelRename($event)"><i
+                  class="fa-solid fa-xmark"></i></button>
+            </div>
+          </ng-template>
+          <div class="aoi-item__area" (click)="stopEvent($event)">
+            <span>{{ "MAP.SMART_FILTER.PREFILTER.AREA_LABEL" | translate }}:</span>
+            <strong class="aoi-item__area-value">{{ formatArea(area.areaM2) }}</strong>
+            <select
+              class="form-select form-select-sm aoi-area-unit-select"
+              [(ngModel)]="selectedAreaUnit"
+              [ngModelOptions]="{ standalone: true }"
+              [attr.aria-label]="'MAP.SMART_FILTER.PREFILTER.AREA_LABEL' | translate"
+            >
+              <option *ngFor="let unit of areaUnits" [ngValue]="unit.value">
+                {{ unit.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="aoi-item__actions">
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary compact-icon-btn"
+            [title]="'MAP.SMART_FILTER.PREFILTER.EDIT_AREA' | translate"
+            (click)="editArea(area); $event.stopPropagation()"><i class="fa-solid fa-object-ungroup"></i></button>
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary compact-icon-btn aoi-menu-trigger"
+            (click)="toggleAreaMenu(area.id, $event)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+          <div class="aoi-menu map-options-menu" *ngIf="openedMenuAreaId === area.id" (click)="stopEvent($event)">
+            <button type="button" (click)="beginRename(area, $event)"><i class="fa-solid fa-pen"></i><span>{{
+                "MAP.SMART_FILTER.PREFILTER.RENAME_AREA" | translate }}</span></button>
+            <button type="button" (click)="createNewRequest(area, $event)">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>Yeni Talep</span>
+            </button>
+            <button type="button" (click)="exportArea(area, 'shp')"><i class="fa-solid fa-file-zipper"></i><span>{{
+                "MAP.SMART_FILTER.PREFILTER.EXPORT_SHP" | translate }}</span></button>
+            <button type="button" (click)="exportArea(area, 'kml')"><i class="fa-solid fa-earth-europe"></i><span>{{
+                "MAP.SMART_FILTER.PREFILTER.EXPORT_KML" | translate }}</span></button>
+            <div class="aoi-menu__divider"></div>
+            <button type="button" class="aoi-menu__danger" (click)="removeArea(area)"><i
+                class="fa-solid fa-trash"></i><span>{{ "MAP.SMART_FILTER.PREFILTER.REMOVE_AREA" | translate
+                }}</span></button>
+          </div>
+        </div>
+        <div class="aoi-item__result-toggle-row">
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary compact-icon-btn aoi-results-toggle"
+            [title]="resultsCollapsed
+  ? ('MAP.SMART_FILTER.PREFILTER.SHOW' | translate)
+  : ('MAP.SMART_FILTER.PREFILTER.HIDE' | translate)" (click)="toggleResults($event)">
+            <i class="fa-solid" [ngClass]="resultsCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+          </button>
+        </div>
+      </div>
+      <div class="aoi-edit-hint" *ngIf="editingAreaId"><i class="fa-solid fa-circle-info"></i><span>{{
+          "MAP.SMART_FILTER.PREFILTER.EDIT_HINT" | translate }}</span></div>
+    </div>
+
+    <div class="aoi-empty-state" *ngIf="areas.length === 0"><i class="fa-solid fa-draw-polygon"></i><span>{{
+        "MAP.SMART_FILTER.PREFILTER.EMPTY_AREAS" | translate }}</span></div>
   </div>
 </div>

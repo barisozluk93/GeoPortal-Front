@@ -9,7 +9,7 @@ export const environment = {
   isMockEnabled: true,
   appUrl: 'http://localhost:5065',
   apiUrl: 'http://localhost:5065/geoPortalApi',
-  signalRUrl: 'http://localhost:5031/NotificationHubForGeoPortal',
+  signalRUrl: 'http://localhost:5065/NotificationHubForGeoPortal',
   appThemeName: 'Metronic',
   appPurchaseUrl: 'https://1.envato.market/EA4JP',
   appHTMLIntegration: 'https://preview.keenthemes.com/metronic8/demo7/documentation/base/helpers/flex-layouts.html',

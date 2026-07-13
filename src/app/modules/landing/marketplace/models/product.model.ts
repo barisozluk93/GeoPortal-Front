@@ -71,7 +71,8 @@ export class ProductModel {
   isOrthorectified?: boolean | null;
   isPansharpened?: boolean | null;
   isClassified?: boolean | null;
-
+  isNVDIAnalysis?: boolean | null;
+  
   // Price
   price!: number;
   priceStr?: string | null;

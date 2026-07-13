@@ -1,5 +1,5 @@
 .map-panel-shell {
-  width: clamp(320px, 30vw, 360px);
+  width: clamp(255px, 24vw, 290px);
   min-width: 0;
   max-width: calc(100vw - 116px);
   box-sizing: border-box;
@@ -13,14 +13,8 @@
   overflow: hidden;
 }
 
-.map-panel-shell__title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .map-panel-shell--minimized {
-  max-height: 52px;
+  max-height: 34px;
 }
 
 .map-panel-shell--maximized {
@@ -36,20 +30,24 @@
 }
 
 .map-panel-shell__header {
-  min-height: 52px;
-  padding: 10px 12px;
+  min-height: 34px;
+  padding: 2px 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 4px;
   border-bottom: 1px solid var(--bs-border-color);
   background: var(--bs-body-bg);
 }
 
 .map-panel-shell__title {
+  display: flex;
+  align-items: center;
+  gap: .2rem;
+
   min-width: 0;
   flex: 1;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--bs-gray-800);
   white-space: nowrap;
@@ -57,11 +55,26 @@
   text-overflow: ellipsis;
 }
 
+.map-panel-shell__title i {
+  font-size: 13px !important;
+  margin-right: .3rem !important;
+}
+
 .map-panel-shell__actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
   flex-shrink: 0;
+}
+
+.map-panel-shell__actions .btn {
+  height: 24px;
+  min-width: 24px;
+  padding: 0;
+}
+
+.map-panel-shell__actions .btn i {
+  font-size: 10px !important;
 }
 
 .map-panel-shell__body {
@@ -71,9 +84,11 @@
   overflow: auto;
 }
 
+/* Responsive */
+
 @media (max-width: 991.98px) {
   .map-panel-shell {
-    width: min(360px, calc(100vw - 92px));
+    width: min(300px, calc(100vw - 92px));
     max-width: calc(100vw - 92px);
   }
 
@@ -90,8 +105,18 @@
   }
 
   .map-panel-shell__header {
-    gap: 8px;
-    padding: 8px 10px;
+    min-height: 32px;
+    padding: 2px 5px;
+  }
+
+  .map-panel-shell__actions .btn {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+  }
+
+  .map-panel-shell__actions .btn i {
+    font-size: 9px !important;
   }
 
   .map-panel-shell--maximized {
@@ -102,37 +127,53 @@
   }
 }
 
-/* Panel tiplerine göre daha okunabilir responsive genişlikler */
+/* Panel tipleri */
+
 .map-panel-shell--smart-results,
 .map-panel-shell--advanced-filter,
 .map-panel-shell--product-request,
 .map-panel-shell--prefilter {
-  width: clamp(420px, 36vw, 480px);
+  width: clamp(335px, 28vw, 385px);
   max-width: calc(100vw - 116px);
 }
 
 .map-panel-shell--metadata {
-  width: clamp(440px, 38vw, 540px);
+  width: clamp(360px, 30vw, 430px);
   max-width: calc(100vw - 116px);
 }
 
-/* Metadata panelinde çift scroll oluşmasın; sadece iç body scroll alsın. */
+.map-panel-shell--metadata:not(.map-panel-shell--minimized) {
+  height: calc(100vh - 130px);
+  max-height: calc(100vh - 130px);
+}
+
 .map-panel-shell--metadata .map-panel-shell__body {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+  min-height: 0;
+}
+
+.map-panel-shell--metadata .map-panel-shell__body>* {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
 }
 
 @media (max-width: 991.98px) {
+
   .map-panel-shell--smart-results,
   .map-panel-shell--advanced-filter,
   .map-panel-shell--product-request,
   .map-panel-shell--prefilter,
   .map-panel-shell--metadata {
-    width: min(460px, calc(100vw - 92px));
+    width: min(385px, calc(100vw - 92px));
     max-width: calc(100vw - 92px);
   }
 }
 
 @media (max-width: 575.98px) {
+
   .map-panel-shell--smart-results,
   .map-panel-shell--advanced-filter,
   .map-panel-shell--product-request,
@@ -141,116 +182,66 @@
     width: calc(100vw - 84px);
     max-width: calc(100vw - 84px);
   }
-}
 
-/* Metadata için tek scroll: shell body scroll alır, içerik kesilmez. */
-.map-panel-shell--metadata .map-panel-shell__body {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-
-/* FINAL FIX: metadata scroll sadece metadata body içinde; shell ikinci scrollbar üretmesin. */
-.map-panel-shell--metadata {
-  width: clamp(460px, 40vw, 560px);
-}
-
-.map-panel-shell--metadata .map-panel-shell__body {
-  overflow: hidden !important;
-  min-height: 0 !important;
-}
-
-/* FIX: Metadata panelinde shell ikinci scrollbar üretmesin; iç metadata body tek scroll olsun. */
-.map-panel-shell--metadata .map-panel-shell__body {
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-  min-height: 0 !important;
-}
-
-.map-panel-shell--metadata .map-panel-shell__body > * {
-  flex: 1 1 auto;
-  min-height: 0;
-  max-height: 100%;
-}
-
-/* SCROLL FIX: Metadata panel sabit viewport yüksekliğinde kalsın; içerik tek scroll ile aksın. */
-.map-panel-shell--metadata:not(.map-panel-shell--minimized) {
-  height: calc(100vh - 130px) !important;
-  max-height: calc(100vh - 130px) !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-.map-panel-shell--metadata:not(.map-panel-shell--minimized) .map-panel-shell__body {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-.map-panel-shell--metadata:not(.map-panel-shell--minimized) .map-panel-shell__body > app-smart-product-metadata-panel {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  display: flex !important;
-}
-
-@media (max-width: 575.98px) {
   .map-panel-shell--metadata:not(.map-panel-shell--minimized) {
-    height: calc(100vh - 84px) !important;
-    max-height: calc(100vh - 84px) !important;
+    height: calc(100vh - 84px);
+    max-height: calc(100vh - 84px);
   }
 }
 
-/* POSITION/SCROLL FINAL: metadata panel tek scroll ile viewport içinde kalsın. */
-.map-panel-shell--metadata:not(.map-panel-shell--minimized) {
-  height: calc(100vh - 40px) !important;
-  max-height: calc(100vh - 40px) !important;
+/* Katman Yöneticisi yalnızca içeriği kadar genişler */
+.map-panel-shell--layer-manager {
+  width: fit-content;
+  min-width: 200px;
+  max-width: 360px;
+
+  .map-panel-shell__header {
+    width: 100%;
+  }
+
+  .map-panel-shell__body {
+    width: auto;
+    min-width: 0;
+  }
 }
 
-.map-panel-shell--metadata:not(.map-panel-shell--minimized) .map-panel-shell__body {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  display: flex !important;
+/* ASK / POINT QUERY PANEL
+   Varsayılan clamp genişliğini ask panel için geçersiz kılar. */
+.map-panel-shell--ask {
+  width: min(450px, calc(100vw - 84px));
+  min-width: min(450px, calc(100vw - 84px));
+  max-width: calc(100vw - 84px);
+  height: min(650px, calc(100vh - 100px));
+  min-height: 320px;
 }
 
-.map-panel-shell--metadata:not(.map-panel-shell--minimized) .map-panel-shell__body > app-smart-product-metadata-panel {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  max-height: 100% !important;
-  display: flex !important;
+.map-panel-shell--ask .map-panel-shell__body {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
-/* USER FINAL: metadata panel biraz daha dar ve solundaki sonuç paneliyle aynı maksimum yükseklikte kalsın. */
-.map-panel-shell--metadata {
-  width: clamp(430px, 36vw, 520px) !important;
-  max-width: calc(100vw - 116px) !important;
-}
-
-.map-panel-shell--metadata:not(.map-panel-shell--minimized) {
-  height: calc(100vh - 130px) !important;
-  max-height: calc(100vh - 130px) !important;
+.map-panel-shell--ask .map-panel-shell__body > * {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
 }
 
 @media (max-width: 991.98px) {
-  .map-panel-shell--metadata {
-    width: min(440px, calc(100vw - 92px)) !important;
-    max-width: calc(100vw - 92px) !important;
+  .map-panel-shell--ask {
+    width: calc(100vw - 92px);
+    min-width: 0;
+    max-width: calc(100vw - 92px);
   }
 }
 
 @media (max-width: 575.98px) {
-  .map-panel-shell--metadata {
-    width: calc(100vw - 84px) !important;
-    max-width: calc(100vw - 84px) !important;
-  }
-
-  .map-panel-shell--metadata:not(.map-panel-shell--minimized) {
-    height: calc(100vh - 84px) !important;
-    max-height: calc(100vh - 84px) !important;
+  .map-panel-shell--ask {
+    width: calc(100vw - 58px);
+    min-width: 0;
+    max-width: calc(100vw - 58px);
+    height: calc(100vh - 84px);
+    max-height: calc(100vh - 84px);
   }
 }
