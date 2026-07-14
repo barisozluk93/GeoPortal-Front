@@ -4,12 +4,12 @@
   <input #areaFileInput type="file" class="d-none" accept=".zip,.geojson,.json,.kml,.kmz"
     (change)="uploadAreaFile($event)" (cancel)="activeTool = null" />
 
-  <div class="map-status-bar">
+  <div class="map-status-bar bg-body border border-gray-300 shadow-sm">
     <div class="map-coordinate-section">
-      <span class="map-coordinate-text">{{ currentCoordinateText }}</span>
+      <span class="map-coordinate-text text-gray-800 fw-semibold">{{ currentCoordinateText }}</span>
 
-      <div class="dropdown position-relative">
-        <button type="button" class="btn btn-icon btn-sm map-coordinate-menu-btn"
+      <div class="dropdown dropup position-relative">
+        <button type="button" class="btn btn-sm p-0 map-coordinate-menu-btn"
           [attr.title]="'MAP.COORDINATE_OPTIONS.TITLE' | translate"
           [attr.aria-label]="'MAP.COORDINATE_OPTIONS.TITLE' | translate" (click)="toggleCoordinateMenu($event)">
           <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <div class="map-aoi-update-warning alert-warning text-warning" *ngIf="isAoiUpdateMode || isAreaCreationMode">
+  <div class="map-aoi-update-warning alert alert-warning d-flex align-items-center py-3 px-4 shadow-sm" *ngIf="isAoiUpdateMode || isAreaCreationMode">
     <i class="fa-solid fa-circle-info"></i>
     <span *ngIf="isAoiUpdateMode; else newAreaCreationHint">
       {{ 'MAP.SMART_FILTER.AOI_UPDATE_HINT' | translate }}
@@ -71,7 +71,7 @@
     </app-map-toolbar>
 
     <div class="map-panels-container" *ngIf="isLayerManagerOpen">
-      <app-map-panel-shell icon="fa-solid fa-layer-group" [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
+      <app-map-panel-shell [isHeaderExist]="false" icon="fa-solid fa-layer-group" [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
         panelClass="map-panel-shell--layer-manager" [minimized]="panelUiState.layerManager.minimized"
         [maximized]="panelUiState.layerManager.maximized" (closeClicked)="closeLayerManager()"
         (minimizeClicked)="togglePanelMinimize('layerManager')" (maximizeClicked)="togglePanelMaximize('layerManager')">
@@ -82,7 +82,7 @@
     </div>
 
     <div class="map-panels-container" *ngIf="isAskPanelOpen">
-      <app-map-panel-shell icon="fa-solid fa-circle-info" [title]="'MAP.ASK.TITLE' | translate"
+      <app-map-panel-shell [isHeaderExist]="false" icon="fa-solid fa-circle-info" [title]="'MAP.ASK.TITLE' | translate"
         panelClass="map-panel-shell--ask" [minimized]="panelUiState.ask.minimized"
         [maximized]="panelUiState.ask.maximized" (closeClicked)="closeAskPanel()"
         (minimizeClicked)="togglePanelMinimize('ask')" (maximizeClicked)="togglePanelMaximize('ask')">
@@ -97,8 +97,8 @@
       [class.map-draggable-panel--aoi-editing]="isAoiUpdateMode"
       [class.map-draggable-panel--results-collapsed]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen"
       [class.map-draggable-panel--prefilter-collapsed]="isPrefilterPanelCollapsed"
-      *ngIf="isSmartPrefilterPanelOpen || isSmartFilterPanelOpen">
-      <app-map-panel-shell icon="fa-solid fa-map-location-dot" [panelClass]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen
+      *ngIf="isSmartPrefilterPanelOpen || isSmartFilterPanelOpen || isPrefilterPanelCollapsed || isResultsPanelCollapsed || isSmartProductRequestPanelOpen">
+      <app-map-panel-shell *ngIf="!(isPrefilterPanelCollapsed && isResultsPanelCollapsed && !isSmartProductRequestPanelOpen)" icon="fa-solid fa-map-location-dot" [panelClass]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen
           ? 'map-panel-shell--combined-smart-filter map-panel-shell--results-collapsed'
           : 'map-panel-shell--combined-smart-filter'" [title]="'MAP.SMART_FILTER.TITLE' | translate"
         [minimized]="panelUiState.smartFilter.minimized" [maximized]="panelUiState.smartFilter.maximized"
@@ -118,10 +118,10 @@
           </app-smart-product-prefilter-panel>
 
           <button *ngIf="isPrefilterPanelCollapsed" type="button"
-            class="prefilter-restore-rail btn btn-sm btn-light-primary"
+            class="prefilter-restore-rail btn btn-sm btn-light"
             [title]="'MAP.SMART_FILTER.PREFILTER.SHOW' | translate"
             (click)="togglePrefilterPanel(); $event.stopPropagation()">
-            <i class="fa-solid fa-angles-right"></i>
+            <i class="fa-solid fa-angles-left"></i>
             <span>{{ 'MAP.SMART_FILTER.PREFILTER.AREAS' | translate }}</span>
           </button>
 
@@ -146,7 +146,17 @@
         </div>
       </app-map-panel-shell>
 
-      <div *ngIf="isMetadataPanelOpen" class="smart-metadata-hover-panel"
+      <button
+        *ngIf="isPrefilterPanelCollapsed && isResultsPanelCollapsed && !isSmartProductRequestPanelOpen"
+        type="button"
+        class="prefilter-restore-rail prefilter-restore-rail--standalone btn btn-sm btn-light shadow-sm"
+        [title]="'MAP.SMART_FILTER.PREFILTER.SHOW' | translate"
+        (click)="togglePrefilterPanel(); $event.stopPropagation()">
+        <i class="fa-solid fa-angles-left"></i>
+        <span>{{ 'MAP.SMART_FILTER.PREFILTER.AREAS' | translate }}</span>
+      </button>
+
+      <div *ngIf="isMetadataPanelOpen" class="smart-metadata-hover-panel card shadow-sm border border-gray-200"
         [style.top.px]="smartMetadataPanelPosition.top" [style.left.px]="smartMetadataPanelPosition.left"
         (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()">
         <div class="smart-advanced-filter-hover-panel__header">
@@ -168,7 +178,7 @@
         </app-smart-product-metadata-panel>
       </div>
 
-      <div *ngIf="isSmartAdvancedFilterPanelOpen" class="smart-advanced-filter-hover-panel"
+      <div *ngIf="isSmartAdvancedFilterPanelOpen" class="smart-advanced-filter-hover-panel card shadow-sm border border-gray-200"
         [style.top.px]="smartAdvancedFilterPosition.top" [style.left.px]="smartAdvancedFilterPosition.left"
         (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()">
         <div class="smart-advanced-filter-hover-panel__header">
@@ -194,7 +204,7 @@
     </div>
 
     <div class="map-layer-manager-floating" *ngIf="isSearchPanelOpen" (mouseenter)="openSearchPanel()">
-      <app-map-panel-shell icon="fa-solid fa-search" [title]="'MAP.ACTIONS.SEARCH' | translate"
+      <app-map-panel-shell [isHeaderExist]="false" icon="fa-solid fa-search" [title]="'MAP.ACTIONS.SEARCH' | translate"
         [minimized]="panelUiState.search.minimized" [maximized]="panelUiState.search.maximized"
         (closeClicked)="closeSearchPanel()" (minimizeClicked)="togglePanelMinimize('search')"
         (maximizeClicked)="togglePanelMaximize('search')">
@@ -212,7 +222,7 @@
     </div>
 
     <div class="map-layer-manager-floating" *ngIf="isExportPanelOpen" (mouseenter)="openExportPanel()">
-      <app-map-panel-shell icon="fa-solid fa-print" [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate"
+      <app-map-panel-shell [isHeaderExist]="false" icon="fa-solid fa-print" [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate"
         [minimized]="panelUiState.export.minimized" [maximized]="panelUiState.export.maximized"
         (closeClicked)="closeExportPanel()" (minimizeClicked)="togglePanelMinimize('export')"
         (maximizeClicked)="togglePanelMaximize('export')">

@@ -1,1275 +1,194 @@
-.smart-product-prefilter-panel {
-  display: flex;
-  flex-direction: column;
+:host {
+  display: block;
   width: 100%;
   height: 100%;
-  min-width: 390px;
-  overflow: visible;
+  min-width: 0;
+  min-height: 0;
 }
 
-.smart-product-prefilter-panel__body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px;
-  overflow: visible;
-}
-
-.prefilter-info,
-.aoi-edit-hint,
-.aoi-empty-state {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  padding: 6px 8px;
-  border-radius: var(--bs-border-radius-sm);
-  font-size: 11px;
-  line-height: 1.35;
-}
-
-.prefilter-info {
-  background: var(--bs-light-info);
-  color: var(--bs-gray-700);
-
-  i {
-    margin-top: 2px;
-    color: var(--bs-info);
-    font-size: 11px;
-    flex-shrink: 0;
-  }
+.smart-prefilter-panel__topline {
+  height: 55px;
+  min-height: 55px;
+  padding: 0 14px;
+  box-sizing: border-box;
 }
 
 .aoi-list {
   position: relative;
-  margin-bottom: 4px;
-  overflow: visible;
+  overflow: visible !important;
 }
 
-.aoi-list__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.55rem;
-  color: var(--bs-gray-800);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.aoi-item {
+.aoi-list > .aoi-card {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-height: 58px;
-  padding: 0.65rem 0.7rem;
-  margin-bottom: 0.5rem;
-
-  background: var(--bs-body-bg);
-  border: 1px solid var(--bs-gray-300);
-  border-radius: 0.65rem;
-
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+  z-index: 1;
+  overflow: visible !important;
 }
 
-.aoi-item--editing {
-  border-color: var(--bs-primary);
-  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.12);
+.aoi-list > .aoi-card.aoi-card--menu-open {
+  z-index: 9999 !important;
 }
 
-.aoi-item__icon {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
+.aoi-card {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  overflow: visible !important;
+  border-radius: 3px !important;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 
-  background: var(--bs-light-primary);
-  border-radius: 0.55rem;
-  color: var(--bs-primary);
+  &:hover {
+    border-color: var(--bs-primary) !important;
+  }
 
-  i {
-    font-size: 14px;
+  &--editing {
+    box-shadow: inset 3px 0 0 var(--bs-warning) !important;
   }
 }
 
-.aoi-item__content {
+.aoi-card > .card-body {
+  position: relative;
+  z-index: auto;
   min-width: 0;
-  flex: 1;
+  overflow: visible !important;
 }
 
-.aoi-item__name {
+.aoi-card--menu-open > .card-body {
+  z-index: 9999;
+}
+
+.aoi-card-layout {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  overflow: visible !important;
+}
+
+.aoi-card-content {
+  width: 100%;
+  min-width: 0;
+}
+
+.aoi-card-content .btn-link {
+  display: block;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
-  color: var(--bs-gray-800);
-  font-size: 12px;
-  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.aoi-item__area {
-  margin-top: 0.1rem;
-  color: var(--bs-gray-600);
-  font-size: 11px;
+.aoi-card-actions-wrap {
+  position: relative;
+  z-index: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: max-content;
+  overflow: visible !important;
 }
 
-.aoi-item__actions {
+.aoi-card-actions {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  width: 100%;
+  overflow: visible !important;
+}
+
+.aoi-menu-anchor {
+  position: relative;
+  z-index: 10000;
+  flex: 0 0 auto;
+  overflow: visible !important;
+}
+
+.aoi-results-toggle {
   flex: 0 0 auto;
 }
 
-.aoi-menu-trigger {
-  width: 30px !important;
-  height: 30px !important;
-  min-width: 30px !important;
-}
+/*
+ * Menü kart akışının dışında, üç nokta butonunun hemen altında açılır.
+ * Metronic'in menu-sub-dropdown transform/inset kuralları özellikle eziliyor.
+ */
+.aoi-menu.menu-sub-dropdown {
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  inset: auto 0 auto auto !important;
+  transform: none !important;
 
-.aoi-menu {
-  position: absolute;
-  z-index: 1200;
-  top: calc(100% + 6px);
-  right: 0;
+  z-index: 10001 !important;
+  display: block !important;
+  min-width: 210px;
+  margin: 0 !important;
+  overflow: visible !important;
 
-  width: 220px;
-  padding: 0.4rem;
-
-  background: var(--bs-body-bg);
   border: 1px solid var(--bs-gray-300);
-  border-radius: 0.65rem;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.12),
-    0 2px 6px rgba(0, 0, 0, 0.08);
+  border-radius: 3px !important;
+  background: var(--bs-body-bg) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+  padding: 6px !important;
 
-  button {
+  .menu-link {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
     width: 100%;
-    padding: 0.6rem 0.7rem;
-
+    min-height: 34px;
+    padding: 6px 12px;
     background: transparent;
-    border: 0;
-    border-radius: 0.4rem;
-
     color: var(--bs-gray-700);
     font-size: 12px;
-    font-weight: 500;
     text-align: left;
-
-    transition:
-      color 0.15s ease,
-      background-color 0.15s ease;
+    white-space: nowrap;
 
     &:hover,
     &:focus {
-      color: var(--bs-primary);
-      background: var(--bs-light);
+      background: var(--bs-primary-light) !important;
     }
 
-    i {
-      width: 16px;
-      flex: 0 0 16px;
-      text-align: center;
-    }
-  }
-
-  .aoi-menu__danger {
-    color: var(--bs-danger);
-
-    &:hover,
-    &:focus {
-      color: var(--bs-danger);
-      background: var(--bs-light-danger);
+    &.text-danger:hover,
+    &.text-danger:focus {
+      background: var(--bs-danger-light) !important;
     }
   }
 }
 
-.aoi-menu__divider {
-  height: 1px;
-  margin: 0.3rem 0;
-  background: var(--bs-gray-300);
+.btn-light:hover,
+.btn-light:focus,
+.btn-light:active {
+  background: var(--bs-gray-100) !important;
+  color: var(--bs-primary) !important;
 }
 
-.aoi-edit-hint {
-  margin-top: 2px;
-  background: var(--bs-light-primary);
-  color: var(--bs-primary);
-
-  i {
-    margin-top: 2px;
-    flex-shrink: 0;
-  }
+.form-select.w-auto {
+  width: auto !important;
+  min-width: 76px;
+  max-width: 90px;
 }
 
-.aoi-empty-state {
-  align-items: center;
-  background: var(--bs-light);
-  color: var(--bs-gray-600);
-
-  i {
-    color: var(--bs-gray-500);
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-}
-
-.prefilter-field {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  height: 100%;
-}
-
-.prefilter-label {
-  margin-bottom: 0;
-  color: var(--bs-gray-700);
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.row.g-2 {
-  --bs-gutter-x: 0.5rem;
-  --bs-gutter-y: 0.25rem;
-}
-
-.smart-product-prefilter-panel__footer {
-  display: flex;
-  gap: 6px;
-  padding: 8px;
-  border-top: 1px solid var(--bs-border-color);
-
-  .btn {
-    flex: 1;
-  }
-}
-
-.spinner-border-sm {
-  width: 0.85rem;
-  height: 0.85rem;
-}
-
-@media (max-width: 576px) {
-  .smart-product-prefilter-panel {
-    min-width: 310px;
+@media (max-width: 767.98px) {
+  .aoi-card-layout {
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
-  .smart-product-prefilter-panel__body,
-  .smart-product-prefilter-panel__footer {
-    padding: 6px;
+  .aoi-card-actions-wrap {
+    grid-column: 2;
+    width: 100%;
   }
 
-  .row.g-2 {
-    --bs-gutter-x: 0.35rem;
+  .aoi-card-actions {
+    justify-content: flex-end;
   }
 
   .aoi-menu {
-    right: -4px;
-    width: 205px;
-  }
-
-  .smart-product-prefilter-panel__footer {
-    flex-direction: column;
-
-    .btn {
-      width: 100%;
-    }
+    min-width: 190px;
   }
 }
-
-.prefilter-section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--bs-gray-800);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.prefilter-section-title--areas {
-  margin-top: 6px;
-}
-
-.prefilter-auto-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--bs-primary);
-  font-size: 10px;
-  font-weight: 600;
-}
-
-/* Discover / Area Imagery Results düzeni */
-.prefilter-heading {
-  color: var(--bs-gray-900);
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.1;
-  margin-bottom: 8px;
-}
-
-.prefilter-section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  color: var(--bs-gray-800);
-  font-size: 14px;
-  font-weight: 700;
-  margin-top: 4px;
-}
-
-.prefilter-section-title--areas {
-  padding-top: 12px;
-  margin-top: 10px;
-  border-top: 1px solid var(--bs-gray-300);
-}
-
-.prefilter-auto-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--bs-primary);
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.prefilter-date-range {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: end;
-  gap: 7px;
-}
-
-.prefilter-date-separator {
-  padding-bottom: 8px;
-  color: var(--bs-gray-500);
-  font-weight: 700;
-}
-
-.new-area-wrapper {
-  position: relative;
-  z-index: 1250;
-}
-
-.new-area-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.new-area-menu {
-  position: absolute;
-  z-index: 1300;
-  top: calc(100% + 6px);
-  right: 0;
-  width: 205px;
-  padding: 6px;
-  background: var(--bs-body-bg);
-  border: 1px solid var(--bs-gray-300);
-  border-radius: 8px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
-
-  button {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    width: 100%;
-    padding: 9px 10px;
-    border: 0;
-    border-radius: 6px;
-    background: transparent;
-    color: var(--bs-gray-800);
-    font-size: 12px;
-    text-align: left;
-
-    &:hover {
-      background: var(--bs-light-primary);
-      color: var(--bs-primary);
-    }
-
-    i { width: 16px; text-align: center; }
-  }
-}
-
-.aoi-item {
-  align-items: flex-start;
-  min-height: 92px;
-  border-color: var(--bs-primary);
-  padding: 12px;
-}
-
-.aoi-item__select {
-  padding-top: 7px;
-  flex: 0 0 auto;
-}
-
-.aoi-item__name-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  max-width: 100%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--bs-gray-900);
-  font-size: 18px;
-  font-weight: 700;
-  text-align: left;
-
-  i {
-    color: var(--bs-gray-500);
-    font-size: 10px;
-    opacity: 0;
-    transition: opacity .15s ease;
-  }
-
-  &:hover i { opacity: 1; }
-}
-
-.aoi-item__area {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: 14px;
-
-  span { color: var(--bs-gray-600); }
-  strong { color: var(--bs-gray-800); font-weight: 600; }
-}
-
-.aoi-item__actions {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.aoi-rename {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 30px 30px;
-  gap: 4px;
-  align-items: center;
-}
-
-.smart-product-prefilter-panel__footer {
-  display: none !important;
-}
-
-/* Combined panel sizing */
-:host {
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-}
-
-.smart-product-prefilter-panel {
-  min-width: 0 !important;
-  width: 100% !important;
-  height: 100%;
-  overflow: hidden;
-  background: var(--bs-body-bg);
-}
-
-.smart-product-prefilter-panel__body {
-  height: 100%;
-  padding: 14px 16px;
-  overflow-y: auto;
-  overflow-x: visible;
-}
-
-.prefilter-date-range {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr);
-  align-items: end;
-  gap: 8px;
-}
-
-.prefilter-date-range .form-control {
-  min-width: 0;
-  width: 100%;
-}
-
-.prefilter-section-title--areas {
-  flex-wrap: nowrap;
-}
-
-.new-area-button {
-  white-space: nowrap;
-}
-
-.aoi-item {
-  width: 100%;
-  min-width: 0;
-}
-
-/* Compact AOI selector */
-.smart-product-prefilter-panel { min-width: 350px; }
-.smart-product-prefilter-panel__body { gap: 8px; padding: 8px; }
-.prefilter-date-range { display:grid; grid-template-columns:minmax(0,1fr) 10px minmax(0,1fr); align-items:end; gap:4px; }
-.prefilter-date-separator { padding-bottom:7px; text-align:center; font-size:11px; }
-.prefilter-field { gap:1px; }
-.prefilter-label { font-size:10px; line-height:1.1; }
-.prefilter-field .form-control-sm { min-height:30px; height:30px; padding:.25rem .5rem; font-size:11px; }
-.prefilter-section-title { display:flex; align-items:center; justify-content:space-between; margin:2px 0; min-height:30px; font-size:11px; font-weight:700; }
-.prefilter-section-title .badge { min-width:20px; padding:.25rem .4rem; font-size:10px; }
-.new-area-button { min-height:28px; padding:.25rem .5rem; gap:4px; font-size:10px; }
-.aoi-list { max-height:420px; margin:0; overflow-y:auto; overflow-x:visible; padding-right:2px; }
-.aoi-item { gap:5px; min-height:44px; margin-bottom:3px; padding:4px 5px; border-radius:.4rem; cursor:pointer; }
-.aoi-item--selected { border-color:var(--bs-primary); background:var(--bs-light-primary); box-shadow:inset 3px 0 0 var(--bs-primary); }
-.aoi-item__select { display:flex; align-items:center; }
-.aoi-item__select .form-check-input { width:14px; height:14px; margin:0; }
-.aoi-item__icon { width:24px; height:24px; flex:0 0 24px; border-radius:.35rem; }
-.aoi-item__icon i { font-size:11px; }
-.aoi-item__name-button { display:block; max-width:100%; padding:0; overflow:hidden; border:0; background:transparent; color:var(--bs-gray-800); font-size:11px; font-weight:700; line-height:1.15; text-align:left; text-overflow:ellipsis; white-space:nowrap; }
-.aoi-item__name-button i { margin-left:3px; font-size:8px; opacity:.55; }
-.aoi-item__area { display:flex; gap:4px; margin-top:2px; font-size:9px; line-height:1.1; }
-.aoi-item__area strong { color:var(--bs-gray-700); }
-.aoi-item__actions { display:flex; gap:2px; }
-.compact-icon-btn,.aoi-menu-trigger { width:24px!important; height:24px!important; min-width:24px!important; padding:0!important; }
-.compact-icon-btn i,.aoi-menu-trigger i { font-size:10px; }
-.aoi-menu { width:185px; padding:3px; }
-.aoi-menu button { gap:6px; padding:6px 7px; font-size:10px; }
-.aoi-edit-hint,.aoi-empty-state { padding:4px 6px; font-size:9px; }
-.aoi-rename { display:flex; gap:2px; }
-.aoi-rename .form-control-sm { height:26px; min-height:26px; padding:.2rem .4rem; font-size:10px; }
-.aoi-rename .btn { width:26px!important; height:26px!important; min-width:26px!important; }
-
-
-/* Final compact / menu stacking overrides */
-:host {
-  display: block;
-  width: fit-content;
-  min-width: 0;
-  max-width: 100%;
-  overflow: visible;
-}
-
-.smart-product-prefilter-panel {
-  width: 315px !important;
-  min-width: 315px !important;
-  height: fit-content !important;
-  max-height: calc(100vh - 150px);
-  overflow: visible !important;
-}
-
-.smart-product-prefilter-panel__body {
-  flex: 0 0 auto;
-  height: fit-content !important;
-  max-height: calc(100vh - 150px);
-  padding: 8px !important;
-  gap: 3px !important;
-  overflow-y: auto;
-  overflow-x: visible !important;
-}
-
-.prefilter-section-title--areas {
-  padding-top: 4px !important;
-  margin-top: 2px !important;
-}
-
-.aoi-list {
-  max-height: min(320px, calc(100vh - 265px)) !important;
-  overflow-y: auto !important;
-  overflow-x: visible !important;
-  isolation: auto;
-}
-
-.aoi-item {
-  position: relative;
-  z-index: 1;
-  min-height: 39px !important;
-  padding: 3px 4px !important;
-  margin-bottom: 2px !important;
-}
-
-.aoi-item--menu-open {
-  z-index: 5000 !important;
-}
-
-.aoi-item--menu-open .aoi-menu {
-  z-index: 6000 !important;
-}
-
-.aoi-menu {
-  top: calc(100% + 2px) !important;
-  right: 0;
-  width: max-content !important;
-  min-width: 165px;
-  max-width: 205px;
-  padding: 2px !important;
-  z-index: 6000 !important;
-}
-
-.aoi-menu button {
-  padding: 5px 6px !important;
-  font-size: 10px !important;
-  white-space: nowrap;
-}
-
-.aoi-item__name-button { font-size: 10px !important; }
-.aoi-item__area { font-size: 8.5px !important; }
-.aoi-item__icon { width: 21px !important; height: 21px !important; flex-basis: 21px !important; }
-.compact-icon-btn,.aoi-menu-trigger { width:22px!important; height:22px!important; min-width:22px!important; }
-.new-area-button { min-height:26px !important; font-size:9px !important; }
-
-
-/* AOI compact row and dropdown stacking - final overrides */
-:host,
-.smart-product-prefilter-panel,
-.smart-product-prefilter-panel__body,
-.prefilter-section-title,
-.new-area-wrapper {
-  overflow: visible !important;
-}
-
-.smart-product-prefilter-panel__body {
-  position: relative;
-}
-
-.prefilter-section-title--areas,
-.new-area-wrapper {
-  z-index: 12000 !important;
-}
-
-.new-area-wrapper {
-  isolation: isolate;
-}
-
-.new-area-button {
-  color: #fff !important;
-  font-weight: 600 !important;
-}
-
-.new-area-button i {
-  color: #fff !important;
-}
-
-.new-area-menu {
-  top: calc(100% + 3px) !important;
-  right: 0 !important;
-  z-index: 20000 !important;
-  overflow: visible !important;
-}
-
-.aoi-list {
-  position: relative;
-  z-index: 1;
-}
-
-.aoi-item {
-  grid-template-columns: auto minmax(0, 1fr) auto !important;
-}
-
-.aoi-item__content {
-  min-width: 0;
-}
-
-.aoi-item__name-button {
-  width: 100%;
-  line-height: 1.05 !important;
-}
-
-.aoi-item__area {
-  display: block !important;
-  margin-top: 1px !important;
-  white-space: nowrap;
-}
-
-.aoi-item__area span,
-.aoi-item__area strong {
-  display: inline !important;
-}
-
-
-/* =========================================================
-   FINAL: white New Area text, unclipped menus, matching AOI highlight
-========================================================= */
-:host,
-.smart-product-prefilter-panel {
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  max-width: none !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-.smart-product-prefilter-panel__body {
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  overflow-y: auto !important;
-  overflow-x: visible !important;
-}
-
-.new-area-button,
-.new-area-button:hover,
-.new-area-button:focus,
-.new-area-button:active,
-.new-area-button span,
-.new-area-button i {
-  color: #ffffff !important;
-}
-
-.new-area-wrapper,
-.new-area-menu {
-  z-index: 30000 !important;
-}
-
-/* A menu opened inside the scrollable AOI list must not be clipped. */
-.aoi-list:has(.aoi-item--menu-open) {
-  overflow: visible !important;
-}
-
-.aoi-item--menu-open,
-.aoi-item--menu-open .aoi-item__actions,
-.aoi-item--menu-open .aoi-menu {
-  z-index: 32000 !important;
-}
-
-.aoi-menu {
-  position: absolute !important;
-  overflow: visible !important;
-}
-
-/* Same cyan used by the selected AOI on the OpenLayers map. */
-.aoi-item--selected {
-  border-color: #009ef7 !important;
-  background: rgba(0, 158, 247, 0.12) !important;
-  box-shadow: inset 3px 0 0 #009ef7, 0 0 0 1px rgba(0, 158, 247, 0.14) !important;
-}
-
-.aoi-item--selected .form-check-input:checked {
-  background-color: #009ef7 !important;
-  border-color: #009ef7 !important;
-}
-
-@media (max-width: 900px) {
-  .smart-product-prefilter-panel__body {
-    min-width: 285px !important;
-  }
-}
-
-/* Keep the original panel selected style; only center AOI text vertically. */
-.aoi-item--selected {
-  border-color: var(--bs-primary) !important;
-  background: var(--bs-light-primary) !important;
-  box-shadow: inset 3px 0 0 var(--bs-primary) !important;
-}
-
-.aoi-item--selected .form-check-input:checked {
-  background-color: var(--bs-primary) !important;
-  border-color: var(--bs-primary) !important;
-}
-
-.aoi-item__content {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-self: stretch !important;
-  padding: 2px 0 !important;
-}
-
-.aoi-item__name-button,
-.aoi-item__area {
-  line-height: 1.2 !important;
-}
-
-
-/* Coordinate options menu visual language for all AOI dropdowns. */
-.new-area-menu.map-options-menu,
-.aoi-menu.map-options-menu {
-  padding: 8px 0 !important;
-  background-color: var(--bs-body-bg) !important;
-  border: 1px solid var(--bs-gray-200) !important;
-  border-radius: .475rem !important;
-  box-shadow: var(--bs-dropdown-box-shadow) !important;
-}
-
-.new-area-menu.map-options-menu button,
-.aoi-menu.map-options-menu button {
-  width: calc(100% - 12px) !important;
-  min-height: 36px !important;
-  margin: 0 6px !important;
-  padding: 0 12px !important;
-  gap: 10px !important;
-  color: var(--bs-gray-700) !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: .475rem !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  text-align: left !important;
-  transition: color .2s ease, background-color .2s ease !important;
-}
-
-.new-area-menu.map-options-menu button:hover,
-.new-area-menu.map-options-menu button:focus,
-.aoi-menu.map-options-menu button:hover,
-.aoi-menu.map-options-menu button:focus {
-  color: var(--bs-primary) !important;
-  background: var(--bs-primary-light) !important;
-}
-
-.new-area-menu.map-options-menu button:hover i,
-.new-area-menu.map-options-menu button:focus i,
-.aoi-menu.map-options-menu button:hover i,
-.aoi-menu.map-options-menu button:focus i {
-  color: var(--bs-primary) !important;
-}
-
-.aoi-menu.map-options-menu .aoi-menu__danger:hover,
-.aoi-menu.map-options-menu .aoi-menu__danger:focus {
-  color: var(--bs-danger) !important;
-  background: var(--bs-danger-light) !important;
-}
-
-.aoi-menu.map-options-menu .aoi-menu__danger:hover i,
-.aoi-menu.map-options-menu .aoi-menu__danger:focus i {
-  color: var(--bs-danger) !important;
-}
-
-
-/* Requested AOI list and dropdown refinements. */
-.aoi-item {
-  min-height: 50px !important;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-}
-
-.new-area-menu.map-options-menu button:hover,
-.new-area-menu.map-options-menu button:focus-visible,
-.aoi-menu.map-options-menu button:hover,
-.aoi-menu.map-options-menu button:focus-visible {
-  color: var(--bs-primary) !important;
-  background-color: var(--bs-light-primary) !important;
-}
-
-.new-area-menu.map-options-menu button:hover i,
-.new-area-menu.map-options-menu button:focus-visible i,
-.aoi-menu.map-options-menu button:hover i,
-.aoi-menu.map-options-menu button:focus-visible i {
-  color: var(--bs-primary) !important;
-}
-
-/* =========================================================
-   FINAL: use the exact coordinate-options dropdown states
-========================================================= */
-.new-area-menu.map-options-menu button,
-.aoi-menu.map-options-menu button {
-  color: var(--bs-gray-700) !important;
-  background-color: transparent !important;
-  outline: 0 !important;
-}
-
-.new-area-menu.map-options-menu button:hover,
-.new-area-menu.map-options-menu button:focus,
-.new-area-menu.map-options-menu button:focus-visible,
-.aoi-menu.map-options-menu button:hover,
-.aoi-menu.map-options-menu button:focus,
-.aoi-menu.map-options-menu button:focus-visible {
-  color: var(--bs-primary) !important;
-  background-color: var(--bs-primary-light) !important;
-  box-shadow: none !important;
-  outline: 0 !important;
-}
-
-.new-area-menu.map-options-menu button:hover span,
-.new-area-menu.map-options-menu button:focus span,
-.new-area-menu.map-options-menu button:focus-visible span,
-.new-area-menu.map-options-menu button:hover i,
-.new-area-menu.map-options-menu button:focus i,
-.new-area-menu.map-options-menu button:focus-visible i,
-.aoi-menu.map-options-menu button:hover span,
-.aoi-menu.map-options-menu button:focus span,
-.aoi-menu.map-options-menu button:focus-visible span,
-.aoi-menu.map-options-menu button:hover i,
-.aoi-menu.map-options-menu button:focus i,
-.aoi-menu.map-options-menu button:focus-visible i {
-  color: var(--bs-primary) !important;
-}
-
-
-/* =========================================================
-   FINAL: danger action and coordinate-options menu states
-========================================================= */
-.aoi-menu.map-options-menu .aoi-menu__danger {
-  color: var(--bs-danger) !important;
-  background-color: var(--bs-danger-light) !important;
-}
-
-.aoi-menu.map-options-menu .aoi-menu__danger span,
-.aoi-menu.map-options-menu .aoi-menu__danger i {
-  color: var(--bs-danger) !important;
-}
-
-.aoi-menu.map-options-menu .aoi-menu__danger:hover,
-.aoi-menu.map-options-menu .aoi-menu__danger:focus,
-.aoi-menu.map-options-menu .aoi-menu__danger:focus-visible {
-  color: var(--bs-danger) !important;
-  background-color: var(--bs-danger-light) !important;
-  box-shadow: none !important;
-  outline: 0 !important;
-}
-
-.aoi-menu.map-options-menu .aoi-menu__danger:hover span,
-.aoi-menu.map-options-menu .aoi-menu__danger:focus span,
-.aoi-menu.map-options-menu .aoi-menu__danger:focus-visible span,
-.aoi-menu.map-options-menu .aoi-menu__danger:hover i,
-.aoi-menu.map-options-menu .aoi-menu__danger:focus i,
-.aoi-menu.map-options-menu .aoi-menu__danger:focus-visible i {
-  color: var(--bs-danger) !important;
-}
-
-
-/* Result-panel toggle and taller AOI cards */
-.aoi-item { min-height: 72px !important; padding-top: .8rem !important; padding-bottom: .8rem !important; }
-.aoi-item__actions { display: flex; align-items: center; gap: 4px; }
-.aoi-results-toggle { width: 30px !important; height: 30px !important; min-width: 30px !important; }
-.aoi-results-toggle i { font-size: 11px; }
-
-/* FINAL: result hide/expand control at the AOI card's bottom-right corner */
-.aoi-item {
-  position: relative !important;
-  min-height: 78px !important;
-  padding-right: 42px !important;
-  padding-bottom: 34px !important;
-}
-
-.aoi-item__actions {
-  align-self: flex-start;
-}
-
-.aoi-results-toggle {
-  position: absolute !important;
-  right: 7px !important;
-  bottom: 6px !important;
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 24px !important;
-  z-index: 4;
-  background: transparent !important;
-  background-color: transparent !important;
-  border-radius: 5px !important;
-  color: var(--bs-gray-600) !important;
-}
-
-/* =========================================================
-   FINAL: result toggle lives on its own row below AOI actions
-========================================================= */
-.aoi-item {
-  display: grid !important;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-rows: auto auto;
-  align-items: start !important;
-  min-height: 88px !important;
-  padding-right: 8px !important;
-  padding-bottom: 8px !important;
-}
-
-.aoi-item__select { grid-column: 1; grid-row: 1 / span 2; }
-.aoi-item__content { grid-column: 2; grid-row: 1 / span 2; }
-.aoi-item__actions {
-  grid-column: 3;
-  grid-row: 1;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  align-self: start;
-}
-
-.aoi-item__result-toggle-row {
-  grid-column: 3;
-  grid-row: 2;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  min-height: 30px;
-  align-self: end;
-}
-
-.aoi-results-toggle {
-  position: static !important;
-  right: auto !important;
-  bottom: auto !important;
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  margin: 0 !important;
-}
-
-/* =========================================================
-   FINAL: AOI kart içeriğini dikey ortala ve yazıları büyüt
-========================================================= */
-.aoi-item {
-  align-items: center !important;
-}
-
-.aoi-item__select {
-  display: flex !important;
-  align-items: center !important;
-  align-self: stretch !important;
-  padding-top: 0 !important;
-}
-
-.aoi-item__content {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-self: stretch !important;
-  min-height: 100% !important;
-  padding: 0 2px !important;
-}
-
-.aoi-item__name-button {
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  line-height: 1.3 !important;
-  color: var(--bs-gray-900) !important;
-}
-
-.aoi-item__area {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 4px !important;
-  margin-top: 4px !important;
-  font-size: 11px !important;
-  line-height: 1.3 !important;
-  color: var(--bs-gray-700) !important;
-}
-
-.aoi-item__area span {
-  display: inline !important;
-  color: var(--bs-gray-700) !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-}
-
-.aoi-item__area strong {
-  display: inline !important;
-  color: var(--bs-gray-900) !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-}
-
-.aoi-item__actions {
-  align-self: start !important;
-}
-
-.aoi-item__result-toggle-row {
-  align-self: end !important;
-}
-
-
-
-/* AOI alan birimi seçimi */
-.aoi-item__area {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-.aoi-area-unit-select {
-  width: auto;
-  min-width: 62px;
-  height: 25px;
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 7px;
-  padding-right: 24px;
-  font-size: 10px;
-  line-height: 1.2;
-}
-
-.aoi-item__area-value {
-  color: var(--bs-gray-800);
-  font-size: 11px;
-  white-space: nowrap;
-}
-
-.prefilter-panel-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  height: 42px;
-  min-height: 42px;
-  max-height: 42px;
-  box-sizing: border-box;
-  padding: 6px 10px;
-  border-bottom: 1px solid var(--bs-gray-200);
-  background: var(--bs-body-bg);
-  flex: 0 0 auto;
-}
-
-.prefilter-collapse-button {
-  position: static;
-  z-index: auto;
-  width: 30px;
-  height: 30px;
-  flex: 0 0 30px;
-  border-radius: 8px;
-}
-
-.prefilter-collapse-button i {
-  font-size: 12px;
-}
-
-/* ===== FINAL AOI TOOLBAR BUTTON ALIGNMENT / SQUARE EDGES ===== */
-.prefilter-collapse-button {
-  width: 36px !important;
-  height: 36px !important;
-  min-width: 36px !important;
-  flex: 0 0 36px !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* =========================================================
-   FINAL AOI / RESULT TOPLINE ALIGNMENT
-   AOI daraltma butonu, smart-filter görünüm butonlarıyla aynı
-   32x28 ölçü ve 5px köşe yarıçapını kullanır. Sol üst araç
-   satırı sağdaki result topline ile aynı 42px yüksekliğe sahiptir.
-========================================================= */
-.prefilter-panel-toolbar {
-  height: 42px !important;
-  min-height: 42px !important;
-  max-height: 42px !important;
-  padding: 6px 8px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  box-sizing: border-box !important;
-  border-bottom: 1px solid var(--bs-border-color) !important;
-  background: var(--bs-body-bg) !important;
-}
-
-.prefilter-collapse-button {
-  width: 32px !important;
-  height: 28px !important;
-  min-width: 32px !important;
-  max-width: 32px !important;
-  min-height: 28px !important;
-  max-height: 28px !important;
-  flex: 0 0 32px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 5px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-}
-
-.prefilter-collapse-button i {
-  margin: 0 !important;
-  font-size: 12px !important;
-  line-height: 1 !important;
-}
-
-/* =========================================================
-   ABSOLUTE FINAL TOPLINE ALIGNMENT
-   Prefilter ve sonuç panelinin üst satırı birebir aynı ölçüdedir.
-========================================================= */
-.prefilter-panel-toolbar {
-  width: 100% !important;
-  height: 44px !important;
-  min-height: 44px !important;
-  max-height: 44px !important;
-  padding: 6px 10px !important;
-  margin: 0 !important;
-  box-sizing: border-box !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  border-bottom: 1px solid var(--bs-border-color) !important;
-  background: var(--bs-body-bg) !important;
-}
-
-.prefilter-collapse-button {
-  width: 32px !important;
-  min-width: 32px !important;
-  max-width: 32px !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  max-height: 28px !important;
-  flex: 0 0 32px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-}
-
-/* =========================================================
-   AOI action buttons = map-coordinate-menu-btn
-========================================================= */
-.aoi-item__actions .compact-icon-btn,
-.aoi-item__actions .aoi-menu-trigger {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  width: 26px !important;
-  min-width: 26px !important;
-  max-width: 26px !important;
-  height: 26px !important;
-  min-height: 26px !important;
-  max-height: 26px !important;
-  padding: 0 !important;
-
-  color: var(--bs-gray-600) !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  border: 0 !important;
-  border-radius: 5ox !important;
-  box-shadow: none !important;
-
-  transition:
-    color 0.15s ease,
-    background-color 0.15s ease !important;
-}
-
-.aoi-item__result-toggle-row .compact-icon-btn:hover,
-.aoi-item__result-toggle-row .compact-icon-btn:focus,
-.aoi-item__result-toggle-row .compact-icon-btn:active,
-.aoi-item__result-toggle-row .aoi-menu-trigger:hover,
-.aoi-item__result-toggle-row .aoi-menu-trigger:focus,
-.aoi-item__result-toggle-row .aoi-menu-trigger:active
-{
-  color: var(--bs-primary) !important;
-  background: var(--bs-primary-light) !important;
-  background-color: var(--bs-primary-light) !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-.aoi-item__actions .compact-icon-btn:hover,
-.aoi-item__actions .compact-icon-btn:focus,
-.aoi-item__actions .compact-icon-btn:active,
-.aoi-item__actions .aoi-menu-trigger:hover,
-.aoi-item__actions .aoi-menu-trigger:focus,
-.aoi-item__actions .aoi-menu-trigger:active,
-.aoi-item--menu-open .aoi-menu-trigger {
-  color: var(--bs-primary) !important;
-  background: var(--bs-primary-light) !important;
-  background-color: var(--bs-primary-light) !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-.aoi-item__actions .compact-icon-btn i,
-.aoi-item__actions .aoi-menu-trigger i {
-  color: inherit !important;
-  font-size: 12px !important;
-  line-height: 1 !important;
-}
-

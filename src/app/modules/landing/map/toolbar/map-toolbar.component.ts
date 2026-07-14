@@ -160,7 +160,7 @@ export class MapToolbarComponent {
   }
 
   get compassNeedleTransform(): string {
-    return `rotate(${-this.normalizedRotationDegree}deg)`;
+    return `rotate(${this.normalizedRotationDegree}deg)`;
   }
 
   private updateCompassRotation(clientX: number, clientY: number): void {

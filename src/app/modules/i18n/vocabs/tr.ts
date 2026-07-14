@@ -934,6 +934,8 @@ export const locale = {
                 AOI_NEW: "Harita üzerinde yeni bir ilgi alanı oluşturabilirsiniz. İptal etmek için Esc tuşuna basın.",
                 AOI_UPDATE_HINT: 'İlgi alanını harita üzerinden güncelleyebilirsiniz. İptal etmek için Esc tuşuna basın.',
                 "AOI_UPDATE_ONLY_FOR_DRAWINGS": "İlgi alanı güncelleme yalnızca çizim araçlarıyla oluşturulan alanlarda kullanılabilir. Arama veya dosya yükleme ile oluşturulan alanlar güncellenemez.",
+                "CARD_VIEW": "Kart Görünümü",
+                "LIST_VIEW": "Liste Görünümü",
                 "PREFILTER": {
                     "TITLE": "Ön Filtre",
                     "DESCRIPTION": "Sonuçları getirmeden önce görüntü alım tarihi aralığını seçebilirsiniz.",
@@ -956,6 +958,7 @@ export const locale = {
                     "EDIT_HINT": "Köşeleri taşıyın; alan ve sonuçlar otomatik güncellenir.",
                     "EMPTY_AREAS": "Yeni Alan ile bir ilgi alanı ekleyin.",
                     "HIDE": "Sonuçları Gizle",
+                    "HIDE_AREAS": "İlgi Alanlarını Gizle",
                     "SHOW": "Sonuçları Göster",
                 },
                 "SORT": {

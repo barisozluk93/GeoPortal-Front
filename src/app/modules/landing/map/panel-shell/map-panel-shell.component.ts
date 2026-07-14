@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./map-panel-shell.component.scss'],
 })
 export class MapPanelShellComponent {
+  @Input() isHeaderExist = true;
   @Input() title = '';
   @Input() icon = 'fa-solid fa-window-maximize';
   @Input() panelClass = '';

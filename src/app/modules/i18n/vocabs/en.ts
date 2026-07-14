@@ -930,6 +930,8 @@ export const locale = {
         ZOOM_TO_EXTENT: 'Zoom to Extent',
         VIEW_METADATA: 'View Metadata',
         ADD_TO_CART: 'Add to Cart',
+        "CARD_VIEW": "Card View",
+        "LIST_VIEW": "List View",
         AOI_UPDATE_HINT: "You can update the area of interest on the map. Press Esc to cancel.",
         AOI_NEW: "You can create a new area of interest on the map. Press Esc to cancel.",
         "AOI_UPDATE_ONLY_FOR_DRAWINGS": "Area update is only available for areas created using drawing tools. Areas created from search results or uploaded files cannot be updated.",
@@ -955,6 +957,7 @@ export const locale = {
           "EDIT_HINT": "Move vertices; area and results update automatically.",
           "EMPTY_AREAS": "Add an area using New Area.",
           "HIDE": "Hide Results",
+          "HIDE_AREAS": "Hide Areas of Interest",
           "SHOW": "Show Results",
         },
         "SORT": {

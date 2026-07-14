@@ -2,11 +2,11 @@
   class="map-panel-shell card rounded-0 border border-gray-300 shadow-lg"
   [ngClass]="[
     panelClass,
-    minimized ? 'map-panel-shell--minimized' : '',
+    minimized && !panelClass.includes('map-panel-shell--combined-smart-filter') ? 'map-panel-shell--minimized' : '',
     maximized ? 'map-panel-shell--maximized' : ''
   ]"
 >
-  <div class="card-header min-h-35px px-2 border-bottom border-gray-300">
+  <div class="card-header min-h-35px px-2 border-bottom border-gray-300" *ngIf="isHeaderExist">
     <div class="card-title min-w-0 flex-grow-1 m-0" [title]="title">
       <i *ngIf="icon" [class]="icon + ' text-primary fs-6 me-2'"></i>
       <!-- <span class="text-gray-800 fw-semibold fs-7 text-truncate">{{ title }}</span> -->
@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <div class="card-body p-0 min-h-0 overflow-auto" *ngIf="!minimized">
+  <div class="card-body p-0 min-h-0 overflow-auto" *ngIf="!minimized || panelClass.includes('map-panel-shell--combined-smart-filter')">
     <ng-content></ng-content>
   </div>
 </div>

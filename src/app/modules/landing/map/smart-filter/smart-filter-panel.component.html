@@ -1,1 +1,244 @@
-<div class="smart-filter-panel" (click)="closeProductDropdown(); closeSortMenu(); $event.stopPropagation()" (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()"> <div class="smart-filter-panel__topline" (click)="$event.stopPropagation()"> <div class="smart-filter-view-switch" role="group" aria-label="Görünüm seçimi"> <button type="button" class="smart-view-btn" [class.active]="viewMode === 'card'" title="Kart görünümü" (click)="setViewMode('card', $event)"> <i class="fa-solid fa-grip"></i> </button> <button type="button" class="smart-view-btn" [class.active]="viewMode === 'table'" title="Liste görünümü" (click)="setViewMode('table', $event)"> <i class="fa-solid fa-table-list"></i> </button> </div> <div class="smart-filter-panel__summary smart-filter-panel__summary--top-right"> <strong>{{ results.length }}</strong> <span>{{ 'MAP.SMART_FILTER.RESULT_FOUND' | translate }}</span> <span *ngIf="selectedCount > 0">• {{ selectedCount }} {{ 'MAP.SMART_FILTER.SELECTED' | translate }}</span> </div> <button #detailFilterButton type="button" class="btn btn-sm smart-filter-icon-btn smart-detail-filter-btn" title="Detay Filtre" aria-label="Detay Filtre" (click)="onDetailFilterClick($event, detailFilterButton)" > <span class="smart-detail-filter-icon" aria-hidden="true"> <i class="fa-solid fa-filter"></i> <i class="fa-solid fa-gear"></i> </span> </button> </div> <div class="smart-sort-row" role="group" aria-label="Sıralama seçenekleri"> <span class="smart-sort-row__label">{{ 'MAP.SMART_FILTER.SORT.TITLE' | translate }}:</span> <div class="smart-sort-option" [class.active]="sortField === 'date'"> <span>{{ 'MAP.SMART_FILTER.SORT.DATE' | translate }}</span> <div class="smart-sort-option__arrows"> <button type="button" [class.active]="sortField === 'date' && sortDirection === 'asc'" title="Artan sıralama" (click)="setSort('date', 'asc', $event)"> <i class="fa-solid fa-arrow-up"></i> </button> <button type="button" [class.active]="sortField === 'date' && sortDirection === 'desc'" title="Azalan sıralama" (click)="setSort('date', 'desc', $event)"> <i class="fa-solid fa-arrow-down"></i> </button> </div> </div> <div class="smart-sort-option" [class.active]="sortField === 'cloudRate'"> <span>{{ 'MAP.SMART_FILTER.SORT.AREA_CLOUD_COVER' | translate }}</span> <div class="smart-sort-option__arrows"> <button type="button" [class.active]="sortField === 'cloudRate' && sortDirection === 'asc'" title="Artan sıralama" (click)="setSort('cloudRate', 'asc', $event)"> <i class="fa-solid fa-arrow-up"></i> </button> <button type="button" [class.active]="sortField === 'cloudRate' && sortDirection === 'desc'" title="Azalan sıralama" (click)="setSort('cloudRate', 'desc', $event)"> <i class="fa-solid fa-arrow-down"></i> </button> </div> </div> <div class="smart-sort-option" [class.active]="sortField === 'nadirAngle'"> <span>{{ 'MAP.SMART_FILTER.SORT.AREA_OFF_NADIR_ANGLE' | translate }}</span> <div class="smart-sort-option__arrows"> <button type="button" [class.active]="sortField === 'nadirAngle' && sortDirection === 'asc'" title="Artan sıralama" (click)="setSort('nadirAngle', 'asc', $event)"> <i class="fa-solid fa-arrow-up"></i> </button> <button type="button" [class.active]="sortField === 'nadirAngle' && sortDirection === 'desc'" title="Azalan sıralama" (click)="setSort('nadirAngle', 'desc', $event)"> <i class="fa-solid fa-arrow-down"></i> </button> </div> </div> </div> <div class="smart-filter-panel__body"> <div class="smart-filter-loading" *ngIf="loading"> <span class="spinner-border spinner-border-sm text-primary"></span> <span>{{ 'MAP.SMART_FILTER.LOADING' | translate }}</span> </div> <ng-container *ngIf="!loading"> <div class="smart-filter-empty" *ngIf="sortedResults.length === 0"> <i class="fa-solid fa-satellite-dish"></i> <span>{{ 'MAP.SMART_FILTER.EMPTY' | translate }}</span> </div> <div class="smart-product-card-list" *ngIf="viewMode === 'card'"> <div class="smart-product-row" *ngFor="let product of sortedResults; trackBy: trackByProduct" [class.smart-product-row--selected]="isSelected(product)" (mouseenter)="onProductMouseEnter(product)" (mouseleave)="onProductMouseLeave()" (click)="toggleSelected(product)"> <div class="smart-product-row__main"> <div class="smart-product-row__image"> <img *ngIf="getProductImage(product); else noImage" [src]="getProductImage(product)!" [alt]="product.name" /> <ng-template #noImage> <div class="smart-product-row__no-image"><i class="fa-solid fa-image"></i></div> </ng-template> <input type="checkbox" class="form-check-input smart-product-check" [checked]="isSelected(product)" (change)="toggleSelected(product); $event.stopPropagation()" (click)="$event.stopPropagation()" /> </div> <div class="smart-product-row__content"> <div class="smart-product-row__top"> <div class="min-w-0 flex-grow-1"> <div class="smart-product-row__line"><span>{{ 'MAP.SMART_FILTER.LOCAL_TIME_OF_DAY' | translate }}:</span><strong>{{ getDisplayDate(product) }}</strong></div> <div class="smart-product-row__line"><span>{{ 'MAP.SMART_FILTER.IMAGE_ID' | translate }}:</span><strong>{{ product.imageId || product.name || '-' }}</strong></div> </div> <div class="smart-product-dropdown" (click)="$event.stopPropagation()"> <button type="button" class="smart-product-more" (click)="toggleProductDropdown(product)"><i class="fa-solid fa-ellipsis-vertical"></i></button> <div class="smart-product-dropdown__menu map-options-menu" *ngIf="openedDropdownId === product.id"> <button type="button" class="smart-product-dropdown__item" (click)="onZoomToExtent(product)"><i class="fa-solid fa-location-crosshairs"></i><span>{{ 'MAP.SMART_FILTER.ZOOM_TO_EXTENT' | translate }}</span></button> <button #metadataButton type="button" class="smart-product-dropdown__item" (click)="onViewMetadata(product, $event, metadataButton)"><i class="fa-solid fa-circle-info"></i><span>{{ 'MAP.SMART_FILTER.VIEW_METADATA' | translate }}</span></button> <button type="button" class="smart-product-dropdown__item" (click)="onAddToCart(product)"><i class="fa-solid fa-cart-plus"></i><span>{{ 'MAP.SMART_FILTER.ADD_TO_CART' | translate }}</span></button> </div> </div> </div> <div class="smart-product-row__metrics"> <div class="smart-product-metric"> <i class="fa-solid fa-cloud smart-cloud-icon"></i> <span>{{ formatPercent(product.cloudRate) }}</span> </div> <div class="smart-product-separator"></div> <div class="smart-product-metric"> <i class="smart-nadir-icon" aria-hidden="true"> <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"> <path d="M6.5 0H5.5V8.51858C4.82248 8.54932 4.1472 8.64307 3.48 8.79982C2.66 8.98982 1.85 9.27982 1.04 9.66982C0.69 9.83982 0.34 10.0398 0 10.2398V11.4098C0.044997 11.3798 0.0874943 11.3498 0.129991 11.3198L0.130001 11.3198C0.1725 11.2898 0.215 11.2598 0.26 11.2298C0.66 10.9898 1.07 10.7598 1.47 10.5698C2.21 10.2198 2.96 9.94982 3.71 9.76982C5.23 9.40982 6.78 9.40982 8.29 9.76982C9.04 9.94982 9.79 10.2198 10.53 10.5698C10.93 10.7598 11.34 10.9898 11.74 11.2298C11.795 11.2604 11.8463 11.2985 11.8985 11.3371L11.8985 11.3372C11.9316 11.3617 11.9651 11.3865 12 11.4098V10.2398L11.8553 10.1569C11.5558 9.98507 11.2616 9.81631 10.96 9.66982C10.16 9.28982 9.34 8.99982 8.52 8.79982C7.97443 8.67241 7.42458 8.58663 6.87361 8.54247L6.95007 8.41984L6.5 8.13921V0ZM6.63007 7.03984L7.48007 7.56984L8.01007 6.71984L7.16007 6.18984L6.63007 7.03984ZM7.69007 5.33984L8.54007 5.86984L9.07007 5.01984L8.22007 4.48984L7.69007 5.33984ZM8.75007 3.63984L9.60007 4.16984L10.1301 3.31984L9.28007 2.78984L8.75007 3.63984ZM9.81007 1.93984L10.6601 2.46984L11.1901 1.61984L10.3401 1.08984L9.81007 1.93984Z" fill="currentColor" /> </svg> </i> <span>{{ formatDegree(product.nadirAngle) }}</span> </div> <div class="smart-product-separator"></div> <div class="smart-product-metric"> <img fill="currentColor" src="data:image/svg+xml,%3csvg%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M8%2010.5V2H5.665L6.5%200H2.5L0%206H4L5.25%203H7V3.5V4.5V5V6V6.5V7.5V9.5H4V7H3V10.5L1.5%2012H2.915L4.415%2010.5H5V12H6V10.5H6.585L8.085%2012H9.5L8%2010.5ZM4.585%202L4.17%203L4.005%203.4L3.34%205H1.5L3.165%201H5L4.585%202ZM8%200L7.585%201H10.5L9%204.6V6H9.5L12%200H8Z'%20 fill='%23000000'/%3e%3c/svg%3e" draggable="false"> <span>{{ product.satellite }}</span> </div> <button type="button" class="btn btn-icon btn-sm btn-light-primary smart-product-expand" (click)="toggleExpanded(product); $event.stopPropagation()"> <i class="fa-solid" [ngClass]="isExpanded(product) ? 'fa-chevron-up' : 'fa-chevron-down'"></i> </button> </div> </div> </div> <div class="smart-product-row__details" *ngIf="isExpanded(product)"> <div class="smart-product-detail-grid"> <div class="smart-product-detail"> <span class="smart-product-detail__label"> {{ 'MAP.SMART_FILTER.SUN_ELEVATION' | translate }}: </span> <strong>{{ formatDegree(product.sunElevation) }}</strong> </div> <div class="smart-product-detail"> <span class="smart-product-detail__label"> {{ 'MAP.SMART_FILTER.SUN_AZIMUTH' | translate }}: </span> <strong>{{ formatDegree(product.sunAzimuth) }}</strong> </div> <div class="smart-product-detail"> <span class="smart-product-detail__label"> {{ 'MAP.SMART_FILTER.GSD' | translate }}: </span> <strong>{{ formatMeter(product.resolution) }}</strong> </div> <div class="smart-product-detail smart-product-detail--preview-action"> <a *ngIf="getPreviewUrl(product)" class="btn btn-sm btn-light-primary smart-product-preview-button" [href]="getPreviewUrl(product)!" target="_blank" rel="noopener" [title]="'MAP.SMART_FILTER.PREVIEW' | translate" (click)="$event.stopPropagation()"> <i class="fa-solid fa-up-right-from-square"></i> <span>{{ 'MAP.SMART_FILTER.PREVIEW' | translate }}</span> </a> <button *ngIf="!getPreviewUrl(product)" type="button" class="btn btn-sm btn-light smart-product-preview-button" disabled> <i class="fa-solid fa-up-right-from-square"></i> <span>{{ 'MAP.SMART_FILTER.PREVIEW' | translate }}</span> </button> </div> </div> </div> </div> </div> <div class="smart-product-table-wrap" *ngIf="viewMode === 'table'"> <table class="smart-product-table"> <thead> <tr> <th></th> <th>{{ 'MAP.SMART_FILTER.IMAGE_ID' | translate }}</th> <th>{{ 'MAP.SMART_FILTER.SORT.DATE' | translate }}</th> <th>{{ 'MAP.SMART_FILTER.SORT.AREA_CLOUD_COVER' | translate }}</th> <th>Platform</th> </tr> </thead> <tbody> <tr *ngFor="let product of sortedResults; trackBy: trackByProduct" [class.selected]="isSelected(product)" (mouseenter)="onProductMouseEnter(product)" (mouseleave)="onProductMouseLeave()" (click)="toggleSelected(product)"> <td class="smart-table-actions"> <input type="checkbox" class="form-check-input" [checked]="isSelected(product)" (change)="toggleSelected(product); $event.stopPropagation()" (click)="$event.stopPropagation()" /> <div class="smart-product-dropdown" (click)="$event.stopPropagation()"> <button type="button" class="btn btn-icon btn-sm btn-light-primary smart-product-more" (click)="toggleProductDropdown(product)"><i class="fa-solid fa-ellipsis-vertical"></i></button> <div class="smart-product-dropdown__menu map-options-menu" *ngIf="openedDropdownId === product.id"> <button type="button" class="smart-product-dropdown__item" (click)="onZoomToExtent(product)"><i class="fa-solid fa-location-crosshairs"></i><span>{{ 'MAP.SMART_FILTER.ZOOM_TO_EXTENT' | translate }}</span></button> <button #metadataButton type="button" class="smart-product-dropdown__item" (click)="onViewMetadata(product, $event, metadataButton)"><i class="fa-solid fa-circle-info"></i><span>{{ 'MAP.SMART_FILTER.VIEW_METADATA' | translate }}</span></button> <button type="button" class="smart-product-dropdown__item" (click)="onAddToCart(product)"><i class="fa-solid fa-cart-plus"></i><span>{{ 'MAP.SMART_FILTER.ADD_TO_CART' | translate }}</span></button> </div> </div> </td> <td>{{ product.imageId || product.name || '-' }}</td> <td>{{ getDisplayDateOnly(product) }}</td> <td>{{ formatPercent(product.cloudRate) }}</td> <td>{{ product.satellite || '-' }}</td> </tr> </tbody> </table> </div> </ng-container> </div> </div>
+<div class="d-flex flex-column h-100 min-h-0 bg-body overflow-hidden"
+  (click)="closeProductDropdown(); closeSortMenu(); $event.stopPropagation()" (mousedown)="$event.stopPropagation()"
+  (mouseup)="$event.stopPropagation()">
+  <div class="d-flex align-items-center flex-shrink-0 h-55px min-h-55px px-3 border-bottom border-gray-300">
+    <div class="btn-group smart-view-toggle" role="group" aria-label="Görünüm seçimi">
+      <button type="button" class="btn btn-icon btn-sm rounded-end-0"
+        [ngClass]="viewMode === 'card' ? 'btn-light-primary' : 'btn-light'" title="Kart görünümü"
+        (click)="setViewMode('card', $event)">
+        <i class="fa-solid fa-grip text-primary"></i>
+      </button>
+
+      <button type="button" class="btn btn-icon btn-sm rounded-start-0 border-start-0"
+        [ngClass]="viewMode === 'table' ? 'btn-light-primary' : 'btn-light'" title="Liste görünümü"
+        (click)="setViewMode('table', $event)">
+        <i class="fa-solid fa-table-list text-primary"></i>
+      </button>
+    </div>
+
+    <div class="d-flex align-items-center gap-2 ms-auto text-gray-700 fs-8 text-nowrap">
+      <span class="badge badge-light-primary fw-bold">{{ results.length }}</span>
+      <span>{{ 'MAP.SMART_FILTER.RESULT_FOUND' | translate }}</span>
+      <span *ngIf="selectedCount > 0">• {{ selectedCount }} {{ 'MAP.SMART_FILTER.SELECTED' | translate }}</span>
+    </div>
+
+    <button #detailFilterButton type="button" class="btn btn-icon btn-sm btn-light ms-3" title="{{ 'MAP.SMART_FILTER.FILTER' | translate }}"
+       (click)="onDetailFilterClick($event, detailFilterButton)">
+      <span class="smart-filter-gear-icon" aria-hidden="true">
+        <i class="fa-solid fa-filter smart-filter-gear-icon__filter text-primary"></i>
+        <i class="fa-solid fa-gear smart-filter-gear-icon__gear text-primary"></i>
+      </span>
+    </button>
+  </div>
+
+  <div
+    class="smart-sort-bar d-flex align-items-center flex-shrink-0 h-55px min-h-55px gap-2 px-3 border-bottom border-gray-300 overflow-hidden text-nowrap">
+    <span class="text-gray-700 fs-8">{{ 'MAP.SMART_FILTER.SORT.TITLE' | translate }}:</span>
+
+    <div class="smart-sort-option" [class.smart-sort-option--active]="sortField === 'date'">
+      <span class="smart-sort-option__label">{{ 'MAP.SMART_FILTER.SORT.DATE' | translate }}</span>
+      <button type="button" class="smart-sort-direction-btn"
+        [class.smart-sort-direction-btn--active]="sortField === 'date' && sortDirection === 'asc'"
+        title="Artan sıralama" (click)="setSort('date', 'asc', $event)">
+        <i class="fa-solid fa-arrow-up"></i>
+      </button>
+      <button type="button" class="smart-sort-direction-btn"
+        [class.smart-sort-direction-btn--active]="sortField === 'date' && sortDirection === 'desc'"
+        title="Azalan sıralama" (click)="setSort('date', 'desc', $event)">
+        <i class="fa-solid fa-arrow-down"></i>
+      </button>
+    </div>
+
+    <div class="smart-sort-option" [class.smart-sort-option--active]="sortField === 'cloudRate'">
+      <span class="smart-sort-option__label">{{ 'MAP.SMART_FILTER.SORT.AREA_CLOUD_COVER' | translate }}</span>
+      <button type="button" class="smart-sort-direction-btn"
+        [class.smart-sort-direction-btn--active]="sortField === 'cloudRate' && sortDirection === 'asc'"
+        title="Artan sıralama" (click)="setSort('cloudRate', 'asc', $event)">
+        <i class="fa-solid fa-arrow-up"></i>
+      </button>
+      <button type="button" class="smart-sort-direction-btn"
+        [class.smart-sort-direction-btn--active]="sortField === 'cloudRate' && sortDirection === 'desc'"
+        title="Azalan sıralama" (click)="setSort('cloudRate', 'desc', $event)">
+        <i class="fa-solid fa-arrow-down"></i>
+      </button>
+    </div>
+
+    <div class="smart-sort-option" [class.smart-sort-option--active]="sortField === 'nadirAngle'">
+      <span class="smart-sort-option__label">{{ 'MAP.SMART_FILTER.SORT.AREA_OFF_NADIR_ANGLE' | translate }}</span>
+      <button type="button" class="smart-sort-direction-btn"
+        [class.smart-sort-direction-btn--active]="sortField === 'nadirAngle' && sortDirection === 'asc'"
+        title="Artan sıralama" (click)="setSort('nadirAngle', 'asc', $event)">
+        <i class="fa-solid fa-arrow-up"></i>
+      </button>
+      <button type="button" class="smart-sort-direction-btn"
+        [class.smart-sort-direction-btn--active]="sortField === 'nadirAngle' && sortDirection === 'desc'"
+        title="Azalan sıralama" (click)="setSort('nadirAngle', 'desc', $event)">
+        <i class="fa-solid fa-arrow-down"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex-grow-1 min-h-0 overflow-auto p-2">
+    <div class="d-flex flex-column align-items-center justify-content-center min-h-150px gap-2 text-gray-600"
+      *ngIf="loading">
+      <span class="spinner-border spinner-border-sm text-primary"></span>
+      <span class="fs-8">{{ 'MAP.SMART_FILTER.LOADING' | translate }}</span>
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <div class="d-flex flex-column align-items-center justify-content-center min-h-150px gap-2 text-gray-600"
+        *ngIf="sortedResults.length === 0">
+        <i class="fa-solid fa-satellite-dish fs-2 text-gray-500"></i>
+        <span class="fs-8">{{ 'MAP.SMART_FILTER.EMPTY' | translate }}</span>
+      </div>
+
+      <div class="d-flex flex-column gap-2" *ngIf="viewMode === 'card'">
+        <div class="position-relative border border-gray-300 bg-body overflow-visible"
+          *ngFor="let product of sortedResults; trackBy: trackByProduct" [ngClass]="{
+            'border-primary bg-light-primary': isSelected(product),
+            'smart-product-menu-open': openedDropdownId === product.id
+          }" (mouseenter)="onProductMouseEnter(product)" (mouseleave)="onProductMouseLeave()"
+          (click)="toggleSelected(product)">
+          <div class="d-flex align-items-stretch min-w-0">
+            <div
+              class="smart-product-thumb position-relative flex-shrink-0 bg-light border-end border-gray-300 overflow-hidden">
+              <img *ngIf="getProductImage(product); else noImage" class="w-100 h-100 object-fit-cover"
+                [src]="getProductImage(product)!" [alt]="product.name" />
+              <ng-template #noImage>
+                <div class="d-flex align-items-center justify-content-center w-100 h-100 text-gray-500">
+                  <i class="fa-solid fa-image fs-2"></i>
+                </div>
+              </ng-template>
+              <input type="checkbox" class="form-check-input position-absolute top-0 start-0 m-2"
+                [checked]="isSelected(product)" (change)="toggleSelected(product); $event.stopPropagation()"
+                (click)="$event.stopPropagation()" />
+            </div>
+
+            <div class="d-flex flex-column flex-grow-1 min-w-0 px-3 py-2">
+              <div class="d-flex align-items-start gap-2 min-w-0">
+                <div class="flex-grow-1 min-w-0">
+                  <div class="d-flex align-items-center gap-1 fs-8 mb-1 min-w-0">
+                    <div class="text-gray-600 smart-product-label flex-shrink-0">{{ 'MAP.SMART_FILTER.LOCAL_TIME_OF_DAY' |
+                      translate }}:</div>
+                    <div class="min-w-0 fw-bold text-gray-900 text-truncate">{{ getDisplayDate(product) }}</div>
+                  </div>
+                  <div class="d-flex align-items-center gap-1 fs-8 min-w-0">
+                    <div class="text-gray-600 smart-product-label flex-shrink-0">{{ 'MAP.SMART_FILTER.IMAGE_ID' | translate
+                      }}:</div>
+                    <div class="min-w-0 fw-bold text-gray-900 text-truncate">{{ product.imageId || product.name ||
+                      '-' }}</div>
+                  </div>
+                </div>
+
+                <div class="position-relative flex-shrink-0" (click)="$event.stopPropagation()">
+                  <button type="button" class="btn btn-icon btn-sm btn-light text-primary"
+                    (click)="toggleProductDropdown(product)">
+                    <i class="fa-solid fa-ellipsis-vertical text-primary"></i>
+                  </button>
+
+                  <div class="menu menu-sub menu-sub-dropdown menu-column show py-2 smart-product-menu"
+                    *ngIf="openedDropdownId === product.id">
+                    <button type="button" class="menu-link border-0 w-100 px-3 py-2" (click)="onZoomToExtent(product)">
+                      <i class="fa-solid fa-location-crosshairs me-3"></i>
+                      <span>{{ 'MAP.SMART_FILTER.ZOOM_TO_EXTENT' | translate }}</span>
+                    </button>
+                    <button #metadataButton type="button" class="menu-link border-0 w-100 px-3 py-2"
+                      (click)="onViewMetadata(product, $event, metadataButton)">
+                      <i class="fa-solid fa-circle-info me-3"></i>
+                      <span>{{ 'MAP.SMART_FILTER.VIEW_METADATA' | translate }}</span>
+                    </button>
+                    <button type="button" class="menu-link border-0 w-100 px-3 py-2" (click)="onAddToCart(product)">
+                      <i class="fa-solid fa-cart-plus me-3"></i>
+                      <span>{{ 'MAP.SMART_FILTER.ADD_TO_CART' | translate }}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-4 mt-auto pt-2 fs-8 text-gray-800">
+                <span class="d-inline-flex align-items-center gap-1"><i class="fa-solid fa-cloud"
+                    style="color: #d6f0ff !important"></i>{{ formatPercent(product.cloudRate) }}</span>
+                <div class="smart-product-separator"></div>
+                <span class="d-inline-flex align-items-center gap-1">
+                  <i style="color: #000"><svg _ngcontent-ng-c335023454="" width="12" height="12" viewBox="0 0 12 12"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path _ngcontent-ng-c335023454=""
+                        d="M6.5 0H5.5V8.51858C4.82248 8.54932 4.1472 8.64307 3.48 8.79982C2.66 8.98982 1.85 9.27982 1.04 9.66982C0.69 9.83982 0.34 10.0398 0 10.2398V11.4098C0.044997 11.3798 0.0874943 11.3498 0.129991 11.3198L0.130001 11.3198C0.1725 11.2898 0.215 11.2598 0.26 11.2298C0.66 10.9898 1.07 10.7598 1.47 10.5698C2.21 10.2198 2.96 9.94982 3.71 9.76982C5.23 9.40982 6.78 9.40982 8.29 9.76982C9.04 9.94982 9.79 10.2198 10.53 10.5698C10.93 10.7598 11.34 10.9898 11.74 11.2298C11.795 11.2604 11.8463 11.2985 11.8985 11.3371L11.8985 11.3372C11.9316 11.3617 11.9651 11.3865 12 11.4098V10.2398L11.8553 10.1569C11.5558 9.98507 11.2616 9.81631 10.96 9.66982C10.16 9.28982 9.34 8.99982 8.52 8.79982C7.97443 8.67241 7.42458 8.58663 6.87361 8.54247L6.95007 8.41984L6.5 8.13921V0ZM6.63007 7.03984L7.48007 7.56984L8.01007 6.71984L7.16007 6.18984L6.63007 7.03984ZM7.69007 5.33984L8.54007 5.86984L9.07007 5.01984L8.22007 4.48984L7.69007 5.33984ZM8.75007 3.63984L9.60007 4.16984L10.1301 3.31984L9.28007 2.78984L8.75007 3.63984ZM9.81007 1.93984L10.6601 2.46984L11.1901 1.61984L10.3401 1.08984L9.81007 1.93984Z"
+                        fill="currentColor"></path>
+                    </svg></i>
+                  {{ formatDegree(product.nadirAngle) }}</span>
+                <div class="smart-product-separator"></div>
+                <span class="d-inline-flex align-items-center gap-1">
+                  <img _ngcontent-ng-c335023454="" fill="currentColor" src="data:image/svg+xml,%3csvg%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M8%2010.5V2H5.665L6.5%200H2.5L0%206H4L5.25%203H7V3.5V4.5V5V6V6.5V7.5V9.5H4V7H3V10.5L1.5%2012H2.915L4.415%2010.5H5V12H6V10.5H6.585L8.085%2012H9.5L8%2010.5ZM4.585%202L4.17%203L4.005%203.4L3.34%205H1.5L3.165%201H5L4.585%202ZM8%200L7.585%201H10.5L9%204.6V6H9.5L12%200H8Z'%20 fill='%23000000'/%3e%3c/svg%3e" draggable="false">
+                  {{ product.satellite }}</span>
+
+                <button type="button" class="btn btn-icon btn-sm btn-light text-primary ms-auto"
+                  (click)="toggleExpanded(product); $event.stopPropagation()">
+                  <i class="fa-solid text-primary"
+                    [ngClass]="isExpanded(product) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-0 border-top border-gray-300 bg-light" *ngIf="isExpanded(product)">
+            <div class="col-6 p-3">
+              <div class="d-flex align-items-center gap-1 fs-8 mb-4">
+                <span class="text-gray-600 smart-detail-label">{{ 'MAP.SMART_FILTER.SUN_ELEVATION' | translate
+                  }}:</span>
+                <strong class="text-gray-900">{{ formatDegree(product.sunElevation) }}</strong>
+              </div>
+              <div class="d-flex align-items-center gap-1 fs-8">
+                <span class="text-gray-600 smart-detail-label">{{ 'MAP.SMART_FILTER.GSD' | translate }}:</span>
+                <strong class="text-gray-900">{{ formatMeter(product.resolution) }}</strong>
+              </div>
+            </div>
+
+            <div class="col-6 p-3">
+              <div class="d-flex align-items-center gap-1 fs-8 mb-3">
+                <span class="text-gray-600 smart-detail-label">{{ 'MAP.SMART_FILTER.SUN_AZIMUTH' | translate }}:</span>
+                <strong class="text-gray-900">{{ formatDegree(product.sunAzimuth) }}</strong>
+              </div>
+
+              <a *ngIf="getPreviewUrl(product)" class="btn btn-sm btn-light-primary" [href]="getPreviewUrl(product)!"
+                target="_blank" rel="noopener" (click)="$event.stopPropagation()">
+                <i class="fa-solid fa-up-right-from-square"></i>
+                <span>{{ 'MAP.SMART_FILTER.PREVIEW' | translate }}</span>
+              </a>
+              <button *ngIf="!getPreviewUrl(product)" type="button" class="btn btn-sm btn-light" disabled>
+                <i class="fa-solid fa-up-right-from-square"></i>
+                <span>{{ 'MAP.SMART_FILTER.PREVIEW' | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="viewMode === 'table'">
+        <table class="table table-row-bordered table-row-gray-300 align-middle gs-2 gy-2 mb-0 fs-8">
+          <thead>
+            <tr>
+              <th></th>
+              <th>{{ 'MAP.SMART_FILTER.IMAGE_ID' | translate }}</th>
+              <th>{{ 'MAP.SMART_FILTER.SORT.DATE' | translate }}</th>
+              <th>{{ 'MAP.SMART_FILTER.SORT.AREA_CLOUD_COVER' | translate }}</th>
+              <th>Platform</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of sortedResults; trackBy: trackByProduct"
+              [class.bg-light-primary]="isSelected(product)" (click)="toggleSelected(product)">
+              <td><input type="checkbox" class="form-check-input" [checked]="isSelected(product)"
+                  (change)="toggleSelected(product); $event.stopPropagation()" (click)="$event.stopPropagation()" />
+              </td>
+              <td>{{ product.imageId || product.name || '-' }}</td>
+              <td>{{ getDisplayDateOnly(product) }}</td>
+              <td>{{ formatPercent(product.cloudRate) }}</td>
+              <td>{{ product.satellite || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -3,21 +3,21 @@
     'toolbar-right': side === 'right'
   }">
   <ng-container *ngIf="side === 'left'">
-    <div class="left-map-toolbar" role="group">
-      <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+    <div class="left-map-toolbar d-flex flex-column" role="group">
+      <button type="button" class="btn btn-icon btn-light map-action-btn"
         [ngClass]="{ 'map-action-btn--active': activeTool === 'layer-manager' }"
         [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate" (mouseenter)="layerManagerHovered.emit()"
         (click)="layerManagerClicked.emit()">
         <i class="fa-solid fa-layer-group fs-2"></i>
       </button>
 
-      <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+      <button type="button" class="btn btn-icon btn-light map-action-btn"
         [ngClass]="{ 'map-action-btn--active': activeTool === 'search' }" [title]="'MAP.ACTIONS.SEARCH' | translate"
         (click)="searchClicked.emit()">
         <i class="fa-solid fa-search fs-2"></i>
       </button>
 
-      <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+      <button type="button" class="btn btn-icon btn-light map-action-btn"
         [ngClass]="{ 'map-action-btn--active': activeTool === 'ask' }"
         [title]="'MAP.ACTIONS.ASK' | translate"
         [attr.aria-label]="'MAP.ACTIONS.ASK' | translate"
@@ -27,7 +27,7 @@
 
       <div class="map-action-dropdown">
 
-        <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn" [ngClass]="{
+        <button type="button" class="btn btn-icon btn-light map-action-btn" [ngClass]="{
     'map-action-btn--active':
       activeTool === 'polygon' ||
       activeTool === 'rectangle' ||
@@ -39,17 +39,17 @@
         </button>
 
         <div class="map-action-dropdown__menu">
-          <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+          <button type="button" class="btn btn-icon btn-light map-action-btn"
             [title]="'MAP.ACTIONS.POLYGON' | translate" (click)="polygonClicked.emit()">
             <i class="fa-solid fa-pen fs-2"></i>
           </button>
 
-          <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+          <button type="button" class="btn btn-icon btn-light map-action-btn"
             [title]="'MAP.ACTIONS.RECTANGLE' | translate" (click)="rectangleClicked.emit()">
             <i class="fa-regular fa-square fs-2"></i>
           </button>
 
-          <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+          <button type="button" class="btn btn-icon btn-light map-action-btn"
             [title]="'MAP.ACTIONS.UPLOAD_FILE' | translate" (click)="uploadClicked.emit()">
             <i class="fa-solid fa-upload fs-2"></i>
           </button>
@@ -58,7 +58,7 @@
 
       <div class="map-action-dropdown">
         <button type="button"
-          class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+          class="btn btn-icon btn-light map-action-btn"
           [ngClass]="{ 'map-action-btn--active': activeTool === 'measure' }"
           [title]="'MAP.ACTIONS.MEASUREMENT' | translate">
           <i class="fa-solid fa-ruler-combined fs-2 text-primary"></i>
@@ -66,7 +66,7 @@
 
         <div class="map-action-dropdown__menu">
           <button type="button"
-            class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+            class="btn btn-icon btn-light map-action-btn"
             [title]="'MAP.ACTIONS.MEASURE_LENGTH' | translate"
             (click)="measureDistanceClicked.emit()">
             <svg class="measure-tool-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -81,7 +81,7 @@
           </button>
 
           <button type="button"
-            class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+            class="btn btn-icon btn-light map-action-btn"
             [title]="'MAP.ACTIONS.MEASURE_AREA' | translate"
             (click)="measureAreaClicked.emit()">
             <svg class="measure-tool-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -97,20 +97,20 @@
         </div>
       </div>
 
-      <!-- <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+      <!-- <button type="button" class="btn btn-icon btn-light map-action-btn"
         [ngClass]="{ 'map-action-btn--active': activeTool === 'coordinate' }"
         [title]="'MAP.ACTIONS.GOTO_COORDINATE' | translate" (mouseenter)="goToCoordinateHovered.emit()"
         (click)="goToCoordinateClicked.emit()">
         <i class="fa-solid fa-location-crosshairs fs-2"></i>
       </button> -->
 
-      <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+      <button type="button" class="btn btn-icon btn-light map-action-btn"
         [ngClass]="{ 'map-action-btn--active': activeTool === 'export' }"
         [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate" (click)="exportClicked.emit()">
         <i class="fa-solid fa-print fs-2"></i>
       </button>
 
-      <button type="button" class="btn btn-light btn-icon fw-bolder text-primary map-action-btn"
+      <button type="button" class="btn btn-icon btn-light map-action-btn"
         [title]="'MAP.ACTIONS.RESET' | translate" (click)="resetClicked.emit()">
         <i class="fa-solid fa-arrows-rotate fs-2"></i>
       </button>
@@ -118,61 +118,64 @@
   </ng-container>
 
   <ng-container *ngIf="side === 'right'">
-    <div class="map-navigation-control">
-      <div class="compass-control">
+    <div class="map-navigation-control d-flex flex-column align-items-center">
+      <div class="compass-control compass-control--stacked">
         <div *ngIf="isCompassOpen"
-        class="compass-popover"
-        [class.compass-popover--dragging]="isCompassDragging"
-        (click)="$event.stopPropagation()">
-        <button #compassElement
-          type="button"
-          class="rotation-compass"
-          [attr.aria-label]="'MAP.ACTIONS.ROTATE_MAP' | translate"
-          (pointerdown)="onCompassPointerDown($event)"
-          (keydown)="onCompassKeyDown($event)">
-          <span class="rotation-compass__ticks" aria-hidden="true"></span>
-          <span class="rotation-compass__north"
-            [style.transform]="compassNeedleTransform"
-            aria-hidden="true">
-            <span class="rotation-compass__north-label">N</span>
-            <i class="fa-solid fa-location-arrow rotation-compass__needle"></i>
-          </span>
-          <span class="rotation-compass__degree">
-            {{ normalizedRotationDegree | number:'1.0-0' }}°
-          </span>
-        </button>
+          class="compass-popover compass-popover--compact"
+          [class.compass-popover--dragging]="isCompassDragging"
+          (click)="$event.stopPropagation()">
+          <button #compassElement
+            type="button"
+            class="rotation-compass rotation-compass--compact"
+            [attr.aria-label]="'MAP.ACTIONS.ROTATE_MAP' | translate"
+            (pointerdown)="onCompassPointerDown($event)"
+            (keydown)="onCompassKeyDown($event)">
+            <span class="rotation-compass__ticks" aria-hidden="true"></span>
 
-        <button type="button"
-          class="compass-reset-btn"
-          [title]="'MAP.ACTIONS.NORTH' | translate"
-          (click)="resetNorth($event)">
-          <i class="fa-solid fa-location-arrow"></i>
-          <span>{{ 'MAP.ACTIONS.NORTH' | translate }}</span>
-        </button>
-      </div>
+            <span class="rotation-compass__north"
+              [style.transform]="compassNeedleTransform"
+              aria-hidden="true">
+              <i class="fa-solid fa-caret-up rotation-compass__needle"></i>
+              <span class="rotation-compass__north-label">N</span>
+            </span>
 
-      <button type="button"
-        class="north-compass"
-        [class.north-compass--active]="isCompassOpen"
-        [attr.aria-expanded]="isCompassOpen"
-        [attr.aria-label]="'MAP.ACTIONS.ROTATE_MAP' | translate"
-        [title]="'MAP.ACTIONS.ROTATE_MAP' | translate"
-        (click)="toggleCompass($event)">
-        <span class="north-compass__direction"
-          [style.transform]="compassNeedleTransform">
-          <span class="north-compass__label">N</span>
-          <i class="fa-solid fa-caret-up north-compass__icon"></i>
-        </span>
-      </button>
+            <span class="rotation-compass__degree">
+              {{ normalizedRotationDegree | number:'1.0-0' }}°
+            </span>
+          </button>
+        </div>
+
+        <div class="compass-stack" role="group">
+          <button type="button"
+            class="compass-stack__button compass-stack__button--rotate btn btn-icon btn-light"
+            [class.compass-stack__button--active]="isCompassOpen"
+            [attr.aria-expanded]="isCompassOpen"
+            [attr.aria-label]="'MAP.ACTIONS.ROTATE_MAP' | translate"
+            [title]="'MAP.ACTIONS.ROTATE_MAP' | translate"
+            (click)="toggleCompass($event)">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+
+          <button type="button"
+            class="compass-stack__button compass-stack__button--north btn btn-icon btn-light"
+            [attr.aria-label]="'MAP.ACTIONS.NORTH' | translate"
+            [title]="'MAP.ACTIONS.NORTH' | translate"
+            (click)="resetNorth($event)">
+            <span class="north-reset-icon" aria-hidden="true">
+              <i class="fa-solid fa-caret-up north-reset-icon__arrow text-primary"></i>
+              <span class="north-reset-icon__label text-primary">N</span>
+            </span>
+          </button>
+        </div>
       </div>
 
       <div class="zoom-toolbar" role="group">
-        <button type="button" class="zoom-btn" [title]="'MAP.ACTIONS.ZOOM_IN' | translate"
+        <button type="button" class="zoom-btn btn btn-icon btn-light" [title]="'MAP.ACTIONS.ZOOM_IN' | translate"
           (click)="zoomInClicked.emit()">
           <i class="fa-solid fa-plus"></i>
         </button>
 
-        <button type="button" class="zoom-btn" [title]="'MAP.ACTIONS.ZOOM_OUT' | translate"
+        <button type="button" class="zoom-btn btn btn-icon btn-light" [title]="'MAP.ACTIONS.ZOOM_OUT' | translate"
           (click)="zoomOutClicked.emit()">
           <i class="fa-solid fa-minus"></i>
         </button>
