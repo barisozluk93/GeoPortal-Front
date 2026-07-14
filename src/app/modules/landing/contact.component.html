@@ -1,0 +1,269 @@
+<div class="bg-body py-10">
+  <div class="container-fluid">
+    <div class="card border border-gray-300 shadow-sm overflow-hidden mb-10">
+      <div class="card-body p-0">
+        <div class="row g-0">
+          <div class="col-12 col-xl-7">
+            <div class="position-relative overflow-hidden h-100 min-h-500px p-8 p-lg-15 d-flex flex-column justify-content-center bg-white">
+              <div class="position-relative z-index-2">
+                <span class="badge badge-light-primary align-self-start mb-5">
+                  {{ 'CONTACT.HERO.KICKER' | translate }}
+                </span>
+
+                <h1 class="text-gray-900 fw-bolder fs-2x fs-lg-4x lh-sm mb-5 mw-750px">
+                  {{ 'CONTACT.HERO.TITLE' | translate }}
+                </h1>
+
+                <p class="text-gray-600 fs-4 fw-semibold lh-lg mw-700px mb-8">
+                  {{ 'CONTACT.HERO.COPY' | translate }}
+                </p>
+
+                <div class="row g-5">
+                  <div class="col-12 col-md-6">
+                    <div class="d-flex align-items-center border border-gray-300 rounded p-5 h-100">
+                      <div class="symbol symbol-50px me-4 flex-shrink-0">
+                        <span class="symbol-label bg-light-primary">
+                          <i class="ki-outline ki-message-text-2 fs-2x text-primary"></i>
+                        </span>
+                      </div>
+                      <div>
+                        <div class="text-gray-900 fw-bold fs-5 mb-1">
+                          {{ 'CONTACT.HERO.ITEMS.RESPONSE.TITLE' | translate }}
+                        </div>
+                        <div class="text-gray-600 fw-semibold fs-7 lh-base">
+                          {{ 'CONTACT.HERO.ITEMS.RESPONSE.TEXT' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <div class="d-flex align-items-center border border-gray-300 rounded p-5 h-100">
+                      <div class="symbol symbol-50px me-4 flex-shrink-0">
+                        <span class="symbol-label bg-light-primary">
+                          <i class="ki-outline ki-code fs-2x text-primary"></i>
+                        </span>
+                      </div>
+                      <div>
+                        <div class="text-gray-900 fw-bold fs-5 mb-1">
+                          {{ 'CONTACT.HERO.ITEMS.API.TITLE' | translate }}
+                        </div>
+                        <div class="text-gray-600 fw-semibold fs-7 lh-base">
+                          {{ 'CONTACT.HERO.ITEMS.API.TEXT' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-xl-5">
+            <div class="d-flex flex-column h-100 min-h-500px bg-primary p-8 p-md-10 p-xl-12">
+              <div class="mb-8">
+                <span class="badge badge-light fs-8 fw-bold text-primary mb-4">
+                  {{ 'CONTACT.FORM.TITLE' | translate }}
+                </span>
+
+                <h2 class="text-white fw-bolder fs-1 mb-3">
+                  {{ 'CONTACT.FORM.TITLE' | translate }}
+                </h2>
+
+                <p class="text-white text-opacity-75 fs-6 fw-semibold mb-0">
+                  {{ 'CONTACT.FORM.SUBTITLE' | translate }}
+                </p>
+              </div>
+
+              <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+                <div class="row g-5">
+                  <div class="col-12 col-md-6">
+                    <label class="required form-label fw-bold text-white fs-6">
+                      {{ 'CONTACT.FORM.FULL_NAME' | translate }}
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg bg-white border-0"
+                      formControlName="fullName"
+                      [placeholder]="'CONTACT.FORM.PLACEHOLDERS.FULL_NAME' | translate"
+                      [ngClass]="{ 'is-invalid': isSubmitted && f['fullName'].invalid }"
+                    />
+                    <div class="invalid-feedback text-white" *ngIf="isSubmitted && f['fullName'].errors">
+                      <span *ngIf="f['fullName'].errors['required']">
+                        {{ 'CONTACT.FORM.ERRORS.FULL_NAME_REQUIRED' | translate }}
+                      </span>
+                      <span *ngIf="f['fullName'].errors['minlength']">
+                        {{ 'CONTACT.FORM.ERRORS.FULL_NAME_MIN' | translate }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold text-white fs-6">
+                      {{ 'CONTACT.FORM.ORGANIZATION' | translate }}
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg bg-white border-0"
+                      formControlName="organization"
+                      [placeholder]="'CONTACT.FORM.PLACEHOLDERS.ORGANIZATION' | translate"
+                    />
+                  </div>
+
+                  <div class="col-12">
+                    <label class="required form-label fw-bold text-white fs-6">
+                      {{ 'CONTACT.FORM.BUSINESS_EMAIL' | translate }}
+                    </label>
+                    <input
+                      type="email"
+                      class="form-control form-control-lg bg-white border-0"
+                      formControlName="businessEmail"
+                      [placeholder]="'CONTACT.FORM.PLACEHOLDERS.BUSINESS_EMAIL' | translate"
+                      [ngClass]="{ 'is-invalid': isSubmitted && f['businessEmail'].invalid }"
+                    />
+                    <div class="invalid-feedback text-white" *ngIf="isSubmitted && f['businessEmail'].errors">
+                      <span *ngIf="f['businessEmail'].errors['required']">
+                        {{ 'CONTACT.FORM.ERRORS.BUSINESS_EMAIL_REQUIRED' | translate }}
+                      </span>
+                      <span *ngIf="f['businessEmail'].errors['email']">
+                        {{ 'CONTACT.FORM.ERRORS.BUSINESS_EMAIL_INVALID' | translate }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="required form-label fw-bold text-white fs-6">
+                      {{ 'CONTACT.FORM.SUBJECT' | translate }}
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg bg-white border-0"
+                      formControlName="subject"
+                      [placeholder]="'CONTACT.FORM.PLACEHOLDERS.SUBJECT' | translate"
+                      [ngClass]="{ 'is-invalid': isSubmitted && f['subject'].invalid }"
+                    />
+                    <div class="invalid-feedback text-white" *ngIf="isSubmitted && f['subject'].errors">
+                      <span *ngIf="f['subject'].errors['required']">
+                        {{ 'CONTACT.FORM.ERRORS.SUBJECT_REQUIRED' | translate }}
+                      </span>
+                      <span *ngIf="f['subject'].errors['minlength']">
+                        {{ 'CONTACT.FORM.ERRORS.SUBJECT_MIN' | translate }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="required form-label fw-bold text-white fs-6">
+                      {{ 'CONTACT.FORM.MESSAGE' | translate }}
+                    </label>
+                    <textarea
+                      rows="4"
+                      class="form-control form-control-lg bg-white border-0"
+                      formControlName="message"
+                      [placeholder]="'CONTACT.FORM.PLACEHOLDERS.MESSAGE' | translate"
+                      [ngClass]="{ 'is-invalid': isSubmitted && f['message'].invalid }"
+                    ></textarea>
+                    <div class="invalid-feedback text-white" *ngIf="isSubmitted && f['message'].errors">
+                      <span *ngIf="f['message'].errors['required']">
+                        {{ 'CONTACT.FORM.ERRORS.MESSAGE_REQUIRED' | translate }}
+                      </span>
+                      <span *ngIf="f['message'].errors['minlength']">
+                        {{ 'CONTACT.FORM.ERRORS.MESSAGE_MIN' | translate }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12 pt-2">
+                    <button
+                      type="submit"
+                      class="btn btn-light-primary btn-lg w-100"
+                      [disabled]="isLoading"
+                    >
+                      <ng-container *ngIf="!isLoading">
+                        <i class="ki-outline ki-send fs-3 me-2"></i>
+                        {{ 'CONTACT.FORM.SUBMIT' | translate }}
+                      </ng-container>
+
+                      <ng-container *ngIf="isLoading">
+                        <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                        {{ 'PLEASE_WAIT' | translate }}
+                      </ng-container>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center py-8 mb-8">
+      <span class="badge badge-light-primary mb-4">
+        {{ 'CONTACT.HERO.KICKER' | translate }}
+      </span>
+      <h2 class="text-gray-900 fw-bolder fs-2hx mb-4">
+        {{ 'CONTACT.HERO.TITLE' | translate }}
+      </h2>
+      <p class="text-gray-600 fs-5 fw-semibold lh-lg mw-750px mx-auto mb-0">
+        {{ 'CONTACT.HERO.COPY' | translate }}
+      </p>
+    </div>
+
+    <div class="row g-6 mb-15">
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card card-bordered h-100 hover-elevate-up">
+          <div class="card-body p-7 d-flex flex-column">
+            <div class="symbol symbol-60px mb-6">
+              <span class="symbol-label bg-light-primary">
+                <i class="ki-outline ki-message-text-2 fs-2x text-primary"></i>
+              </span>
+            </div>
+            <h3 class="text-gray-900 fw-bolder fs-2 mb-3">
+              {{ 'CONTACT.HERO.ITEMS.RESPONSE.TITLE' | translate }}
+            </h3>
+            <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-0">
+              {{ 'CONTACT.HERO.ITEMS.RESPONSE.TEXT' | translate }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card card-bordered h-100 hover-elevate-up">
+          <div class="card-body p-7 d-flex flex-column">
+            <div class="symbol symbol-60px mb-6">
+              <span class="symbol-label bg-light-primary">
+                <i class="ki-outline ki-code fs-2x text-primary"></i>
+              </span>
+            </div>
+            <h3 class="text-gray-900 fw-bolder fs-2 mb-3">
+              {{ 'CONTACT.HERO.ITEMS.API.TITLE' | translate }}
+            </h3>
+            <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-0">
+              {{ 'CONTACT.HERO.ITEMS.API.TEXT' | translate }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card card-bordered h-100 hover-elevate-up">
+          <div class="card-body p-7 d-flex flex-column">
+            <div class="symbol symbol-60px mb-6">
+              <span class="symbol-label bg-light-primary">
+                <i class="ki-outline ki-geolocation fs-2x text-primary"></i>
+              </span>
+            </div>
+            <h3 class="text-gray-900 fw-bolder fs-2 mb-3">
+              {{ 'CONTACT.HERO.ITEMS.CUSTOM.TITLE' | translate }}
+            </h3>
+            <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-0">
+              {{ 'CONTACT.HERO.ITEMS.CUSTOM.TEXT' | translate }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

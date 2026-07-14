@@ -1,135 +1,45 @@
-<form
-  class="map-export-panel"
-  novalidate
-  (ngSubmit)="submit()"
-  (click)="$event.stopPropagation()"
-  (mousedown)="$event.stopPropagation()"
-  (mouseup)="$event.stopPropagation()"
->
-  <div class="export-field">
-    <label class="export-label">
-      {{ 'MAP.EXPORT.FILE_TYPE' | translate }}
-    </label>
-
-    <app-custom-select
-      [size]="'sm'"
-      [items]="fileTypes"
-      bindLabel="label"
-      bindValue="value"
-      [multiple]="false"
-      [clearable]="true"
-      [placeholder]="'MAP.EXPORT.FILE_TYPE_PLACEHOLDER' | translate"
-      [(ngModel)]="fileType"
-      (ngModelChange)="onFileTypeChange($event)"
-      [ngModelOptions]="{ standalone: true }"
-      [invalid]="isFileTypeInvalid"
-    >
-    </app-custom-select>
-
-    <div class="invalid-feedback d-block" *ngIf="isFileTypeInvalid">
-      {{ 'MAP.EXPORT.FILE_TYPE_REQUIRED' | translate }}
-    </div>
+<form class="d-flex flex-column gap-2 p-2" novalidate (ngSubmit)="submit()" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()">
+  <div class="d-flex flex-column gap-1">
+    <label class="form-label mb-0 fw-semibold fs-8 text-gray-700">{{ 'MAP.EXPORT.FILE_TYPE' | translate }}</label>
+    <app-custom-select [size]="'sm'" [items]="fileTypes" bindLabel="label" bindValue="value" [multiple]="false" [clearable]="true" [placeholder]="'MAP.EXPORT.FILE_TYPE_PLACEHOLDER' | translate" [(ngModel)]="fileType" (ngModelChange)="onFileTypeChange($event)" [ngModelOptions]="{ standalone: true }" [invalid]="isFileTypeInvalid"></app-custom-select>
+    <div class="invalid-feedback d-block" *ngIf="isFileTypeInvalid">{{ 'MAP.EXPORT.FILE_TYPE_REQUIRED' | translate }}</div>
   </div>
 
-  <div class="export-field" *ngIf="requiresFileName">
-    <label class="export-label">
-      {{ 'MAP.EXPORT.FILE_NAME' | translate }}
-    </label>
-
-    <input
-      type="text"
-      class="form-control form-control-sm"
-      [class.is-invalid]="isFileNameInvalid"
-      [value]="fileName"
-      (input)="onFileNameInput($event)"
-      [placeholder]="'MAP.EXPORT.FILE_NAME_PLACEHOLDER' | translate"
-    />
-
-    <div class="invalid-feedback d-block" *ngIf="isFileNameInvalid">
-      {{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}
-    </div>
+  <div class="d-flex flex-column gap-1" *ngIf="requiresFileName">
+    <label class="form-label mb-0 fw-semibold fs-8 text-gray-700">{{ 'MAP.EXPORT.FILE_NAME' | translate }}</label>
+    <input type="text" class="form-control form-control-sm" [class.is-invalid]="isFileNameInvalid" [value]="fileName" (input)="onFileNameInput($event)" [placeholder]="'MAP.EXPORT.FILE_NAME_PLACEHOLDER' | translate" />
+    <div class="invalid-feedback d-block" *ngIf="isFileNameInvalid">{{ 'MAP.EXPORT.FILE_NAME_REQUIRED' | translate }}</div>
   </div>
 
   <ng-container *ngIf="isJpg">
-    <div class="export-field">
-      <label class="export-label">
-        {{ 'MAP.EXPORT.DPI' | translate }}
-      </label>
-
-      <app-custom-select
-        [size]="'sm'"
-        [items]="dpiOptions"
-        bindLabel="label"
-        bindValue="value"
-        [multiple]="false"
-        [clearable]="false"
-        [placeholder]="'MAP.EXPORT.DPI_PLACEHOLDER' | translate"
-        [(ngModel)]="dpi"
-        (ngModelChange)="onDpiChange($event)"
-        [ngModelOptions]="{ standalone: true }"
-        [invalid]="isDpiInvalid"
-      >
-      </app-custom-select>
-
-      <div class="invalid-feedback d-block" *ngIf="isDpiInvalid">
-        {{ 'MAP.EXPORT.DPI_REQUIRED' | translate }}
-      </div>
+    <div class="d-flex flex-column gap-1">
+      <label class="form-label mb-0 fw-semibold fs-8 text-gray-700">{{ 'MAP.EXPORT.DPI' | translate }}</label>
+      <app-custom-select [size]="'sm'" [items]="dpiOptions" bindLabel="label" bindValue="value" [multiple]="false" [clearable]="false" [placeholder]="'MAP.EXPORT.DPI_PLACEHOLDER' | translate" [(ngModel)]="dpi" (ngModelChange)="onDpiChange($event)" [ngModelOptions]="{ standalone: true }" [invalid]="isDpiInvalid"></app-custom-select>
+      <div class="invalid-feedback d-block" *ngIf="isDpiInvalid">{{ 'MAP.EXPORT.DPI_REQUIRED' | translate }}</div>
     </div>
 
-    <div class="export-grid">
-      <div class="export-field">
-        <label class="export-label">
-          {{ 'MAP.EXPORT.X' | translate }}
-        </label>
-
+    <div class="row g-2">
+      <div class="col-6">
+        <label class="form-label mb-1 fw-semibold fs-8 text-gray-700">{{ 'MAP.EXPORT.X' | translate }}</label>
         <div class="input-group input-group-sm">
-          <input
-            type="number"
-            min="1"
-            readonly
-            class="form-control"
-            [class.is-invalid]="isXInvalid"
-            [value]="x ?? ''"
-            [placeholder]="'MAP.EXPORT.X_PLACEHOLDER' | translate"
-          />
-          <span class="input-group-text">px</span>
+          <input type="number" min="1" readonly class="form-control" [class.is-invalid]="isXInvalid" [value]="x ?? ''" [placeholder]="'MAP.EXPORT.X_PLACEHOLDER' | translate" />
+          <span class="input-group-text fs-8 fw-semibold text-gray-700 bg-light">px</span>
         </div>
-
-        <div class="invalid-feedback d-block" *ngIf="isXInvalid">
-          {{ 'MAP.EXPORT.X_REQUIRED' | translate }}
-        </div>
+        <div class="invalid-feedback d-block" *ngIf="isXInvalid">{{ 'MAP.EXPORT.X_REQUIRED' | translate }}</div>
       </div>
-
-      <div class="export-field">
-        <label class="export-label">
-          {{ 'MAP.EXPORT.Y' | translate }}
-        </label>
-
+      <div class="col-6">
+        <label class="form-label mb-1 fw-semibold fs-8 text-gray-700">{{ 'MAP.EXPORT.Y' | translate }}</label>
         <div class="input-group input-group-sm">
-          <input
-            type="number"
-            min="1"
-            readonly
-            class="form-control"
-            [class.is-invalid]="isYInvalid"
-            [value]="y ?? ''"
-            [placeholder]="'MAP.EXPORT.Y_PLACEHOLDER' | translate"
-          />
-          <span class="input-group-text">px</span>
+          <input type="number" min="1" readonly class="form-control" [class.is-invalid]="isYInvalid" [value]="y ?? ''" [placeholder]="'MAP.EXPORT.Y_PLACEHOLDER' | translate" />
+          <span class="input-group-text fs-8 fw-semibold text-gray-700 bg-light">px</span>
         </div>
-
-        <div class="invalid-feedback d-block" *ngIf="isYInvalid">
-          {{ 'MAP.EXPORT.Y_REQUIRED' | translate }}
-        </div>
+        <div class="invalid-feedback d-block" *ngIf="isYInvalid">{{ 'MAP.EXPORT.Y_REQUIRED' | translate }}</div>
       </div>
     </div>
   </ng-container>
 
   <button type="submit" class="btn btn-sm btn-primary w-100">
-    <i
-      class="fa-solid me-1"
-      [ngClass]="isPrint ? 'fa-print' : 'fa-download'"
-    ></i>
+    <i class="fa-solid me-1" [ngClass]="isPrint ? 'fa-print' : 'fa-download'"></i>
     {{ (isPrint ? 'MAP.EXPORT.PRINT' : 'MAP.EXPORT.SUBMIT') | translate }}
   </button>
 </form>

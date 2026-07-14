@@ -224,7 +224,7 @@ private getScrollParent(element: HTMLElement): HTMLElement | Window {
 
   getMethodClass(method: 'GET' | 'POST'): string {
     return method === 'GET'
-      ? 'method-badge method-badge--get'
-      : 'method-badge method-badge--post';
+      ? 'badge badge-light-success fw-bold px-4 py-3'
+      : 'badge badge-light-danger fw-bold px-4 py-3';
   }
 }

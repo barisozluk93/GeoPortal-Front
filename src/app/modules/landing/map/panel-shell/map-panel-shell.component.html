@@ -1,57 +1,31 @@
 <div
-  class="map-panel-shell"
+  class="map-panel-shell card rounded-0 border border-gray-300 shadow-lg"
   [ngClass]="[
     panelClass,
     minimized ? 'map-panel-shell--minimized' : '',
     maximized ? 'map-panel-shell--maximized' : ''
   ]"
 >
-  <div class="map-panel-shell__header">
-    <div class="map-panel-shell__title" [title]="title">
-      <i [class]="icon + ' text-primary fs-5 me-2'"></i>
-      <!-- <span>{{ title }}</span> -->
+  <div class="card-header min-h-35px px-2 border-bottom border-gray-300">
+    <div class="card-title min-w-0 flex-grow-1 m-0" [title]="title">
+      <i *ngIf="icon" [class]="icon + ' text-primary fs-6 me-2'"></i>
+      <!-- <span class="text-gray-800 fw-semibold fs-7 text-truncate">{{ title }}</span> -->
     </div>
 
-    <div class="map-panel-shell__actions">
-      <!-- <button
-        type="button"
-        class="btn btn-sm btn-icon btn-light"
-        [attr.title]="minimized ? 'Restore' : 'Minimize'"
-        (click)="onMinimize($event)"
-      >
-        <i
-          class="fa-solid fs-8"
-          [ngClass]="minimized ? 'fa-window-restore' : 'fa-minus'"
-        ></i>
-      </button> -->
-
-      <!--
+    <div class="card-toolbar flex-shrink-0">
       <button
         type="button"
-        class="btn btn-sm btn-icon btn-light"
-        [attr.title]="maximized ? 'Collapse' : 'Maximize'"
-        (click)="onMaximize($event)"
-      >
-        <i
-          class="fa-solid fs-7"
-          [ngClass]="maximized ? 'fa-compress' : 'fa-expand'"
-        ></i>
-      </button>
-      -->
-
-      <button
-        type="button"
-        class="btn btn-sm btn-light-danger py-1"
-        title="{{'CLOSE' | translate }}"
+        class="btn btn-sm btn-light-danger py-1 px-2"
+        [attr.title]="'CLOSE' | translate"
         (click)="onClose($event)"
       >
         <i class="fa-solid fa-xmark fs-8 me-2"></i>
-        <span class="fs-8">{{'CLOSE' | translate }}</span>
+        <span class="fs-8">{{ 'CLOSE' | translate }}</span>
       </button>
     </div>
   </div>
 
-  <div class="map-panel-shell__body" *ngIf="!minimized">
+  <div class="card-body p-0 min-h-0 overflow-auto" *ngIf="!minimized">
     <ng-content></ng-content>
   </div>
 </div>

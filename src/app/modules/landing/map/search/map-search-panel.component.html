@@ -1,51 +1,23 @@
-<div
-  class="map-search-panel"
-  (click)="$event.stopPropagation()"
-  (mousedown)="$event.stopPropagation()"
-  (mouseup)="$event.stopPropagation()"
->
-  <div class="mb-2">
-    <div class="position-relative">
-      <i
-        class="fa-solid fa-search text-primary position-absolute top-50 translate-middle-y ms-3 fs-7"
-      ></i>
-
-      <input
-        type="text"
-        class="form-control form-control-sm ps-10"
-        [value]="searchText"
-        [placeholder]="'MAP.SEARCH.PLACEHOLDER' | translate"
-        autocomplete="off"
-        (input)="onSearchInput($event)"
-      />
-    </div>
+<div class="d-flex flex-column gap-2 p-2 h-100" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()">
+  <div class="position-relative">
+    <i class="fa-solid fa-search text-primary position-absolute top-50 translate-middle-y ms-3 fs-7"></i>
+    <input type="text" class="form-control form-control-sm ps-10" [value]="searchText" [placeholder]="'MAP.SEARCH.PLACEHOLDER' | translate" autocomplete="off" (input)="onSearchInput($event)" />
   </div>
 
-  <div class="map-search-panel__loading" *ngIf="isLoading">
+  <div class="d-flex align-items-center gap-2 text-gray-600 fs-8" *ngIf="isLoading">
     <span class="spinner-border spinner-border-sm"></span>
     <span>{{ 'MAP.SEARCH.SEARCHING' | translate }}</span>
   </div>
 
-  <div
-    class="map-search-panel__results"
-    *ngIf="!isLoading && results.length > 0"
-  >
-    <button
-      type="button"
-      class="map-search-result"
-      *ngFor="let result of results; trackBy: trackResult"
-      (click)="selectResult(result)"
-    >
-      <i class="fa-solid fa-draw-polygon text-primary"></i>
-      <span>{{ result.displayName }}</span>
+  <div class="d-flex flex-column gap-1 overflow-auto" *ngIf="!isLoading && results.length > 0">
+    <button type="button" class="btn btn-sm btn-light-primary d-flex align-items-center justify-content-start gap-2 text-start w-100 px-3" *ngFor="let result of results; trackBy: trackResult" (click)="selectResult(result)">
+      <i class="fa-solid fa-draw-polygon text-primary fs-8 flex-shrink-0"></i>
+      <span class="text-hover-white fw-medium fs-8 text-truncate">{{ result.displayName }}</span>
     </button>
   </div>
 
-  <div
-    class="map-search-panel__empty"
-    *ngIf="!isLoading && hasSearched && results.length === 0"
-  >
-    <i class="fa-solid fa-map-location-dot"></i>
-    <span>{{ 'MAP.SEARCH.EMPTY' | translate }}</span>
+  <div class="d-flex flex-column align-items-center justify-content-center min-h-100px text-gray-600 text-center" *ngIf="!isLoading && hasSearched && results.length === 0">
+    <i class="fa-solid fa-map-location-dot fs-2 text-gray-500 mb-2"></i>
+    <span class="fs-8">{{ 'MAP.SEARCH.EMPTY' | translate }}</span>
   </div>
 </div>

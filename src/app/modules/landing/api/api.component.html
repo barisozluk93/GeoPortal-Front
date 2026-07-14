@@ -1,354 +1,229 @@
-<div class="api-page">
-  <section class="api-hero">
-    <div class="container-fluid">
-      <div class="card api-shell border-0 overflow-hidden">
-        <div class="card-body p-0">
-          <div class="row g-0 api-hero-row">
+<div class="bg-body py-10">
+  <div class="container-fluid">
+    <div class="card border border-gray-300 shadow-sm overflow-hidden api-card mb-10">
+      <div class="card-body p-0">
+        <div class="row g-0 align-items-stretch api-row">
 
-            <!-- LEFT -->
-            <div class="col-12 col-xl-7">
-              <div class="api-hero-content h-100 p-8 p-lg-12 d-flex flex-column justify-content-center">
-                <div class="badge badge-light-primary w-fit mb-5">
-                  {{ 'API_PAGE.KICKER' | translate }}
-                </div>
+          <!-- SOL: GÖRSEL + API İÇERİĞİ -->
+          <div class="col-12 col-xl-7">
+            <div class="position-relative overflow-hidden bg-white h-100 api-hero">
+              <div class="position-absolute top-0 start-0 bottom-0 api-hero-image"></div>
+              <div class="position-absolute top-0 start-0 end-0 bottom-0 api-hero-overlay"></div>
 
-                <h1 class="fw-bolder fs-2x fs-lg-4x mb-5">
-                  {{ 'API_PAGE.TITLE' | translate }}
-                </h1>
+              <div class="position-relative z-index-2 d-flex align-items-center h-100 p-6 p-md-8 p-xxl-10">
+                <div class="w-100 ms-xl-auto api-hero-content">
+                  <span class="badge badge-light-primary fw-bold fs-8 mb-5">
+                    {{ 'API_PAGE.KICKER' | translate }}
+                  </span>
 
-                <p class="text-muted fs-4 fw-semibold mw-700px mb-8">
-                  {{ 'API_PAGE.COPY' | translate }}
-                </p>
+                  <h1 class="text-gray-900 fw-bolder fs-2x fs-lg-3x lh-sm mb-5 api-hero-title">
+                    {{ 'API_PAGE.TITLE' | translate }}
+                  </h1>
 
-                <div class="d-flex flex-column flex-sm-row gap-3">
-                  <button type="button" class="btn btn-primary btn-lg px-8" (click)="onBuyNow()">
-                    {{ 'API_PAGE.BUY_API_KEY' | translate }}
-                  </button>
+                  <p class="text-gray-700 fw-semibold fs-6 fs-lg-5 lh-lg mb-8 api-hero-copy">
+                    {{ 'API_PAGE.COPY' | translate }}
+                  </p>
 
-                  <a routerLink="/landing/documentation" class="btn btn-light-primary btn-lg px-8">
-                    {{ 'API_PAGE.DOCUMENTATION' | translate }}
-                  </a>
+                  <div class="d-flex flex-column flex-sm-row gap-3 api-hero-actions">
+                    <button type="button" class="btn btn-primary px-7" (click)="onBuyNow()">
+                      <i class="ki-outline ki-key fs-2 me-2"></i>
+                      {{ 'API_PAGE.BUY_API_KEY' | translate }}
+                    </button>
+
+                    <a routerLink="/landing/documentation" class="btn btn-light-primary px-7">
+                      <i class="ki-outline ki-document fs-2 me-2"></i>
+                      {{ 'API_PAGE.DOCUMENTATION' | translate }}
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- RIGHT -->
-            <div class="col-12 col-xl-5">
-              <div class="api-panel h-100 p-8 p-lg-10">
-
-                <!-- HEADER -->
-                <div class="api-panel-header mb-9">
-                  <div class="api-panel-title-wrap">
-                    <div class="api-panel-heading">
-                      <div class="api-panel-kicker">
-                        {{ 'API_PAGE.ENDPOINTS_KICKER' | translate }}
-                      </div>
-
-                      <h3 class="api-panel-title">
-                        {{ 'API_PAGE.ENDPOINTS_TITLE' | translate }}
-                      </h3>
-                    </div>
-                  </div>
+          <!-- SAĞ: ENDPOINT PANELİ -->
+          <div class="col-12 col-xl-5 position-relative api-endpoint-column">
+            <div class="position-relative d-flex flex-column justify-content-center bg-primary h-100 p-6 p-lg-8 p-xxl-10 api-endpoint-panel">
+              <div class="position-relative z-index-2">
+                <div class="mb-5">
+                  <span class="badge badge-light text-primary fw-bold fs-8 mb-4">
+                    {{ 'API_PAGE.ENDPOINTS_KICKER' | translate }}
+                  </span>
+                  <h2 class="text-white fw-bolder fs-1 mb-0">
+                    {{ 'API_PAGE.ENDPOINTS_TITLE' | translate }}
+                  </h2>
                 </div>
 
-                <!-- ENDPOINTS -->
-                <div class="api-endpoint-list">
-
-                  <!-- ITEM -->
-                  <div class="api-endpoint-card">
-                    <div class="api-endpoint-top">
-                      <div class="d-flex align-items-center gap-4 flex-wrap">
-                        <div class="api-endpoint-method method-post">
-                          POST
-                        </div>
-
-                        <div class="d-flex align-items-center gap-4 flex-wrap">
-                          <div class="api-endpoint-label mb-0">
-                            {{ 'API_PAGE.ENDPOINT_1_TITLE' | translate }}
-                          </div>
-                        </div>
-                      </div>
+                <div class="d-flex flex-column gap-3">
+                  <div class="bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                    <div class="d-flex align-items-center flex-wrap gap-3 mb-2">
+                      <span class="badge badge-danger fw-bold">POST</span>
+                      <span class="text-white fw-bold fs-7">
+                        {{ 'API_PAGE.ENDPOINT_1_TITLE' | translate }}
+                      </span>
                     </div>
-
-                    <div class="api-endpoint-url">
-                      <code>{{baseUrl}}/taiearthApi/map/getSatelliteDatas</code>
-                    </div>
+                    <code class="api-endpoint-code text-white text-opacity-75 fw-semibold">
+                      {{baseUrl}}/taiearthApi/map/getSatelliteDatas
+                    </code>
                   </div>
 
-                  <!-- ITEM -->
-                  <div class="api-endpoint-card">
-                    <div class="api-endpoint-top">
-                      <div class="d-flex align-items-center gap-4 flex-wrap">
-                        <div class="api-endpoint-method method-get">
-                          GET
-                        </div>
-
-                        <div class="d-flex align-items-center gap-4 flex-wrap">
-                          <div class="api-endpoint-label mb-0">
-                            {{ 'API_PAGE.ENDPOINT_2_TITLE' | translate }}
-                          </div>
-                        </div>
-                      </div>
+                  <div class="bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                    <div class="d-flex align-items-center flex-wrap gap-3 mb-2">
+                      <span class="badge badge-success fw-bold">GET</span>
+                      <span class="text-white fw-bold fs-7">
+                        {{ 'API_PAGE.ENDPOINT_2_TITLE' | translate }}
+                      </span>
                     </div>
-
-                    <div class="api-endpoint-url">
-                      <code>{{baseUrl}}/taiearthApi/map/getStatus/&#123;processId&#125;</code>
-                    </div>
+                    <code class="api-endpoint-code text-white text-opacity-75 fw-semibold">
+                      {{baseUrl}}/taiearthApi/map/getStatus/&#123;processId&#125;
+                    </code>
                   </div>
 
-                  <!-- ITEM -->
-                  <div class="api-endpoint-card">
-                    <div class="api-endpoint-top">
-                      <div class="d-flex align-items-center gap-4 flex-wrap">
-                        <div class="api-endpoint-method method-get">
-                          GET
-                        </div>
-
-                        <div class="d-flex align-items-center gap-4 flex-wrap">
-                          <div class="api-endpoint-label mb-0">
-                            {{ 'API_PAGE.ENDPOINT_3_TITLE' | translate }}
-                          </div>
-                        </div>
-                      </div>
+                  <div class="bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                    <div class="d-flex align-items-center flex-wrap gap-3 mb-2">
+                      <span class="badge badge-success fw-bold">GET</span>
+                      <span class="text-white fw-bold fs-7">
+                        {{ 'API_PAGE.ENDPOINT_3_TITLE' | translate }}
+                      </span>
                     </div>
-
-                    <div class="api-endpoint-url">
-                      <code>{{baseUrl}}/taiearthApi/map/getProcessedSatelliteImage/&#123;processId&#125;</code>
-                    </div>
+                    <code class="api-endpoint-code text-white text-opacity-75 fw-semibold">
+                      {{baseUrl}}/taiearthApi/map/getProcessedSatelliteImage/&#123;processId&#125;
+                    </code>
                   </div>
-
                 </div>
-
               </div>
             </div>
+          </div>
 
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center py-8 mb-8">
+      <span class="badge badge-light-primary mb-4">
+        {{ 'API_PAGE.SECTION2_KICKER' | translate }}
+      </span>
+      <h2 class="text-gray-900 fw-bolder fs-2hx mb-4">
+        {{ 'API_PAGE.SECTION2_TITLE' | translate }}
+      </h2>
+      <p class="text-gray-600 fs-5 fw-semibold lh-lg mw-750px mx-auto mb-0">
+        {{ 'API_PAGE.SECTION2_COPY' | translate }}
+      </p>
+    </div>
+
+    <div class="row g-6 mb-15">
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card card-bordered h-100 hover-elevate-up">
+          <div class="card-body p-7 d-flex flex-column">
+            <div class="symbol symbol-60px mb-6">
+              <span class="symbol-label bg-light-primary">
+                <i class="ki-outline ki-key fs-2x text-primary"></i>
+              </span>
+            </div>
+            <h3 class="text-gray-900 fw-bolder fs-2 mb-3">{{ 'API_PAGE.ACCESS_1_TITLE' | translate }}</h3>
+            <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-7">{{ 'API_PAGE.ACCESS_1_DESC' | translate }}</p>
+            <div class="d-flex flex-column gap-4 mt-auto">
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_1_ITEM_1' | translate }}</span></div>
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_1_ITEM_2' | translate }}</span></div>
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_1_ITEM_3' | translate }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card card-bordered h-100 hover-elevate-up">
+          <div class="card-body p-7 d-flex flex-column">
+            <div class="symbol symbol-60px mb-6"><span class="symbol-label bg-light-primary"><i class="ki-outline ki-satellite fs-2x text-primary"></i></span></div>
+            <h3 class="text-gray-900 fw-bolder fs-2 mb-3">{{ 'API_PAGE.ACCESS_2_TITLE' | translate }}</h3>
+            <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-7">{{ 'API_PAGE.ACCESS_2_DESC' | translate }}</p>
+            <div class="d-flex flex-column gap-4 mt-auto">
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_2_ITEM_1' | translate }}</span></div>
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_2_ITEM_2' | translate }}</span></div>
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_2_ITEM_3' | translate }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card card-bordered h-100 hover-elevate-up">
+          <div class="card-body p-7 d-flex flex-column">
+            <div class="symbol symbol-60px mb-6"><span class="symbol-label bg-light-primary"><i class="ki-outline ki-time fs-2x text-primary"></i></span></div>
+            <h3 class="text-gray-900 fw-bolder fs-2 mb-3">{{ 'API_PAGE.ACCESS_3_TITLE' | translate }}</h3>
+            <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-7">{{ 'API_PAGE.ACCESS_3_DESC' | translate }}</p>
+            <div class="d-flex flex-column gap-4 mt-auto">
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_3_ITEM_1' | translate }}</span></div>
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_3_ITEM_2' | translate }}</span></div>
+              <div class="d-flex align-items-center gap-3 text-gray-700 fw-semibold"><i class="ki-outline ki-check-circle fs-2 text-primary"></i><span>{{ 'API_PAGE.ACCESS_3_ITEM_3' | translate }}</span></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <section class="api-section">
-    <div class="container-fluid">
-
-      <div class="text-center mb-12">
-        <div class="badge badge-light-primary mb-4">
-          {{ 'API_PAGE.SECTION2_KICKER' | translate }}
+    <div class="row g-6 mb-15">
+      <div class="col-12 col-xl-4">
+        <div class="card card-bordered h-100">
+          <div class="card-body p-8">
+            <div class="symbol symbol-60px mb-6"><span class="symbol-label bg-light-primary"><i class="ki-outline ki-code fs-2x text-primary"></i></span></div>
+            <h3 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'API_PAGE.ENDPOINTS_TITLE' | translate }}</h3>
+            <p class="text-gray-600 fw-semibold mb-0">{{ 'API_PAGE.ENDPOINTS_KICKER' | translate }}</p>
+          </div>
         </div>
-
-        <h2 class="fw-bolder fs-2hx mb-4">
-          {{ 'API_PAGE.SECTION2_TITLE' | translate }}
-        </h2>
-
-        <p class="text-muted fs-5 fw-semibold mw-750px mx-auto mb-0">
-          {{ 'API_PAGE.SECTION2_COPY' | translate }}
-        </p>
       </div>
 
-      <div class="row g-6">
-        <div class="col-12 col-md-6 col-xl-4">
-          <div class="card api-card h-100">
+      <div class="col-12 col-xl-8">
+        <div class="d-flex flex-column gap-5">
+          <div class="card card-bordered">
             <div class="card-body p-7">
-              <div class="symbol symbol-60px mb-6">
-                <span class="symbol-label bg-light-primary">
-                  <i class="ki-outline ki-key fs-2x text-primary"></i>
-                </span>
-              </div>
-
-              <h3 class="fw-bolder fs-2 mb-3">
-                {{ 'API_PAGE.ACCESS_1_TITLE' | translate }}
-              </h3>
-
-              <p class="text-muted fs-6 fw-semibold lh-lg mb-7">
-                {{ 'API_PAGE.ACCESS_1_DESC' | translate }}
-              </p>
-
-              <div class="d-flex flex-column gap-3">
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_1_ITEM_1' | translate }}
-                </div>
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_1_ITEM_2' | translate }}
-                </div>
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_1_ITEM_3' | translate }}
-                </div>
-              </div>
+              <div class="d-flex align-items-center flex-wrap gap-3 mb-4"><span class="badge badge-danger px-4 py-3">POST</span><span class="text-gray-900 fw-bold fs-5">{{ 'API_PAGE.ENDPOINT_1_TITLE' | translate }}</span></div>
+              <div class="bg-light-primary rounded p-4 overflow-hidden mb-4"><code class="api-endpoint-code text-primary fw-semibold">{{baseUrl}}/taiearthApi/map/getSatelliteDatas</code></div>
+              <p class="text-gray-600 fw-semibold mb-0">{{ 'API_PAGE.ENDPOINT_1_DESC' | translate }}</p>
             </div>
           </div>
-        </div>
 
-        <div class="col-12 col-md-6 col-xl-4">
-          <div class="card api-card h-100">
+          <div class="card card-bordered">
             <div class="card-body p-7">
-              <div class="symbol symbol-60px mb-6">
-                <span class="symbol-label bg-light-primary">
-                  <i class="ki-outline ki-satellite fs-2x text-primary"></i>
-                </span>
-              </div>
-
-              <h3 class="fw-bolder fs-2 mb-3">
-                {{ 'API_PAGE.ACCESS_2_TITLE' | translate }}
-              </h3>
-
-              <p class="text-muted fs-6 fw-semibold lh-lg mb-7">
-                {{ 'API_PAGE.ACCESS_2_DESC' | translate }}
-              </p>
-
-              <div class="d-flex flex-column gap-3">
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_2_ITEM_1' | translate }}
-                </div>
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_2_ITEM_2' | translate }}
-                </div>
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_2_ITEM_3' | translate }}
-                </div>
-              </div>
+              <div class="d-flex align-items-center flex-wrap gap-3 mb-4"><span class="badge badge-success px-4 py-3">GET</span><span class="text-gray-900 fw-bold fs-5">{{ 'API_PAGE.ENDPOINT_2_TITLE' | translate }}</span></div>
+              <div class="bg-light-primary rounded p-4 overflow-hidden mb-4"><code class="api-endpoint-code text-primary fw-semibold">{{baseUrl}}/taiearthApi/map/getStatus/&#123;processId&#125;</code></div>
+              <p class="text-gray-600 fw-semibold mb-0">{{ 'API_PAGE.ENDPOINT_2_DESC' | translate }}</p>
             </div>
           </div>
-        </div>
 
-        <div class="col-12 col-md-6 col-xl-4">
-          <div class="card api-card h-100">
+          <div class="card card-bordered">
             <div class="card-body p-7">
-              <div class="symbol symbol-60px mb-6">
-                <span class="symbol-label bg-light-primary">
-                  <i class="ki-outline ki-time fs-2x text-primary"></i>
-                </span>
-              </div>
-
-              <h3 class="fw-bolder fs-2 mb-3">
-                {{ 'API_PAGE.ACCESS_3_TITLE' | translate }}
-              </h3>
-
-              <p class="text-muted fs-6 fw-semibold lh-lg mb-7">
-                {{ 'API_PAGE.ACCESS_3_DESC' | translate }}
-              </p>
-
-              <div class="d-flex flex-column gap-3">
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_3_ITEM_1' | translate }}
-                </div>
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_3_ITEM_2' | translate }}
-                </div>
-                <div class="api-check">
-                  <i class="ki-outline ki-check-circle fs-3 text-primary"></i>
-                  {{ 'API_PAGE.ACCESS_3_ITEM_3' | translate }}
-                </div>
-              </div>
+              <div class="d-flex align-items-center flex-wrap gap-3 mb-4"><span class="badge badge-success px-4 py-3">GET</span><span class="text-gray-900 fw-bold fs-5">{{ 'API_PAGE.ENDPOINT_3_TITLE' | translate }}</span></div>
+              <div class="bg-light-primary rounded p-4 overflow-hidden mb-4"><code class="api-endpoint-code text-primary fw-semibold">{{baseUrl}}/taiearthApi/map/getProcessedSatelliteImage/&#123;processId&#125;</code></div>
+              <p class="text-gray-600 fw-semibold mb-0">{{ 'API_PAGE.ENDPOINT_3_DESC' | translate }}</p>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- ENDPOINT DETAILS -->
-      <div class="api-doc-section mt-15">
-        <div class="api-doc-aside">
-          <div class="symbol symbol-60px mb-6">
-            <span class="symbol-label bg-light-primary">
-              <i class="ki-outline ki-code fs-2x text-primary"></i>
-            </span>
-          </div>
-
-          <h3 class="fw-bolder fs-2x mb-4">
-            {{ 'API_PAGE.ENDPOINTS_TITLE' | translate }}
-          </h3>
-        </div>
-
-        <div class="api-doc-list">
-          <div class="api-doc-item">
-            <div class="api-doc-head">
-              <span class="api-doc-method method-post">POST</span>
-              <strong>{{ 'API_PAGE.ENDPOINT_1_TITLE' | translate }}</strong>
-            </div>
-
-            <div class="api-doc-code">
-              <code>{{baseUrl}}/taiearthApi/map/getSatelliteDatas</code>
-            </div>
-
-            <p class="text-muted">{{ 'API_PAGE.ENDPOINT_1_DESC' | translate }}</p>
-          </div>
-
-          <div class="api-doc-item">
-            <div class="api-doc-head">
-              <span class="api-doc-method method-get">GET</span>
-              <strong>{{ 'API_PAGE.ENDPOINT_2_TITLE' | translate }}</strong>
-            </div>
-
-            <div class="api-doc-code">
-              <code>{{baseUrl}}/taiearthApi/map/getStatus/&#123;processId&#125;</code>
-            </div>
-
-            <p class="text-muted">{{ 'API_PAGE.ENDPOINT_2_DESC' | translate }}</p>
-          </div>
-
-          <div class="api-doc-item">
-            <div class="api-doc-head">
-              <span class="api-doc-method method-get">GET</span>
-              <strong>{{ 'API_PAGE.ENDPOINT_3_TITLE' | translate }}</strong>
-            </div>
-
-            <div class="api-doc-code">
-              <code>{{baseUrl}}/taiearthApi/map/getProcessedSatelliteImage/&#123;processId&#125;</code>
-            </div>
-
-            <p class="text-muted">{{ 'API_PAGE.ENDPOINT_3_DESC' | translate }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- FLOW -->
-      <div class="api-timeline-section mt-15">
-        <div class="api-timeline">
-          <div class="api-timeline-item">
-            <div class="api-timeline-dot">
-              <i class="ki-outline ki-cloud-add fs-2"></i>
-            </div>
-
-            <div class="api-timeline-card">
-              <span>01</span>
-              <h4>{{ 'API_PAGE.FLOW_1_TITLE' | translate }}</h4>
-              <p>{{ 'API_PAGE.FLOW_1_DESC' | translate }}</p>
-            </div>
-          </div>
-
-          <div class="api-timeline-item">
-            <div class="api-timeline-dot">
-              <i class="ki-outline ki-setting-2 fs-2"></i>
-            </div>
-
-            <div class="api-timeline-card">
-              <span>02</span>
-              <h4>{{ 'API_PAGE.FLOW_2_TITLE' | translate }}</h4>
-              <p>{{ 'API_PAGE.FLOW_2_DESC' | translate }}</p>
-            </div>
-          </div>
-
-          <div class="api-timeline-item">
-            <div class="api-timeline-dot">
-              <i class="ki-outline ki-picture fs-2"></i>
-            </div>
-
-            <div class="api-timeline-card">
-              <span>03</span>
-              <h4>{{ 'API_PAGE.FLOW_3_TITLE' | translate }}</h4>
-              <p>{{ 'API_PAGE.FLOW_3_DESC' | translate }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </section>
+
+    <div class="card card-bordered">
+      <div class="card-body p-8 p-lg-10">
+        <div class="row g-8">
+          <div class="col-12 col-lg-4">
+            <div class="d-flex align-items-start gap-5">
+              <div class="symbol symbol-55px"><span class="symbol-label bg-light-primary"><i class="ki-outline ki-cloud-add fs-2x text-primary"></i></span></div>
+              <div><span class="badge badge-light-primary mb-3">01</span><h4 class="text-gray-900 fw-bold fs-3 mb-3">{{ 'API_PAGE.FLOW_1_TITLE' | translate }}</h4><p class="text-gray-600 fw-semibold lh-lg mb-0">{{ 'API_PAGE.FLOW_1_DESC' | translate }}</p></div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="d-flex align-items-start gap-5">
+              <div class="symbol symbol-55px"><span class="symbol-label bg-light-primary"><i class="ki-outline ki-setting-2 fs-2x text-primary"></i></span></div>
+              <div><span class="badge badge-light-primary mb-3">02</span><h4 class="text-gray-900 fw-bold fs-3 mb-3">{{ 'API_PAGE.FLOW_2_TITLE' | translate }}</h4><p class="text-gray-600 fw-semibold lh-lg mb-0">{{ 'API_PAGE.FLOW_2_DESC' | translate }}</p></div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="d-flex align-items-start gap-5">
+              <div class="symbol symbol-55px"><span class="symbol-label bg-light-primary"><i class="ki-outline ki-picture fs-2x text-primary"></i></span></div>
+              <div><span class="badge badge-light-primary mb-3">03</span><h4 class="text-gray-900 fw-bold fs-3 mb-3">{{ 'API_PAGE.FLOW_3_TITLE' | translate }}</h4><p class="text-gray-600 fw-semibold lh-lg mb-0">{{ 'API_PAGE.FLOW_3_DESC' | translate }}</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

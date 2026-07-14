@@ -1,26 +1,22 @@
-<div class="layer-manager-panel" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()"
-  (mouseup)="$event.stopPropagation()">
-  <div class="layer-manager-panel__body">
+<div class="d-flex flex-column h-100 min-w-0 bg-body" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()">
+  <div class="flex-grow-1 overflow-auto p-2">
     <ng-container *ngIf="activeLayers.length > 0; else emptyState">
-      <div class="layer-list__content">
-        <div class="layer-item" *ngFor="let layer of activeLayers; trackBy: trackLayer"
-          [class.layer-item--disabled]="!isLayerVisible(layer)">
-          <div class="layer-item__left">
-            <input type="checkbox" class="form-check-input layer-checkbox" [checked]="isLayerVisible(layer)"
-              (change)="onLayerVisibilityToggle(layer)">
-
-            <span class="layer-item__name">
-              {{ layer.name || layer.layerName }}
-            </span>
-          </div>
-        </div>
+      <div class="d-flex flex-column px-1">
+        <label
+          class="d-flex align-items-center gap-2 min-h-35px px-1 border-bottom border-gray-300 border-bottom-dashed cursor-pointer"
+          *ngFor="let layer of activeLayers; trackBy: trackLayer"
+          [class.opacity-50]="!isLayerVisible(layer)"
+        >
+          <input type="checkbox" class="form-check-input h-15px w-15px m-0 flex-shrink-0" [checked]="isLayerVisible(layer)" (change)="onLayerVisibilityToggle(layer)">
+          <span class="text-gray-800 fw-medium fs-8 text-truncate">{{ layer.name || layer.layerName }}</span>
+        </label>
       </div>
     </ng-container>
 
     <ng-template #emptyState>
-      <div class="layer-manager-panel__empty">
-        <i class="fa-solid fa-layer-group"></i>
-        <span>{{ 'MAP.LAYER_MANAGER.EMPTY' | translate }}</span>
+      <div class="d-flex flex-column align-items-center justify-content-center min-h-100px p-4 border border-gray-300 border-dashed bg-light text-center">
+        <i class="fa-solid fa-layer-group fs-2 text-gray-500 mb-2"></i>
+        <span class="text-gray-600 fw-medium fs-8">{{ 'MAP.LAYER_MANAGER.EMPTY' | translate }}</span>
       </div>
     </ng-template>
   </div>

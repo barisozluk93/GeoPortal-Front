@@ -1,84 +1,142 @@
-<div class="map-ask-panel" (click)="$event.stopPropagation()">
-  <div class="map-ask-panel__location" *ngIf="coordinateText">
-    <i class="fa-solid fa-location-dot"></i>
-    <span>{{ 'MAP.ASK.CLICKED_LOCATION' | translate }}</span>
-    <strong>{{ coordinateText }}</strong>
+<div class="d-flex flex-column w-100 h-100 min-h-0 overflow-hidden bg-body" (click)="$event.stopPropagation()">
+  <div
+    *ngIf="coordinateText"
+    class="d-flex align-items-center flex-shrink-0 gap-2 px-4 py-2 bg-light-warning border-bottom border-warning border-opacity-25"
+  >
+    <span class="symbol symbol-25px flex-shrink-0">
+      <span class="symbol-label bg-warning bg-opacity-15">
+        <i class="fa-solid fa-location-dot text-warning fs-7"></i>
+      </span>
+    </span>
+
+    <span class="text-gray-600 fw-semibold fs-8 text-uppercase text-nowrap">
+      {{ 'MAP.ASK.CLICKED_LOCATION' | translate }}
+    </span>
+
+    <span
+      class="badge badge-light-warning fw-bold fs-8 text-truncate"
+      [title]="coordinateText"
+    >
+      {{ coordinateText }}
+    </span>
   </div>
 
-  <div *ngIf="loading" class="map-ask-panel__state">
-    <span class="spinner-border spinner-border-sm"></span>
-    <span>{{ 'MAP.ASK.LOADING' | translate }}</span>
+  <div
+    *ngIf="loading"
+    class="d-flex flex-column flex-grow-1 align-items-center justify-content-center gap-3 p-10 text-center"
+  >
+    <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+    <span class="text-gray-700 fw-semibold fs-7">
+      {{ 'MAP.ASK.LOADING' | translate }}
+    </span>
   </div>
 
   <div
     *ngIf="!loading && footprints.length === 0"
-    class="map-ask-panel__state map-ask-panel__state--empty"
+    class="d-flex flex-column flex-grow-1 align-items-center justify-content-center gap-3 p-10 text-center"
   >
-    <i class="fa-regular fa-map"></i>
-    <span>{{ 'MAP.ASK.NO_RESULT' | translate }}</span>
+    <span class="symbol symbol-50px">
+      <span class="symbol-label bg-light-primary">
+        <i class="fa-regular fa-map text-primary fs-2"></i>
+      </span>
+    </span>
+
+    <span class="text-gray-600 fw-semibold fs-7">
+      {{ 'MAP.ASK.NO_RESULT' | translate }}
+    </span>
   </div>
 
   <ng-container *ngIf="!loading && footprints.length > 0">
-    <ul class="nav map-ask-panel__tabs" role="tablist">
-      <li
-        class="nav-item"
-        *ngFor="let footprint of footprints; let i = index; trackBy: trackByFootprint"
-        role="presentation"
-      >
-        <button
-          type="button"
-          role="tab"
-          class="nav-link map-ask-panel__tab"
-          [class.active]="i === activeIndex"
-          [attr.aria-selected]="i === activeIndex"
-          [title]="footprint.imageId || footprint.productName || footprint.name || ('MAP.ASK.FOOTPRINT' | translate)"
-          (click)="selectTab(i)"
+    <div class="flex-shrink-0 border-bottom border-gray-300 px-3 py-3">
+      <ul class="nav nav-pills nav-pills-custom flex-nowrap gap-2 overflow-auto" role="tablist">
+        <li
+          class="nav-item flex-shrink-0"
+          *ngFor="let footprint of footprints; let i = index; trackBy: trackByFootprint"
+          role="presentation"
         >
-          <span class="map-ask-panel__tab-index">{{ i + 1 }}</span>
-          <span class="map-ask-panel__tab-label">
-            {{ footprint.imageId || footprint.productName || footprint.name || ('MAP.ASK.FOOTPRINT' | translate) }}
-          </span>
-        </button>
-      </li>
-    </ul>
+          <button
+            type="button"
+            role="tab"
+            class="nav-link btn btn-sm d-flex align-items-center flex-nowrap gap-2 px-3 py-2 border border-gray-300"
+            [ngClass]="i === activeIndex ? 'active btn-light-primary border-primary' : 'btn-light'"
+            [attr.aria-selected]="i === activeIndex"
+            [title]="footprint.imageId || footprint.productName || footprint.name || ('MAP.ASK.FOOTPRINT' | translate)"
+            (click)="selectTab(i)"
+          >
+            <span
+              class="badge badge-circle fw-bold fs-8"
+              [ngClass]="i === activeIndex ? 'badge-primary' : 'badge-light-primary'"
+            >
+              {{ i + 1 }}
+            </span>
 
-    <div class="map-ask-panel__body" *ngIf="activeFootprint as footprint">
-      <div *ngIf="footprint.attributesLoading" class="map-ask-panel__state">
-        <span class="spinner-border spinner-border-sm"></span>
-        <span>Öznitelikler okunuyor...</span>
+            <span class="text-truncate mw-125px fw-semibold fs-8">
+              {{ footprint.imageId || footprint.productName || footprint.name || ('MAP.ASK.FOOTPRINT' | translate) }}
+            </span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="d-flex flex-column flex-grow-1 min-h-0 overflow-auto" *ngIf="activeFootprint as footprint">
+      <div
+        *ngIf="footprint.attributesLoading"
+        class="d-flex flex-column flex-grow-1 align-items-center justify-content-center gap-3 p-10 text-center"
+      >
+        <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+        <span class="text-gray-700 fw-semibold fs-7">Öznitelikler okunuyor...</span>
       </div>
 
       <div
         *ngIf="!footprint.attributesLoading && footprint.attributesError"
-        class="map-ask-panel__state map-ask-panel__state--error"
+        class="d-flex flex-column flex-grow-1 align-items-center justify-content-center gap-3 p-10 text-center"
       >
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        <span>{{ footprint.attributesError }}</span>
+        <span class="symbol symbol-50px">
+          <span class="symbol-label bg-light-danger">
+            <i class="fa-solid fa-triangle-exclamation text-danger fs-2"></i>
+          </span>
+        </span>
+
+        <span class="text-danger fw-semibold fs-7">
+          {{ footprint.attributesError }}
+        </span>
       </div>
 
       <div
         *ngIf="!footprint.attributesLoading && !footprint.attributesError && activeAttributeRows.length === 0"
-        class="map-ask-panel__state map-ask-panel__state--empty"
+        class="d-flex flex-column flex-grow-1 align-items-center justify-content-center gap-3 p-10 text-center"
       >
-        <i class="fa-regular fa-rectangle-list"></i>
-        <span>Öznitelik bulunamadı.</span>
+        <span class="symbol symbol-50px">
+          <span class="symbol-label bg-light-primary">
+            <i class="fa-regular fa-rectangle-list text-primary fs-2"></i>
+          </span>
+        </span>
+
+        <span class="text-gray-600 fw-semibold fs-7">Öznitelik bulunamadı.</span>
       </div>
 
       <div
-        class="map-ask-panel__attribute-list"
         *ngIf="!footprint.attributesLoading && !footprint.attributesError && activeAttributeRows.length > 0"
+        class="d-flex flex-column px-4 py-2"
       >
         <div
-          class="map-ask-panel__attribute"
+          class="row g-2 align-items-start py-3 border-bottom border-gray-300 border-bottom-dashed"
           *ngFor="let row of activeAttributeRows; let i = index; trackBy: trackByAttribute"
         >
-          <span class="map-ask-panel__attribute-key">{{ row.key }}</span>
-          <span
-            class="map-ask-panel__attribute-value"
-            [title]="formatAttributeValue(row.value)"
-          >
-            {{ formatAttributeValue(row.value) }}
-          </span>
+          <div class="col-12 col-sm-5">
+            <span class="d-block text-gray-600 fw-bold fs-8 text-break">
+              {{ row.key }}
+            </span>
+          </div>
+
+          <div class="col-12 col-sm-7">
+            <span
+              class="d-block text-gray-900 fw-semibold fs-8 text-break"
+              [title]="formatAttributeValue(row.value)"
+            >
+              {{ formatAttributeValue(row.value) }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
