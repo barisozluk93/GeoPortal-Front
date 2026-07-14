@@ -61,6 +61,7 @@
   align-items: center;
   flex: 0 0 auto;
   min-width: 0;
+  height: 100%;
 }
 
 .modern-header-center {
@@ -82,51 +83,48 @@
 .app-header__brand {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   min-width: 0;
+  height: 100%;
   cursor: pointer;
   user-select: none;
+  text-decoration: none;
+  outline: none;
 }
 
 .app-header__brand-top {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: flex-start;
   min-width: 0;
+  height: 100%;
+  line-height: 0;
 }
 
 .app-header__logo-img {
-  height: 38px;
+  display: block;
   width: auto;
+  height: 48px;
+  max-width: 230px;
   object-fit: contain;
+  object-position: left center;
+  flex-shrink: 0;
   transition:
     transform 0.2s ease,
-    opacity 0.2s ease;
+    opacity 0.2s ease,
+    filter 0.2s ease;
 }
 
 .app-header__brand:hover {
   .app-header__logo-img {
     transform: translateY(-1px);
+    opacity: 0.96;
   }
 }
 
-.app-header__brand-divider {
-  width: 1px;
-  height: 28px;
-  background: linear-gradient(
-    to bottom,
-    rgba(15, 23, 42, 0),
-    rgba(15, 23, 42, 0.14),
-    rgba(15, 23, 42, 0)
-  );
-  flex-shrink: 0;
-}
-
-.app-header__brand-name {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--bs-dark);
-  white-space: nowrap;
+.app-header__brand:focus-visible {
+  border-radius: 10px;
+  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.14);
 }
 
 .mobile-toggle-btn {
@@ -216,11 +214,8 @@
   }
 
   .app-header__logo-img {
-    height: 34px;
-  }
-
-  .app-header__brand-name {
-    font-size: 16px;
+    height: 42px;
+    max-width: 205px;
   }
 }
 
@@ -354,10 +349,16 @@
   padding-bottom: 0 !important;
 }
 
-:host-context(.landing-map-mode) .app-header__logo-img {
-  height: 36px !important;
+:host-context(.landing-map-mode) .modern-header-left {
+  height: 64px !important;
 }
 
-:host-context(.landing-map-mode) .app-header__brand-name {
-  font-size: 20px !important;
+:host-context(.landing-map-mode) .app-header__brand,
+:host-context(.landing-map-mode) .app-header__brand-top {
+  height: 64px !important;
+}
+
+:host-context(.landing-map-mode) .app-header__logo-img {
+  height: 40px !important;
+  max-width: 210px;
 }

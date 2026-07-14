@@ -10,6 +10,7 @@ export interface BasketProcessingOption {
 
 export class BasketModel {
   id: number;
+  basketItemId?: number;
   productId?: number;
   product?: ProductModel;
   userId: number;

@@ -65,49 +65,13 @@ export class OrderCompletionComponent implements OnInit, OnDestroy {
     }
 
     this.basketService.basket$.subscribe(result => {
-      if (result) {
-        this.numberOfItem = 0;
-        this.totalPrice = 0;
-        this.basket = [];
-        this.basketFromStorage = result;
-
-        result.forEach(item => {
-          this.numberOfItem += 1;
-          this.totalPrice += item.product?.price!;
-
-          if (this.basket.length === 0) {
-            this.basket.push({
-              id: 0,
-              userId: 0,
-              productId: item.product?.id,
-              product: item.product,
-              numberOf: 1,
-              isDeleted: item.isDeleted,
-              totalPrice: item.product?.price
-            });
-          } else {
-            const itemInBasket = this.basket.filter(f => f.productId == item.productId);
-            if (itemInBasket.length > 0) {
-              if (itemInBasket[0].numberOf) {
-                itemInBasket[0].numberOf += 1;
-              }
-              if (itemInBasket[0].totalPrice) {
-                itemInBasket[0].totalPrice += item.product?.price!;
-              }
-            } else {
-              this.basket.push({
-                id: 0,
-                userId: 0,
-                productId: item.product?.id,
-                product: item.product,
-                numberOf: 1,
-                isDeleted: item.isDeleted,
-                totalPrice: item.product?.price
-              });
-            }
-          }
-        });
-      }
+      this.basketFromStorage = result ?? [];
+      this.basket = [...this.basketFromStorage];
+      this.numberOfItem = this.basket.reduce((sum, item) => sum + Number(item.numberOf ?? 1), 0);
+      this.totalPrice = this.basket.reduce(
+        (sum, item) => sum + Number(item.calculatedTotalPrice ?? item.totalPrice ?? 0),
+        0
+      );
     });
   }
 

@@ -15,7 +15,7 @@
   }
 
   &__heading {
-    margin-top: 16px;
+    margin-top: 18px;
   }
 
   &__title {
@@ -28,6 +28,8 @@
 }
 
 .login-brand-wrap {
+  width: 100%;
+  min-height: 54px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,40 +38,47 @@
 .app-auth__brand {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 0;
   cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  outline: none;
+  border-radius: 12px;
 
   &:hover {
     text-decoration: none;
+
+    .app-auth__logo-img {
+      transform: translateY(-1px) scale(1.015);
+      opacity: 0.96;
+    }
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.14);
   }
 }
 
 .app-auth__brand-top {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
   min-width: 0;
+  line-height: 0;
 }
 
 .app-auth__logo-img {
   display: block;
   width: auto;
-  height: 34px;
-  max-width: 150px;
+  height: 48px;
+  max-width: 220px;
   object-fit: contain;
-}
-
-.app-auth__brand-divider {
-  width: 1px;
-  height: 24px;
-  background: var(--app-border);
-}
-
-.app-auth__brand-name {
-  color: var(--app-text);
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
+  object-position: center;
+  flex-shrink: 0;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .login-input-group {
@@ -81,14 +90,12 @@
     border-bottom-left-radius: 12px;
   }
 
-  // iconlu input
   .input-group-text + .form-control {
     border-left: 0 !important;
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
   }
 
-  // iconsuz input
   > .form-control {
     border-radius: 12px !important;
   }
@@ -101,15 +108,11 @@
   }
 
   &.is-invalid {
-    .input-group-text {
-      border-color: var(--bs-danger) !important;
-    }
-
+    .input-group-text,
     .form-control {
       border-color: var(--bs-danger) !important;
     }
 
-    // birleşim çizgisini gizle
     .input-group-text + .form-control {
       border-left-color: transparent !important;
     }
@@ -150,13 +153,17 @@
     margin-bottom: 18px;
   }
 
-  .app-auth__logo-img {
-    height: 30px;
-    max-width: 130px;
+  .login-card__heading {
+    margin-top: 14px;
   }
 
-  .app-auth__brand-name {
-    font-size: 16px;
+  .login-brand-wrap {
+    min-height: 46px;
+  }
+
+  .app-auth__logo-img {
+    height: 40px;
+    max-width: 185px;
   }
 
   .login-submit {

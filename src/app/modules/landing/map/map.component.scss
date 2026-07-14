@@ -393,12 +393,12 @@
   max-width: calc(100% - 32px);
   padding: 12px 16px;
 
-  background: #ffffff;
-  border: 1px solid var(--bs-border-color);
+  // background: #ffffff;
+  // border: 1px solid var(--bs-border-color);
   border-radius: 10px;
   box-shadow: var(--bs-box-shadow-sm);
 
-  color: #1f2937;
+  // color: #1f2937;
   font-size: 13px;
   font-weight: 600;
 
@@ -1902,6 +1902,16 @@
   border-radius: 0 !important;
 }
 
+.prefilter-restore-rail:hover {
+  background: var(--bs-primary) !important;
+  color: #fff !important;
+}
+
+.prefilter-restore-rail:hover span,
+.prefilter-restore-rail:hover i {
+  color: #fff !important;
+}
+
 /* =========================================================
    ABSOLUTE FINAL PANEL ALIGNMENT
    - Sol birleşik panel, sağ floating panel ile aynı 10px
@@ -1909,8 +1919,8 @@
    - Sol kenara yapışık kalır.
 ========================================================= */
 .map-layer-manager-floating.map-draggable-panel--combined-smart-filter {
-  top: 13px !important;
-  bottom: 5px !important;
+  top: 8px !important;
+  bottom: 0px !important;
   left: 0 !important;
   right: auto !important;
   height: auto !important;

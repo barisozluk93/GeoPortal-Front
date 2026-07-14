@@ -427,7 +427,351 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
   }
 
   getProductPrice(item: OrderProductModel): number | null {
-    return item?.product?.price ?? null;
+    return this.getCalculatedTotal(item);
+  }
+
+  isApiKey(item: OrderProductModel): boolean {
+    const raw: any = item;
+    const product: any = item?.product;
+    const name = String(product?.name ?? '').trim().toLocaleLowerCase('tr-TR');
+
+    return (
+      product?.id === 1 ||
+      product?.categoryId === 2 ||
+      raw?.itemType === 'processingService' ||
+      name === 'api key' ||
+      name.includes('api key')
+    );
+  }
+
+  getItemCount(item: OrderProductModel): number {
+    const value = Number((item as any)?.numberOf ?? 1);
+    return Number.isFinite(value) && value > 0 ? value : 1;
+  }
+
+  formatArea(value: number | null | undefined): string {
+    const parsed = Number(value ?? 0);
+    const safeValue = Number.isFinite(parsed) ? parsed : 0;
+
+    return new Intl.NumberFormat('tr-TR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4
+    }).format(safeValue);
+  }
+
+  getRequestArea(item: OrderProductModel): number {
+    const raw: any = item;
+    const product: any = item?.product;
+    return this.toNonNegativeNumber(
+      raw?.requestAreaKm2 ??
+      raw?.RequestAreaKm2 ??
+      product?.requestAreaKm2 ??
+      product?.areaKm2,
+      0
+    );
+  }
+
+  getUnitPrice(item: OrderProductModel): number {
+    const raw: any = item;
+    const product: any = item?.product;
+    return this.toNonNegativeNumber(
+      raw?.unitPrice ??
+      raw?.UnitPrice ??
+      product?.unitPrice ??
+      product?.price,
+      0
+    );
+  }
+
+  getBaseTotal(item: OrderProductModel): number {
+    const raw: any = item;
+    const explicit = this.toNonNegativeNumber(
+      raw?.baseTotalPrice ?? raw?.BaseTotalPrice,
+      0
+    );
+
+    if (explicit > 0) {
+      return explicit;
+    }
+
+    if (this.isApiKey(item)) {
+      return this.getUnitPrice(item);
+    }
+
+    return this.getRequestArea(item) * this.getUnitPrice(item);
+  }
+
+  getProcessingOptions(item: OrderProductModel): any[] {
+    const raw: any = item;
+    const product: any = item?.product;
+
+    const candidates = [
+      raw?.processingOptions,
+      raw?.ProcessingOptions,
+      raw?.processingOptionsJson,
+      raw?.ProcessingOptionsJson,
+      product?.processingOptions,
+      product?.ProcessingOptions,
+      product?.processingOptionsJson,
+      product?.ProcessingOptionsJson
+    ];
+
+    for (const candidate of candidates) {
+      const parsed = this.parseProcessingOptions(candidate);
+      if (parsed.length) {
+        return parsed.map(option => this.normalizeProcessingOption(option, item));
+      }
+    }
+
+    const inferred: any[] = [];
+    const area = this.getRequestArea(item);
+
+    this.addBooleanProcessingOption(
+      inferred,
+      product?.isOrthorectified,
+      'orthorectification',
+      'ORDER_DETAIL_VIEW.ORTHORECTIFICATION',
+      250,
+      area
+    );
+    this.addBooleanProcessingOption(
+      inferred,
+      product?.isPansharpened,
+      'pansharpening',
+      'ORDER_DETAIL_VIEW.PANSHARPENING',
+      180,
+      area
+    );
+    this.addBooleanProcessingOption(
+      inferred,
+      product?.isNVDIAnalysis ?? product?.isNDVIAnalysis,
+      'ndvi',
+      'ORDER_DETAIL_VIEW.NDVI',
+      120,
+      area
+    );
+    this.addBooleanProcessingOption(
+      inferred,
+      product?.isClassified,
+      'classification',
+      'ORDER_DETAIL_VIEW.CLASSIFICATION',
+      300,
+      area
+    );
+
+    if (inferred.length) {
+      return inferred;
+    }
+
+    const processingTotal = this.getStoredProcessingTotal(item);
+    if (processingTotal > 0) {
+      const unitPrice = area > 0 ? processingTotal / area : processingTotal;
+      const key = this.resolveProcessingKeyByUnitPrice(unitPrice);
+
+      return [{
+        key,
+        nameKey: this.getProcessingNameKey(key),
+        name: null,
+        areaKm2: area,
+        unitPrice,
+        totalPrice: processingTotal
+      }];
+    }
+
+    return [];
+  }
+
+  getProcessingTotal(item: OrderProductModel): number {
+    const optionsTotal = this.getProcessingOptions(item)
+      .reduce((sum, option) => sum + this.toNonNegativeNumber(option?.totalPrice, 0), 0);
+    const storedTotal = this.getStoredProcessingTotal(item);
+    return Math.max(optionsTotal, storedTotal);
+  }
+
+  getCalculatedTotal(item: OrderProductModel): number {
+    const raw: any = item;
+    const explicit = this.toNonNegativeNumber(
+      raw?.calculatedTotalPrice ??
+      raw?.CalculatedTotalPrice ??
+      raw?.totalPrice ??
+      raw?.TotalPrice,
+      0
+    );
+
+    const calculated =
+      (this.getBaseTotal(item) + this.getProcessingTotal(item)) *
+      this.getItemCount(item);
+
+    return Math.max(explicit, calculated);
+  }
+
+  getAoiName(item: OrderProductModel): string {
+    const raw: any = item;
+    const product: any = item?.product;
+    return String(
+      raw?.aoiName ??
+      raw?.AoiName ??
+      product?.aoiName ??
+      product?.sourceLabel ??
+      this.translate.instant('ORDER_DETAIL_VIEW.AOI')
+    );
+  }
+
+  getProcessingOptionLabel(option: any): string {
+    if (option?.name) {
+      return String(option.name);
+    }
+
+    return this.translate.instant(
+      option?.nameKey ?? this.getProcessingNameKey(option?.key)
+    );
+  }
+
+  private getStoredProcessingTotal(item: OrderProductModel): number {
+    const raw: any = item;
+    return this.toNonNegativeNumber(
+      raw?.processingTotalPrice ?? raw?.ProcessingTotalPrice,
+      0
+    );
+  }
+
+  private parseProcessingOptions(value: unknown, depth = 0): any[] {
+    if (depth > 4 || value == null) {
+      return [];
+    }
+
+    if (Array.isArray(value)) {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      if (!trimmed) {
+        return [];
+      }
+
+      try {
+        return this.parseProcessingOptions(JSON.parse(trimmed), depth + 1);
+      } catch {
+        return [];
+      }
+    }
+
+    if (typeof value === 'object') {
+      const objectValue: any = value;
+      const nestedCandidates = [
+        objectValue.$values,
+        objectValue.items,
+        objectValue.data,
+        objectValue.value,
+        objectValue.processingOptions,
+        objectValue.ProcessingOptions
+      ];
+
+      for (const nested of nestedCandidates) {
+        const parsed = this.parseProcessingOptions(nested, depth + 1);
+        if (parsed.length) {
+          return parsed;
+        }
+      }
+    }
+
+    return [];
+  }
+
+  private normalizeProcessingOption(option: any, item: OrderProductModel): any {
+    const area = this.toNonNegativeNumber(
+      option?.areaKm2 ?? option?.AreaKm2,
+      this.getRequestArea(item)
+    );
+    const unitPrice = this.toNonNegativeNumber(
+      option?.unitPrice ?? option?.UnitPrice,
+      0
+    );
+    const totalPrice = this.toNonNegativeNumber(
+      option?.totalPrice ?? option?.TotalPrice,
+      area * unitPrice
+    );
+    const key = this.normalizeProcessingKey(option?.key ?? option?.Key ?? option?.name ?? option?.Name);
+
+    return {
+      key,
+      name: option?.name ?? option?.Name ?? null,
+      nameKey: this.getProcessingNameKey(key),
+      areaKm2: area,
+      unitPrice,
+      totalPrice
+    };
+  }
+
+  private addBooleanProcessingOption(
+    target: any[],
+    selected: unknown,
+    key: string,
+    nameKey: string,
+    unitPrice: number,
+    areaKm2: number
+  ): void {
+    if (selected !== true) {
+      return;
+    }
+
+    target.push({
+      key,
+      nameKey,
+      name: null,
+      areaKm2,
+      unitPrice,
+      totalPrice: areaKm2 * unitPrice
+    });
+  }
+
+  private normalizeProcessingKey(value: unknown): string {
+    const normalized = String(value ?? '')
+      .trim()
+      .toLocaleLowerCase('tr-TR')
+      .replace(/ı/g, 'i')
+      .replace(/ş/g, 's')
+      .replace(/ğ/g, 'g')
+      .replace(/ü/g, 'u')
+      .replace(/ö/g, 'o')
+      .replace(/ç/g, 'c')
+      .replace(/[\s_-]+/g, '');
+
+    if (normalized.includes('ortorekt') || normalized.includes('orthorect')) return 'orthorectification';
+    if (normalized.includes('pansharp')) return 'pansharpening';
+    if (normalized.includes('ndvi') || normalized.includes('nvdi')) return 'ndvi';
+    if (normalized.includes('sinif') || normalized.includes('classif')) return 'classification';
+    return 'processing';
+  }
+
+  private resolveProcessingKeyByUnitPrice(unitPrice: number): string {
+    const rounded = Math.round(unitPrice);
+    if (rounded === 250) return 'orthorectification';
+    if (rounded === 180) return 'pansharpening';
+    if (rounded === 120) return 'ndvi';
+    if (rounded === 300) return 'classification';
+    return 'processing';
+  }
+
+  private getProcessingNameKey(key: string): string {
+    switch (key) {
+      case 'orthorectification':
+        return 'ORDER_DETAIL_VIEW.ORTHORECTIFICATION';
+      case 'pansharpening':
+        return 'ORDER_DETAIL_VIEW.PANSHARPENING';
+      case 'ndvi':
+        return 'ORDER_DETAIL_VIEW.NDVI';
+      case 'classification':
+        return 'ORDER_DETAIL_VIEW.CLASSIFICATION';
+      default:
+        return 'ORDER_DETAIL_VIEW.PROCESSING_SERVICE';
+    }
+  }
+
+  private toNonNegativeNumber(value: unknown, fallback: number): number {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
   }
 
   goBack(): void {

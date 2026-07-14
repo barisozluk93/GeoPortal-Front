@@ -9,146 +9,181 @@
       <div class="card-header border-0 pt-8 pb-8">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 w-100">
           <div>
-            <h2 class="basket-page-title mb-1">
-              {{ 'MY_BASKET' | translate }}
-            </h2>
+            <h2 class="basket-page-title mb-1">{{ 'MY_BASKET' | translate }}</h2>
             <div class="basket-page-subtitle text-muted">
-              {{ basket.length }} {{ 'PRODUCT_HEADER' | translate }}
+              {{ numberOfItem }} ürün · {{ groupCount }} grup
             </div>
           </div>
-
-          <div *ngIf="basket.length > 0" class="basket-page-badge">
-            <i class="ki-duotone ki-basket fs-4 me-2">
-              <span class="path1"></span>
-              <span class="path2"></span>
-              <span class="path3"></span>
-              <span class="path4"></span>
-            </i>
-            <span>{{ totalPrice.toFixed(2) }} ₺</span>
+          <div *ngIf="basket.length" class="basket-page-badge">
+            <i class="ki-duotone ki-basket fs-4 me-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+            <span>{{ formatMoney(totalPrice) }} ₺</span>
           </div>
         </div>
       </div>
 
       <div class="card-body pt-6 pb-8">
-        <div
-          *ngIf="!currentUserIsExist"
-          class="basket-login-alert alert alert-warning d-flex align-items-start p-5 mb-8"
-        >
-          <i class="ki-duotone ki-information-4 fs-2hx text-warning me-4 mt-1">
-            <span class="path1"></span>
-            <span class="path2"></span>
-            <span class="path3"></span>
-          </i>
-
-          <div class="d-flex flex-column">
-            <span class="fw-semibold text-gray-800">
-              {{ 'TO_COMPLETE_YOUR_SHOPPING_FASTER' | translate }}
-              <a routerLink="/auth/login" class="fw-bold ms-1">
-                {{ 'AUTH.LOGIN.TITLE' | translate }}
-              </a>
-            </span>
-          </div>
+        <div *ngIf="!currentUserIsExist" class="basket-login-alert alert alert-warning d-flex align-items-start p-5 mb-8">
+          <i class="ki-duotone ki-information-4 fs-2hx text-warning me-4 mt-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+          <span class="fw-semibold text-gray-800">
+            {{ 'TO_COMPLETE_YOUR_SHOPPING_FASTER' | translate }}
+            <a routerLink="/auth/login" class="fw-bold ms-1">{{ 'AUTH.LOGIN.TITLE' | translate }}</a>
+          </span>
         </div>
 
-        <ng-container *ngIf="basket.length > 0; else emptyBasket">
-          <div class="basket-items d-flex flex-column gap-4">
-            <div
-              class="basket-item"
-              *ngFor="let item of basket; let i = index"
-            >
-              <div class="basket-item__inner">
-                <div class="row align-items-center gy-5">
-                  <div class="col-12 col-lg-7">
-                    <div class="d-flex align-items-start gap-4">
-                      <div class="basket-item__icon">
-                        <i class="ki-duotone ki-element-11 fs-2 text-primary">
-                          <span class="path1"></span>
-                          <span class="path2"></span>
-                          <span class="path3"></span>
-                          <span class="path4"></span>
-                        </i>
+        <ng-container *ngIf="basket.length; else emptyBasket">
+          <div class="aoi-groups d-flex flex-column gap-6">
+            <section class="aoi-group service-group" *ngIf="serviceItems.length">
+              <header class="aoi-group__header service-group__header">
+                <div class="aoi-group__icon service-group__icon">
+                  <i class="ki-duotone ki-key fs-2 text-primary"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                </div>
+                <div class="min-w-0 flex-grow-1">
+                  <div class="aoi-group__eyebrow">Dijital Servis</div>
+                  <h3 class="aoi-group__title">API Servisleri</h3>
+                </div>
+                <div class="aoi-group__total">{{ formatMoney(serviceTotalPrice) }} ₺</div>
+              </header>
+
+              <div class="aoi-section">
+                <article class="product-card service-product-card" *ngFor="let item of serviceItems; let i = index; trackBy: trackByBasketItem">
+                  <div class="product-card__header">
+                    <div class="product-card__identity">
+                      <div class="hierarchy-item__icon service-product-card__icon">
+                        <i class="ki-duotone ki-key fs-2 text-primary"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
                       </div>
 
-                      <div class="d-flex flex-column min-w-0">
-                        <span class="basket-item__label text-primary">
-                          {{ 'PRODUCT_HEADER' | translate }}
-                        </span>
-
-                        <a class="basket-item__title">
-                          {{ item.product?.name }}
-                        </a>
-
-                        <div class="basket-item__meta">
-                          <span class="basket-item__meta-dot"></span>
-                          <span class="text-muted">
-                            {{ 'IN_BASKET' | translate }}
-                          </span>
+                      <div class="min-w-0">
+                        <div class="hierarchy-item__type">API Hizmeti</div>
+                        <div class="hierarchy-item__name">{{ item.product?.name }}</div>
+                        <div class="hierarchy-item__attributes service-product-card__attributes">
+                          <span><strong>Adet:</strong> {{ item.numberOf || 1 }}</span>
+                          <span><strong>Birim Fiyat:</strong> {{ formatMoney(item.unitPrice) }} ₺</span>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="col-9 col-lg-4">
-                    <div class="basket-price-box">
-                      <span class="basket-price-box__label text-primary">
-                        {{ 'TOTAL' | translate }}
-                      </span>
-                      <span class="basket-price-box__value">
-                        {{ item.totalPrice?.toFixed(2) }} ₺
-                      </span>
+                    <div class="hierarchy-item__actions">
+                      <div class="product-card__grand-total">
+                        <span>Ürün Toplamı</span>
+                        <strong>{{ formatMoney(item.displayTotalPrice) }} ₺</strong>
+                      </div>
+
+                      <button
+                        type="button"
+                        (click)="openDeleteModal(item.productId)"
+                        class="btn btn-icon basket-delete-btn"
+                      >
+                        <i class="ki-duotone ki-trash fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+                      </button>
                     </div>
                   </div>
 
-                  <div class="col-3 col-lg-1 text-end">
-                    <button
-                      type="button"
-                      (click)="openDeleteModal(item.productId)"
-                      class="btn btn-icon basket-delete-btn"
-                    >
-                      <i class="ki-duotone ki-trash fs-2">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                        <span class="path3"></span>
-                        <span class="path4"></span>
-                        <span class="path5"></span>
-                      </i>
-                    </button>
+                  <div class="product-price-breakdown service-price-breakdown">
+                    <div class="price-breakdown-row price-breakdown-row--base">
+                      <div>
+                        <strong>API Key</strong>
+                        <small>{{ item.numberOf || 1 }} adet × {{ formatMoney(item.unitPrice) }} ₺</small>
+                      </div>
+                      <strong>{{ formatMoney(item.displayTotalPrice) }} ₺</strong>
+                    </div>
                   </div>
-                </div>
+                </article>
               </div>
-            </div>
+            </section>
+
+            <section class="aoi-group" *ngFor="let group of aoiGroups; trackBy: trackByAoi">
+              <header class="aoi-group__header">
+                <div class="aoi-group__icon">
+                  <i class="ki-duotone ki-geolocation fs-2 text-primary"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+                </div>
+                <div class="min-w-0 flex-grow-1">
+                  <div class="aoi-group__eyebrow">İlgi Alanı</div>
+                  <h3 class="aoi-group__title">{{ group.aoiName }}</h3>
+                </div>
+                <div class="aoi-group__total">{{ formatMoney(group.totalPrice) }} ₺</div>
+              </header>
+
+              <div class="aoi-section">
+                <article class="product-card" *ngFor="let item of group.products; let i = index; trackBy: trackByBasketItem">
+                  <div class="product-card__header">
+                    <div class="product-card__identity">
+                      <div class="hierarchy-item__icon">
+                        <i class="ki-duotone ki-satellite fs-2 text-primary"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+                      </div>
+                      <div class="min-w-0">
+                        <div class="hierarchy-item__type">
+                          {{ item.product?.isCustomArea ? 'Yeni Uydu Görüntüsü Talebi' : 'Hazır Uydu Görüntüsü' }}
+                        </div>
+                        <div class="hierarchy-item__name">{{ item.product?.name }}</div>
+                        <div class="hierarchy-item__attributes">
+                          <span><strong>Talep Alanı:</strong> {{ formatArea(item.requestAreaKm2) }} km²</span>
+                          <span><strong>Görüntü Birim Fiyatı:</strong> {{ formatMoney(item.unitPrice) }} TL/km²</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="hierarchy-item__actions">
+                      <div class="product-card__grand-total">
+                        <span>Ürün Toplamı</span>
+                        <strong>{{ formatMoney(item.displayTotalPrice) }} ₺</strong>
+                      </div>
+                      <button type="button" (click)="openDeleteModal(item.productId)" class="btn btn-icon basket-delete-btn">
+                        <i class="ki-duotone ki-trash fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="product-price-breakdown">
+                    <div class="price-breakdown-row price-breakdown-row--base">
+                      <div>
+                        <strong>Uydu Görüntüsü</strong>
+                        <small>{{ formatArea(item.requestAreaKm2) }} km² × {{ formatMoney(item.unitPrice) }} TL/km²</small>
+                      </div>
+                      <strong>{{ formatMoney(item.baseTotalPrice) }} ₺</strong>
+                    </div>
+
+                    <div class="processing-inline" *ngIf="item.processingOptions.length; else noProcessing">
+                      <div class="processing-inline__title">
+                        <i class="ki-duotone ki-setting-2 fs-3 text-success"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+                        Görüntü İşleme Seçenekleri
+                      </div>
+                      <div class="processing-option" *ngFor="let option of item.processingOptions; trackBy: trackByProcessingOption">
+                        <div class="processing-option__name">
+                          <i class="ki-duotone ki-check-circle fs-4 text-success"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+                          <div>
+                            <strong>{{ option.name }}</strong>
+                            <small>{{ formatArea(option.areaKm2) }} km² × {{ formatMoney(option.unitPrice) }} TL/km²</small>
+                          </div>
+                        </div>
+                        <div class="processing-option__impact">
+                          <span>+ {{ formatMoney(option.totalPrice) }} ₺</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <ng-template #noProcessing>
+                      <div class="processing-empty">Görüntü işleme seçeneği bulunmuyor.</div>
+                    </ng-template>
+
+                    <div class="price-breakdown-total">
+                      <span>Görüntü İşleme Toplamı</span>
+                      <strong>+ {{ formatMoney(item.processingTotalPrice) }} ₺</strong>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
           </div>
         </ng-container>
 
         <ng-template #emptyBasket>
           <div class="basket-empty">
             <div class="basket-empty__content">
-              <div class="basket-empty__icon">
-                <i class="ki-duotone ki-basket fs-1 text-primary">
-                  <span class="path1"></span>
-                  <span class="path2"></span>
-                  <span class="path3"></span>
-                  <span class="path4"></span>
-                </i>
-              </div>
-
-              <div class="basket-empty__text">
-                <h3 class="mb-2 text-gray-900">
-                  {{ 'YOUR_BASKET_EMPTY' | translate }}
-                </h3>
-                <div class="text-gray-600 fs-6">
-                  {{ 'CONTINUE_SHOPPING' | translate }}
-                </div>
-              </div>
+              <div class="basket-empty__icon"><i class="ki-duotone ki-basket fs-1 text-primary"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i></div>
+              <h3 class="mb-2 text-gray-900">{{ 'YOUR_BASKET_EMPTY' | translate }}</h3>
+              <div class="text-gray-600 fs-6">{{ 'CONTINUE_SHOPPING' | translate }}</div>
             </div>
-
-            <button
-              type="button"
-              (click)="routeToShopping()"
-              class="btn btn-primary btn-lg"
-            >
-              {{ 'CONTINUE_SHOPPING' | translate }}
-            </button>
+            <button type="button" (click)="routeToShopping()" class="btn btn-primary btn-lg">{{ 'CONTINUE_SHOPPING' | translate }}</button>
           </div>
         </ng-template>
       </div>
@@ -158,47 +193,29 @@
   <div class="col-12 col-xxl-4">
     <div class="card basket-summary-card shadow-sm sticky-summary">
       <div class="card-header border-0 pt-8 pb-8">
-        <div class="d-flex flex-column">
-          <div class="basket-summary-card__eyebrow text-primary">
-            {{ 'ORDER_SUMMARY' | translate }}
-          </div>
-          <h3 class="basket-summary-card__title mb-1">
-            {{ 'TOTAL' | translate }}
-          </h3>
-          <span class="basket-summary-card__subtitle text-muted">
-            {{ numberOfItem }} {{ 'PRODUCT_HEADER' | translate }}
-          </span>
+        <div>
+          <div class="basket-summary-card__eyebrow text-primary">{{ 'ORDER_SUMMARY' | translate }}</div>
+          <h3 class="basket-summary-card__title mb-1">{{ 'TOTAL' | translate }}</h3>
+          <span class="basket-summary-card__subtitle text-muted">{{ numberOfItem }} ürün · {{ groupCount }} grup</span>
         </div>
       </div>
-
       <div class="card-body pt-6 pb-8">
         <div class="basket-summary-panel">
-          <div class="basket-summary-row">
-            <span class="basket-summary-row__label">
-              {{ 'TOTAL_OF_THE_PRODUCTS' | translate }}
-            </span>
-            <span class="basket-summary-row__value">
-              {{ totalPrice.toFixed(2) }} ₺
-            </span>
+          <div class="basket-summary-row" *ngIf="serviceItems.length">
+            <span class="basket-summary-row__label">API Servisleri</span>
+            <span class="basket-summary-row__value">{{ formatMoney(serviceTotalPrice) }} ₺</span>
           </div>
 
+          <div class="basket-summary-row" *ngFor="let group of aoiGroups">
+            <span class="basket-summary-row__label">{{ group.aoiName }}</span>
+            <span class="basket-summary-row__value">{{ formatMoney(group.totalPrice) }} ₺</span>
+          </div>
           <div class="separator separator-dashed my-4"></div>
-
           <div class="basket-summary-total">
-            <span class="basket-summary-total__label">
-              {{ 'TOTAL' | translate }}
-            </span>
-            <span class="basket-summary-total__value">
-              {{ totalPrice.toFixed(2) }} ₺
-            </span>
+            <span class="basket-summary-total__label">{{ 'TOTAL' | translate }}</span>
+            <span class="basket-summary-total__value">{{ formatMoney(totalPrice) }} ₺</span>
           </div>
-
-          <button
-            type="button"
-            (click)="confirmBasket()"
-            class="btn btn-primary btn-lg w-100 mt-7 basket-summary-btn"
-            [disabled]="basket.length === 0"
-          >
+          <button type="button" (click)="confirmBasket()" class="btn btn-primary btn-lg w-100 mt-7 basket-summary-btn" [disabled]="!basket.length">
             {{ 'CONFIRM_BASKET' | translate }}
           </button>
         </div>

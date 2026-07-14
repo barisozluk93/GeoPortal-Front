@@ -9,8 +9,6 @@ import {
 import { ProductModel } from '../../../marketplace/models/product.model';
 
 export type SmartProductRequestProduct = ProductModel & {
-  platform?: string | null;
-  isNdviAnalysis?: boolean;
 };
 
 @Component({
@@ -84,7 +82,7 @@ export class SmartProductRequestPanelComponent implements OnChanges {
       (
         this.product.isPansharpened ||
         this.product.isOrthorectified ||
-        this.product.isNdviAnalysis ||
+        this.product.isNVDIAnalysis ||
         this.product.isClassified
       )
     );
@@ -178,7 +176,7 @@ export class SmartProductRequestPanelComponent implements OnChanges {
     product.areaKm2 = this.getAreaKm2();
 
     product.imageType = null;
-    product.platform = null;
+    product.satellite = null;
     product.acquisitionStartDate = null;
     product.acquisitionEndDate = null;
 
@@ -187,7 +185,7 @@ export class SmartProductRequestPanelComponent implements OnChanges {
 
     product.isPansharpened = false;
     product.isOrthorectified = true;
-    product.isNdviAnalysis = false;
+    product.isNVDIAnalysis = false;
     product.isClassified = false;
 
     product.isCustomArea = true;

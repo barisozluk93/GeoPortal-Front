@@ -135,7 +135,7 @@
         bindValue="value"
         [multiple]="false"
         [clearable]="true"
-        [(ngModel)]="product.platform"
+        [(ngModel)]="product.satellite"
         (ngModelChange)="onDraftChanged()"
         [ngModelOptions]="{ standalone: true }"
       >
@@ -180,7 +180,7 @@
           <input
             type="checkbox"
             class="request-check-input"
-            [(ngModel)]="product.isNdviAnalysis"
+            [(ngModel)]="product.isNVDIAnalysis"
             (ngModelChange)="onDraftChanged()"
             [ngModelOptions]="{ standalone: true }"
           />
@@ -211,7 +211,7 @@
           submitted &&
           !product.isPansharpened &&
           !product.isOrthorectified &&
-          !product.isNdviAnalysis &&
+          !product.isNVDIAnalysis &&
           !product.isClassified
         "
       >

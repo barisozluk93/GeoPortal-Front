@@ -1,68 +1,187 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
+import { environment } from 'src/environments/environment';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
 import { BasketService } from 'src/app/_metronic/partials/layout/basket/basket.service';
+
 import { AuthService } from '../../auth';
 import { BasketManagementService } from '../../basket-management/basket-management.service';
-import { BasketModel } from '../../basket-management/models/basket.model';
-import { Router } from '@angular/router';
+import {
+  BasketModel,
+  BasketProcessingOption,
+} from '../../basket-management/models/basket.model';
 import { ProductModel } from '../marketplace/models/product.model';
-import { environment } from 'src/environments/environment';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-api',
   templateUrl: './api.component.html',
-  styleUrl: './api.component.scss'
+  styleUrl: './api.component.scss',
 })
 export class ApiComponent {
   readonly basketManagementService = inject(BasketManagementService);
   readonly basketService = inject(BasketService);
   readonly authService = inject(AuthService);
   readonly alertService = inject(AlertService);
-  readonly router = inject(Router)
+  readonly router = inject(Router);
   readonly translate = inject(TranslateService);
 
-  baseUrl: string = environment.appUrl;
+  readonly baseUrl: string = environment.appUrl;
 
-  routeToDoc() {
+  private readonly apiProductId = 1;
+  private readonly apiProductPrice = 1000;
+  private readonly apiAoiId = 'api-services';
+  private readonly apiAoiName = 'API Servisleri';
+
+  routeToDoc(): void {
     this.router.navigate(['/landing/documentation']);
   }
 
-  onBuyNow() {
-    var currentUser = this.authService.currentUserValue;
+  onBuyNow(): void {
+    const currentUser = this.authService.currentUserValue;
 
     if (currentUser) {
-      let data: BasketModel = { id: 0, userId: Number(currentUser.id), productId: 1, isDeleted: false, product: undefined, totalPrice: undefined, numberOf: undefined };
-
-      this.basketManagementService.save(data).subscribe(result => {
-        if (result.isSuccess) {
-          this.alertService.createAlert('success', this.translate.instant('MESSAGES.ADD_TO_CART_SUCCESS'));
-          this.basketService.loadBasketFromDb();
-        }
-        else {
-          this.alertService.createAlert('danger', this.translate.instant('MESSAGES.ERROR'));
-        }
-      })
+      this.addToAuthenticatedBasket(Number(currentUser.id));
+      return;
     }
-    else {
-      var product: ProductModel = { categoryId: 2, id: 1, name: "API Key", price: 1000, isDeleted: false, userId: 0 };
-      var basket = JSON.parse(localStorage.getItem("basket") as string) as BasketModel[];
 
-      if (basket) {
-        if (basket.length < 15) {
-          basket.push({ id: 0, userId: 0, product: product, productId: product.id, isDeleted: false, numberOf: 0, totalPrice: 0 });
-        }
-        else {
-          this.alertService.createAlert("warning", this.translate.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS'));
-        }
-      }
-      else {
-        basket = [{ id: 0, userId: 0, product: product, productId: product.id, isDeleted: false, numberOf: 0, totalPrice: 0 }];
-      }
+    this.addToGuestBasket();
+  }
 
-      this.basketService.setBasket(basket);
-      this.alertService.createAlert('success', this.translate.instant('MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS'));
+  private addToAuthenticatedBasket(userId: number): void {
+    const data = this.createApiBasketItem(userId);
+
+    this.basketManagementService.save(data).subscribe({
+      next: result => {
+        if (!result.isSuccess) {
+          this.showError();
+          return;
+        }
+
+        this.alertService.createAlert(
+          'success',
+          this.translate.instant('MESSAGES.ADD_TO_CART_SUCCESS')
+        );
+
+        this.basketService.loadBasketFromDb();
+      },
+      error: error => {
+        console.error('API ürünü sepete eklenemedi:', error);
+        this.showError();
+      },
+    });
+  }
+
+  private addToGuestBasket(): void {
+    const basket = this.readGuestBasket();
+
+    if (basket.length >= 15) {
+      this.alertService.createAlert(
+        'warning',
+        this.translate.instant('MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS')
+      );
+      return;
     }
+
+    const existingItem = basket.find(
+      item =>
+        item.productId === this.apiProductId &&
+        item.aoiId === this.apiAoiId &&
+        item.itemType === 'processingService'
+    );
+
+    if (existingItem) {
+      const currentCount = Math.max(1, Number(existingItem.numberOf ?? 1));
+      const newCount = currentCount + 1;
+
+      existingItem.numberOf = newCount;
+      existingItem.baseTotalPrice = this.apiProductPrice;
+      existingItem.processingTotalPrice = 0;
+      existingItem.calculatedTotalPrice = this.apiProductPrice * newCount;
+      existingItem.totalPrice = existingItem.calculatedTotalPrice;
+    } else {
+      basket.push(this.createApiBasketItem(0));
+    }
+
+    this.basketService.setBasket([...basket]);
+
+    this.alertService.createAlert(
+      'success',
+      this.translate.instant('MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS')
+    );
+  }
+
+  private createApiBasketItem(userId: number): BasketModel {
+    const product = this.createApiProduct(userId);
+    const processingOptions: BasketProcessingOption[] = [];
+
+    return {
+      id: 0,
+      userId,
+      productId: product.id,
+      product,
+      isDeleted: false,
+      numberOf: 1,
+      totalPrice: this.apiProductPrice,
+
+      aoiId: this.apiAoiId,
+      aoiName: this.apiAoiName,
+      aoiWkt: null,
+      requestWkt: null,
+      intersectionWkt: null,
+
+      requestAreaKm2: 1,
+      unitPrice: this.apiProductPrice,
+      baseTotalPrice: this.apiProductPrice,
+
+      processingOptions,
+      processingTotalPrice: 0,
+      calculatedTotalPrice: this.apiProductPrice,
+
+      itemType: 'processingService',
+    };
+  }
+
+  private createApiProduct(userId: number): ProductModel {
+    return {
+      id: this.apiProductId,
+      categoryId: 2,
+      name: 'API Key',
+      price: this.apiProductPrice,
+      priceStr: `₺${this.apiProductPrice}`,
+      currency: 'TRY',
+      isDeleted: false,
+      isCustomArea: false,
+      userId,
+      sourceLabel: 'API Servisi',
+      provider: 'API',
+    };
+  }
+
+  private readGuestBasket(): BasketModel[] {
+    try {
+      const storedBasket = localStorage.getItem('basket');
+
+      if (!storedBasket) {
+        return [];
+      }
+
+      const parsedBasket = JSON.parse(storedBasket);
+
+      return Array.isArray(parsedBasket)
+        ? (parsedBasket as BasketModel[])
+        : [];
+    } catch (error) {
+      console.error('Yerel sepet okunamadı:', error);
+      return [];
+    }
+  }
+
+  private showError(): void {
+    this.alertService.createAlert(
+      'danger',
+      this.translate.instant('MESSAGES.ERROR')
+    );
   }
 }

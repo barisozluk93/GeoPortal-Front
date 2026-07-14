@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <div class="map-aoi-update-warning" *ngIf="isAoiUpdateMode || isAreaCreationMode">
+  <div class="map-aoi-update-warning alert-warning text-warning" *ngIf="isAoiUpdateMode || isAreaCreationMode">
     <i class="fa-solid fa-circle-info"></i>
     <span *ngIf="isAoiUpdateMode; else newAreaCreationHint">
       {{ 'MAP.SMART_FILTER.AOI_UPDATE_HINT' | translate }}

@@ -952,6 +952,10 @@
   min-width: 28px !important;
   height: 24px !important;
   z-index: 4;
+  background: transparent !important;
+  background-color: transparent !important;
+  border-radius: 5px !important;
+  color: var(--bs-gray-600) !important;
 }
 
 /* =========================================================
@@ -1226,12 +1230,26 @@
   background: transparent !important;
   background-color: transparent !important;
   border: 0 !important;
-  border-radius: 0 !important;
+  border-radius: 5ox !important;
   box-shadow: none !important;
 
   transition:
     color 0.15s ease,
     background-color 0.15s ease !important;
+}
+
+.aoi-item__result-toggle-row .compact-icon-btn:hover,
+.aoi-item__result-toggle-row .compact-icon-btn:focus,
+.aoi-item__result-toggle-row .compact-icon-btn:active,
+.aoi-item__result-toggle-row .aoi-menu-trigger:hover,
+.aoi-item__result-toggle-row .aoi-menu-trigger:focus,
+.aoi-item__result-toggle-row .aoi-menu-trigger:active
+{
+  color: var(--bs-primary) !important;
+  background: var(--bs-primary-light) !important;
+  background-color: var(--bs-primary-light) !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .aoi-item__actions .compact-icon-btn:hover,

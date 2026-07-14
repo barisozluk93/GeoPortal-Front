@@ -60,4 +60,9 @@ export interface ProductSmartFilterResult {
   wkt?: string | null;
   price?: number | null;
   propertyUrl?: string | null;
+  
+  isOrthorectified?: boolean | null;
+  isPansharpened?: boolean | null;
+  isClassified?: boolean | null;
+  isNVDIAnalysis?: boolean | null;
 }

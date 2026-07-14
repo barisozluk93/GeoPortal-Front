@@ -1,7 +1,9 @@
 .basket-card {
   height: 44px;
-  min-width: 128px;
-  padding: 0 12px;
+  min-width: 52px;
+  width: 52px;
+  padding: 0;
+  justify-content: center;
   border-radius: 12px;
   cursor: pointer;
 
@@ -29,7 +31,9 @@
 .basket-left {
   display: flex;
   align-items: center;
-  gap: 9px;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
 }
 
 .basket-icon-box {

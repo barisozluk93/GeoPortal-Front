@@ -1,446 +1,395 @@
 <div class="order-detail-page" *ngIf="!loading && order">
   <div class="order-page-header">
-    <button
-      type="button"
-      class="btn btn-icon btn-light-primary btn-sm"
-      (click)="goBack()"
-      [attr.title]="'BACK' | translate"
-    >
-      <i class="fa-solid fa-arrow-left"></i>
-    </button>
+    <div class="order-page-header__content">
+      <button type="button" class="btn btn-icon btn-light-primary btn-sm flex-shrink-0" (click)="goBack()"
+        [attr.title]="'BACK' | translate">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
 
-    <div class="min-w-0">
-      <div class="order-kicker">
-        {{ 'COMING_ORDER_DETAIL.ORDER_AND_PRODUCT_INFORMATION' | translate }}
-      </div>
-
-      <h1 class="order-title">
-        {{ header }}
-      </h1>
-
-      <div class="order-subtitle">
-        {{ 'ORDER_NUMBER' | translate }}:
-        <span class="fw-semibold">{{ order.orderNo || '-' }}</span>
+      <div class="min-w-0">
+        <div class="order-kicker">{{ 'COMING_ORDER_DETAIL.ORDER_AND_PRODUCT_INFORMATION' | translate }}</div>
+        <h1 class="order-title">{{ header }}</h1>
+        <div class="order-subtitle">
+          {{ 'ORDER_NUMBER' | translate }}:
+          <span class="fw-bold text-gray-800">{{ order.orderNo || '-' }}</span>
+        </div>
       </div>
     </div>
 
-    <div class="order-header-status ms-lg-auto">
-      <div class="summary-status-icon">
-        <i [class]="getOrderStatusIconClass(order.orderStatus)"></i>
+    <div class="order-header-summary">
+      <div class="header-summary-item header-summary-item--status">
+        <div class="header-summary-icon"><i [class]="getOrderStatusIconClass(order.orderStatus)"></i></div>
+        <div class="min-w-0">
+          <span [ngClass]="getStatusBadgeClass(order.orderStatus)">
+            {{ order.orderStatusStr || getOrderStatusText(order.orderStatus) }}
+          </span>
+          <div class="header-summary-label">{{ 'STATUS' | translate }}</div>
+        </div>
       </div>
 
-      <div>
-        <span [ngClass]="getStatusBadgeClass(order.orderStatus)">
-          {{ order.orderStatusStr || getOrderStatusText(order.orderStatus) }}
-        </span>
+      <div class="header-summary-item">
+        <strong>{{ getTotalProductCount() }}</strong>
+        <span>{{ 'TOTAL_PRODUCT' | translate }}</span>
+      </div>
 
-        <div class="order-muted mt-2">
-          {{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}
-        </div>
+      <div class="header-summary-item header-summary-item--amount">
+        <strong>{{ order.price != null ? (formatMoney(order.price) + ' ₺') : '-' }}</strong>
+        <span>{{ 'COMING_ORDER_DETAIL.AMOUNT_LABEL' | translate }}</span>
       </div>
     </div>
   </div>
 
-  <div class="card order-main-card">
-    <div class="card-body p-6 p-lg-8">
-      <div class="row g-8 align-items-start">
-        <div class="col-12 col-xxl-5">
-          <div class="section-title">
-            {{ 'ORDER_INFORMATION' | translate }}
-          </div>
-
-          <div class="info-grid info-grid--two-col">
-            <div class="info-item">
-              <div class="info-label">{{ 'ORDER_NUMBER' | translate }}</div>
-              <div class="info-value">{{ order.orderNo || '-' }}</div>
-            </div>
-
-            <div class="info-item">
-              <div class="info-label">{{ 'ORDER_DATE' | translate }}</div>
-              <div class="info-value">{{ order.orderDate || '-' }}</div>
-            </div>
-
-            <div class="info-item">
-              <div class="info-label">{{ 'STATUS' | translate }}</div>
-              <div class="info-value">
-                <span [ngClass]="getStatusBadgeClass(order.orderStatus)">
-                  {{ order.orderStatusStr || getOrderStatusText(order.orderStatus) }}
-                </span>
-              </div>
-            </div>
-
-            <div class="info-item">
-              <div class="info-label">{{ 'TOTAL_PRODUCT' | translate }}</div>
-              <div class="info-value">{{ getTotalProductCount() }}</div>
-            </div>
-
-            <div class="info-item info-item-full">
-              <div class="info-label">{{ 'COMING_ORDER_DETAIL.AMOUNT_LABEL' | translate }}</div>
-              <div class="amount-value">
-                {{
-                  order.price != null
-                    ? (order.price | currency:'₺':'symbol':'1.2-2')
-                    : '-'
-                }}
-              </div>
-            </div>
-
-            <div class="info-item info-item-full">
-              <div class="info-label">{{ 'INVOICE' | translate }}</div>
-
-              <ng-container *ngIf="hasAnyOrderFile(); else noFilesInlineBlock">
-                <div class="invoice-inline-list">
-                  <div class="invoice-inline-card" *ngFor="let item of getOrderWithFiles()">
-                    <div class="invoice-inline-card__top">
-                      <div class="invoice-inline-card__icon">
-                        <i [class]="getFileIconClass(item.fileName)"></i>
-                      </div>
-
-                      <div class="invoice-inline-card__content min-w-0">
-                        <div class="invoice-inline-card__name text-truncate">
-                          {{ item.fileName || ('INVOICE' | translate) }}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="invoice-inline-card__actions">
-                      <button
-                        *ngIf="canViewFile(item)"
-                        type="button"
-                        class="btn btn-sm btn-light-primary"
-                        (click)="openFileModal(item)"
-                      >
-                        {{ 'VIEW_INVOICE' | translate }}
-                      </button>
-
-                      <button
-                        type="button"
-                        class="btn btn-sm btn-success"
-                        (click)="downloadFile(item)"
-                      >
-                        {{ 'DOWNLOAD' | translate }}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-
-              <ng-template #noFilesInlineBlock>
-                <div class="empty-state-block">
-                  <div class="empty-state-icon">
-                    <i class="fa-solid fa-file-invoice"></i>
-                  </div>
-
-                  <div class="min-w-0">
-                    <div class="fw-semibold order-text mb-1">
-                      {{ 'COMING_ORDER_DETAIL.NO_FILES_TITLE' | translate }}
-                    </div>
-                    <div class="order-muted fs-8">
-                      {{ 'COMING_ORDER_DETAIL.NO_FILES_TEXT' | translate }}
-                    </div>
-                  </div>
-                </div>
-              </ng-template>
+  <div class="row g-5 align-items-start">
+    <div class="col-12 col-xl-4">
+      <div class="card detail-side-card">
+        <div class="card-body p-5 p-lg-6">
+          <div class="section-heading">
+            <div>
+              <div class="section-title">{{ 'ORDER_INFORMATION' | translate }}</div>
+              <div class="section-description">{{ order.orderNo || '-' }}</div>
             </div>
           </div>
 
-          <div class="separator my-7"></div>
+          <div class="compact-info-list">
+            <div class="compact-info-row">
+              <span>{{ 'ORDER_NUMBER' | translate }}</span>
+              <strong>{{ order.orderNo || '-' }}</strong>
+            </div>
+            <div class="compact-info-row">
+              <span>{{ 'ORDER_DATE' | translate }}</span>
+              <strong>{{ order.orderDate || '-' }}</strong>
+            </div>
+            <div class="compact-info-row">
+              <span>{{ 'STATUS' | translate }}</span>
+              <span [ngClass]="getStatusBadgeClass(order.orderStatus)">
+                {{ order.orderStatusStr || getOrderStatusText(order.orderStatus) }}
+              </span>
+            </div>
+            <div class="compact-info-row">
+              <span>{{ 'TOTAL_PRODUCT' | translate }}</span>
+              <strong>{{ getTotalProductCount() }}</strong>
+            </div>
+            <div class="compact-info-row compact-info-row--total">
+              <span>{{ 'COMING_ORDER_DETAIL.AMOUNT_LABEL' | translate }}</span>
+              <strong>{{ order.price != null ? (formatMoney(order.price) + ' ₺') : '-' }}</strong>
+            </div>
+          </div>
 
-          <div class="section-title">
-            {{ 'INVOICE_ADDRESS' | translate }}
+          <div class="section-separator"></div>
+          <div class="section-title mb-4">{{ 'INVOICE' | translate }}</div>
+
+          <ng-container *ngIf="hasAnyOrderFile(); else emptyInvoiceCustomer">
+            <div class="invoice-file" *ngFor="let item of getOrderWithFiles()">
+              <div class="invoice-file__main min-w-0">
+                <div class="invoice-file__icon"><i [class]="getFileIconClass(item.fileName)"></i></div>
+                <div class="min-w-0">
+                  <div class="invoice-file__name text-truncate">{{ item.fileName || ('INVOICE' | translate) }}</div>
+                  <div class="invoice-file__type">PDF</div>
+                </div>
+              </div>
+              <div class="invoice-file__actions">
+                <button *ngIf="canViewFile(item)" type="button" class="btn btn-icon btn-sm btn-light-primary"
+                  (click)="openFileModal(item)" [attr.title]="'VIEW_INVOICE' | translate">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+                <button type="button" class="btn btn-icon btn-sm btn-primary"
+                  (click)="downloadFile(item)" [attr.title]="'DOWNLOAD' | translate">
+                  <i class="fa-solid fa-download"></i>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #emptyInvoiceCustomer>
+            <div class="minimal-empty-state">
+              <i class="fa-solid fa-file-invoice"></i>
+              <span>{{ 'COMING_ORDER_DETAIL.NO_FILES_TITLE' | translate }}</span>
+            </div>
+          </ng-template>
+
+
+          <div class="section-separator"></div>
+
+          <div class="section-heading mb-4">
+            <div class="section-title mb-0">{{ 'INVOICE_ADDRESS' | translate }}</div>
           </div>
 
           <ng-container *ngIf="order.invoiceAddress as address; else noAddress">
-            <div class="info-grid">
-              <div class="info-item">
-                <div class="info-label">{{ 'ADDRESS_HEADER' | translate }}</div>
-                <div class="info-value">{{ address.addressHeader || '-' }}</div>
-              </div>
+            <div class="address-block">
+              <div class="address-block__title">{{ address.addressHeader || ('ADDRESS_HEADER' | translate) }}</div>
+              <div class="address-block__name">{{ address.name }} {{ address.surname }}</div>
+              <div class="address-block__line" *ngIf="address.phone"><i class="fa-solid fa-phone"></i>{{ address.phone }}</div>
+              <div class="address-block__line"><i class="fa-solid fa-location-dot"></i>{{ address.city }} / {{ address.district }}</div>
+              <div class="address-block__text">{{ address.address || '-' }}</div>
 
-              <div class="info-item">
-                <div class="info-label">{{ 'FULL_NAME' | translate }}</div>
-                <div class="info-value">{{ address.name }} {{ address.surname }}</div>
-              </div>
-
-              <div class="info-item">
-                <div class="info-label">{{ 'PHONE' | translate }}</div>
-                <div class="info-value">{{ address.phone || '-' }}</div>
-              </div>
-
-              <div class="info-item">
-                <div class="info-label">{{ 'CITY' | translate }} / {{ 'DISTRICT' | translate }}</div>
-                <div class="info-value">{{ address.city }} / {{ address.district }}</div>
-              </div>
-
-              <div class="info-item info-item-full">
-                <div class="info-label">{{ 'ADDRESS' | translate }}</div>
-                <div class="info-value">{{ address.address || '-' }}</div>
-              </div>
-
-              <div class="info-item" *ngIf="address.firmaAdi">
-                <div class="info-label">{{ 'FIRM_NAME' | translate }}</div>
-                <div class="info-value">{{ address.firmaAdi }}</div>
-              </div>
-
-              <div class="info-item" *ngIf="address.vkn">
-                <div class="info-label">{{ 'TAX_NO' | translate }}</div>
-                <div class="info-value">{{ address.vkn }}</div>
-              </div>
-
-              <div class="info-item" *ngIf="address.vergiDairesi">
-                <div class="info-label">{{ 'TAX_OFFICE' | translate }}</div>
-                <div class="info-value">{{ address.vergiDairesi }}</div>
+              <div class="address-tax-list" *ngIf="address.firmaAdi || address.vkn || address.vergiDairesi">
+                <div *ngIf="address.firmaAdi"><span>{{ 'FIRM_NAME' | translate }}</span><strong>{{ address.firmaAdi }}</strong></div>
+                <div *ngIf="address.vkn"><span>{{ 'TAX_NO' | translate }}</span><strong>{{ address.vkn }}</strong></div>
+                <div *ngIf="address.vergiDairesi"><span>{{ 'TAX_OFFICE' | translate }}</span><strong>{{ address.vergiDairesi }}</strong></div>
               </div>
             </div>
           </ng-container>
 
           <ng-template #noAddress>
-            <div class="empty-state-block">
-              <div class="empty-state-icon">
-                <i class="fa-regular fa-address-card"></i>
-              </div>
-
-              <div class="order-muted fs-7">
-                {{ 'COMING_ORDER_DETAIL.NO_INVOICE_ADDRESS' | translate }}
-              </div>
+            <div class="minimal-empty-state">
+              <i class="fa-regular fa-address-card"></i>
+              <span>{{ 'COMING_ORDER_DETAIL.NO_INVOICE_ADDRESS' | translate }}</span>
             </div>
           </ng-template>
-        </div>
-
-        <div class="col-12 col-xxl-7">
-          <div class="section-title d-flex align-items-center justify-content-between gap-3">
-            <span>{{ 'PRODUCT_INFORMATION' | translate }}</span>
-
-            <span class="badge badge-light-primary">
-              {{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}
-            </span>
-          </div>
-
-          <div class="d-flex flex-column gap-5">
-            <div class="product-item-card" *ngFor="let item of order.orderProducts">
-              <div class="product-item-card__layout">
-                <div class="product-item-card__main">
-                  <div class="d-flex flex-column gap-4">
-                    <div class="product-head">
-                      <div class="min-w-0 flex-grow-1">
-                        <div class="product-title">
-                          {{ item.product?.name || '-' }}
-                        </div>
-                      </div>
-
-                      <div class="product-price">
-                        {{
-                          getProductPrice(item) != null
-                            ? (getProductPrice(item)! | currency:'₺':'symbol':'1.2-2')
-                            : '-'
-                        }}
-                      </div>
-                    </div>
-
-                    <div class="d-flex flex-wrap align-items-center gap-2">
-                      <span [ngClass]="getStatusBadgeClass(item.orderStatus)">
-                        {{ item.orderStatusStr || getOrderStatusText(item.orderStatus) }}
-                      </span>
-
-                      <span class="badge badge-light-primary" *ngIf="item.proccessDate">
-                        {{ item.proccessDate }}
-                      </span>
-                    </div>
-
-                    <div
-                      class="d-flex flex-wrap gap-2"
-                      *ngIf="item.product?.isOrthorectified || item.product?.isPansharpened || item.product?.isClassified"
-                    >
-                      <span *ngIf="item.product?.isOrthorectified" class="badge badge-light-success">
-                        {{ 'MARKETPLACE.BUNDLE.SHORT_1' | translate }}
-                      </span>
-
-                      <span *ngIf="item.product?.isPansharpened" class="badge badge-light-info">
-                        {{ 'MARKETPLACE.BUNDLE.SHORT_2' | translate }}
-                      </span>
-
-                      <span *ngIf="item.product?.isClassified" class="badge badge-light-warning">
-                        {{ 'MARKETPLACE.BUNDLE.SHORT_3' | translate }}
-                      </span>
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-2">
-                      <span class="badge badge-light-primary" *ngIf="item.product?.provider">
-                        {{ 'VENDOR' | translate }}: {{ item.product?.provider }}
-                      </span>
-
-                      <span class="badge badge-light-primary" *ngIf="item.product?.resolution">
-                        {{ item.product?.resolution }} m
-                      </span>
-
-                      <span
-                        class="badge badge-light-primary"
-                        *ngIf="item.product?.cloudRate !== undefined && item.product?.cloudRate !== null"
-                      >
-                        {{ 'COMING_ORDER_DETAIL.CLOUD_LABEL' | translate }}: %{{ item.product?.cloudRate }}
-                      </span>
-                    </div>
-
-                    <div class="api-key-box" *ngIf="item.productValue || item.product?.downloadLink">
-                      <div
-                        *ngIf="item.product?.categoryId === 1 && item.product?.downloadLink"
-                        class="api-key-box__value"
-                      >
-                        {{ item.product?.downloadLink }}
-                      </div>
-
-                      <div
-                        *ngIf="item.product?.categoryId === 2"
-                        class="api-key-box__value"
-                      >
-                        {{ item.productValue }}
-                      </div>
-
-                      <button
-                        type="button"
-                        class="btn btn-icon btn-sm btn-light-primary api-key-box__copy"
-                        (click)="copyToClipboard(item.productValue || item.product?.downloadLink, item.id)"
-                        [attr.aria-label]="copiedMap[item.id] ? 'Copied' : 'Copy'"
-                        [attr.title]="copiedMap[item.id] ? 'Copied' : 'Copy'"
-                      >
-                        <ng-container *ngIf="!copiedMap[item.id]; else copiedIcon">
-                          <i class="fa-regular fa-copy"></i>
-                        </ng-container>
-
-                        <ng-template #copiedIcon>
-                          <i class="fa-solid fa-check text-success"></i>
-                        </ng-template>
-                      </button>
-                    </div>
-
-                    <div class="product-description" *ngIf="item.product?.description">
-                      {{ item.product?.description }}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="product-item-card__flow">
-                  <div class="product-flow-card">
-                    <div class="product-flow-card__title">
-                      {{ 'COMING_ORDER_DETAIL.ORDER_FLOW_TITLE' | translate }}
-                    </div>
-
-                    <div class="branch-flow">
-                      <div
-                        class="branch-flow__item"
-                        [class.is-active]="item.orderStatus === 0"
-                        [class.is-completed]="item.orderStatus === 1 || item.orderStatus === 2 || item.orderStatus === 3 || item.orderStatus === 4"
-                      >
-                        <div class="branch-flow__marker">
-                          <i class="fa-regular fa-clock"></i>
-                        </div>
-
-                        <div class="branch-flow__content">
-                          <div class="branch-flow__title">
-                            {{ 'PENDING_APPROVAL' | translate }}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="branch-flow__branches">
-                        <div
-                          class="branch-flow__branch is-danger"
-                          [class.is-active]="item.orderStatus === 2"
-                        >
-                          <div class="branch-flow__marker">
-                            <i class="fa-solid fa-circle-xmark"></i>
-                          </div>
-
-                          <div class="branch-flow__content">
-                            <div class="branch-flow__title">
-                              {{ 'REJECTED' | translate }}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div
-                          class="branch-flow__branch is-primary"
-                          [class.is-active]="item.orderStatus === 1 || item.orderStatus === 3 || item.orderStatus === 4"
-                          [class.is-completed]="item.orderStatus === 3 || item.orderStatus === 4"
-                        >
-                          <div class="branch-flow__marker">
-                            <i class="fa-solid fa-circle-check"></i>
-                          </div>
-
-                          <div class="branch-flow__content">
-                            <div class="branch-flow__title">
-                              {{ 'APPROVED' | translate }}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <ng-container *ngIf="item.orderStatus !== 2">
-                        <div
-                          class="branch-flow__item"
-                          [class.is-active]="item.orderStatus === 3"
-                          [class.is-completed]="item.orderStatus === 4"
-                        >
-                          <div class="branch-flow__marker">
-                            <i class="fa-solid fa-gear"></i>
-                          </div>
-
-                          <div class="branch-flow__content">
-                            <div class="branch-flow__title">
-                              {{ 'PREPARING' | translate }}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div
-                          class="branch-flow__item"
-                          [class.is-active]="item.orderStatus === 4"
-                        >
-                          <div class="branch-flow__marker">
-                            <i class="fa-solid fa-box-open"></i>
-                          </div>
-
-                          <div class="branch-flow__content">
-                            <div class="branch-flow__title">
-                              {{ 'COMPLETED' | translate }}
-                            </div>
-                          </div>
-                        </div>
-                      </ng-container>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div *ngIf="!order.orderProducts?.length" class="empty-state-block">
-              <div class="empty-state-icon">
-                <i class="fa-solid fa-box-open"></i>
-              </div>
-
-              <div class="order-muted fs-6">
-                {{ 'NO_DATA_AVAILABLE' | translate }}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
 
-    <app-invoice-preview-modal
-      [isOpen]="previewModalOpen"
-      [previewUrl]="previewUrl"
-      [fileName]="previewFileName"
-      (closed)="closePreviewModal()"
-    ></app-invoice-preview-modal>
+    <div class="col-12 col-xl-8">
+      <div class="products-header">
+        <div>
+          <div class="section-title mb-1">{{ 'PRODUCT_INFORMATION' | translate }}</div>
+          <div class="section-description">{{ getTotalProductCount() }} {{ 'PRODUCT_HEADER' | translate }}</div>
+        </div>
+        <span class="badge badge-light-primary fs-7">{{ getTotalProductCount() }}</span>
+      </div>
+
+      <div class="product-list">
+        <article class="product-card" *ngFor="let item of order.orderProducts">
+          <div class="product-card-layout">
+            <div class="product-card-main">
+          <header class="product-card__header">
+            <div class="product-identity">
+              <div class="product-icon" [class.product-icon--api]="isApiKey(item)">
+                <i [class]="isApiKey(item) ? 'fa-solid fa-key' : 'fa-solid fa-satellite'"></i>
+              </div>
+              <div class="min-w-0">
+                <div class="product-type">
+                  {{
+                    (isApiKey(item)
+                      ? 'ORDER_DETAIL_VIEW.DIGITAL_SERVICE'
+                      : (item.product?.isCustomArea
+                          ? 'ORDER_DETAIL_VIEW.NEW_SATELLITE_REQUEST'
+                          : 'ORDER_DETAIL_VIEW.READY_SATELLITE_IMAGE')) | translate
+                  }}
+                </div>
+                <h2 class="product-name">{{ item.product?.name || '-' }}</h2>
+                <div class="product-status-line">
+                  <span [ngClass]="getStatusBadgeClass(item.orderStatus)">
+                    {{ item.orderStatusStr || getOrderStatusText(item.orderStatus) }}
+                  </span>
+                  <span class="product-date" *ngIf="item.proccessDate">
+                    <i class="fa-regular fa-calendar"></i>{{ item.proccessDate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-card__header-actions">
+              <div class="product-total">
+                <small>{{ 'ORDER_DETAIL_VIEW.GENERAL_TOTAL' | translate }}</small>
+                <strong>{{ formatMoney(getItemTotal(item)) }} ₺</strong>
+              </div>
+            </div>
+          </header>
+
+          <ng-container *ngIf="isApiKey(item); else satelliteDetail">
+            <div class="api-service-row">
+              <div><i class="fa-solid fa-code"></i><span>{{ 'ORDER_DETAIL_VIEW.API_SERVICE' | translate }}</span></div>
+              <div class="api-service-metrics">
+                <span>{{ 'ORDER_DETAIL_VIEW.UNIT_PRICE' | translate }} <strong>{{ formatMoney(getItemUnitPrice(item)) }} ₺</strong></span>
+                <span>{{ 'ORDER_DETAIL_VIEW.QUANTITY' | translate }} <strong>{{ getItemCount(item) }}</strong></span>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #satelliteDetail>
+
+            <div class="aoi-strip">
+              <i class="fa-solid fa-location-dot"></i>
+              <div class="min-w-0">
+                <span>{{ 'ORDER_DETAIL_VIEW.AOI' | translate }}</span>
+                <strong class="text-truncate">{{ getAoiName(item) }}</strong>
+              </div>
+            </div>
+
+            <div class="product-details-grid">
+              <div class="product-detail-item">
+                <span>{{ 'ORDER_DETAIL_VIEW.REQUEST_AREA' | translate }}</span>
+                <strong>{{ formatArea(getItemArea(item)) }} km²</strong>
+              </div>
+
+              <div class="product-detail-item" *ngIf="!item.product?.isCustomArea && item.product?.acquisitionDate">
+                <span>{{ 'COMING_ORDER_DETAIL.ACQUISITION' | translate }}</span><strong>{{ item.product?.acquisitionDate }}</strong>
+              </div>
+
+              <div class="product-detail-item" *ngIf="item.product?.isCustomArea && item.product?.acquisitionStartDate">
+                <span>{{ 'COMING_ORDER_DETAIL.ACQUISITION_START' | translate }}</span><strong>{{ item.product?.acquisitionStartDate }}</strong>
+              </div>
+
+              <div class="product-detail-item" *ngIf="item.product?.isCustomArea && item.product?.acquisitionEndDate">
+                <span>{{ 'COMING_ORDER_DETAIL.ACQUISITION_END' | translate }}</span><strong>{{ item.product?.acquisitionEndDate }}</strong>
+              </div>
+              <div class="product-detail-item" *ngIf="item.product?.satellite">
+                <span>Platform</span><strong>{{ item.product?.satellite }}</strong>
+              </div>
+              <div class="product-detail-item" *ngIf="item.product?.imageType">
+                <span>{{ 'ORDER_DETAIL_VIEW.IMAGE_TYPE' | translate }}</span><strong>{{ item.product?.imageType }}</strong>
+              </div>
+              <div class="product-detail-item" *ngIf="item.product?.resolution">
+                <span>{{ 'ORDER_DETAIL_VIEW.RESOLUTION' | translate }}</span><strong>{{ item.product?.resolution }} m</strong>
+              </div>
+              <div class="product-detail-item" *ngIf="item.product?.cloudRate !== undefined && item.product?.cloudRate !== null">
+                <span>{{ 'ORDER_DETAIL_VIEW.CLOUD_RATE' | translate }}</span>
+                <strong>{{ item.product?.cloudRate }} %</strong>
+              </div>
+              <div class="product-detail-item" *ngIf="item.product?.offNadirAngle !== undefined && item.product?.offNadirAngle !== null">
+                <span>{{ 'ORDER_DETAIL_VIEW.OFF_NADIR_ANGLE' | translate }}</span>
+                <strong>{{ item.product?.offNadirAngle }}°</strong>
+              </div>
+              
+            </div>
+
+            <div class="price-breakdown">
+              <div class="price-line">
+                <div>
+                  <strong>{{ 'ORDER_DETAIL_VIEW.SATELLITE_IMAGE' | translate }}</strong>
+                  <small>{{ formatArea(getItemArea(item)) }} km² × {{ formatMoney(getItemUnitPrice(item)) }} TL/km²</small>
+                </div>
+                <strong>{{ formatMoney(getItemBaseTotal(item)) }} ₺</strong>
+              </div>
+
+              <ng-container *ngIf="getProcessingOptions(item) as processingOptions">
+                <div class="processing-section" *ngIf="processingOptions.length; else noProcessing">
+                  <div class="processing-section__head">
+                    <span><i class="fa-solid fa-sliders"></i>{{ 'ORDER_DETAIL_VIEW.PROCESSING_OPTIONS' | translate }}</span>
+                    <span class="badge badge-light-success">{{ processingOptions.length }}</span>
+                  </div>
+
+                  <div class="processing-line" *ngFor="let option of processingOptions">
+                    <div class="processing-line__name">
+                      <i class="fa-solid fa-circle-check text-success"></i>
+                      <div>
+                        <strong>{{ option.name }}</strong>
+                        <small>{{ formatArea(option.areaKm2) }} km² × {{ formatMoney(option.unitPrice) }} TL/km²</small>
+                      </div>
+                    </div>
+                    <strong class="text-success">+ {{ formatMoney(option.totalPrice) }} ₺</strong>
+                  </div>
+                </div>
+
+                <ng-template #noProcessing>
+                  <div class="processing-empty" *ngIf="getItemProcessingTotal(item) <= 0">
+                    <i class="fa-solid fa-circle-info"></i>{{ 'ORDER_DETAIL_VIEW.NO_PROCESSING_OPTIONS' | translate }}
+                  </div>
+                </ng-template>
+              </ng-container>
+
+              <div class="price-totals">
+                <div><span>{{ 'ORDER_DETAIL_VIEW.PROCESSING_TOTAL' | translate }}</span><strong>+ {{ formatMoney(getItemProcessingTotal(item)) }} ₺</strong></div>
+                <div *ngIf="getItemCount(item) > 1"><span>{{ 'ORDER_DETAIL_VIEW.QUANTITY' | translate }}</span><strong>{{ getItemCount(item) }}</strong></div>
+                <div class="price-totals__grand"><span>{{ 'ORDER_DETAIL_VIEW.GENERAL_TOTAL' | translate }}</span><strong>{{ formatMoney(getItemTotal(item)) }} ₺</strong></div>
+              </div>
+            </div>
+
+          </ng-template>
+
+          <div class="customer-product-extras">
+            <div class="api-key-box" *ngIf="item.product?.downloadLink">
+              <div class="api-key-box__content min-w-0">
+                <span>{{ 'ORDER_DETAIL_VIEW.DOWNLOAD_LINK' | translate }}</span>
+                <strong class="text-truncate">{{ item.product?.downloadLink }}</strong>
+              </div>
+              <button type="button" class="btn btn-icon btn-sm btn-light-primary"
+                (click)="copyToClipboard(item.product?.downloadLink, item.id)">
+                <i [class]="copiedMap[item.id] ? 'fa-solid fa-check text-success' : 'fa-regular fa-copy'"></i>
+              </button>
+            </div>
+
+            <div class="api-key-box" *ngIf="isApiKey(item) && item.productValue">
+              <div class="api-key-box__content min-w-0">
+                <span>{{ 'ORDER_DETAIL_VIEW.API_KEY' | translate }}</span>
+                <strong class="text-truncate">{{ item.productValue }}</strong>
+              </div>
+              <button type="button" class="btn btn-icon btn-sm btn-primary"
+                (click)="copyToClipboard(item.productValue, item.id)">
+                <i [class]="copiedMap[item.id] ? 'fa-solid fa-check' : 'fa-regular fa-copy'"></i>
+              </button>
+            </div>
+
+
+          </div>
+            </div>
+
+            <aside class="order-product-card__flow">
+              <div class="product-flow-card">
+                <div class="product-flow-card__title">
+                  {{ 'COMING_ORDER_DETAIL.ORDER_FLOW_TITLE' | translate }}
+                </div>
+
+                <div class="branch-flow">
+                  <div class="branch-flow__item"
+                    [class.is-active]="item.orderStatus === 0"
+                    [class.is-completed]="item.orderStatus === 1 || item.orderStatus === 2 || item.orderStatus === 3 || item.orderStatus === 4">
+                    <div class="branch-flow__marker"><i class="fa-regular fa-clock"></i></div>
+                    <div class="branch-flow__content">
+                      <div class="branch-flow__title">{{ 'PENDING_APPROVAL' | translate }}</div>
+                    </div>
+                  </div>
+
+                  <div class="branch-flow__branches">
+                    <div class="branch-flow__branch is-danger" [class.is-active]="item.orderStatus === 2">
+                      <div class="branch-flow__marker"><i class="fa-solid fa-circle-xmark"></i></div>
+                      <div class="branch-flow__content">
+                        <div class="branch-flow__title">{{ 'REJECTED' | translate }}</div>
+                      </div>
+                    </div>
+
+                    <div class="branch-flow__branch is-primary"
+                      [class.is-active]="item.orderStatus === 1 || item.orderStatus === 3 || item.orderStatus === 4"
+                      [class.is-completed]="item.orderStatus === 3 || item.orderStatus === 4">
+                      <div class="branch-flow__marker"><i class="fa-solid fa-circle-check"></i></div>
+                      <div class="branch-flow__content">
+                        <div class="branch-flow__title">{{ 'APPROVED' | translate }}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <ng-container *ngIf="item.orderStatus !== 2">
+                    <div class="branch-flow__item"
+                      [class.is-active]="item.orderStatus === 3"
+                      [class.is-completed]="item.orderStatus === 4">
+                      <div class="branch-flow__marker"><i class="fa-solid fa-gear"></i></div>
+                      <div class="branch-flow__content">
+                        <div class="branch-flow__title">{{ 'PREPARING' | translate }}</div>
+                      </div>
+                    </div>
+
+                    <div class="branch-flow__item" [class.is-active]="item.orderStatus === 4">
+                      <div class="branch-flow__marker"><i class="fa-solid fa-box-open"></i></div>
+                      <div class="branch-flow__content">
+                        <div class="branch-flow__title">{{ 'COMPLETED' | translate }}</div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </article>
+
+        <div *ngIf="!order.orderProducts?.length" class="minimal-empty-state minimal-empty-state--large">
+          <i class="fa-solid fa-box-open"></i><span>{{ 'NO_DATA_AVAILABLE' | translate }}</span>
+        </div>
+      </div>
+    </div>
   </div>
+  <app-invoice-preview-modal
+    [isOpen]="previewModalOpen"
+    [previewUrl]="previewUrl"
+    [fileName]="previewFileName"
+    (closed)="closePreviewModal()">
+  </app-invoice-preview-modal>
 </div>
 
 <div *ngIf="loading" class="order-loading card">
   <div class="card-body p-10 d-flex flex-column align-items-center justify-content-center">
     <span class="spinner-border text-primary mb-4"></span>
-    <div class="order-muted">
-      {{ 'PLEASE_WAIT' | translate }}
-    </div>
+    <div class="text-gray-600">{{ 'PLEASE_WAIT' | translate }}</div>
   </div>
 </div>

@@ -1929,8 +1929,7 @@
   margin-left: auto !important;
   padding: 0 !important;
 
-  color: var(--bs-primary) !important;
-  // background-color: var(--bs-primary-light) !important;
+  background-color: transparent !important;
   border: 0 !important;
   border-radius: .475rem !important;
   box-shadow: none !important;
@@ -2188,7 +2187,7 @@
   background: transparent !important;
   background-color: transparent !important;
   border: 0 !important;
-  border-radius: 0 !important;
+  border-radius: 5px !important;
   box-shadow: none !important;
 
   transition:
@@ -2237,7 +2236,7 @@
   padding:0!important;
   background:transparent!important;
   border:0!important;
-  border-radius:0!important;
+  border-radius:5px !important;
   box-shadow:none!important;
   color:var(--bs-gray-600)!important;
   transition:color .15s ease,background-color .15s ease!important;
@@ -2251,4 +2250,21 @@
 .smart-product-expand i{
   color:inherit!important;
   font-size:12px!important;
+}
+
+.smart-product-expand:is(
+  :hover,
+  :focus,
+  :focus-visible,
+  :active,
+  .active,
+  .show
+),
+.smart-product-expand.btn:hover,
+.smart-product-expand.btn:focus,
+.smart-product-expand.btn:active,
+.smart-product-expand.btn.active {
+  background-color: var(--bs-primary-light) !important;
+  color: var(--bs-primary) !important;
+  box-shadow: none !important;
 }

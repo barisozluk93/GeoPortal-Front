@@ -1,44 +1,19 @@
 <div id="kt_header" class="modern-header" [class.scrolled]="isScrolled">
-  <div
-    id="kt_header_container"
-    [ngClass]="[
+  <div id="kt_header_container" [ngClass]="[
       headerContainerCssClasses,
       isMobile ? 'mobile-padding' : 'desktop-padding'
-    ]"
-    class="modern-header-container"
-  >
+    ]" class="modern-header-container">
     <!-- LEFT / BRAND -->
     <div class="modern-header-left">
       <div class="d-flex d-lg-none align-items-center me-3">
-        <button
-          type="button"
-          class="btn btn-icon mobile-toggle-btn"
-          id="kt_aside_toggle"
-          aria-label="Menüyü aç"
-        >
-          <span
-            [inlineSVG]="'./assets/media/icons/duotune/abstract/abs015.svg'"
-            class="svg-icon svg-icon-2"
-          ></span>
+        <button type="button" class="btn btn-icon mobile-toggle-btn" id="kt_aside_toggle" aria-label="Menüyü aç">
+          <span [inlineSVG]="'./assets/media/icons/duotune/abstract/abs015.svg'" class="svg-icon svg-icon-2"></span>
         </button>
       </div>
 
-      <a
-        (click)="onBrandClick()"
-        class="app-header__brand text-decoration-none"
-      >
+      <a (click)="onBrandClick()" class="app-header__brand text-decoration-none">
         <div class="app-header__brand-top">
-          <img
-            src="./assets/media/logos/logo.svg"
-            alt="GeoPortal"
-            class="app-header__logo-img"
-          />
-
-          <div class="app-header__brand-divider"></div>
-
-          <div class="app-header__brand-name" *ngIf="!isMobile">
-            GeoPortal
-          </div>
+          <img src="./assets/media/logos/logo.svg" alt="Logo" class="app-header__logo-img" />
         </div>
       </a>
     </div>

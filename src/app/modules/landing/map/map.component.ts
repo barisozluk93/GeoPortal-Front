@@ -78,6 +78,9 @@ import { createBox } from "ol/interaction/Draw";
 import { saveAs } from "file-saver";
 import { AskFootprintResult } from "./ask-panel/map-ask-panel.component";
 import { firstValueFrom } from "rxjs";
+import { featureCollection, polygon, multiPolygon } from "@turf/helpers";
+import intersect from "@turf/intersect";
+import area from "@turf/area";
 import {
   SmartPrefilterAoiExportEvent,
   SmartPrefilterAoiItem,
@@ -232,6 +235,17 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private readonly drawColor = "#263685";
   private readonly drawFillColor = "rgba(38, 54, 133, 0.14)";
+
+  // AOI bazlı yeni fiyatlandırma. Tarife değiştiğinde yalnızca bu değerler güncellenir.
+  private readonly satelliteImageUnitPriceTryPerKm2 = 1000;
+  private readonly processingServiceUnitPricesTryPerKm2: Record<string, number> = {
+    ortorektifikasyon: 250,
+    orthorectification: 250,
+    pansharpening: 180,
+    ndvi: 120,
+    siniflama: 300,
+    classification: 300,
+  };
   private readonly supportedAreaFileExtensions: SupportedAreaFileExtension[] = [
     "zip",
     "geojson",
@@ -858,9 +872,35 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     const activeFootprint = this.askFootprints[activeIndex];
     const feature = this.createAskFootprintFeature(activeFootprint, activeIndex);
 
-    if (feature) {
-      this.askHighlightSource.addFeature(feature);
+    if (!feature) return;
+
+    this.askHighlightSource.addFeature(feature);
+
+    // İlk footprint çizildiğinde ve panelden yeni sekme seçildiğinde
+    // seçili footprint otomatik olarak harita görünümüne sığdırılır.
+    this.fitToAskFootprintFeature(feature);
+  }
+
+  private fitToAskFootprintFeature(feature: Feature<Geometry>): void {
+    if (!this.map) return;
+
+    const geometry = feature.getGeometry();
+    if (!geometry) return;
+
+    const extent = geometry.getExtent();
+
+    if (
+      !extent ||
+      extent.some((value) => !Number.isFinite(value))
+    ) {
+      return;
     }
+
+    this.map.getView().fit(extent, {
+      padding: [80, 80, 80, 80],
+      duration: 350,
+      maxZoom: 15,
+    });
   }
 
   private createAskFootprintFeature(
@@ -900,26 +940,20 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (!this.map) return;
 
     const index = this.askFootprints.indexOf(item);
+
     if (index >= 0) {
       this.activeAskFootprintIndex = index;
       this.renderAskFootprints();
+      return;
     }
 
     const activeFeature = this.askHighlightSource
       .getFeatures()
       .find((feature) => feature.get("askActive") === true);
-    const geometry = activeFeature?.getGeometry();
-    if (!geometry) return;
 
-    // ol.View.fit expects an Extent or a SimpleGeometry. Some Geometry
-    // implementations provide getExtent(), so prefer passing the extent.
-    const fitTarget = (geometry as any).getExtent ? (geometry as any).getExtent() : (geometry as any);
-
-    this.map.getView().fit(fitTarget, {
-      padding: [80, 80, 80, 80],
-      duration: 350,
-      maxZoom: 15,
-    });
+    if (activeFeature) {
+      this.fitToAskFootprintFeature(activeFeature as Feature<Geometry>);
+    }
   }
 
   closeAskPanel(): void {
@@ -1622,55 +1656,186 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   addSmartProductRequestToCart(product: ProductModel): void {
     const currentUser = this.authService.currentUserValue;
+    const aoiContext = this.getSelectedAoiCartContext();
+
+    if (!aoiContext) {
+      this.showUploadWarning("MAP.SMART_FILTER.AOI_REQUIRED");
+      return;
+    }
+
+    const requestAreaKm2 = aoiContext.areaKm2;
+    const imageUnitPrice = this.satelliteImageUnitPriceTryPerKm2;
+    const baseTotalPrice = this.roundMoney(requestAreaKm2 * imageUnitPrice);
+    const processingOptions = this.buildSelectedProcessingOptions(
+      product,
+      requestAreaKm2,
+    );
+    const processingTotalPrice = this.roundMoney(
+      processingOptions.reduce((sum, option) => sum + option.totalPrice, 0),
+    );
+    const calculatedTotalPrice = this.roundMoney(
+      baseTotalPrice + processingTotalPrice,
+    );
 
     const customProduct: ProductModel = {
       ...product,
       userId: currentUser ? Number(currentUser.id) : 0,
-      wkt: this.getAoiWkt(),
-      areaKm2: this.totalSelectedAreaM2 / 1_000_000,
+      wkt: aoiContext.wkt,
+      areaKm2: requestAreaKm2,
       isCustomArea: true,
       isInMarket: false,
       isDeleted: false,
-      price: product.price ?? 0,
-      currency: product.currency || "TRY",
-      categoryId: 3,
+      price: imageUnitPrice,
+      currency: "TRY",
+      categoryId: product.categoryId ?? 3,
+      ...({
+        basketItemType: "satelliteImage",
+        aoiId: aoiContext.id,
+        aoiName: aoiContext.name,
+        aoiWkt: aoiContext.wkt,
+        requestAreaKm2,
+        unitPrice: imageUnitPrice,
+        baseTotalPrice,
+        processingOptions,
+        processingTotalPrice,
+        calculatedTotalPrice,
+        intersectionWkt: aoiContext.wkt,
+        requestWkt: aoiContext.wkt,
+      } as any),
+    };
+
+    this.saveAoiAwareBasketItem(
+      customProduct,
+      calculatedTotalPrice,
+      true,
+      aoiContext.wkt,
+    );
+  }
+
+  addSmartProductToCart(productResult: ProductSmartFilterResult): void {
+    const aoiContext = this.getSelectedAoiCartContext();
+
+    if (!aoiContext) {
+      this.showUploadWarning("MAP.SMART_FILTER.AOI_REQUIRED");
+      return;
+    }
+
+    const intersection = this.calculateProductAoiIntersection(
+      productResult,
+      aoiContext.wkt,
+    );
+
+    if (!intersection || intersection.areaKm2 <= 0) {
+      this.alertService.createAlert(
+        "warning",
+        "Seçilen görüntü ile ilgi alanı kesişmiyor.",
+      );
+      return;
+    }
+
+    const requestAreaKm2 = intersection.areaKm2;
+    const imageUnitPrice = this.satelliteImageUnitPriceTryPerKm2;
+    const baseTotalPrice = this.roundMoney(requestAreaKm2 * imageUnitPrice);
+    const processingOptions = this.buildSelectedProcessingOptions(
+      productResult as any,
+      requestAreaKm2,
+    );
+    const processingTotalPrice = this.roundMoney(
+      processingOptions.reduce((sum, option) => sum + option.totalPrice, 0),
+    );
+    const calculatedTotalPrice = this.roundMoney(
+      baseTotalPrice + processingTotalPrice,
+    );
+
+    const product: ProductModel = {
+      ...(productResult as any),
+      categoryId: 1,
+      id: productResult.id,
+      name: productResult.name || productResult.imageId || "-",
+      price: imageUnitPrice,
+      currency: "TRY",
+      isDeleted: false,
+      userId: Number(this.authService.currentUserValue?.id ?? 0),
+      ...({
+        basketItemType: "satelliteImage",
+        aoiId: aoiContext.id,
+        aoiName: aoiContext.name,
+        aoiWkt: aoiContext.wkt,
+        requestAreaKm2,
+        unitPrice: imageUnitPrice,
+        baseTotalPrice,
+        processingOptions,
+        processingTotalPrice,
+        calculatedTotalPrice,
+        footprintWkt: productResult.wkt ?? null,
+        intersectionWkt: intersection.wkt,
+        requestWkt: intersection.wkt,
+        imageId: productResult.imageId ?? null,
+      } as any),
+    };
+
+    this.saveAoiAwareBasketItem(
+      product,
+      calculatedTotalPrice,
+      false,
+      intersection.wkt,
+    );
+  }
+
+  private saveAoiAwareBasketItem(
+    product: ProductModel,
+    totalPrice: number,
+    closeRequestPanelAfterSave: boolean,
+    requestWkt: string,
+  ): void {
+    const currentUser = this.authService.currentUserValue;
+    const productSnapshot = product as any;
+
+    const data: BasketModel = {
+      id: 0,
+      userId: Number(currentUser?.id ?? 0),
+      productId: product.id ?? 0,
+      product,
+      isDeleted: false,
+      totalPrice,
+      numberOf: 1,
+      ...({
+        aoiId: productSnapshot.aoiId ?? null,
+        aoiName: productSnapshot.aoiName ?? null,
+        aoiWkt: productSnapshot.aoiWkt ?? null,
+        requestWkt,
+        intersectionWkt: requestWkt,
+        requestAreaKm2: productSnapshot.requestAreaKm2 ?? 0,
+        unitPrice: productSnapshot.unitPrice ?? 0,
+        baseTotalPrice: productSnapshot.baseTotalPrice ?? 0,
+        processingOptions: productSnapshot.processingOptions ?? [],
+        processingTotalPrice: productSnapshot.processingTotalPrice ?? 0,
+        calculatedTotalPrice: totalPrice,
+        itemType: "satelliteImage",
+      } as any),
     };
 
     if (currentUser) {
-      const data: BasketModel = {
-        id: 0,
-        userId: currentUser ? Number(currentUser.id) : 0,
-        productId: customProduct.id ?? 0,
-        product: customProduct,
-        isDeleted: false,
-        totalPrice: undefined,
-        numberOf: undefined,
-      };
-
-      this.isSmartProductRequestLoading = true;
-
+      this.isSmartProductRequestLoading = closeRequestPanelAfterSave;
       this.basketManagementService.save(data).subscribe({
         next: (result) => {
-          if (result.isSuccess) {
+          if (!result.isSuccess) {
             this.alertService.createAlert(
-              "success",
-              this.translate.instant("MESSAGES.ADD_TO_CART_SUCCESS"),
+              "danger",
+              this.translate.instant("MESSAGES.ERROR"),
             );
-            this.basketService.loadBasketFromDb();
-            this.closeSmartProductRequestPanel();
             return;
           }
 
           this.alertService.createAlert(
-            "danger",
-            this.translate.instant("MESSAGES.ERROR"),
+            "success",
+            this.translate.instant("MESSAGES.ADD_TO_CART_SUCCESS"),
           );
+          this.basketService.loadBasketFromDb();
+          if (closeRequestPanelAfterSave) this.closeSmartProductRequestPanel();
         },
         error: (error) => {
-          console.error(
-            "Custom ürün talebi sepete eklenirken hata oluştu:",
-            error,
-          );
+          console.error("AOI bazlı ürün sepete eklenirken hata oluştu:", error);
           this.alertService.createAlert(
             "danger",
             this.translate.instant("MESSAGES.ERROR"),
@@ -1680,130 +1845,167 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           this.isSmartProductRequestLoading = false;
         },
       });
-    } else {
-      var basket = JSON.parse(
-        localStorage.getItem("basket") as string,
-      ) as BasketModel[];
+      return;
+    }
 
-      if (basket) {
-        if (basket.length < 15) {
-          basket.push({
-            id: 0,
-            userId: 0,
-            product: customProduct,
-            productId: customProduct.id,
-            isDeleted: false,
-            numberOf: 0,
-            totalPrice: 0,
-          });
-        } else {
-          this.alertService.createAlert(
-            "warning",
-            this.translate.instant("MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS"),
-          );
-        }
-      } else {
-        basket = [
-          {
-            id: 0,
-            userId: 0,
-            product: customProduct,
-            productId: customProduct.id,
-            isDeleted: false,
-            numberOf: 0,
-            totalPrice: 0,
-          },
-        ];
-      }
-
-      this.basketService.setBasket(basket);
+    const basket = (JSON.parse(localStorage.getItem("basket") || "[]") || []) as BasketModel[];
+    if (basket.length >= 15) {
       this.alertService.createAlert(
-        "success",
-        this.translate.instant("MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS"),
+        "warning",
+        this.translate.instant("MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS"),
       );
+      return;
+    }
+
+    basket.push(data);
+    this.basketService.setBasket(basket);
+    this.alertService.createAlert(
+      "success",
+      this.translate.instant("MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS"),
+    );
+    if (closeRequestPanelAfterSave) this.closeSmartProductRequestPanel();
+  }
+
+  private getSelectedAoiCartContext(): {
+    id: string;
+    name: string;
+    wkt: string;
+    areaKm2: number;
+  } | null {
+    const selectedAoi = this.aoiItems.find((item) => item.id === this.selectedAoiId);
+    const wkt = this.getSelectedAoiWkt();
+    if (!selectedAoi || !wkt) return null;
+
+    return {
+      id: selectedAoi.id,
+      name: selectedAoi.name || "İlgi Alanı",
+      wkt,
+      areaKm2: this.roundArea(selectedAoi.areaM2 / 1_000_000),
+    };
+  }
+
+  private calculateProductAoiIntersection(
+    product: ProductSmartFilterResult,
+    aoiWkt: string,
+  ): { areaKm2: number; wkt: string } | null {
+    try {
+      const format = new WKT();
+      const productFeature = this.createSmartProductFeature(product);
+      const aoiFeature = format.readFeature(aoiWkt, {
+        dataProjection: "EPSG:4326",
+        featureProjection: "EPSG:4326",
+      }) as Feature<Geometry>;
+
+      const productGeometry = productFeature?.getGeometry()?.clone();
+      const aoiGeometry = aoiFeature.getGeometry()?.clone();
+      if (!productGeometry || !aoiGeometry) return null;
+
+      productGeometry.transform("EPSG:3857", "EPSG:4326");
+      const productTurf = this.toTurfPolygon(productGeometry);
+      const aoiTurf = this.toTurfPolygon(aoiGeometry);
+      if (!productTurf || !aoiTurf) return null;
+
+      const intersection = intersect(featureCollection([productTurf, aoiTurf]));
+      if (!intersection?.geometry) return null;
+
+      const areaKm2 = this.roundArea(area(intersection) / 1_000_000);
+      const intersectionFeature = new GeoJSON().readFeature(intersection, {
+        dataProjection: "EPSG:4326",
+        featureProjection: "EPSG:4326",
+      }) as Feature<Geometry>;
+      const wkt = format.writeFeature(intersectionFeature, {
+        dataProjection: "EPSG:4326",
+        featureProjection: "EPSG:4326",
+      });
+
+      return { areaKm2, wkt };
+    } catch (error) {
+      console.error("Görüntü/AOI kesişimi hesaplanamadı:", error);
+      return null;
     }
   }
 
-  addSmartProductToCart(productResult: ProductSmartFilterResult): void {
-    const currentUser = this.authService.currentUserValue;
-
-    if (currentUser) {
-      const data: BasketModel = {
-        id: 0,
-        userId: Number(currentUser.id),
-        productId: productResult.id,
-        isDeleted: false,
-        product: undefined,
-        totalPrice: undefined,
-        numberOf: undefined,
-      };
-
-      this.basketManagementService.save(data).subscribe((result) => {
-        if (result.isSuccess) {
-          this.alertService.createAlert(
-            "success",
-            this.translate.instant("MESSAGES.ADD_TO_CART_SUCCESS"),
-          );
-          this.basketService.loadBasketFromDb();
-        } else {
-          this.alertService.createAlert(
-            "danger",
-            this.translate.instant("MESSAGES.ERROR"),
-          );
-        }
-      });
-
-      return;
-    } else {
-      var product: ProductModel = {
-        categoryId: 1,
-        id: productResult.id,
-        name: productResult.name || "-",
-        price: productResult.price ?? 1000,
-        isDeleted: false,
-        userId: 0,
-      };
-      var basket = JSON.parse(
-        localStorage.getItem("basket") as string,
-      ) as BasketModel[];
-
-      if (basket) {
-        if (basket.length < 15) {
-          basket.push({
-            id: 0,
-            userId: 0,
-            product: product,
-            productId: product.id,
-            isDeleted: false,
-            numberOf: 0,
-            totalPrice: 0,
-          });
-        } else {
-          this.alertService.createAlert(
-            "warning",
-            this.translate.instant("MESSAGES.LOGIN_REQUIRED_FOR_MORE_PRODUCTS"),
-          );
-        }
-      } else {
-        basket = [
-          {
-            id: 0,
-            userId: 0,
-            product: product,
-            productId: product.id,
-            isDeleted: false,
-            numberOf: 0,
-            totalPrice: 0,
-          },
-        ];
-      }
-
-      this.basketService.setBasket(basket);
-      this.alertService.createAlert(
-        "success",
-        this.translate.instant("MESSAGES.ADD_TO_CART_WITHOUT_LOGIN_SUCCESS"),
-      );
+  private toTurfPolygon(geometry: Geometry): any | null {
+    if (geometry instanceof Polygon) {
+      return polygon(geometry.getCoordinates());
     }
+    if (geometry instanceof MultiPolygon) {
+      return multiPolygon(geometry.getCoordinates());
+    }
+    return null;
+  }
+
+  private buildSelectedProcessingOptions(
+    source: Partial<ProductModel> | ProductSmartFilterResult | any,
+    requestAreaKm2: number,
+  ): Array<{
+    key: "orthorectification" | "pansharpening" | "ndvi" | "classification";
+    name: string;
+    unitPrice: number;
+    areaKm2: number;
+    totalPrice: number;
+  }> {
+    const definitions = [
+      {
+        key: "orthorectification" as const,
+        name: "Ortorektifikasyon",
+        selected: source?.isOrthorectified === true,
+        unitPrice: this.processingServiceUnitPricesTryPerKm2["ortorektifikasyon"],
+      },
+      {
+        key: "pansharpening" as const,
+        name: "Pansharpening",
+        selected: source?.isPansharpened === true,
+        unitPrice: this.processingServiceUnitPricesTryPerKm2["pansharpening"],
+      },
+      {
+        key: "ndvi" as const,
+        name: "NDVI Analizi",
+        selected: source?.isNVDIAnalysis === true,
+        unitPrice: this.processingServiceUnitPricesTryPerKm2["ndvi"],
+      },
+      {
+        key: "classification" as const,
+        name: "Sınıflama",
+        selected: source?.isClassified === true,
+        unitPrice: this.processingServiceUnitPricesTryPerKm2["siniflama"],
+      },
+    ];
+
+    return definitions
+      .filter((definition) => definition.selected)
+      .map((definition) => ({
+        key: definition.key,
+        name: definition.name,
+        unitPrice: definition.unitPrice,
+        areaKm2: requestAreaKm2,
+        totalPrice: this.roundMoney(requestAreaKm2 * definition.unitPrice),
+      }));
+  }
+
+  private getProcessingServiceUnitPrice(serviceName: string): number {
+    const normalized = serviceName
+      .toLocaleLowerCase("tr-TR")
+      .replace(/ı/g, "i")
+      .replace(/ş/g, "s")
+      .replace(/ğ/g, "g")
+      .replace(/ü/g, "u")
+      .replace(/ö/g, "o")
+      .replace(/ç/g, "c");
+
+    const matchedKey = Object.keys(this.processingServiceUnitPricesTryPerKm2)
+      .find((key) => normalized.includes(key));
+    return matchedKey
+      ? this.processingServiceUnitPricesTryPerKm2[matchedKey]
+      : 250;
+  }
+
+  private roundArea(value: number): number {
+    return Math.round((Number(value) + Number.EPSILON) * 10000) / 10000;
+  }
+
+  private roundMoney(value: number): number {
+    return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
   }
 
   openSmartProductMetadata(payload: {
