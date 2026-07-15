@@ -66,4 +66,5 @@ export class TabsAsideInnerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
+  
 }

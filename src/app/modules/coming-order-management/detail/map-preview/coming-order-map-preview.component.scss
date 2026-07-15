@@ -1,113 +1,74 @@
-.map-preview-drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1040;
-
-  background: rgba(0, 0, 0, 0.55) !important;
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
-  animation: mapPreviewBackdropFade 0.25s ease;
+:host {
+  display: contents;
 }
 
-.map-preview-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-
-  width: min(950px, 92vw);
-  height: 100vh;
-
-  z-index: 9999;
-
-  display: flex;
-  flex-direction: column;
-
-  background: var(--bs-body-bg);
-
-  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.18);
-
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-
-  isolation: isolate;
-
-  &.open {
-    transform: translateX(0);
-  }
-}
-
-.map-preview-drawer__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  flex-shrink: 0;
-
-  min-height: 56px;
-  padding: 0.75rem 1rem;
-
-  background: var(--bs-body-bg);
-  border-bottom: 1px solid var(--bs-border-color);
-}
-
-.map-preview-drawer__title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  min-width: 0;
-
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--bs-gray-900);
-
-  span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  i {
-    flex-shrink: 0;
-    font-size: 1rem;
-  }
-}
-
-.map-preview-drawer__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-
-  flex-shrink: 0;
-}
-
-.map-preview-drawer__body {
-  flex: 1;
-  min-height: 0;
-
+/* Custom modal ile aynı katman yapısı. */
+.modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 11000 !important;
   overflow: hidden;
+  outline: 0;
+}
+
+.modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10990 !important;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
+.modal-backdrop.show {
+  opacity: 1 !important;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.custom-modal-dialog-right {
+  width: min(92vw, 950px);
+  max-width: 950px;
+  min-height: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0 0 0 auto !important;
+  pointer-events: none;
+}
+
+.modal-content {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100vh;
+  overflow: hidden;
+  pointer-events: auto;
+  background-color: var(--bs-body-bg);
+  border-radius: 0 !important;
+}
+
+.modal-header {
+  min-height: 78px;
+  padding: 1.5rem 1.75rem;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--bs-gray-200);
+  background-color: var(--bs-body-bg);
+}
+
+.modal-body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background-color: var(--bs-body-bg);
 }
 
 .detail-map-preview {
-  display: block;
-  width: 100%;
-  height: 100%;
+  min-height: 100%;
 }
 
-@keyframes mapPreviewBackdropFade {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@media (max-width: 1200px) {
-  .map-preview-drawer {
+@media (max-width: 991.98px) {
+  .custom-modal-dialog-right {
     width: 100vw;
+    max-width: 100%;
   }
 }

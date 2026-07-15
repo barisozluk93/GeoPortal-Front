@@ -8,163 +8,170 @@
   (isSuccess)="isSuccess($event)"
 ></app-address-editsave>
 
-<div *ngIf="user" class="address-page">
-
-  <div class="card border-0">
-
-    <!-- HEADER -->
-    <div class="card-header border-0">
-
-      <div class="address-header px-7 pt-7 pb-5">
-
-        <div class="address-header__title">
-
-          <div class="address-header__icon">
-            <app-keenicon name="geolocation" class="fs-2"></app-keenicon>
+<div *ngIf="user" class="d-flex flex-column gap-6">
+  <div class="card border border-gray-300 shadow-sm">
+    <div class="card-header border-0 pt-6">
+      <div class="card-title">
+        <div class="d-flex align-items-center">
+          <div class="symbol symbol-45px me-4">
+            <span class="symbol-label bg-light-primary">
+              <i class="ki-outline ki-geolocation fs-2 text-primary"></i>
+            </span>
           </div>
 
-          <div>
-            <h3 class="fw-bold mb-1">
+          <div class="d-flex flex-column">
+            <h3 class="fw-bold text-gray-900 mb-1">
               {{ 'MYADDRESSES' | translate }}
             </h3>
-
-            <div class="text-muted fs-7">
+            <span class="text-muted fw-semibold fs-7">
               {{ 'MANAGE_ADDRESSES' | translate }}
-            </div>
+            </span>
           </div>
-
         </div>
+      </div>
 
+      <div class="card-toolbar">
         <button
           type="button"
           class="btn btn-primary"
           (click)="openSaveModal()"
         >
-        <i class="fa-solid fa-plus me-2"></i>
-
-
+          <i class="ki-outline ki-plus fs-3 me-2"></i>
           {{ 'MENU.NEW' | translate }}
         </button>
-
       </div>
-
     </div>
 
-    <!-- BODY -->
-    <div class="card-body px-7 pb-7 pt-5">
+    <div class="card-body pt-4">
+      <ng-container *ngIf="addresses.length > 0; else emptyState">
+        <div class="row g-6">
+          <div
+            class="col-12 col-md-6 col-xl-4"
+            *ngFor="let item of addresses"
+          >
+            <div class="card h-100 border border-gray-300 shadow-sm">
+              <div class="card-header min-h-70px border-0 pt-5">
+                <div class="card-title d-flex flex-column align-items-start">
+                  <span class="fw-bold fs-4 text-gray-900 mb-1">
+                    {{ item.addressHeader }}
+                  </span>
+                  <span class="text-muted fw-semibold fs-7">
+                    {{ item.name }} {{ item.surname }}
+                  </span>
+                </div>
 
-      <div
-        class="address-grid"
-        *ngIf="addresses.length > 0; else emptyState"
-      >
+                <div class="card-toolbar">
+                  <div class="d-flex gap-2">
+                    <button
+                      type="button"
+                      class="btn btn-icon btn-sm btn-light-primary"
+                      (click)="openEditModal(item.id)"
+                      [attr.aria-label]="'EDIT' | translate"
+                    >
+                      <i class="ki-outline ki-pencil fs-4"></i>
+                    </button>
 
-        <div
-          class="address-card"
-          *ngFor="let item of addresses"
-        >
-
-          <div class="address-card__top">
-
-            <div>
-              <div class="address-card__title">
-                {{ item.addressHeader }}
+                    <button
+                      type="button"
+                      class="btn btn-icon btn-sm btn-light-danger"
+                      (click)="openDeleteModal(item.id)"
+                      [attr.aria-label]="'DELETE' | translate"
+                    >
+                      <i class="ki-outline ki-trash fs-4"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
 
-              <div class="text-muted fs-7">
-                {{ item.name }} {{ item.surname }}
+              <div class="card-body pt-3">
+                <div class="d-flex flex-column gap-5">
+                  <div class="d-flex align-items-start">
+                    <div class="symbol symbol-40px me-4 flex-shrink-0">
+                      <span class="symbol-label bg-light-primary">
+                        <i class="ki-outline ki-home-2 fs-3 text-primary"></i>
+                      </span>
+                    </div>
+
+                    <div class="d-flex flex-column">
+                      <span class="text-muted fw-semibold fs-7 mb-1">
+                        {{ 'ADDRESS' | translate }}
+                      </span>
+                      <span class="text-gray-900 fw-semibold">
+                        {{ item.address }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="separator separator-dashed"></div>
+
+                  <div class="d-flex align-items-start">
+                    <div class="symbol symbol-40px me-4 flex-shrink-0">
+                      <span class="symbol-label bg-light-primary">
+                        <i class="ki-outline ki-map fs-3 text-primary"></i>
+                      </span>
+                    </div>
+
+                    <div class="d-flex flex-column">
+                      <span class="text-muted fw-semibold fs-7 mb-1">
+                        {{ 'LOCATION' | translate }}
+                      </span>
+                      <span class="text-gray-900 fw-semibold">
+                        {{ item.district }} / {{ item.city }} / {{ item.country }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="separator separator-dashed"></div>
+
+                  <div class="d-flex align-items-start">
+                    <div class="symbol symbol-40px me-4 flex-shrink-0">
+                      <span class="symbol-label bg-light-primary">
+                        <i class="ki-outline ki-phone fs-3 text-primary"></i>
+                      </span>
+                    </div>
+
+                    <div class="d-flex flex-column">
+                      <span class="text-muted fw-semibold fs-7 mb-1">
+                        {{ 'CONTRACT_PHONE' | translate }}
+                      </span>
+                      <span class="text-gray-900 fw-bold">
+                        {{ item.phone }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div class="d-flex gap-2">
-
-              <button
-                class="btn btn-icon btn-sm btn-light-primary"
-                (click)="openEditModal(item.id)"
-              >
-                <span
-                  [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
-                  class="svg-icon svg-icon-2"
-                ></span>
-              </button>
-
-              <button
-                class="btn btn-icon btn-sm btn-light-danger"
-                (click)="openDeleteModal(item.id)"
-              >
-                <span
-                  [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
-                  class="svg-icon svg-icon-2"
-                ></span>
-              </button>
-
-            </div>
-
           </div>
-
-          <div class="address-card__body">
-
-            <div class="address-item">
-              <span class="label">
-                {{ 'ADDRESS' | translate }}
-              </span>
-
-              <span class="value">
-                {{ item.address }}
-              </span>
-            </div>
-
-            <div class="address-item">
-              <span class="label">
-                {{ 'LOCATION' | translate }}
-              </span>
-
-              <span class="value">
-                {{ item.district }}
-                /
-                {{ item.city }}
-                /
-                {{ item.country }}
-              </span>
-            </div>
-
-            <div class="address-item">
-              <span class="label">
-                {{ 'CONTRACT_PHONE' | translate }}
-              </span>
-
-              <span class="value strong">
-                {{ item.phone }}
-              </span>
-            </div>
-
-          </div>
-
         </div>
+      </ng-container>
 
-      </div>
-
-      <!-- EMPTY -->
       <ng-template #emptyState>
+        <div class="d-flex flex-column align-items-center justify-content-center text-center py-15">
+          <div class="symbol symbol-75px mb-6">
+            <span class="symbol-label bg-light-primary">
+              <i class="ki-outline ki-geolocation fs-2x text-primary"></i>
+            </span>
+          </div>
 
-        <div class="address-empty">
-
-          <div class="text-muted mb-3">
+          <h3 class="fw-bold text-gray-900 mb-2">
             {{ 'NO_ADDRESS_FOUND' | translate }}
+          </h3>
+
+          <div class="text-muted fw-semibold mb-6">
+            {{ 'MANAGE_ADDRESSES' | translate }}
           </div>
 
           <button
+            type="button"
             class="btn btn-primary"
             (click)="openSaveModal()"
           >
+            <i class="ki-outline ki-plus fs-3 me-2"></i>
             {{ 'MENU.NEW' | translate }}
           </button>
-
         </div>
-
       </ng-template>
-
     </div>
-
   </div>
-
 </div>

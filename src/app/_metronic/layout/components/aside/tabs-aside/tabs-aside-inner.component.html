@@ -5,7 +5,10 @@
     <div class="modern-aside-surface">
       <a routerLink="/landing/map" class="aside-brand-link">
         <div class="aside-brand">
-          <img src="./assets/media/logos/logo.svg" alt="GeoPortal" class="w-100" />
+
+          <img [src]="('LANG' | translate) === 'tr'
+    ? './assets/media/logos/tusas_logo_tr.png'
+    : './assets/media/logos/tusas_logo_eng.png'" alt="GeoPortal" class="w-100" />
         </div>
       </a>
 

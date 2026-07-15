@@ -13,7 +13,9 @@
 
       <a (click)="onBrandClick()" class="app-header__brand text-decoration-none">
         <div class="app-header__brand-top">
-          <img src="./assets/media/logos/logo.svg" alt="Logo" class="app-header__logo-img" />
+          <img [src]="('LANG' | translate) === 'tr'
+    ? './assets/media/logos/tusas_logo_tr.png'
+    : './assets/media/logos/tusas_logo_eng.png'" alt="GeoPortal" class="w-100 app-header__logo-img" />
         </div>
       </a>
     </div>

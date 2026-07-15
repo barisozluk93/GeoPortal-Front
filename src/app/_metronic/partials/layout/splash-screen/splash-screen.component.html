@@ -1,6 +1,8 @@
 <!-- splash screen -->
 <div #splashScreen id="splash-screen">
-  <img src="./assets/media/logos/logo.svg" alt="Logo" />
+  <img [src]="('LANG' | translate) === 'tr'
+    ? './assets/media/logos/tusas_logo_tr.png'
+    : './assets/media/logos/tusas_logo_eng.png'" alt="GeoPortal" class="w-100" />
   <svg class="splash-spinner" viewBox="0 0 50 50">
     <circle
       class="path"

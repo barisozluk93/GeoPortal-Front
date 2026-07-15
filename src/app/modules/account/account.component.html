@@ -1,61 +1,67 @@
-<div class="account-page" *ngIf="userData">
-  <div class="account-hero card border-0">
-    <div class="card-body py-5 px-5">
-      <div class="d-flex flex-wrap align-items-center gap-4">
-        <div class="symbol symbol-70px symbol-lg-85px symbol-circle account-avatar">
-          <img *ngIf="!userData?.fileId" src="./assets/media/avatars/blank.png" alt="Avatar" />
-          <img *ngIf="userData?.fileId" [src]="userData?.fileResult?.fileContents" alt="Avatar" />
+<div class="bg-body py-10">
+  <div class="container-fluid">
+    <div *ngIf="userData" class="d-flex flex-column gap-6">
+      <div class="card border border-gray-300 shadow-sm">
+        <div class="card-body p-6 p-lg-8">
+          <div class="d-flex flex-wrap align-items-center gap-6">
+            <div class="image-input image-input-outline image-input-circle" data-kt-image-input="true">
+              <div class="image-input-wrapper w-70px h-70px w-lg-85px h-lg-85px" [style.background-image]="
+              userData?.fileId
+                ? 'url(' + userData?.fileResult?.fileContents + ')'
+                : 'url(./assets/media/avatars/blank.png)'
+            "></div>
 
-          <span class="account-avatar__status"></span>
+              <label
+                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow position-absolute translate-middle top-0 start-100"
+                data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                <i class="ki-outline ki-pencil fs-7 text-primary"></i>
+                <input type="file" class="d-none" accept="image/*" (change)="onFileChange($event)" />
+              </label>
 
-          <button type="button" class="account-avatar__edit" (click)="fileUpload.click()">
-            <i class="ki-outline ki-picture fs-2"></i>
-          </button>
+              <span
+                class="position-absolute bottom-0 end-0 translate-middle p-1 bg-success border border-2 border-body rounded-circle"></span>
+            </div>
 
-          <input type="file" hidden accept="image/*" (change)="onFileChange($event)" #fileUpload />
-        </div>
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <h1 class="fs-2 fw-bold text-gray-900 mb-0">
+                  {{ user?.name }} {{ user?.surname }}
+                </h1>
+                <i class="ki-outline ki-verify fs-4 text-primary"></i>
+              </div>
 
-        <div class="flex-grow-1">
-          <div class="d-flex align-items-center gap-2 mb-1">
-            <h1 class="fs-2 fw-bold text-gray-900 mb-0">
-              {{ user?.name }} {{ user?.surname }}
-            </h1>
-            <app-keenicon name="verify" class="fs-4 text-primary"></app-keenicon>
+              <div class="d-flex align-items-center text-gray-600 fs-6">
+                <i class="ki-outline ki-sms fs-5 me-2 text-primary"></i>
+                {{ user?.email }}
+              </div>
+            </div>
           </div>
 
-          <div class="d-flex align-items-center text-gray-500 fs-6">
-            <app-keenicon name="sms" class="fs-5 me-2"></app-keenicon>
-            {{ user?.email }}
-          </div>
+          <div class="separator separator-dashed my-6"></div>
+
+          <ul class="nav nav-pills nav-pills-custom gap-3 flex-wrap">
+            <li class="nav-item">
+              <a class="nav-link btn btn-flex btn-active-light-primary fw-semibold px-5 py-3"
+                routerLink="/profile/settings" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <i class="ki-outline ki-user fs-5 me-2 text-primary"></i>
+                {{ 'PROFILE' | translate }}
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link btn btn-flex btn-active-light-primary fw-semibold px-5 py-3"
+                routerLink="/profile/addresses" routerLinkActive="active">
+                <i class="ki-outline ki-geolocation fs-5 me-2 text-primary"></i>
+                {{ 'MYADDRESSES' | translate }}
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div class="account-tabs mt-5">
-        <ul class="nav nav-pills gap-2">
-          <li class="nav-item">
-            <a
-              class="nav-link fw-semibold"
-              routerLink="/profile/settings"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-            >
-              <app-keenicon name="user" class="fs-5 me-2"></app-keenicon>
-              {{ 'PROFILE' | translate }}
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link fw-semibold" routerLink="/profile/addresses" routerLinkActive="active">
-              <app-keenicon name="geolocation" class="fs-5 me-2"></app-keenicon>
-              {{ 'MYADDRESSES' | translate }}
-            </a>
-          </li>
-        </ul>
+      <div class="d-flex flex-column gap-6">
+        <router-outlet></router-outlet>
       </div>
     </div>
-  </div>
-
-  <div class="account-content">
-    <router-outlet></router-outlet>
   </div>
 </div>

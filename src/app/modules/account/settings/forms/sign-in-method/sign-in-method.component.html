@@ -1,183 +1,267 @@
-<div class="sign-method">
-  <div class="section-heading">
-    <div class="section-heading__icon">
-      <app-keenicon name="shield-tick" class="fs-2"></app-keenicon>
-    </div>
+<div class="card border border-gray-300 shadow-sm">
+  <div class="card-header border-0 pt-6">
+    <div class="card-title">
+      <div class="d-flex align-items-center">
+        <div class="symbol symbol-45px me-4">
+          <span class="symbol-label bg-light-primary">
+            <i class="ki-outline ki-shield-tick fs-2 text-primary"></i>
+          </span>
+        </div>
 
-    <div>
-      <h3 class="mb-1">{{ 'SIGN_IN_METHOD' | translate }}</h3>
-      <div class="text-muted">{{ 'MANAGE_EMAIL_AND_PASSWORD' | translate }}</div>
+        <div class="d-flex flex-column">
+          <h3 class="fw-bold text-gray-900 mb-1">
+            {{ 'SIGN_IN_METHOD' | translate }}
+          </h3>
+          <span class="text-muted fw-semibold fs-7">
+            {{ 'MANAGE_EMAIL_AND_PASSWORD' | translate }}
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="security-list">
-    <div class="security-item">
-      <ng-container *ngIf="!showChangeEmailForm; else emailFormBlock">
-        <div class="security-item__content">
-          <div class="security-item__icon">
-            <app-keenicon name="sms" class="fs-2"></app-keenicon>
-          </div>
-
-          <div class="security-item__info">
-            <div class="security-item__label">{{ 'EMAIL_ADDRESS' | translate }}</div>
-            <div class="security-item__value">{{ user?.email }}</div>
-          </div>
-        </div>
-
-        <button class="btn btn-light-primary" type="button" (click)="toggleEmailForm(true)">
-          {{ 'CHANGE_EMAIL' | translate }}
-        </button>
-      </ng-container>
-
-      <ng-template #emailFormBlock>
-        <form class="security-form" [formGroup]="changeEmailForm" novalidate>
-          <div class="settings-form-narrow">
-            <label class="form-label fw-bolder">{{ 'ENTER_NEW_EMAIL_ADDRESS' | translate }}</label>
-            <input
-              type="email"
-              class="form-control form-control-lg"
-              formControlName="email"
-              [ngClass]="{
-                'is-invalid': changeEmailForm.controls['email'].invalid &&
-                              (changeEmailForm.controls['email'].dirty || changeEmailForm.controls['email'].touched)
-              }"
-            />
-
-            <div
-              class="invalid-feedback"
-              *ngIf="changeEmailForm.controls['email'].errors?.required &&
-                     (changeEmailForm.controls['email'].dirty || changeEmailForm.controls['email'].touched)"
-            >
-              {{ 'EMAIL' | translate }} {{ 'IS_REQUIRED' | translate }}
+  <div class="card-body pt-4">
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-wrap align-items-center justify-content-between py-6">
+        <ng-container *ngIf="!showChangeEmailForm; else emailFormBlock">
+          <div class="d-flex align-items-center me-5">
+            <div class="symbol symbol-45px me-4">
+              <span class="symbol-label bg-light-primary">
+                <i class="ki-outline ki-sms fs-2 text-primary"></i>
+              </span>
             </div>
 
-            <div
-              class="invalid-feedback"
-              *ngIf="changeEmailForm.controls['email'].errors?.email &&
-                     (changeEmailForm.controls['email'].dirty || changeEmailForm.controls['email'].touched)"
-            >
-              {{ 'INVALID_EMAIL' | translate }}
+            <div class="d-flex flex-column">
+              <span class="fw-bold text-gray-900 mb-1">
+                {{ 'EMAIL_ADDRESS' | translate }}
+              </span>
+              <span class="text-gray-600 fw-semibold">
+                {{ user?.email }}
+              </span>
             </div>
           </div>
 
-          <div class="security-form__actions">
-            <button type="button" class="btn btn-light" (click)="toggleEmailForm(false)">
-              {{ 'CANCEL' | translate }}
-            </button>
-            <button type="button" class="btn btn-primary" (click)="saveEmail()">
-              {{ 'UPDATE_EMAIL' | translate }}
-            </button>
-          </div>
-        </form>
-      </ng-template>
-    </div>
+          <button
+            class="btn btn-light-primary"
+            type="button"
+            (click)="toggleEmailForm(true)"
+          >
+            {{ 'CHANGE_EMAIL' | translate }}
+          </button>
+        </ng-container>
 
-    <div class="security-item">
-      <ng-container *ngIf="!showChangePasswordForm; else passwordFormBlock">
-        <div class="security-item__content">
-          <div class="security-item__icon">
-            <app-keenicon name="lock-2" class="fs-2"></app-keenicon>
-          </div>
+        <ng-template #emailFormBlock>
+          <form class="w-100" [formGroup]="changeEmailForm" novalidate>
+            <div class="row g-6 align-items-end">
+              <div class="col-lg-7 fv-row">
+                <label class="form-label fw-semibold text-gray-900">
+                  {{ 'ENTER_NEW_EMAIL_ADDRESS' | translate }}
+                </label>
 
-          <div class="security-item__info">
-            <div class="security-item__label">{{ 'PASSWORD' | translate }}</div>
-            <div class="security-item__value">************</div>
-          </div>
-        </div>
+                <input
+                  type="email"
+                  class="form-control form-control-lg bg-body border border-gray-300"
+                  formControlName="email"
+                  [ngClass]="{
+                    'is-invalid': changeEmailForm.controls['email'].invalid &&
+                      (changeEmailForm.controls['email'].dirty ||
+                       changeEmailForm.controls['email'].touched)
+                  }"
+                />
 
-        <button class="btn btn-light-primary" type="button" (click)="togglePasswordForm(true)">
-          {{ 'RESET_PASSWORD' | translate }}
-        </button>
-      </ng-container>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="changeEmailForm.controls['email'].errors?.required &&
+                    (changeEmailForm.controls['email'].dirty ||
+                     changeEmailForm.controls['email'].touched)"
+                >
+                  {{ 'EMAIL' | translate }} {{ 'IS_REQUIRED' | translate }}
+                </div>
 
-      <ng-template #passwordFormBlock>
-        <form class="security-form" [formGroup]="changePasswordForm" novalidate>
-          <div class="settings-form-narrow d-flex flex-column gap-5">
-            <div>
-              <label class="form-label fw-bolder">{{ 'CURRENT_PASSWORD' | translate }}</label>
-              <input
-                type="password"
-                class="form-control form-control-lg"
-                formControlName="currentPassword"
-                [ngClass]="{
-                  'is-invalid': changePasswordForm.controls['currentPassword'].invalid &&
-                                (changePasswordForm.controls['currentPassword'].dirty || changePasswordForm.controls['currentPassword'].touched)
-                }"
-              />
-              <div
-                class="invalid-feedback"
-                *ngIf="changePasswordForm.controls['currentPassword'].errors?.required &&
-                       (changePasswordForm.controls['currentPassword'].dirty || changePasswordForm.controls['currentPassword'].touched)"
-              >
-                {{ 'CURRENT_PASSWORD' | translate }} {{ 'IS_REQUIRED' | translate }}
+                <div
+                  class="invalid-feedback"
+                  *ngIf="changeEmailForm.controls['email'].errors?.email &&
+                    (changeEmailForm.controls['email'].dirty ||
+                     changeEmailForm.controls['email'].touched)"
+                >
+                  {{ 'INVALID_EMAIL' | translate }}
+                </div>
+              </div>
+
+              <div class="col-lg-5">
+                <div class="d-flex justify-content-lg-end gap-3">
+                  <button
+                    type="button"
+                    class="btn btn-light"
+                    (click)="toggleEmailForm(false)"
+                  >
+                    {{ 'CANCEL' | translate }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="saveEmail()"
+                  >
+                    {{ 'UPDATE_EMAIL' | translate }}
+                  </button>
+                </div>
               </div>
             </div>
+          </form>
+        </ng-template>
+      </div>
 
-            <div>
-              <label class="form-label fw-bolder">{{ 'NEW_PASSWORD' | translate }}</label>
-              <input
-                type="password"
-                class="form-control form-control-lg"
-                formControlName="password"
-                [ngClass]="{
-                  'is-invalid': changePasswordForm.controls['password'].invalid &&
-                                (changePasswordForm.controls['password'].dirty || changePasswordForm.controls['password'].touched)
-                }"
-              />
-              <div
-                class="invalid-feedback"
-                *ngIf="changePasswordForm.controls['password'].errors?.required &&
-                       (changePasswordForm.controls['password'].dirty || changePasswordForm.controls['password'].touched)"
-              >
-                {{ 'NEW_PASSWORD' | translate }} {{ 'IS_REQUIRED' | translate }}
-              </div>
-              <div
-                class="invalid-feedback"
-                *ngIf="changePasswordForm.controls['password'].errors?.minlength &&
-                       (changePasswordForm.controls['password'].dirty || changePasswordForm.controls['password'].touched)"
-              >
-                {{ 'NEW_PASSWORD_RULE_1' | translate }}
-              </div>
+      <div class="separator separator-dashed"></div>
+
+      <div class="d-flex flex-wrap align-items-center justify-content-between py-6">
+        <ng-container *ngIf="!showChangePasswordForm; else passwordFormBlock">
+          <div class="d-flex align-items-center me-5">
+            <div class="symbol symbol-45px me-4">
+              <span class="symbol-label bg-light-primary">
+                <i class="ki-outline ki-lock-2 fs-2 text-primary"></i>
+              </span>
             </div>
 
-            <div>
-              <label class="form-label fw-bolder">{{ 'CONFIRM_NEW_PASSWORD' | translate }}</label>
-              <input
-                type="password"
-                class="form-control form-control-lg"
-                formControlName="cPassword"
-                [ngClass]="{
-                  'is-invalid': changePasswordForm.controls['cPassword'].invalid &&
-                                (changePasswordForm.controls['cPassword'].dirty || changePasswordForm.controls['cPassword'].touched)
-                }"
-              />
-              <div
-                class="invalid-feedback"
-                *ngIf="changePasswordForm.controls['cPassword'].errors?.required &&
-                       (changePasswordForm.controls['cPassword'].dirty || changePasswordForm.controls['cPassword'].touched)"
-              >
-                {{ 'CONFIRM_NEW_PASSWORD' | translate }} {{ 'IS_REQUIRED' | translate }}
-              </div>
-              <div
-                class="invalid-feedback"
-                *ngIf="changePasswordForm.controls['cPassword'].errors?.ConfirmPassword &&
-                       (changePasswordForm.controls['cPassword'].dirty || changePasswordForm.controls['cPassword'].touched)"
-              >
-                {{ 'PASSWORD_MISMATCH' | translate }}
-              </div>
+            <div class="d-flex flex-column">
+              <span class="fw-bold text-gray-900 mb-1">
+                {{ 'PASSWORD' | translate }}
+              </span>
+              <span class="text-gray-600 fw-semibold">************</span>
             </div>
           </div>
 
-          <div class="security-form__actions">
-            <button type="button" class="btn btn-light" (click)="togglePasswordForm(false)">
-              {{ 'CANCEL' | translate }}
-            </button>
-            <button type="button" class="btn btn-primary" (click)="savePassword()">
-              {{ 'UPDATE_PASSWORD' | translate }}
-            </button>
-          </div>
-        </form>
-      </ng-template>
+          <button
+            class="btn btn-light-primary"
+            type="button"
+            (click)="togglePasswordForm(true)"
+          >
+            {{ 'RESET_PASSWORD' | translate }}
+          </button>
+        </ng-container>
+
+        <ng-template #passwordFormBlock>
+          <form class="w-100" [formGroup]="changePasswordForm" novalidate>
+            <div class="row g-6">
+              <div class="col-lg-4 fv-row">
+                <label class="form-label fw-semibold text-gray-900">
+                  {{ 'CURRENT_PASSWORD' | translate }}
+                </label>
+
+                <input
+                  type="password"
+                  class="form-control form-control-lg bg-body border border-gray-300"
+                  formControlName="currentPassword"
+                  [ngClass]="{
+                    'is-invalid': changePasswordForm.controls['currentPassword'].invalid &&
+                      (changePasswordForm.controls['currentPassword'].dirty ||
+                       changePasswordForm.controls['currentPassword'].touched)
+                  }"
+                />
+
+                <div
+                  class="invalid-feedback"
+                  *ngIf="changePasswordForm.controls['currentPassword'].errors?.required &&
+                    (changePasswordForm.controls['currentPassword'].dirty ||
+                     changePasswordForm.controls['currentPassword'].touched)"
+                >
+                  {{ 'CURRENT_PASSWORD' | translate }} {{ 'IS_REQUIRED' | translate }}
+                </div>
+              </div>
+
+              <div class="col-lg-4 fv-row">
+                <label class="form-label fw-semibold text-gray-900">
+                  {{ 'NEW_PASSWORD' | translate }}
+                </label>
+
+                <input
+                  type="password"
+                  class="form-control form-control-lg bg-body border border-gray-300"
+                  formControlName="password"
+                  [ngClass]="{
+                    'is-invalid': changePasswordForm.controls['password'].invalid &&
+                      (changePasswordForm.controls['password'].dirty ||
+                       changePasswordForm.controls['password'].touched)
+                  }"
+                />
+
+                <div
+                  class="invalid-feedback"
+                  *ngIf="changePasswordForm.controls['password'].errors?.required &&
+                    (changePasswordForm.controls['password'].dirty ||
+                     changePasswordForm.controls['password'].touched)"
+                >
+                  {{ 'NEW_PASSWORD' | translate }} {{ 'IS_REQUIRED' | translate }}
+                </div>
+
+                <div
+                  class="invalid-feedback"
+                  *ngIf="changePasswordForm.controls['password'].errors?.minlength &&
+                    (changePasswordForm.controls['password'].dirty ||
+                     changePasswordForm.controls['password'].touched)"
+                >
+                  {{ 'NEW_PASSWORD_RULE_1' | translate }}
+                </div>
+              </div>
+
+              <div class="col-lg-4 fv-row">
+                <label class="form-label fw-semibold text-gray-900">
+                  {{ 'CONFIRM_NEW_PASSWORD' | translate }}
+                </label>
+
+                <input
+                  type="password"
+                  class="form-control form-control-lg bg-body border border-gray-300"
+                  formControlName="cPassword"
+                  [ngClass]="{
+                    'is-invalid': changePasswordForm.controls['cPassword'].invalid &&
+                      (changePasswordForm.controls['cPassword'].dirty ||
+                       changePasswordForm.controls['cPassword'].touched)
+                  }"
+                />
+
+                <div
+                  class="invalid-feedback"
+                  *ngIf="changePasswordForm.controls['cPassword'].errors?.required &&
+                    (changePasswordForm.controls['cPassword'].dirty ||
+                     changePasswordForm.controls['cPassword'].touched)"
+                >
+                  {{ 'CONFIRM_NEW_PASSWORD' | translate }} {{ 'IS_REQUIRED' | translate }}
+                </div>
+
+                <div
+                  class="invalid-feedback"
+                  *ngIf="changePasswordForm.controls['cPassword'].errors?.ConfirmPassword &&
+                    (changePasswordForm.controls['cPassword'].dirty ||
+                     changePasswordForm.controls['cPassword'].touched)"
+                >
+                  {{ 'PASSWORD_MISMATCH' | translate }}
+                </div>
+              </div>
+            </div>
+
+            <div class="separator separator-dashed my-8"></div>
+
+            <div class="d-flex justify-content-end gap-3">
+              <button
+                type="button"
+                class="btn btn-light"
+                (click)="togglePasswordForm(false)"
+              >
+                {{ 'CANCEL' | translate }}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="savePassword()"
+              >
+                {{ 'UPDATE_PASSWORD' | translate }}
+              </button>
+            </div>
+          </form>
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>

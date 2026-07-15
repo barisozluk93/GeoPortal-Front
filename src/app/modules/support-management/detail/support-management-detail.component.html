@@ -1,248 +1,200 @@
-<div class="support-detail-page" *ngIf="!isLoading && selectedTicket as ticket">
-  <div class="support-page-header">
-    <button
-      type="button"
-      class="btn btn-icon btn-light-primary btn-sm"
-      (click)="backToList()"
-      [attr.title]="'SUPPORT_MANAGEMENT.BACK' | translate"
-    >
-      <i class="fa-solid fa-arrow-left"></i>
-    </button>
-
-    <div class="min-w-0">
-      <div class="support-kicker">
-        {{ 'SUPPORT_MANAGEMENT.TICKET_TITLE' | translate }}
-      </div>
-
-      <h1 class="support-title">
-        {{ ticket.subject || ('SUPPORT_MANAGEMENT.TICKET_TITLE' | translate) }}
-      </h1>
-
-      <div class="support-subtitle">
-        #{{ ticket.ticketNo || '-' }}
-      </div>
-    </div>
-
-    <div class="support-header-status ms-lg-auto">
-      <div class="summary-status-icon" [ngClass]="'summary-status-icon--' + getStatusTheme(ticket.status)">
-        <i [class]="getStatusIconClass(ticket.status)"></i>
-      </div>
-
-      <div>
-        <span class="badge fw-bolder" [ngClass]="getStatusBadgeClass(ticket.status)">
-          {{ getStatusLabel(ticket.status) }}
-        </span>
-
-        <div class="support-muted mt-2">
-          {{ ticket.messages?.length || 0 }}
-          {{ 'SUPPORT_MANAGEMENT.MESSAGE_COUNT' | translate }}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-7 align-items-stretch">
-    <div class="col-12 col-xl-4">
-      <div class="card h-100 support-side-card">
-        <div class="card-body p-6 p-lg-8 d-flex flex-column gap-7">
-          <div>
-            <div class="section-title">
-              {{ 'SUPPORT_MANAGEMENT.TICKET_INFORMATION' | translate }}
-            </div>
-
-            <div class="info-grid info-grid--two-col">
-              <div class="info-item">
-                <div class="info-label">{{ 'SUPPORT_MANAGEMENT.TICKET_TITLE' | translate }}</div>
-                <div class="info-value">#{{ ticket.ticketNo || '-' }}</div>
-              </div>
-
-              <div class="info-item">
-                <div class="info-label">{{ 'SUPPORT_MANAGEMENT.STATUS' | translate }}</div>
-                <div class="info-value">
-                  <span class="badge fw-semibold" [ngClass]="getStatusBadgeClass(ticket.status)">
-                    {{ getStatusLabel(ticket.status) }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="info-item">
-                <div class="info-label">{{ 'SUPPORT_MANAGEMENT.CUSTOMER' | translate }}</div>
-                <div class="info-value">{{ ticket.customerName || '-' }}</div>
-              </div>
-
-              <div class="info-item">
-                <div class="info-label">{{ 'SUPPORT_MANAGEMENT.EMAIL' | translate }}</div>
-                <div class="info-value text-break">{{ ticket.customerEmail || '-' }}</div>
-              </div>
-
-              <div class="info-item">
-                <div class="info-label">{{ 'SUPPORT_MANAGEMENT.ORGANIZATION' | translate }}</div>
-                <div class="info-value">{{ ticket.organization || '-' }}</div>
-              </div>
-
-              <div class="info-item">
-                <div class="info-label">{{ 'SUPPORT_MANAGEMENT.MESSAGE_COUNT' | translate }}</div>
-                <div class="info-value">{{ ticket.messages?.length || 0 }}</div>
-              </div>
-
-              <div class="info-item info-item-full" *ngIf="ticket.subject">
-                <div class="info-label">{{ 'SUBJECT' | translate }}</div>
-                <div class="info-value">{{ ticket.subject }}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="separator"></div>
-
-          <div>
-            <div class="section-title d-flex align-items-center justify-content-between gap-3">
-              <span>{{ 'SUPPORT_MANAGEMENT.UPDATE_STATUS_ONLY' | translate }}</span>
-
-              <span *ngIf="isClosed" class="badge badge-light-danger">
-                {{ 'SUPPORT_MANAGEMENT.STATUS_CLOSED' | translate }}
-              </span>
-            </div>
-
-            <ng-container *ngIf="!isClosed; else closedStateBlock">
-              <form [formGroup]="statusForm" class="d-flex flex-column gap-5">
-                <div>
-                  <label class="form-label fw-bolder">
-                    {{ 'SUPPORT_MANAGEMENT.STATUS' | translate }}
-                  </label>
-
-                  <app-custom-select
-                    [items]="statusOptions"
-                    bindLabel="label"
-                    bindValue="value"
-                    formControlName="status"
-                    [clearable]="true">
-                  </app-custom-select>
-                </div>
-
+<div class="bg-body py-10">
+  <div class="container-fluid">
+    <div *ngIf="!isLoading && selectedTicket as ticket" class="row g-5">
+      <div class="col-12 col-xl-4 col-xxl-3">
+        <aside id="kt_support_detail_sidebar" class="position-sticky z-index-2">
+          <div class="card border border-gray-300 shadow-sm">
+            <div class="card-body p-5 p-lg-6">
+              <div class="d-flex align-items-center mb-5">
                 <button
                   type="button"
-                  class="btn btn-primary w-100"
-                  (click)="updateStatusOnly()"
-                  [disabled]="!canUpdateStatus">
-                  {{ 'SUPPORT_MANAGEMENT.UPDATE_STATUS_ONLY' | translate }}
+                  class="btn btn-icon btn-light-primary btn-sm"
+                  (click)="backToList()"
+                  [attr.title]="'SUPPORT_MANAGEMENT.BACK' | translate"
+                >
+                  <i class="fa-solid fa-arrow-left"></i>
                 </button>
-              </form>
-            </ng-container>
+              </div>
 
-            <ng-template #closedStateBlock>
-              <div class="empty-state-block">
-                <div class="empty-state-icon empty-state-icon--danger">
-                  <i class="fa-solid fa-circle-xmark"></i>
+              <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
+                <div class="fw-bold text-gray-900 fs-5">
+                  {{ 'SUPPORT_MANAGEMENT.TICKET_INFORMATION' | translate }}
+                </div>
+                <span class="badge fw-semibold" [ngClass]="getStatusBadgeClass(ticket.status)">
+                  {{ getStatusLabel(ticket.status) }}
+                </span>
+              </div>
+
+              <div class="d-flex flex-column">
+                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                  <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.TICKET_TITLE' | translate }}</span>
+                  <strong class="text-gray-900 text-end">#{{ ticket.ticketNo || '-' }}</strong>
                 </div>
 
-                <div class="min-w-0">
-                  <div class="fw-semibold support-text mb-1">
-                    {{ 'SUPPORT_MANAGEMENT.STATUS_CLOSED' | translate }}
-                  </div>
-                  <div class="support-muted fs-8">
-                    {{ 'SUPPORT_MANAGEMENT.CANNOT_UPDATE_CLOSED_TICKET' | translate }}
-                  </div>
+                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                  <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.CUSTOMER' | translate }}</span>
+                  <strong class="text-gray-900 text-end text-break">{{ ticket.customerName || '-' }}</strong>
+                </div>
+
+                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                  <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.EMAIL' | translate }}</span>
+                  <strong class="text-gray-900 text-end text-break">{{ ticket.customerEmail || '-' }}</strong>
+                </div>
+
+                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                  <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.ORGANIZATION' | translate }}</span>
+                  <strong class="text-gray-900 text-end text-break">{{ ticket.organization || '-' }}</strong>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                  <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.MESSAGE_COUNT' | translate }}</span>
+                  <strong class="text-gray-900">{{ ticket.messages?.length || 0 }}</strong>
+                </div>
+
+                <div *ngIf="ticket.subject" class="d-flex flex-column gap-2 py-4 px-4 mt-3 bg-light-primary rounded">
+                  <span class="text-primary fw-bold fs-8 text-uppercase">{{ 'SUBJECT' | translate }}</span>
+                  <strong class="text-gray-900 text-break">{{ ticket.subject }}</strong>
                 </div>
               </div>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="col-12 col-xl-8">
-      <div class="card h-100 support-chat-card">
-        <div class="card-header border-0 px-6 px-lg-8 pt-6 pt-lg-8 pb-4">
-          <div class="d-flex flex-wrap justify-content-between align-items-start gap-4 w-100">
-            <div class="min-w-0">
-              <div class="section-title mb-2">
-                {{ 'SUPPORT_MANAGEMENT.MESSAGE_THREAD' | translate }}
+              <div class="separator separator-dashed my-6"></div>
+
+              <div class="d-flex align-items-center justify-content-between gap-3 mb-4">
+                <!-- <div class="fw-bold text-gray-900 fs-5">
+                  {{ 'SUPPORT_MANAGEMENT.UPDATE_STATUS_ONLY' | translate }}
+                </div> -->
+                <span *ngIf="isClosed" class="badge badge-light-danger">
+                  {{ 'SUPPORT_MANAGEMENT.STATUS_CLOSED' | translate }}
+                </span>
               </div>
 
-              <div class="support-muted fs-7 text-truncate">
-                {{ ticket.subject || '-' }}
-              </div>
+              <ng-container *ngIf="!isClosed; else closedStateBlock">
+                <form [formGroup]="statusForm" class="d-flex flex-column gap-5">
+                  <div>
+                    <!-- <label class="form-label fw-bold text-gray-900">
+                      {{ 'SUPPORT_MANAGEMENT.STATUS' | translate }}
+                    </label> -->
+                    <app-custom-select
+                      [items]="statusOptions"
+                      bindLabel="label"
+                      bindValue="value"
+                      formControlName="status"
+                      [clearable]="true"
+                    ></app-custom-select>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn btn-primary w-100"
+                    (click)="updateStatusOnly()"
+                    [disabled]="!canUpdateStatus"
+                  >
+                    {{ 'SUPPORT_MANAGEMENT.UPDATE_STATUS_ONLY' | translate }}
+                  </button>
+                </form>
+              </ng-container>
+
+              <ng-template #closedStateBlock>
+                <div class="d-flex align-items-start gap-3 p-4 bg-light-danger border border-danger border-dashed rounded">
+                  <i class="fa-solid fa-circle-xmark fs-3 text-danger mt-1"></i>
+                  <div class="min-w-0">
+                    <div class="fw-bold text-gray-900 mb-1">
+                      {{ 'SUPPORT_MANAGEMENT.STATUS_CLOSED' | translate }}
+                    </div>
+                    <div class="text-muted fw-semibold fs-8">
+                      {{ 'SUPPORT_MANAGEMENT.CANNOT_UPDATE_CLOSED_TICKET' | translate }}
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
             </div>
-
-            <span class="badge badge-light-primary">
-              {{ ticket.messages?.length || 0 }}
-              {{ 'SUPPORT_MANAGEMENT.MESSAGE_COUNT' | translate }}
-            </span>
           </div>
+        </aside>
+      </div>
+
+      <div class="col-12 col-xl-8 col-xxl-9">
+        <div class="d-flex align-items-center justify-content-between mb-4 px-1">
+          <div class="min-w-0">
+            <div class="fw-bold text-gray-900 fs-5 mb-1">
+              {{ 'SUPPORT_MANAGEMENT.MESSAGE_THREAD' | translate }}
+            </div>
+            <div class="text-muted fw-semibold fs-7 text-truncate">
+              {{ ticket.subject || '-' }}
+            </div>
+          </div>
+          <span class="badge badge-light-primary fs-7">
+            {{ ticket.messages?.length || 0 }}
+          </span>
         </div>
 
-        <div class="card-body px-6 px-lg-8 pt-0 pb-6 support-chat-body" #chatContainer>
-          <div class="chat-list">
-            <div
-              *ngFor="let item of ticket.messages; trackBy: trackByMessage"
-              class="chat-row"
-              [ngClass]="{
-                'chat-row--admin': item.senderType === 'Admin',
-                'chat-row--customer': item.senderType === 'Customer'
-              }"
-            >
-              <div class="chat-bubble">
-                <div class="chat-bubble__meta">
-                  <div class="chat-bubble__author-wrap">
-                    <div
-                      class="chat-bubble__avatar"
-                      [ngClass]="{
-                        'chat-bubble__avatar--admin': item.senderType === 'Admin',
-                        'chat-bubble__avatar--customer': item.senderType === 'Customer'
-                      }"
-                    >
-                      <i
-                        [class]="item.senderType === 'Admin'
-                          ? 'fa-solid fa-headset'
-                          : 'fa-regular fa-user'"
-                      ></i>
+        <div class="card border border-gray-300 shadow-sm">
+          <div class="card-body bg-light px-5 px-lg-7 py-6 overflow-auto mh-700px" #chatContainer>
+            <div class="d-flex flex-column gap-5 min-h-500px">
+              <div
+                *ngFor="let item of ticket.messages; trackBy: trackByMessage"
+                class="d-flex w-100"
+                [ngClass]="item.senderType === 'Admin' ? 'justify-content-end' : 'justify-content-start'"
+              >
+                <div
+                  class="d-flex flex-column p-5 rounded mw-75 shadow-sm"
+                  [ngClass]="item.senderType === 'Admin' ? 'bg-light-primary' : 'bg-body border border-gray-300'"
+                >
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="symbol symbol-35px flex-shrink-0">
+                      <span
+                        class="symbol-label"
+                        [ngClass]="item.senderType === 'Admin' ? 'bg-light-success text-success' : 'bg-light-primary text-primary'"
+                      >
+                        <i
+                          class="fs-4"
+                          [class]="item.senderType === 'Admin' ? 'fa-solid fa-headset' : 'fa-regular fa-user'"
+                        ></i>
+                      </span>
                     </div>
 
-                    <div>
-                      <div class="chat-bubble__author">
+                    <div class="min-w-0">
+                      <div class="text-gray-900 fw-bold fs-7">
                         {{
                           item.senderType === 'Admin'
                             ? ('SUPPORT_MANAGEMENT.ADMIN' | translate)
                             : ('SUPPORT_MANAGEMENT.CUSTOMER' | translate)
                         }}
                       </div>
-
-                      <div class="chat-bubble__date">
+                      <div class="text-muted fw-semibold fs-8">
                         {{ formatDate(item.createdAtUtc) }}
                       </div>
                     </div>
                   </div>
+
+                  <div class="text-gray-800 fw-semibold fs-6 lh-lg text-break white-space-pre-wrap">
+                    {{ item.body }}
+                  </div>
                 </div>
+              </div>
 
-                <div class="chat-bubble__text">
-                  {{ item.body }}
+              <div
+                *ngIf="!ticket.messages?.length"
+                class="d-flex flex-column flex-grow-1 align-items-center justify-content-center text-center py-15 text-muted"
+              >
+                <span class="symbol symbol-60px symbol-label bg-light-primary text-primary mb-4">
+                  <i class="fa-regular fa-comment-dots fs-2x"></i>
+                </span>
+                <div class="fw-bold text-gray-900 mb-1">{{ 'NO_DATA_AVAILABLE' | translate }}</div>
+                <div class="text-muted fw-semibold fs-7">
+                  {{ 'SUPPORT_MANAGEMENT.MESSAGE_THREAD' | translate }}
                 </div>
-              </div>
-            </div>
-
-            <div *ngIf="!ticket.messages?.length" class="empty-chat-state">
-              <div class="empty-chat-state__icon">
-                <i class="fa-regular fa-comment-dots"></i>
-              </div>
-
-              <div class="fw-semibold support-text mb-1">
-                {{ 'NO_DATA_AVAILABLE' | translate }}
-              </div>
-              <div class="support-muted fs-7">
-                {{ 'SUPPORT_MANAGEMENT.MESSAGE_THREAD' | translate }}
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="card-footer border-0 px-6 px-lg-8 pb-6 pt-4" *ngIf="!isClosed">
-          <form [formGroup]="replyForm" class="reply-form">
-            <div class="reply-form__fields">
+          <div class="separator"></div>
+
+          <div class="card-footer border-0 p-5 p-lg-7" *ngIf="!isClosed">
+            <form [formGroup]="replyForm" class="d-flex flex-column gap-5 w-100">
               <div>
-                <label class="form-label fw-semibold">
+                <label class="form-label fw-bold text-gray-900">
                   {{ 'SUPPORT_MANAGEMENT.ADMIN_EMAIL' | translate }}
                 </label>
-
                 <input
                   type="email"
                   class="form-control form-control-lg"
@@ -250,44 +202,43 @@
                   placeholder="admin@company.com"
                 />
               </div>
+
+              <div class="d-flex flex-column flex-lg-row align-items-stretch gap-3">
+                <textarea
+                  rows="2"
+                  class="form-control form-control-lg flex-grow-1"
+                  formControlName="message"
+                  [placeholder]="'SUPPORT_MANAGEMENT.REPLY_PLACEHOLDER' | translate"
+                ></textarea>
+
+                <button
+                  type="button"
+                  class="btn btn-primary flex-shrink-0 px-8"
+                  (click)="submitReply()"
+                  [disabled]="!canReply || replyForm.invalid || statusForm.invalid"
+                >
+                  <i class="fa-solid fa-paper-plane me-2"></i>
+                  {{ 'SUPPORT_MANAGEMENT.SEND_REPLY' | translate }}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card-footer border-0 p-5 p-lg-7" *ngIf="isClosed">
+            <div class="d-flex align-items-center gap-2 text-muted fw-semibold">
+              <i class="fa-solid fa-circle-xmark text-danger"></i>
+              <span>{{ 'SUPPORT_MANAGEMENT.STATUS_CLOSED' | translate }}</span>
             </div>
-
-            <div class="reply-form__inner">
-              <textarea
-                rows="1"
-                class="form-control reply-textarea"
-                formControlName="message"
-                [placeholder]="'SUPPORT_MANAGEMENT.REPLY_PLACEHOLDER' | translate">
-              </textarea>
-
-              <button
-                type="button"
-                class="btn btn-primary reply-btn"
-                (click)="submitReply()"
-                [disabled]="!canReply || replyForm.invalid || statusForm.invalid">
-                <i class="fa-solid fa-paper-plane me-2"></i>
-                {{ 'SUPPORT_MANAGEMENT.SEND_REPLY' | translate }}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div class="card-footer border-0 px-6 px-lg-8 pb-6 pt-4" *ngIf="isClosed">
-          <div class="support-muted fw-semibold d-flex align-items-center gap-2">
-            <i class="fa-solid fa-circle-xmark text-danger"></i>
-            <span>{{ 'SUPPORT_MANAGEMENT.STATUS_CLOSED' | translate }}</span>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div *ngIf="isLoading" class="support-loading card">
-  <div class="card-body p-10 d-flex flex-column align-items-center justify-content-center">
-    <span class="spinner-border text-primary mb-4"></span>
-    <div class="support-muted">
-      {{ 'PLEASE_WAIT' | translate }}
+    <div *ngIf="isLoading" class="card border border-gray-300 shadow-sm m-5 m-lg-8">
+      <div class="card-body p-10 d-flex flex-column align-items-center justify-content-center min-h-300px">
+        <span class="spinner-border text-primary mb-4"></span>
+        <div class="text-gray-600">{{ 'PLEASE_WAIT' | translate }}</div>
+      </div>
     </div>
   </div>
 </div>
