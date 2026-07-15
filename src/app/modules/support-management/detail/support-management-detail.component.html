@@ -3,7 +3,7 @@
     <div *ngIf="!isLoading && selectedTicket as ticket" class="row g-5">
       <div class="col-12 col-xl-4 col-xxl-3">
         <aside id="kt_support_detail_sidebar" class="position-sticky z-index-2">
-          <div class="card border border-gray-300 shadow-sm">
+          <div class="card border  shadow-sm">
             <div class="card-body p-5 p-lg-6">
               <div class="d-flex align-items-center mb-5">
                 <button
@@ -26,27 +26,27 @@
               </div>
 
               <div class="d-flex flex-column">
-                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
                   <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.TICKET_TITLE' | translate }}</span>
                   <strong class="text-gray-900 text-end">#{{ ticket.ticketNo || '-' }}</strong>
                 </div>
 
-                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
                   <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.CUSTOMER' | translate }}</span>
                   <strong class="text-gray-900 text-end text-break">{{ ticket.customerName || '-' }}</strong>
                 </div>
 
-                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
                   <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.EMAIL' | translate }}</span>
                   <strong class="text-gray-900 text-end text-break">{{ ticket.customerEmail || '-' }}</strong>
                 </div>
 
-                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                <div class="d-flex align-items-start justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
                   <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.ORGANIZATION' | translate }}</span>
                   <strong class="text-gray-900 text-end text-break">{{ ticket.organization || '-' }}</strong>
                 </div>
 
-                <div class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                <div class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
                   <span class="text-gray-600 fw-semibold">{{ 'SUPPORT_MANAGEMENT.MESSAGE_COUNT' | translate }}</span>
                   <strong class="text-gray-900">{{ ticket.messages?.length || 0 }}</strong>
                 </div>
@@ -127,7 +127,7 @@
           </span>
         </div>
 
-        <div class="card border border-gray-300 shadow-sm">
+        <div class="card border  shadow-sm">
           <div class="card-body bg-light px-5 px-lg-7 py-6 overflow-auto mh-700px" #chatContainer>
             <div class="d-flex flex-column gap-5 min-h-500px">
               <div
@@ -137,7 +137,7 @@
               >
                 <div
                   class="d-flex flex-column p-5 rounded mw-75 shadow-sm"
-                  [ngClass]="item.senderType === 'Admin' ? 'bg-light-primary' : 'bg-body border border-gray-300'"
+                  [ngClass]="item.senderType === 'Admin' ? 'bg-light-primary' : 'bg-body border '"
                 >
                   <div class="d-flex align-items-center gap-3 mb-3">
                     <div class="symbol symbol-35px flex-shrink-0">
@@ -234,7 +234,7 @@
       </div>
     </div>
 
-    <div *ngIf="isLoading" class="card border border-gray-300 shadow-sm m-5 m-lg-8">
+    <div *ngIf="isLoading" class="card border  shadow-sm m-5 m-lg-8">
       <div class="card-body p-10 d-flex flex-column align-items-center justify-content-center min-h-300px">
         <span class="spinner-border text-primary mb-4"></span>
         <div class="text-gray-600">{{ 'PLEASE_WAIT' | translate }}</div>

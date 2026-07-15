@@ -4,7 +4,7 @@
   (mousedown)="stopEvent($event)"
   (mouseup)="stopEvent($event)"
 >
-  <div class="smart-prefilter-panel__topline d-flex justify-content-end flex-shrink-0 border-bottom border-gray-300">
+  <div class="smart-prefilter-panel__topline d-flex justify-content-end flex-shrink-0 border-bottom ">
     <button
       type="button"
       class="btn btn-icon btn-sm btn-light my-3"
@@ -59,7 +59,7 @@
 
     <div class="aoi-list d-flex flex-column gap-3" *ngIf="areas.length > 0">
       <div
-        class="aoi-card card border border-gray-300 shadow-none cursor-pointer"
+        class="aoi-card card border  shadow-none cursor-pointer"
         *ngFor="let area of areas; trackBy: trackByAreaId"
         [class.border-primary]="internalSelectedAreaId === area.id"
         [class.bg-light-primary]="internalSelectedAreaId === area.id"
@@ -189,7 +189,7 @@
     </div>
 
     <div
-      class="d-flex flex-column align-items-center justify-content-center min-h-150px border border-gray-300 border-dashed bg-light text-center p-6"
+      class="d-flex flex-column align-items-center justify-content-center min-h-150px border  border-dashed bg-light text-center p-6"
       *ngIf="areas.length === 0"
     >
       <span class="symbol symbol-50px mb-3">

@@ -27,7 +27,7 @@
     tr:first-child th {
       border-bottom: 1px solid var(--bs-gray-200);
       background-color: var(--bs-gray-100) !important;
-      letter-spacing: .04em;
+      letter-spacing: 0.04em;
       white-space: nowrap;
     }
   }
@@ -39,12 +39,26 @@
 
   tbody tr {
     transition:
-      background-color .2s ease,
-      box-shadow .2s ease;
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
-  tbody tr:hover {
-    background-color: var(--bs-primary-light) !important;
+  /*
+   * Bootstrap/Metronic hücrelere inset box-shadow uyguladığı için
+   * yalnızca background-color vermek yeterli olmuyor.
+   */
+   tbody {
+    tr:hover > td,
+    tr:hover > th {
+      --bs-table-bg: #DCE7FF !important;
+      --bs-table-accent-bg: transparent !important;
+      --bs-table-striped-bg: transparent !important;
+      --bs-table-hover-bg: #DCE7FF !important;
+      --bs-table-bg-state: transparent !important;
+
+      background-color: #DCE7FF !important;
+      box-shadow: none !important;
+    }
   }
 
   tbody tr:last-child td {
@@ -73,8 +87,43 @@
 
   .btn {
     transition:
-      transform .15s ease,
-      box-shadow .15s ease;
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--bs-box-shadow-sm);
+    }
+  }
+}
+
+.datatable-footer {
+  background-color: var(--bs-body-bg);
+}
+
+.datatable-filter-row {
+  position: sticky;
+  top: 50px;
+  z-index: 4;
+
+  th {
+    border-bottom: 1px solid var(--bs-gray-200);
+    background-color: var(--bs-body-bg) !important;
+  }
+
+  .form-control,
+  app-custom-select {
+    min-width: 145px;
+  }
+}
+
+.datatable-actions {
+  min-width: max-content;
+
+  .btn {
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
 
     &:hover {
       transform: translateY(-1px);

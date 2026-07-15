@@ -25,6 +25,12 @@ export class FilterBarComponent implements OnInit, OnDestroy {
   customerTypeItems: Array<{ label: string; value: string }> = [];
   channelItems: Array<{ label: string; value: string }> = [];
   activeRange: FilterQuickRangeType | null = null;
+  quickRanges: Array<{ value: FilterQuickRangeType; label: string }> = [
+    { value: '7d', label: 'DASHBOARD.FILTER.QUICK_LAST_7_DAYS' },
+    { value: '30d', label: 'DASHBOARD.FILTER.QUICK_LAST_30_DAYS' },
+    { value: '3m', label: 'DASHBOARD.FILTER.QUICK_LAST_3_MONTHS' },
+    { value: '6m', label: 'DASHBOARD.FILTER.QUICK_LAST_6_MONTHS' },
+  ];
 
   private langChangeSub?: Subscription;
 

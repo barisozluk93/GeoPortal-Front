@@ -4,7 +4,7 @@
   <div class="container-fluid">
     <div class="row g-7">
       <div class="col-12 col-xxl-8">
-        <div class="card border border-gray-300 shadow-sm h-100">
+        <div class="card border  shadow-sm h-100">
           <div class="card-header border-0 pt-8 pb-8">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 w-100">
               <div>
@@ -30,7 +30,7 @@
 
             <ng-container *ngIf="basket.length; else emptyBasket">
               <div class="d-flex flex-column gap-6">
-                <section *ngIf="serviceItems.length" class="card border border-gray-300 shadow-sm overflow-hidden">
+                <section *ngIf="serviceItems.length" class="card border  shadow-sm overflow-hidden">
                   <header
                     class="card-body d-flex flex-wrap align-items-center justify-content-between gap-5 cursor-pointer user-select-none"
                     role="button"
@@ -65,7 +65,7 @@
 
                   <div id="basketApiServicesBody" class="collapse">
                     <div class="card-body pt-0 d-flex flex-column gap-5">
-                      <article *ngFor="let item of serviceItems; trackBy: trackByBasketItem" class="card border border-gray-300 shadow-none">
+                      <article *ngFor="let item of serviceItems; trackBy: trackByBasketItem" class="card border  shadow-none">
                         <div class="card-body p-0">
                           <header class="card-body pb-4 d-flex flex-wrap align-items-center justify-content-between gap-5">
                             <div class="d-flex align-items-center gap-4 min-w-0">
@@ -120,7 +120,7 @@
                   </div>
                 </section>
 
-                <section *ngFor="let group of aoiGroups; let groupIndex = index; trackBy: trackByAoi" class="card border border-gray-300 shadow-sm overflow-hidden">
+                <section *ngFor="let group of aoiGroups; let groupIndex = index; trackBy: trackByAoi" class="card border  shadow-sm overflow-hidden">
                   <header
                     class="card-body d-flex flex-wrap align-items-center justify-content-between gap-5 cursor-pointer user-select-none"
                     role="button"
@@ -155,7 +155,7 @@
 
                   <div [id]="'basketAoiBody' + groupIndex" class="collapse">
                     <div class="card-body pt-0 d-flex flex-column gap-5">
-                      <article *ngFor="let item of group.products; trackBy: trackByBasketItem" class="card border border-gray-300 shadow-none">
+                      <article *ngFor="let item of group.products; trackBy: trackByBasketItem" class="card border  shadow-none">
                         <div class="card-body p-0">
                           <header class="card-body pb-4 d-flex flex-wrap align-items-center justify-content-between gap-5">
                             <div class="d-flex align-items-center gap-4 min-w-0">
@@ -196,14 +196,14 @@
                           <div class="card-body pt-0">
                             <div class="row g-4">
                               <div class="col-12 col-md-6">
-                                <div class="h-100 d-flex flex-column border border-gray-300 rounded p-4">
+                                <div class="h-100 d-flex flex-column border  rounded p-4">
                                   <span class="text-muted fw-semibold fs-7 mb-1">Talep Alanı</span>
                                   <strong class="text-gray-900">{{ formatArea(item.requestAreaKm2) }} km²</strong>
                                 </div>
                               </div>
 
                               <div class="col-12 col-md-6">
-                                <div class="h-100 d-flex flex-column border border-gray-300 rounded p-4">
+                                <div class="h-100 d-flex flex-column border  rounded p-4">
                                   <span class="text-muted fw-semibold fs-7 mb-1">Görüntü Birim Fiyatı</span>
                                   <strong class="text-gray-900">{{ formatMoney(item.unitPrice) }} TL/km²</strong>
                                 </div>
@@ -222,8 +222,8 @@
                               <strong class="text-gray-900 text-nowrap">{{ formatMoney(item.baseTotalPrice) }} ₺</strong>
                             </div>
 
-                            <div *ngIf="item.processingOptions.length; else noProcessing" class="mt-5 border border-gray-300 rounded">
-                              <div class="d-flex align-items-center justify-content-between px-5 py-4 border-bottom border-gray-300">
+                            <div *ngIf="item.processingOptions.length; else noProcessing" class="mt-5 border  rounded">
+                              <div class="d-flex align-items-center justify-content-between px-5 py-4 border-bottom ">
                                 <span class="fw-semibold text-gray-900">
                                   <i class="ki-outline ki-setting-2 me-2"></i>
                                   Görüntü İşleme Seçenekleri
@@ -232,7 +232,7 @@
                               </div>
 
                               <div *ngFor="let option of item.processingOptions; trackBy: trackByProcessingOption"
-                                class="d-flex align-items-center justify-content-between gap-5 px-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+                                class="d-flex align-items-center justify-content-between gap-5 px-5 py-4 border-bottom  border-bottom-dashed">
                                 <div class="d-flex align-items-start gap-3 min-w-0">
                                   <i class="ki-outline ki-check-circle text-success fs-3 mt-1"></i>
                                   <div class="d-flex flex-column min-w-0">
@@ -295,7 +295,7 @@
       </div>
 
       <div class="col-12 col-xxl-4">
-        <div class="card border border-gray-300 shadow-sm position-sticky top-100px">
+        <div class="card border  shadow-sm position-sticky top-100px">
           <div class="card-header border-0 pt-8 pb-6">
             <div>
               <div class="text-primary fw-bold fs-8 text-uppercase mb-1">{{ 'ORDER_SUMMARY' | translate }}</div>
@@ -306,12 +306,12 @@
 
           <div class="card-body pt-0 pb-8">
             <div class="d-flex flex-column">
-              <div *ngIf="serviceItems.length" class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+              <div *ngIf="serviceItems.length" class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
                 <span class="text-gray-700 fw-semibold">API Servisleri</span>
                 <strong class="text-gray-900">{{ formatMoney(serviceTotalPrice) }} ₺</strong>
               </div>
 
-              <div *ngFor="let group of aoiGroups" class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+              <div *ngFor="let group of aoiGroups" class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
                 <span class="text-gray-700 fw-semibold">{{ group.aoiName }}</span>
                 <strong class="text-gray-900">{{ formatMoney(group.totalPrice) }} ₺</strong>
               </div>

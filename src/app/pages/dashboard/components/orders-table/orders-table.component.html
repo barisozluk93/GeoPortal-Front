@@ -1,114 +1,50 @@
-<!-- DESKTOP -->
 <div class="table-responsive d-none d-lg-block">
-  <table class="table table-row-dashed align-middle gs-0 gy-4">
+  <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4 mb-0">
     <thead>
-      <tr class="fw-semibold text-muted">
-        <th>{{ 'DASHBOARD.TABLE.ORDER_NO' | translate }}</th>
-        <th>{{ 'DASHBOARD.TABLE.CUSTOMER' | translate }}</th>
+      <tr class="fw-bold text-muted text-uppercase fs-7">
+        <th class="min-w-100px">{{ 'DASHBOARD.TABLE.ORDER_NO' | translate }}</th>
+        <th class="min-w-180px">{{ 'DASHBOARD.TABLE.CUSTOMER' | translate }}</th>
         <th>{{ 'DASHBOARD.TABLE.TYPE' | translate }}</th>
         <th>{{ 'DASHBOARD.TABLE.CHANNEL' | translate }}</th>
-        <th>{{ 'DASHBOARD.TABLE.REGION' | translate }}</th>
-        <th>{{ 'DASHBOARD.TABLE.AMOUNT' | translate }}</th>
-        <th>{{ 'DASHBOARD.TABLE.STATUS' | translate }}</th>
+        <th class="min-w-150px">{{ 'DASHBOARD.TABLE.REGION' | translate }}</th>
+        <th class="text-end">{{ 'DASHBOARD.TABLE.AMOUNT' | translate }}</th>
+        <th class="text-end">{{ 'DASHBOARD.TABLE.STATUS' | translate }}</th>
       </tr>
     </thead>
-
     <tbody>
       <tr *ngFor="let order of orders">
-        <td class="fw-bold">{{ order.id }}</td>
-
+        <td><span class="text-gray-900 fw-bold">{{ order.id }}</span></td>
         <td>
           <div class="d-flex flex-column">
-            <span class="fw-bold">
-              {{ order.customerName }}
-            </span>
-            <span class="text-muted fs-8">
-              {{ order.createdAt }}
-            </span>
+            <span class="text-gray-900 fw-bold">{{ order.customerName }}</span>
+            <span class="text-muted fw-semibold fs-8">{{ order.createdAt }}</span>
           </div>
         </td>
-
-        <td>{{ order.customerType }}</td>
-        <td>{{ order.sourceType }}</td>
-        <td>{{ order.region }}</td>
-
-        <td class="fw-bold">
-          ₺{{ order.amount | number:'1.0-0':'tr' }}
-        </td>
-
-        <td>
-          <span [ngClass]="getStatusClass(order.status)">
-            {{ order.status }}
-          </span>
-        </td>
+        <td><span class="text-gray-700 fw-semibold">{{ order.customerType }}</span></td>
+        <td><span class="badge badge-light-primary">{{ order.sourceType }}</span></td>
+        <td><span class="text-gray-700 fw-semibold">{{ order.region }}</span></td>
+        <td class="text-end text-gray-900 fw-bold">₺{{ order.amount | number:'1.0-0':'tr' }}</td>
+        <td class="text-end"><span [ngClass]="getStatusClass(order.status)">{{ order.status }}</span></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<!-- MOBILE -->
 <div class="d-lg-none">
-  <div class="card mb-3" *ngFor="let order of orders">
-    <div class="card-body p-4">
-
-      <!-- HEADER -->
-      <div class="d-flex justify-content-between align-items-start mb-3">
-        <div>
-          <div class="fw-bold">
-            {{ order.id }}
-          </div>
-          <div class="text-muted fs-8 mt-1">
-            {{ order.createdAt }}
-          </div>
-        </div>
-
-        <span [ngClass]="getStatusClass(order.status)">
-          {{ order.status }}
-        </span>
+  <div class="border border-dashed border-gray-300 rounded p-5 mb-4" *ngFor="let order of orders">
+    <div class="d-flex justify-content-between align-items-start mb-5">
+      <div>
+        <div class="text-gray-900 fw-bold fs-6">{{ order.id }}</div>
+        <div class="text-muted fw-semibold fs-8 mt-1">{{ order.createdAt }}</div>
       </div>
-
-      <!-- GRID -->
-      <div class="row g-3 fs-7">
-        <div class="col-6">
-          <div class="text-muted">
-            {{ 'DASHBOARD.TABLE.CUSTOMER' | translate }}
-          </div>
-          <div class="fw-semibold">
-            {{ order.customerName }}
-          </div>
-        </div>
-
-        <div class="col-6">
-          <div class="text-muted">
-            {{ 'DASHBOARD.TABLE.TYPE' | translate }}
-          </div>
-          <div>{{ order.customerType }}</div>
-        </div>
-
-        <div class="col-6">
-          <div class="text-muted">
-            {{ 'DASHBOARD.TABLE.CHANNEL' | translate }}
-          </div>
-          <div>{{ order.sourceType }}</div>
-        </div>
-
-        <div class="col-6">
-          <div class="text-muted">
-            {{ 'DASHBOARD.TABLE.REGION' | translate }}
-          </div>
-          <div>{{ order.region }}</div>
-        </div>
-
-        <div class="col-12">
-          <div class="text-muted">
-            {{ 'DASHBOARD.TABLE.AMOUNT' | translate }}
-          </div>
-          <div class="fw-bold">
-            ₺{{ order.amount | number:'1.0-0':'tr' }}
-          </div>
-        </div>
-      </div>
-
+      <span [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+    </div>
+    <div class="row g-4 fs-7">
+      <div class="col-6"><div class="text-muted mb-1">{{ 'DASHBOARD.TABLE.CUSTOMER' | translate }}</div><div class="text-gray-800 fw-semibold">{{ order.customerName }}</div></div>
+      <div class="col-6"><div class="text-muted mb-1">{{ 'DASHBOARD.TABLE.TYPE' | translate }}</div><div class="text-gray-800 fw-semibold">{{ order.customerType }}</div></div>
+      <div class="col-6"><div class="text-muted mb-1">{{ 'DASHBOARD.TABLE.CHANNEL' | translate }}</div><span class="badge badge-light-primary">{{ order.sourceType }}</span></div>
+      <div class="col-6"><div class="text-muted mb-1">{{ 'DASHBOARD.TABLE.REGION' | translate }}</div><div class="text-gray-800 fw-semibold">{{ order.region }}</div></div>
+      <div class="col-12"><div class="separator separator-dashed my-2"></div><div class="d-flex justify-content-between"><span class="text-muted">{{ 'DASHBOARD.TABLE.AMOUNT' | translate }}</span><span class="text-gray-900 fw-bold">₺{{ order.amount | number:'1.0-0':'tr' }}</span></div></div>
     </div>
   </div>
 </div>

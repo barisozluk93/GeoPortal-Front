@@ -1,7 +1,7 @@
 <div class="d-flex flex-column h-100 min-h-0 bg-body overflow-hidden"
   (click)="closeProductDropdown(); closeSortMenu(); $event.stopPropagation()" (mousedown)="$event.stopPropagation()"
   (mouseup)="$event.stopPropagation()">
-  <div class="d-flex align-items-center flex-shrink-0 h-55px min-h-55px px-3 border-bottom border-gray-300">
+  <div class="d-flex align-items-center flex-shrink-0 h-55px min-h-55px px-3 border-bottom ">
     <div class="btn-group smart-view-toggle" role="group" aria-label="Görünüm seçimi">
       <button type="button" class="btn btn-icon btn-sm rounded-end-0"
         [ngClass]="viewMode === 'card' ? 'btn-light-primary' : 'btn-light'" title="Kart görünümü"
@@ -32,7 +32,7 @@
   </div>
 
   <div
-    class="smart-sort-bar d-flex align-items-center flex-shrink-0 h-55px min-h-55px gap-2 px-3 border-bottom border-gray-300 overflow-hidden text-nowrap">
+    class="smart-sort-bar d-flex align-items-center flex-shrink-0 h-55px min-h-55px gap-2 px-3 border-bottom  overflow-hidden text-nowrap">
     <span class="text-gray-700 fs-8">{{ 'MAP.SMART_FILTER.SORT.TITLE' | translate }}:</span>
 
     <div class="smart-sort-option" [class.smart-sort-option--active]="sortField === 'date'">
@@ -93,7 +93,7 @@
       </div>
 
       <div class="d-flex flex-column gap-2" *ngIf="viewMode === 'card'">
-        <div class="position-relative border border-gray-300 bg-body overflow-visible"
+        <div class="position-relative border  bg-body overflow-visible"
           *ngFor="let product of sortedResults; trackBy: trackByProduct" [ngClass]="{
             'border-primary bg-light-primary': isSelected(product),
             'smart-product-menu-open': openedDropdownId === product.id
@@ -101,7 +101,7 @@
           (click)="toggleSelected(product)">
           <div class="d-flex align-items-stretch min-w-0">
             <div
-              class="smart-product-thumb position-relative flex-shrink-0 bg-light border-end border-gray-300 overflow-hidden">
+              class="smart-product-thumb position-relative flex-shrink-0 bg-light border-end  overflow-hidden">
               <img *ngIf="getProductImage(product); else noImage" class="w-100 h-100 object-fit-cover"
                 [src]="getProductImage(product)!" [alt]="product.name" />
               <ng-template #noImage>
@@ -181,7 +181,7 @@
             </div>
           </div>
 
-          <div class="row g-0 border-top border-gray-300 bg-light" *ngIf="isExpanded(product)">
+          <div class="row g-0 border-top  bg-light" *ngIf="isExpanded(product)">
             <div class="col-6 p-3">
               <div class="d-flex align-items-center gap-1 fs-8 mb-4">
                 <span class="text-gray-600 smart-detail-label">{{ 'MAP.SMART_FILTER.SUN_ELEVATION' | translate

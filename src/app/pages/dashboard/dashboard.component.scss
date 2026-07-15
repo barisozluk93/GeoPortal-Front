@@ -1,129 +1,13 @@
 :host {
   display: block;
   min-width: 0;
-  min-height: calc(100vh - 92px);
 }
 
-.satdash {
-  min-width: 0;
+.mw-700px {
+  max-width: 700px;
 }
 
-/* HERO */
-.satdash-hero {
-  overflow: hidden;
-  border: 1px solid var(--bs-border-color);
-  background:
-    radial-gradient(circle at top right, rgba(var(--bs-primary-rgb), 0.12), transparent 30%),
-    var(--bs-card-bg);
-}
-
-.satdash-hero__eyebrow {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--bs-primary);
-}
-
-.satdash-hero__dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--bs-primary);
-  flex-shrink: 0;
-}
-
-.satdash-hero__title {
-  font-size: clamp(1.8rem, 2vw + 1rem, 2.8rem);
-  line-height: 1.15;
-  font-weight: 700;
-  color: var(--bs-heading-color);
-}
-
-.satdash-hero__title span {
-  color: var(--bs-primary);
-}
-
-.satdash-hero__text {
-  max-width: 720px;
-  font-size: 1rem;
-  line-height: 1.7;
-}
-
-/* METRICS */
-.satdash-metric {
-  height: 100%;
-  padding: 1rem;
-  border-radius: 1rem;
-  background: var(--bs-gray-100);
-}
-
-[data-bs-theme='dark'] .satdash-metric {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.satdash-metric__label {
-  margin-bottom: 0.45rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--bs-gray-600);
-}
-
-.satdash-metric__value {
-  font-size: clamp(1.3rem, 1vw + 1rem, 1.9rem);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--bs-heading-color);
-}
-
-/* LOADING */
-.satdash-loading {
-  border: 1px solid var(--bs-border-color);
-  background: var(--bs-card-bg);
-}
-
-/* CHILD CARDS */
-:host ::ng-deep app-chart-card .card,
-:host ::ng-deep app-kpi-card .card {
-  border-color: var(--bs-border-color);
-  background: var(--bs-card-bg);
-}
-
-:host ::ng-deep app-chart-card .card-header {
-  border-bottom: 1px solid var(--bs-border-color);
-}
-
-/* TABLES */
-:host ::ng-deep .table {
-  --bs-table-bg: transparent;
-}
-
-:host ::ng-deep .table > :not(caption) > * > * {
-  background-color: transparent !important;
-}
-
-/* CHART FIX */
 :host ::ng-deep .apexcharts-canvas,
 :host ::ng-deep .apexcharts-svg {
   max-width: 100% !important;
-}
-
-/* RESPONSIVE */
-@media (max-width: 991.98px) {
-
-  .satdash-hero__text {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 767.98px) {
-
-
-  .satdash-hero__title {
-    font-size: 1.55rem;
-  }
-
-  .satdash-metric__value {
-    font-size: 1.2rem;
-  }
 }

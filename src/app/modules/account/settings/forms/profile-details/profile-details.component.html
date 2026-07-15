@@ -1,4 +1,4 @@
-<div *ngIf="user" class="card border border-gray-300 shadow-sm">
+<div *ngIf="user" class="card border shadow-sm">
   <div class="card-header border-0 pt-6">
     <div class="card-title">
       <div class="d-flex align-items-center">
@@ -30,7 +30,7 @@
 
           <input
             type="text"
-            class="form-control form-control-lg bg-body border border-gray-300"
+            class="form-control form-control-lg bg-body border "
             formControlName="name"
             [ngClass]="{
               'is-invalid': form.controls['name'].invalid &&
@@ -54,7 +54,7 @@
 
           <input
             type="text"
-            class="form-control form-control-lg bg-body border border-gray-300"
+            class="form-control form-control-lg bg-body border "
             formControlName="surname"
             [ngClass]="{
               'is-invalid': form.controls['surname'].invalid &&
@@ -78,7 +78,7 @@
 
           <input
             type="text"
-            class="form-control form-control-lg bg-body border border-gray-300"
+            class="form-control form-control-lg bg-body border "
             formControlName="username"
             [ngClass]="{
               'is-invalid': form.controls['username'].invalid &&
@@ -102,7 +102,7 @@
 
           <input
             type="tel"
-            class="form-control form-control-lg bg-body border border-gray-300"
+            class="form-control form-control-lg bg-body border "
             formControlName="phone"
             mask="(000) 000 00 00"
             [showMaskTyped]="true"

@@ -7,7 +7,7 @@
   <div class="flex-grow-1 min-h-0 overflow-auto p-3">
     <div class="row g-3">
       <div class="col-12">
-        <div class="d-flex align-items-center justify-content-between border border-gray-300 bg-light rounded px-3 py-2 fs-8">
+        <div class="d-flex align-items-center justify-content-between border  bg-light rounded px-3 py-2 fs-8">
           <span class="text-gray-700 fw-semibold">
             {{ 'MAP.SMART_FILTER.REQUEST_PANEL.AOI_AREA' | translate }}
           </span>
@@ -138,7 +138,7 @@
           {{ 'MAP.SMART_FILTER.REQUEST_PANEL.PROCESS_OPTIONS' | translate }}
         </label>
 
-        <div class="row g-2 border border-gray-300 bg-light rounded p-2">
+        <div class="row g-2 border  bg-light rounded p-2">
           <div class="col-6">
             <label class="form-check form-check-custom form-check-solid d-flex align-items-center m-0">
               <input
@@ -210,7 +210,7 @@
     </div>
   </div>
 
-  <div class="flex-shrink-0 border-top border-gray-300 p-3 bg-body">
+  <div class="flex-shrink-0 border-top  p-3 bg-body">
     <button type="button" class="btn btn-sm btn-primary w-100" [disabled]="loading" (click)="addToCart()">
       <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
       <i *ngIf="!loading" class="fa-solid fa-cart-plus me-2"></i>

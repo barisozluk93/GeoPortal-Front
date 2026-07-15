@@ -1,6 +1,6 @@
 <div class="bg-body py-10">
   <div class="container-fluid">
-    <div class="card border border-gray-300 shadow-sm overflow-hidden documentation-hero-card mb-10">
+    <div class="card border  shadow-sm overflow-hidden documentation-hero-card mb-10">
       <div class="card-body p-0">
         <div class="row g-0 align-items-stretch documentation-hero-row">
           <div class="col-12 col-xl-7">
@@ -24,7 +24,7 @@
 
                   <div class="row g-4 documentation-meta-row">
                     <div class="col-12 col-md-4">
-                      <div class="d-flex flex-column bg-white border border-gray-300 rounded-3 shadow-sm p-4 h-100 hover-elevate-up">
+                      <div class="d-flex flex-column bg-white border  rounded-3 shadow-sm p-4 h-100 hover-elevate-up">
                         <div class="symbol symbol-40px mb-3">
                           <span class="symbol-label bg-light-primary">
                             <i class="ki-outline ki-code fs-2 text-primary"></i>
@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="col-12 col-md-4">
-                      <div class="d-flex flex-column bg-white border border-gray-300 rounded-3 shadow-sm p-4 h-100 hover-elevate-up">
+                      <div class="d-flex flex-column bg-white border  rounded-3 shadow-sm p-4 h-100 hover-elevate-up">
                         <div class="symbol symbol-40px mb-3">
                           <span class="symbol-label bg-light-primary">
                             <i class="ki-outline ki-key fs-2 text-primary"></i>
@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="col-12 col-md-4">
-                      <div class="d-flex flex-column bg-white border border-gray-300 rounded-3 shadow-sm p-4 h-100 hover-elevate-up">
+                      <div class="d-flex flex-column bg-white border  rounded-3 shadow-sm p-4 h-100 hover-elevate-up">
                         <div class="symbol symbol-40px mb-3">
                           <span class="symbol-label bg-light-primary">
                             <i class="ki-outline ki-row-horizontal fs-2 text-primary"></i>
@@ -109,7 +109,7 @@
           id="kt_documentation_sidebar"
           class="position-sticky top-100px z-index-2"
         >
-          <div class="card card-flush border border-gray-300 shadow-sm">
+          <div class="card card-flush border  shadow-sm">
             <div class="card-body p-6">
               <span class="badge badge-light-primary fs-8 fw-bold mb-4">
                 {{ 'API_DOC.SIDEBAR.KICKER' | translate }}
@@ -142,21 +142,21 @@
 
       <div class="col-12 col-xl-9">
         <div class="d-flex flex-column gap-7">
-          <section id="overview" class="card card-flush border border-gray-300 shadow-sm scroll-mt-100px">
+          <section id="overview" class="card card-flush border  shadow-sm scroll-mt-100px">
             <div class="card-body p-6 p-lg-8">
               <span class="badge badge-light-primary fs-8 fw-bold mb-4">
                 {{ 'API_DOC.NAV.OVERVIEW' | translate }}
               </span>
               <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'API_DOC.HERO.TITLE' | translate }}</h2>
               <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-6">{{ 'API_DOC.HERO.DESCRIPTION' | translate }}</p>
-              <div class="border border-gray-300 rounded bg-light-primary p-5">
+              <div class="border  rounded bg-light-primary p-5">
                 <div class="text-primary fs-8 fw-bolder text-uppercase mb-3">{{ 'API_DOC.HERO.BASE_URL' | translate }}</div>
                 <code class="text-gray-800 fw-semibold text-break">{{ baseUrl }}</code>
               </div>
             </div>
           </section>
 
-          <section id="authentication" class="card card-flush border border-gray-300 shadow-sm scroll-mt-100px">
+          <section id="authentication" class="card card-flush border  shadow-sm scroll-mt-100px">
             <div class="card-body p-6 p-lg-8">
               <span class="badge badge-light-primary fs-8 fw-bold mb-4">{{ 'API_DOC.AUTH.KICKER' | translate }}</span>
               <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'API_DOC.AUTH.TITLE' | translate }}</h2>
@@ -169,7 +169,7 @@
             </div>
           </section>
 
-          <section id="response-format" class="card card-flush border border-gray-300 shadow-sm scroll-mt-100px">
+          <section id="response-format" class="card card-flush border  shadow-sm scroll-mt-100px">
             <div class="card-body p-6 p-lg-8">
               <span class="badge badge-light-primary fs-8 fw-bold mb-4">{{ 'API_DOC.RESPONSE.KICKER' | translate }}</span>
               <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'API_DOC.RESPONSE.TITLE' | translate }}</h2>
@@ -182,7 +182,7 @@
             </div>
           </section>
 
-          <section *ngFor="let endpoint of endpoints" [id]="endpoint.id" class="card card-flush border border-gray-300 shadow-sm scroll-mt-100px">
+          <section *ngFor="let endpoint of endpoints" [id]="endpoint.id" class="card card-flush border  shadow-sm scroll-mt-100px">
             <div class="card-body p-6 p-lg-8">
               <div class="d-flex flex-column flex-lg-row align-items-lg-start justify-content-between gap-4 mb-6">
                 <div class="min-w-0">
@@ -196,13 +196,13 @@
 
               <div class="row g-5 mb-7">
                 <div class="col-12 col-lg-6">
-                  <div class="border border-gray-300 rounded bg-light-primary p-5 h-100">
+                  <div class="border  rounded bg-light-primary p-5 h-100">
                     <div class="text-primary fs-8 fw-bolder text-uppercase mb-3">{{ 'API_DOC.COMMON.ENDPOINT' | translate }}</div>
                     <code class="text-gray-800 fw-semibold text-break">{{ endpoint.method }} {{ endpoint.path }}</code>
                   </div>
                 </div>
                 <div class="col-12 col-lg-6">
-                  <div class="border border-gray-300 rounded bg-light-primary p-5 h-100">
+                  <div class="border  rounded bg-light-primary p-5 h-100">
                     <div class="text-primary fs-8 fw-bolder text-uppercase mb-3">{{ 'API_DOC.COMMON.AUTHENTICATION' | translate }}</div>
                     <div class="text-gray-900 fw-bold fs-6">{{ endpoint.authKey | translate }}</div>
                   </div>
@@ -260,7 +260,7 @@
             </div>
           </section>
 
-          <section id="product-model" class="card card-flush border border-gray-300 shadow-sm scroll-mt-100px">
+          <section id="product-model" class="card card-flush border  shadow-sm scroll-mt-100px">
             <div class="card-body p-6 p-lg-8">
               <span class="badge badge-light-primary fs-8 fw-bold mb-4">{{ 'API_DOC.MODEL.KICKER' | translate }}</span>
               <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'API_DOC.MODEL.TITLE' | translate }}</h2>
@@ -269,7 +269,7 @@
             </div>
           </section>
 
-          <section id="error-codes" class="card card-flush border border-gray-300 shadow-sm scroll-mt-100px">
+          <section id="error-codes" class="card card-flush border  shadow-sm scroll-mt-100px">
             <div class="card-body p-6 p-lg-8">
               <span class="badge badge-light-primary fs-8 fw-bold mb-4">{{ 'API_DOC.ERRORS.KICKER' | translate }}</span>
               <h2 class="text-gray-900 fw-bolder fs-2x mb-6">{{ 'API_DOC.ERRORS.TITLE' | translate }}</h2>

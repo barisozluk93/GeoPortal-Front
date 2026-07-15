@@ -3,7 +3,7 @@
     <ng-container *ngIf="activeLayers.length > 0; else emptyState">
       <div class="d-flex flex-column px-1">
         <label
-          class="d-flex align-items-center gap-2 min-h-35px px-1 border-bottom border-gray-300 border-bottom-dashed cursor-pointer"
+          class="d-flex align-items-center gap-2 min-h-35px px-1 border-bottom  border-bottom-dashed cursor-pointer"
           *ngFor="let layer of activeLayers; trackBy: trackLayer"
           [class.opacity-50]="!isLayerVisible(layer)"
         >
@@ -14,7 +14,7 @@
     </ng-container>
 
     <ng-template #emptyState>
-      <div class="d-flex flex-column align-items-center justify-content-center min-h-100px p-4 border border-gray-300 border-dashed bg-light text-center">
+      <div class="d-flex flex-column align-items-center justify-content-center min-h-100px p-4 border  border-dashed bg-light text-center">
         <i class="fa-solid fa-layer-group fs-2 text-gray-500 mb-2"></i>
         <span class="text-gray-600 fw-medium fs-8">{{ 'MAP.LAYER_MANAGER.EMPTY' | translate }}</span>
       </div>

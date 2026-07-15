@@ -29,7 +29,7 @@
 
       <div
         *ngIf="metadataRows.length"
-        class="d-flex flex-column border border-gray-300 bg-body font-monospace fs-8"
+        class="d-flex flex-column border  bg-body font-monospace fs-8"
       >
         <div
           *ngFor="let row of metadataRows"
@@ -47,7 +47,7 @@
 
       <pre
         *ngIf="!metadataRows.length && rawText"
-        class="mb-0 p-3 border border-gray-300 bg-light text-gray-900 fs-8 font-monospace text-break overflow-auto"
+        class="mb-0 p-3 border  bg-light text-gray-900 fs-8 font-monospace text-break overflow-auto"
       >{{ rawText }}</pre>
     </ng-container>
   </div>

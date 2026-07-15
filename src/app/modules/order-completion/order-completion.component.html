@@ -4,7 +4,7 @@
   <div class="container-fluid">
     <div class="row g-7">
       <div class="col-12 col-xxl-8">
-        <div class="card border border-gray-300 shadow-sm">
+        <div class="card border  shadow-sm">
           <div class="card-header border-0 pt-8 pb-8">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 w-100">
               <div>
@@ -24,7 +24,7 @@
               <div class="col-12 col-md-6">
                 <button type="button"
                   class="btn w-100 d-flex align-items-center justify-content-start gap-4 p-5 border"
-                  [ngClass]="activeTabId === 'address' ? 'bg-light-primary border-primary' : 'bg-body border-gray-300'"
+                  [ngClass]="activeTabId === 'address' ? 'bg-light-primary border-primary' : 'bg-body '"
                   (click)="setActiveTabId('address')">
                   <span class="symbol symbol-45px flex-shrink-0">
                     <span class="symbol-label" [ngClass]="activeTabId === 'address' ? 'bg-primary text-white' : 'bg-light-primary text-primary'">01</span>
@@ -39,7 +39,7 @@
               <div class="col-12 col-md-6">
                 <button type="button"
                   class="btn w-100 d-flex align-items-center justify-content-start gap-4 p-5 border"
-                  [ngClass]="activeTabId === 'payment' ? 'bg-light-primary border-primary' : 'bg-body border-gray-300'"
+                  [ngClass]="activeTabId === 'payment' ? 'bg-light-primary border-primary' : 'bg-body '"
                   (click)="setActiveTabId('payment')">
                   <span class="symbol symbol-45px flex-shrink-0">
                     <span class="symbol-label" [ngClass]="activeTabId === 'payment' ? 'bg-primary text-white' : 'bg-light-primary text-primary'">02</span>
@@ -53,7 +53,7 @@
             </div>
 
             <ng-container *ngIf="activeTabId === 'address'">
-              <div class="card border border-gray-300 shadow-none">
+              <div class="card border  shadow-none">
                 <div class="card-header border-0 pt-7 pb-0">
                   <div class="d-flex align-items-center justify-content-between w-100 gap-3 flex-wrap">
                     <div>
@@ -72,7 +72,7 @@
                   <div class="d-flex flex-column gap-4">
                     <div *ngFor="let item of addresses"
                       class="position-relative border rounded p-5 cursor-pointer"
-                      [ngClass]="item.selected ? 'border-primary bg-light-primary' : 'border-gray-300 bg-body'"
+                      [ngClass]="item.selected ? 'border-primary bg-light-primary' : ' bg-body'"
                       (click)="selectAddress(item.id)">
                       <div class="d-flex align-items-start justify-content-between gap-4">
                         <div class="d-flex align-items-start gap-4 min-w-0">
@@ -151,7 +151,7 @@
                 </div>
 
                 <div class="col-12 col-xl-6">
-                  <div class="card border border-gray-300 shadow-none h-100">
+                  <div class="card border  shadow-none h-100">
                     <div class="card-header border-0 pt-7 pb-0">
                       <div>
                         <h3 class="fw-bold text-gray-900 fs-4 mb-1">{{ 'PAYMENT_FORM_TITLE' | translate }}</h3>
@@ -164,14 +164,14 @@
                         <div class="row g-5">
                           <div class="col-12">
                             <label class="form-label fw-semibold text-gray-800">{{ 'CARD_HOLDER' | translate }}</label>
-                            <input type="text" class="form-control form-control-lg border border-gray-300 bg-body" formControlName="cardHolder"
+                            <input type="text" class="form-control form-control-lg border  bg-body" formControlName="cardHolder"
                               [placeholder]="'CARD_HOLDER_PLACEHOLDER' | translate" [ngClass]="{ 'is-invalid': isFieldInvalid('cardHolder') }" />
                             <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('cardHolder')">{{ 'CARD_HOLDER_REQUIRED' | translate }}</div>
                           </div>
 
                           <div class="col-12">
                             <label class="form-label fw-semibold text-gray-800">{{ 'CARD_NUMBER' | translate }}</label>
-                            <input type="text" class="form-control form-control-lg border border-gray-300 bg-body" formControlName="cardNumber"
+                            <input type="text" class="form-control form-control-lg border  bg-body" formControlName="cardNumber"
                               [placeholder]="'CARD_NUMBER_PLACEHOLDER' | translate" maxlength="19" (input)="onCardNumberInput()"
                               [ngClass]="{ 'is-invalid': isFieldInvalid('cardNumber') }" />
                             <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('cardNumber')">{{ 'CARD_NUMBER_REQUIRED' | translate }}</div>
@@ -179,7 +179,7 @@
 
                           <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold text-gray-800">{{ 'EXPIRY_DATE' | translate }}</label>
-                            <input type="text" class="form-control form-control-lg border border-gray-300 bg-body" formControlName="expiry"
+                            <input type="text" class="form-control form-control-lg border  bg-body" formControlName="expiry"
                               [placeholder]="'EXPIRY_DATE_PLACEHOLDER' | translate" maxlength="5" (input)="onExpiryInput()"
                               [ngClass]="{ 'is-invalid': isFieldInvalid('expiry') }" />
                             <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('expiry')">{{ 'EXPIRY_DATE_REQUIRED' | translate }}</div>
@@ -187,14 +187,14 @@
 
                           <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold text-gray-800">{{ 'CVV' | translate }}</label>
-                            <input type="password" class="form-control form-control-lg border border-gray-300 bg-body" formControlName="cvv"
+                            <input type="password" class="form-control form-control-lg border  bg-body" formControlName="cvv"
                               [placeholder]="'CVV_PLACEHOLDER' | translate" maxlength="4" (input)="onCvvInput()"
                               [ngClass]="{ 'is-invalid': isFieldInvalid('cvv') }" />
                             <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('cvv')">{{ 'CVV_REQUIRED' | translate }}</div>
                           </div>
 
                           <div class="col-12">
-                            <label class="form-check form-check-custom form-check-solid align-items-start p-4 border border-gray-300 rounded">
+                            <label class="form-check form-check-custom form-check-solid align-items-start p-4 border  rounded">
                               <input class="form-check-input mt-1" type="checkbox" formControlName="agreement"
                                 [ngClass]="{ 'is-invalid': isFieldInvalid('agreement') }" />
                               <span class="form-check-label ms-3 text-gray-700 fw-semibold">{{ 'PAYMENT_AGREEMENT' | translate }}</span>
@@ -213,7 +213,7 @@
       </div>
 
       <div class="col-12 col-xxl-4">
-        <div class="card border border-gray-300 shadow-sm position-sticky top-100px">
+        <div class="card border  shadow-sm position-sticky top-100px">
           <div class="card-header border-0 pt-8 pb-6">
             <div>
               <div class="text-primary fw-bold fs-8 text-uppercase mb-1">{{ 'ORDER_SUMMARY' | translate }}</div>
@@ -224,7 +224,7 @@
 
           <div class="card-body pt-0 pb-8">
             <div class="d-flex flex-column">
-              <div class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom border-gray-300 border-bottom-dashed">
+              <div class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
                 <span class="text-gray-700 fw-semibold">{{ 'TOTAL_OF_THE_PRODUCTS' | translate }}</span>
                 <strong class="text-gray-900">{{ totalPrice.toFixed(2) }} ₺</strong>
               </div>

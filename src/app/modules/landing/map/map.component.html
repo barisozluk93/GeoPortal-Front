@@ -4,7 +4,7 @@
   <input #areaFileInput type="file" class="d-none" accept=".zip,.geojson,.json,.kml,.kmz"
     (change)="uploadAreaFile($event)" (cancel)="activeTool = null" />
 
-  <div class="map-status-bar bg-body border border-gray-300 shadow-sm">
+  <div class="map-status-bar bg-body border  shadow-sm">
     <div class="map-coordinate-section">
       <span class="map-coordinate-text text-gray-800 fw-semibold">{{ currentCoordinateText }}</span>
 

@@ -1,78 +1,72 @@
-<div class="auth-page">
-  <div class="auth-page__bg"></div>
+<div class="d-flex flex-column flex-root min-vh-100 bg-body">
+ <div class="d-flex flex-column flex-lg-row flex-column-fluid min-vh-100">
+ <div class="d-none d-lg-flex flex-lg-row-fluid position-relative overflow-hidden bg-light-primary p-12 p-xl-20">
+ <div class="d-flex flex-column flex-center w-100 position-relative z-index-2">
+ <div class="w-100 mw-600px">
+ <span class="badge badge-light-primary fw-bold fs-7 px-4 py-3 mb-8">
+ {{ 'AUTH.ASIDE.EYEBROW' | translate }}
+ </span>
 
-  <div class="auth-page__content">
-    <div class="auth-shell shadow-sm">
-      <div class="auth-shell__aside d-none d-lg-flex">
-        <div class="auth-aside">
-          <div class="auth-aside__header">
-            <span class="auth-aside__badge badge badge-light-primary fw-bold">
-              {{ 'AUTH.ASIDE.EYEBROW' | translate }}
-            </span>
+ <h1 class="fs-2x fs-xl-3x fw-bolder text-gray-900 lh-base mb-5">
+ {{ 'AUTH.ASIDE.TITLE_1' | translate }}
+ <span class="d-block text-primary">{{ 'AUTH.ASIDE.TITLE_2' | translate }}</span>
+ </h1>
 
-            <h1 class="auth-aside__title">
-              {{ 'AUTH.ASIDE.TITLE_1' | translate }}
-              <span>{{ 'AUTH.ASIDE.TITLE_2' | translate }}</span>
-            </h1>
-          </div>
+ <div class="card card-flush shadow-sm mt-12">
+ <div class="card-header min-h-55px border-bottom border-gray-200">
+ <div class="card-title">
+ <span class="bullet bullet-dot bg-success me-2"></span>
+ <span class="bullet bullet-dot bg-warning me-2"></span>
+ <span class="bullet bullet-dot bg-primary"></span>
+ </div>
+ </div>
 
-          <div class="auth-aside__visual">
-            <div class="auth-visual-card">
-              <div class="auth-visual-card__top">
-                <span class="dot bg-success"></span>
-                <span class="dot bg-warning"></span>
-                <span class="dot bg-primary"></span>
-              </div>
+ <div class="card-body p-8">
+ <div class="placeholder-glow mb-8">
+ <span class="placeholder col-8 rounded h-15px"></span>
+ <span class="placeholder col-5 rounded h-10px d-block mt-3"></span>
+ </div>
 
-              <div class="auth-visual-card__body">
-                <div class="auth-line auth-line--lg"></div>
-                <div class="auth-line auth-line--md"></div>
+ <div class="d-flex flex-column gap-4">
+ <div class="d-flex align-items-center border border-gray-200 rounded p-4">
+ <div class="symbol symbol-45px me-4">
+ <span class="symbol-label bg-light-primary">
+ <i class="ki-duotone ki-chart-simple fs-2 text-primary"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+ </span>
+ </div>
+ <div class="flex-grow-1 placeholder-glow"><span class="placeholder col-8 rounded"></span><span class="placeholder col-5 rounded d-block mt-2"></span></div>
+ </div>
 
-                <div class="auth-stat-list">
-                  <div class="auth-stat-item">
-                    <div class="auth-stat-item__icon bg-light-primary">
-                      <i class="ki-outline ki-chart-simple text-primary fs-2"></i>
-                    </div>
-                    <div class="auth-stat-item__content">
-                      <div class="auth-line auth-line--sm"></div>
-                      <div class="auth-line auth-line--xs"></div>
-                    </div>
-                  </div>
+ <div class="d-flex align-items-center border border-gray-200 rounded p-4">
+ <div class="symbol symbol-45px me-4">
+ <span class="symbol-label bg-light-success">
+ <i class="ki-duotone ki-shield-tick fs-2 text-success"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+ </span>
+ </div>
+ <div class="flex-grow-1 placeholder-glow"><span class="placeholder col-7 rounded"></span><span class="placeholder col-4 rounded d-block mt-2"></span></div>
+ </div>
 
-                  <div class="auth-stat-item">
-                    <div class="auth-stat-item__icon bg-light-success">
-                      <i class="ki-outline ki-shield-tick text-success fs-2"></i>
-                    </div>
-                    <div class="auth-stat-item__content">
-                      <div class="auth-line auth-line--sm"></div>
-                      <div class="auth-line auth-line--xs"></div>
-                    </div>
-                  </div>
+ <div class="d-flex align-items-center border border-gray-200 rounded p-4">
+ <div class="symbol symbol-45px me-4">
+ <span class="symbol-label bg-light-warning">
+ <i class="ki-duotone ki-abstract-26 fs-2 text-warning"><span class="path1"></span><span class="path2"></span></i>
+ </span>
+ </div>
+ <div class="flex-grow-1 placeholder-glow"><span class="placeholder col-9 rounded"></span><span class="placeholder col-6 rounded d-block mt-2"></span></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-                  <div class="auth-stat-item">
-                    <div class="auth-stat-item__icon bg-light-warning">
-                      <i class="ki-outline ki-abstract-26 text-warning fs-2"></i>
-                    </div>
-                    <div class="auth-stat-item__content">
-                      <div class="auth-line auth-line--sm"></div>
-                      <div class="auth-line auth-line--xs"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="auth-floating auth-floating--one"></div>
-            <div class="auth-floating auth-floating--two"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="auth-shell__body">
-        <div class="auth-shell__form">
-          <router-outlet></router-outlet>
-        </div>
-      </div>
-    </div>
-  </div>
+ <div class="d-flex flex-column flex-lg-row-fluid bg-body p-4 p-sm-8 p-lg-12">
+ <div class="d-flex flex-center flex-column flex-column-fluid">
+ <div class="w-100 mw-500px">
+ <router-outlet></router-outlet>
+ </div>
+ </div>
+ </div>
+ </div>
 </div>

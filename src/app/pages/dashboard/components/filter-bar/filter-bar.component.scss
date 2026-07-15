@@ -2,74 +2,15 @@
   display: block;
 }
 
-/* QUICK FILTERS */
-.badge {
-  transition: all 0.2s ease;
-}
-
-.badge.active {
-  background-color: var(--bs-primary) !important;
-  color: var(--bs-white) !important;
-}
-
-.badge.badge-light-primary:hover {
-  background-color: rgba(var(--bs-primary-rgb), 0.15);
-  color: var(--bs-primary);
-}
-
-/* LIVE INDICATOR */
-.live-dot {
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 50%;
-  background: var(--bs-success);
-  position: relative;
-  flex-shrink: 0;
-}
-
-.live-dot::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: inherit;
-  border: 1px solid rgba(var(--bs-success-rgb), 0.35);
-}
-
-/* FILTER CARD */
-.card {
-  border: 1px solid var(--bs-border-color);
-  background: var(--bs-card-bg);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--bs-border-color);
-}
-
-/* CUSTOM SELECT */
 :host ::ng-deep .ng-select-container {
-  min-height: calc(1.5em + 1.65rem + 2px);
-  border-color: var(--bs-border-color);
-  background: var(--bs-body-bg);
+  min-height: 43px;
 }
 
-:host ::ng-deep .ng-select.ng-select-focused .ng-select-container {
-  border-color: rgba(var(--bs-primary-rgb), 0.45);
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.12);
+:host input[type="date"].form-control {
+  background-color: var(--bs-body-bg);
+  border: 1px solid var(--bs-gray-300);
 }
 
-/* RESPONSIVE */
-@media (max-width: 991.98px) {
-  .card-body {
-    padding: 1.5rem !important;
-  }
-}
-
-@media (max-width: 767.98px) {
-  .badge {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .d-grid.d-md-flex {
-    grid-template-columns: 1fr;
-  }
+:host input[type="date"].form-control:focus {
+  border-color: var(--bs-primary);
 }
