@@ -3,61 +3,84 @@
   [title]="modalTitle"
   [subtitle]="'ROLE_FORM.TITLE' | translate"
   [width]="'760px'"
-  (closed)="closeModal()"
-  (submitted)="submit()"
   variant="center"
   [showFooter]="true"
+  (closed)="closeModal()"
+  (submitted)="submit()"
 >
-  <form class="form w-100" [formGroup]="form" novalidate>
+  <form class="form" [formGroup]="form" novalidate>
 
-    <!-- NAME -->
-    <div class="fv-row mb-8">
-      <label class="form-label fw-bolder">
-        {{ 'ROLE_FORM.NAME' | translate }}
-      </label>
+    <div class="row g-8">
 
-      <input
-        type="text"
-        formControlName="name"
-        autocomplete="off"
-        class="form-control form-control-lg"
-        [placeholder]="'ROLE_FORM.NAME' | translate"
-        [ngClass]="{
-          'is-invalid': isInvalid('name')
-        }"
-      />
+      <!-- NAME -->
+      <div class="col-12">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'ROLE_FORM.NAME' | translate }}
+          </label>
 
-      <ng-container *ngIf="isInvalid('name')">
-        <div class="invalid-feedback d-block" *ngIf="f['name'].errors?.['required']">
-          {{ 'ROLE_FORM.REQUIRED_NAME' | translate }}
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            autocomplete="off"
+            [placeholder]="'ROLE_FORM.NAME' | translate"
+            [ngClass]="{
+              'is-invalid': isInvalid('name')
+            }"
+          />
+
+          <div
+            *ngIf="isInvalid('name')"
+            class="fv-plugins-message-container"
+          >
+            <div
+              *ngIf="f['name'].errors?.['required']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'ROLE_FORM.REQUIRED_NAME' | translate }}
+            </div>
+          </div>
         </div>
-      </ng-container>
-    </div>
+      </div>
 
-    <!-- PERMISSIONS -->
-    <div class="fv-row mb-8">
-      <label class="form-label fw-bolder">
-        {{ 'ROLE_FORM.PERMISSIONS' | translate }}
-      </label>
+      <!-- PERMISSIONS -->
+      <div class="col-12">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'ROLE_FORM.PERMISSIONS' | translate }}
+          </label>
 
-      <app-custom-select
-        [size]="'lg'"
-        formControlName="permissions"
-        [items]="permissionList"
-        bindLabel="name"
-        bindValue="id"
-        [multiple]="true"
-        [clearable]="true"
-        [placeholder]="'ROLE_FORM.PERMISSIONS' | translate"
-        [invalid]="isInvalid('permissions')"
-      >
-      </app-custom-select>
+          <app-custom-select
+            formControlName="permissions"
+            [items]="permissionList"
+            bindLabel="name"
+            bindValue="id"
+            [multiple]="true"
+            [clearable]="true"
+            [placeholder]="'ROLE_FORM.PERMISSIONS' | translate"
+            [invalid]="isInvalid('permissions')"
+          >
+          </app-custom-select>
 
-      <ng-container *ngIf="isInvalid('permissions')">
-        <div class="invalid-feedback d-block" *ngIf="f['permissions'].errors?.['required']">
-          {{ ('ROLE_FORM.PERMISSIONS' | translate) + ' ' + ('IS_REQUIRED' | translate) }}
+          <div
+            *ngIf="isInvalid('permissions')"
+            class="fv-plugins-message-container"
+          >
+            <div
+              *ngIf="f['permissions'].errors?.['required']"
+              class="fv-help-block text-danger"
+            >
+              {{
+                ('ROLE_FORM.PERMISSIONS' | translate)
+                + ' '
+                + ('IS_REQUIRED' | translate)
+              }}
+            </div>
+          </div>
         </div>
-      </ng-container>
+      </div>
+
     </div>
 
   </form>

@@ -554,16 +554,15 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   togglePolygonDraw(keepSmartPanelOpen = false): void {
     if (this.previewMode) return;
 
-    if (this.polygonDraw) {
-      this.stopPolygonDraw(true);
-      this.activeTool = null;
+    if (this.activeTool === "polygon" || this.polygonDraw) {
+      this.cancelAreaCreationTool();
       return;
     }
 
     this.clearMeasure();
 
-    // Çizim başladığında panel daima kapanır ve newAreaCreationHint görünür.
-    // Mevcut panel durumu snapshot olarak saklanır; çizim bitince/ESC'de geri gelir.
+    // Çizim başladığında smart panel görünürlüğü saklanır, paneller geçici
+    // olarak kapatılır ve alan oluşturma hint mesajı gösterilir.
     this.hideSmartPanelsForAreaDrawing();
 
     this.disableAreaModify();
@@ -578,30 +577,38 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   openUploadFilePicker(keepSmartPanelOpen = false): void {
     if (this.previewMode) return;
 
-    this.clearMeasure();
-    this.stopPolygonDraw(true);
-    if (!keepSmartPanelOpen) {
-      this.closeAllPanels();
-    } else {
-      this.hideSmartPanelsForAreaDrawing();
-    }
-
-    this.activeTool = "upload";
-
-    if (!this.areaFileInput?.nativeElement) {
-      this.activeTool = null;
+    // Upload butonuna ikinci kez basılırsa aktif araç ve hint birlikte kapanır.
+    if (this.activeTool === "upload") {
+      this.cancelAreaCreationTool();
       return;
     }
 
-    const input = this.areaFileInput.nativeElement;
+    this.clearMeasure();
+    this.stopPolygonDraw(true);
+
+    if (!keepSmartPanelOpen) {
+      this.closeAllPanels();
+    }
+
+    // Dosya seçici açıkken de alan oluşturma hint mesajı görünür.
+    this.hideSmartPanelsForAreaDrawing();
+    this.activeTool = "upload";
+
+    const input = this.areaFileInput?.nativeElement;
+
+    if (!input) {
+      this.cancelAreaCreationTool();
+      return;
+    }
 
     input.value = "";
 
     const onFocus = () => {
       setTimeout(() => {
-        if (!input.files?.length && this.activeTool === "upload") {
-          this.activeTool = null;
-          this.restoreAreaDrawPanels();
+        // HTML tarafındaki cancel event'i activeTool'u daha önce null yapsa bile
+        // isAreaCreationMode üzerinden hint ve panel state'i kesin kapatılır.
+        if (!input.files?.length && this.isAreaCreationMode) {
+          this.cancelAreaCreationTool();
         }
 
         window.removeEventListener("focus", onFocus);
@@ -1552,11 +1559,15 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       if (event.key !== "Escape") return;
       event.preventDefault();
       event.stopPropagation();
-      this.stopPolygonDraw(true);
-      this.activeTool = null;
-      this.restoreAreaDrawPanels();
+      this.cancelAreaCreationTool();
     };
     window.addEventListener("keydown", this.areaDrawEscHandler);
+  }
+
+  cancelAreaCreationTool(): void {
+    this.stopPolygonDraw(true);
+    this.activeTool = null;
+    this.restoreAreaDrawPanels();
   }
 
   private unbindAreaDrawEscHandler(): void {
@@ -4322,16 +4333,15 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   toggleRectangleDraw(keepSmartPanelOpen = false): void {
     if (this.previewMode) return;
 
-    if (this.polygonDraw) {
-      this.stopPolygonDraw(true);
-      this.activeTool = null;
+    if (this.activeTool === "rectangle" || this.polygonDraw) {
+      this.cancelAreaCreationTool();
       return;
     }
 
     this.clearMeasure();
 
-    // Çizim başladığında panel daima kapanır ve newAreaCreationHint görünür.
-    // Mevcut panel durumu snapshot olarak saklanır; çizim bitince/ESC'de geri gelir.
+    // Çizim başladığında smart panel görünürlüğü saklanır, paneller geçici
+    // olarak kapatılır ve alan oluşturma hint mesajı gösterilir.
     this.hideSmartPanelsForAreaDrawing();
 
     this.disableAreaModify();

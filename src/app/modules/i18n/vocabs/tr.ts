@@ -960,6 +960,7 @@ export const locale = {
                     "HIDE": "Sonuçları Gizle",
                     "HIDE_AREAS": "İlgi Alanlarını Gizle",
                     "SHOW": "Sonuçları Göster",
+                    "EDIT_REQUEST": "İlgi Alanı Güncelle"
                 },
                 "SORT": {
                     "TITLE": "Sırala",

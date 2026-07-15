@@ -1,87 +1,94 @@
-<div
-  class="glass-modal-backdrop"
-  tabindex="-1"
-  *ngIf="isOpen"
-  (click)="onBackdropClick($event)"
->
+<ng-container *ngIf="isOpen">
+  <div class="modal-backdrop fade show"></div>
+
   <div
-    class="modal-dialog"
-    [ngClass]="{
-      'modal-dialog-centered': variant === 'center',
-      'modal-dialog-end': variant === 'right',
-      'glass-modal-dialog-right': variant === 'right'
-    }"
-    [style.maxWidth]="variant === 'center' ? width : null"
-    (click)="$event.stopPropagation()"
+    class="modal fade show d-block"
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'custom-modal-title'"
+    (mousedown)="onBackdropClick($event)"
   >
-    <div class="modal-content glass-modal-content">
+    <div
+      class="modal-dialog"
+      [ngClass]="{
+        'modal-dialog-centered modal-dialog-scrollable': variant === 'center',
+        'custom-modal-dialog-right m-0 ms-auto h-100': variant === 'right'
+      }"
+      [style.--custom-modal-width]="width"
+    >
+      <div
+        class="modal-content shadow-sm"
+        [ngClass]="{
+          'h-100 rounded-0 border-0': variant === 'right'
+        }"
+        (mousedown)="$event.stopPropagation()"
+      >
+        <div class="modal-header">
+          <div class="d-flex align-items-center min-w-0">
+            <div class="symbol symbol-40px me-4 flex-shrink-0">
+              <span class="symbol-label bg-light-primary">
+                <i class="fa-solid fa-folder-open fs-2 text-primary"></i>
+              </span>
+            </div>
 
-      <!-- Modal Header -->
-      <div class="modal-header glass-modal-header">
-        <div class="d-flex align-items-center gap-3 min-w-0">
+            <div class="d-flex flex-column min-w-0">
+              <h2
+                id="custom-modal-title"
+                class="modal-title fw-bold text-gray-900 mb-0 text-truncate"
+              >
+                {{ title }}
+              </h2>
 
-          <div class="symbol symbol-40px glass-modal-symbol">
-            <span class="symbol-label">
-              <i class="fas fa-folder-open fs-2 text-primary"></i>
-            </span>
-          </div>
-
-          <div class="min-w-0">
-            <h3 class="fw-bold mb-1 text-truncate">
-              {{ title }}
-            </h3>
-
-            <div *ngIf="subtitle" class="text-muted fs-7">
-              {{ subtitle }}
+              <span
+                *ngIf="subtitle"
+                class="text-gray-500 fw-semibold fs-7 mt-1 text-truncate"
+              >
+                {{ subtitle }}
+              </span>
             </div>
           </div>
+
+          <button
+            type="button"
+            class="btn btn-sm btn-light-danger d-inline-flex align-items-center flex-shrink-0 ms-4"
+            (click)="close()"
+            [attr.aria-label]="'CLOSE' | translate"
+          >
+            <i class="fa-solid fa-xmark me-2"></i>
+            {{ 'CLOSE' | translate }}
+          </button>
         </div>
 
-        <!-- Açık ve anlaşılır kapatma butonu -->
-        <button
-          type="button"
-          class="btn btn-sm btn-light-danger d-flex align-items-center gap-2"
-          (click)="close()"
-          [attr.aria-label]="'CLOSE' | translate"
-        >
-          <i class="fas fa-times"></i>
+        <div class="modal-body">
+          <ng-content></ng-content>
+        </div>
 
-          <span>
-            {{ 'CLOSE' | translate }}
-          </span>
-        </button>
+        <div *ngIf="showFooter" class="modal-footer">
+          <div class="d-flex align-items-center justify-content-end gap-3 w-100">
+            <button
+              type="button"
+              class="btn btn-light"
+              (click)="close()"
+            >
+              <i class="fa-solid fa-xmark me-2"></i>
+              {{ cancelText | translate }}
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-primary"
+              [disabled]="submitDisabled"
+              (click)="onSubmit()"
+            >
+              <span class="indicator-label text-white">
+                <i class="fa-solid fa-check me-2"></i>
+                {{ submitText | translate }}
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
-
-      <!-- Modal Body -->
-      <div class="modal-body glass-modal-body">
-        <ng-content></ng-content>
-      </div>
-
-      <!-- Modal Footer -->
-      <div
-        class="modal-footer glass-modal-footer"
-        *ngIf="showFooter"
-      >
-        <button
-          type="button"
-          class="btn btn-light"
-          (click)="close()"
-        >
-          <i class="fas fa-times me-2"></i>
-          {{ cancelText | translate }}
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-primary"
-          [disabled]="submitDisabled"
-          (click)="onSubmit()"
-        >
-          <i class="fas fa-check me-2"></i>
-          {{ submitText | translate }}
-        </button>
-      </div>
-
     </div>
   </div>
-</div>
+</ng-container>

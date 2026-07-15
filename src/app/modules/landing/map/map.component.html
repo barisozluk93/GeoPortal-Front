@@ -98,7 +98,7 @@
       [class.map-draggable-panel--results-collapsed]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen"
       [class.map-draggable-panel--prefilter-collapsed]="isPrefilterPanelCollapsed"
       *ngIf="isSmartPrefilterPanelOpen || isSmartFilterPanelOpen || isPrefilterPanelCollapsed || isResultsPanelCollapsed || isSmartProductRequestPanelOpen">
-      <app-map-panel-shell *ngIf="!(isPrefilterPanelCollapsed && isResultsPanelCollapsed && !isSmartProductRequestPanelOpen)" icon="fa-solid fa-map-location-dot" [panelClass]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen
+      <app-map-panel-shell *ngIf="!(isPrefilterPanelCollapsed && isResultsPanelCollapsed && !isSmartProductRequestPanelOpen)" icon="fa-solid fa-grip" [panelClass]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen
           ? 'map-panel-shell--combined-smart-filter map-panel-shell--results-collapsed'
           : 'map-panel-shell--combined-smart-filter'" [title]="'MAP.SMART_FILTER.TITLE' | translate"
         [minimized]="panelUiState.smartFilter.minimized" [maximized]="panelUiState.smartFilter.maximized"

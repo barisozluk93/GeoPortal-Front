@@ -1,37 +1,44 @@
 <div
   #trigger
-  class="custom-select-trigger form-control d-flex align-items-center justify-content-between"
+  class="custom-select-trigger form-control d-flex align-items-center justify-content-between bg-body border border-gray-300 text-gray-800"
   [ngClass]="{
     'form-control-sm': size === 'sm',
     'form-control-lg': size === 'lg',
     'is-invalid': invalid,
-    'disabled': disabled,
-    'open': isOpen
+    'disabled bg-light text-muted': disabled,
+    'open border-primary': isOpen
   }"
+  [attr.tabindex]="disabled ? -1 : 0"
+  [attr.aria-disabled]="disabled"
+  [attr.aria-expanded]="isOpen"
+  role="combobox"
   (click)="toggle($event)"
 >
   <div class="d-flex align-items-center flex-grow-1 min-w-0 overflow-hidden">
     <ng-container *ngIf="multiple; else singleTemplate">
       <ng-container *ngIf="selectedItems.length > 0; else multiPlaceholder">
-        <span class="custom-select-value text-truncate">
+        <span class="custom-select-value text-gray-800 text-truncate">
           {{ selectedItemsText }}
         </span>
       </ng-container>
 
       <ng-template #multiPlaceholder>
-        <span class="custom-select-placeholder text-truncate">
+        <span class="custom-select-placeholder text-gray-500 text-truncate">
           {{ placeholder }}
         </span>
       </ng-template>
     </ng-container>
 
     <ng-template #singleTemplate>
-      <span *ngIf="selectedItem; else singlePlaceholder" class="custom-select-value text-truncate">
+      <span
+        *ngIf="selectedItem; else singlePlaceholder"
+        class="custom-select-value text-truncate"
+      >
         {{ selectedItem[bindLabel] }}
       </span>
 
       <ng-template #singlePlaceholder>
-        <span class="custom-select-placeholder text-truncate">
+        <span class="custom-select-placeholder text-muted text-truncate">
           {{ placeholder }}
         </span>
       </ng-template>
@@ -42,18 +49,22 @@
     <button
       *ngIf="clearable && !disabled && ((multiple && selectedItems.length > 0) || (!multiple && selectedItem))"
       type="button"
-      class="custom-select-icon-btn"
+      class="custom-select-icon-btn btn btn-icon btn-sm btn-active-light-primary text-gray-500"
       (click)="clear($event)"
       tabindex="-1"
+      aria-label="Seçimi temizle"
     >
-      <i class="fa-solid fa-xmark fs-8"></i>
+      <i class="ki-duotone ki-cross fs-3">
+        <span class="path1"></span>
+        <span class="path2"></span>
+      </i>
     </button>
 
-    <span class="custom-select-divider"></span>
+    <span class="custom-select-divider border-start border-gray-300"></span>
 
-    <span class="custom-select-chevron-wrap">
+    <span class="custom-select-chevron-wrap text-gray-500">
       <i
-        class="fa-solid fa-chevron-down fs-8 custom-select-chevron"
+        class="ki-duotone ki-down fs-3 custom-select-chevron"
         [style.transform]="isOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
       ></i>
     </span>

@@ -1,179 +1,198 @@
+/* Componentin tam genişlikte çalışması için zorunlu. */
 app-custom-select {
   display: block;
   width: 100%;
 }
 
+/*
+ * Custom select gerçek bir input/select olmadığı için Metronic form-control
+ * ölçüleri trigger üzerinde birebir korunur.
+ */
 .custom-select-trigger {
   width: 100%;
-  min-height: 43px;
-  padding: 0.775rem 0.9rem;
+  box-sizing: border-box;
   cursor: pointer;
   user-select: none;
+  outline: 0;
+  box-shadow: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 
-  background: var(--app-bg, #fff) !important;
-  color: var(--app-text, #000) !important;
-  border: 1px solid #d1d5db !important;
-  border-radius: 8px !important;
-  box-shadow: none !important;
-
-  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
-
-  &:hover:not(.disabled) {
-    border-color: var(--app-primary, #263685) !important;
+  &:hover:not(.disabled):not(.is-invalid) {
+    border-color: var(--bs-gray-400) !important;
   }
 
   &.open,
+  &:focus,
+  &:focus-visible,
   &:focus-within {
-    border-color: var(--app-primary, #263685) !important;
-    box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb, 38, 54, 133), .12) !important;
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.1) !important;
   }
 
   &.disabled {
-    opacity: .65;
+    color: var(--bs-gray-600) !important;
+    background-color: var(--bs-gray-100) !important;
+    border-color: var(--bs-gray-300) !important;
+    opacity: 1;
     cursor: not-allowed;
     pointer-events: none;
-    background: var(--app-soft-bg, #f3f4f6) !important;
   }
 
   &.is-invalid {
-    border-color: var(--app-danger, #dd140e) !important;
-    box-shadow: 0 0 0 3px rgba(var(--bs-danger-rgb, 221, 20, 14), .12) !important;
+    border-color: var(--bs-danger) !important;
+
+    &.open,
+    &:focus,
+    &:focus-visible,
+    &:focus-within {
+      box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.1) !important;
+    }
   }
 
+  /* Metronic form-control-sm input yüksekliği ile eşleşir. */
   &.form-control-sm {
-    min-height: 34px;
-    padding: .55rem .75rem;
-    font-size: .95rem;
+    height: 34.83px;
+    min-height: 34.83px;
+
+    .custom-select-actions,
+    .custom-select-chevron-wrap,
+    .custom-select-icon-btn {
+      max-height: 20px;
+      line-height: 1;
+    }
   }
 
+  /* Metronic form-control-lg ölçüsü. */
   &.form-control-lg {
+    height: calc(1.5em + 1.65rem + 2px);
     min-height: calc(1.5em + 1.65rem + 2px);
-    padding: .825rem 1rem;
-    font-size: 1.15rem;
+
+    .custom-select-actions,
+    .custom-select-chevron-wrap,
+    .custom-select-icon-btn {
+      max-height: 24px;
+      line-height: 1;
+    }
   }
 }
 
+.custom-select-value,
 .custom-select-placeholder {
-  color: var(--app-muted, #6b7280) !important;
+  display: block;
+  min-width: 0;
+  line-height: 1.5;
 }
 
 .custom-select-value {
-  color: var(--app-text, #000) !important;
+  color: var(--app-text) !important;
+}
+
+.custom-select-placeholder {
+  color: var(--bs-gray-600) !important;
+}
+
+.custom-select-trigger.disabled {
+  .custom-select-value,
+  .custom-select-placeholder,
+  .custom-select-actions,
+  .custom-select-chevron-wrap {
+    color: var(--bs-gray-500) !important;
+  }
 }
 
 .custom-select-actions {
-  gap: .45rem;
+  gap: 0.45rem;
+  line-height: 1;
 }
 
 .custom-select-divider {
   width: 1px;
   height: 18px;
-  background: var(--app-border, #e5e7eb);
+  flex-shrink: 0;
 }
 
 .custom-select-icon-btn {
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--app-muted, #6b7280);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(var(--bs-primary-rgb, 38, 54, 133), .08);
-    color: var(--app-primary, #263685);
-  }
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  padding: 0 !important;
+  line-height: 1 !important;
 
   i {
     color: inherit !important;
+    line-height: 1 !important;
   }
 }
 
 .custom-select-chevron-wrap {
   width: 20px;
   height: 20px;
-  color: var(--app-muted, #6b7280);
+  min-width: 20px;
+  min-height: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
 
   i {
     color: inherit !important;
+    line-height: 1 !important;
   }
 }
 
 .custom-select-chevron {
-  transition: transform .18s ease;
+  transition: transform 0.2s ease;
 }
 
-/* body'ye append edildiği için global çalışır */
+/* Dropdown body'ye append edildiği için mevcut görünüm korunmuştur. */
 .custom-select-dropdown {
   z-index: 32000 !important;
   width: max-content;
   min-width: var(--custom-select-trigger-width, 190px);
   max-width: 300px;
-  padding: 8px 0 !important;
+  padding: 6px !important;
   overflow: hidden auto;
-
   background-color: var(--bs-body-bg) !important;
-  border: 1px solid var(--bs-gray-200) !important;
-  border-radius: 0.475rem !important;
+  border: 1px solid var(--bs-gray-300) !important;
+  border-radius: 3px !important;
   box-shadow: var(--bs-dropdown-box-shadow) !important;
-
-  animation: customSelectDropdownFade .14s ease;
+  animation: customSelectDropdownFade 0.14s ease;
 }
 
 .custom-select-dropdown-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
   width: 100%;
-  background: transparent !important;
 }
 
 .custom-select-dropdown-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-
-  width: calc(100% - 12px);
-  min-height: 36px;
-  margin: 0 6px;
-  padding: 0 12px;
-  gap: 10px;
-
-  color: var(--app-soft-text) !important;
-  background-color: transparent !important;
-  border: 0 !important;
-  border-radius: 0.475rem !important;
-  box-shadow: none !important;
-  outline: 0 !important;
-
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  line-height: 1.2 !important;
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 12px;
+  background: transparent;
+  font-size: 12px;
   text-align: left;
   white-space: nowrap;
   cursor: pointer;
-
+  outline: 0;
   transition:
-    color .2s ease,
-    background-color .2s ease !important;
+    color 0.2s ease,
+    background-color 0.2s ease;
 
   &:hover,
   &:focus,
   &:focus-visible,
   &.active {
-    color: var(--bs-primary) !important;
     background-color: var(--bs-primary-light) !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    outline: 0 !important;
+    border-radius: 10px !important;
   }
 }
 
@@ -190,22 +209,50 @@ app-custom-select {
   min-width: 16px;
   margin-left: auto;
   flex-shrink: 0;
-  color: inherit !important;
+  color: var(--bs-primary) !important;
   font-size: 13px;
   text-align: center;
 }
 
 .custom-select-dropdown-empty {
   min-height: 36px;
-  margin: 0 6px;
-  padding: 0 12px;
+  padding: 0 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--bs-gray-600) !important;
-  background: transparent !important;
   font-size: 13px;
   font-weight: 500;
+}
+
+/* Metronic dark mode değişkenleriyle otomatik uyum. */
+[data-bs-theme='dark'] {
+  .custom-select-trigger {
+    background-color: var(--bs-body-bg) !important;
+    border-color: var(--bs-gray-300) !important;
+
+    &:hover:not(.disabled):not(.is-invalid) {
+      border-color: var(--bs-gray-400) !important;
+    }
+
+    &.disabled {
+      background-color: var(--bs-gray-200) !important;
+      border-color: var(--bs-gray-300) !important;
+    }
+  }
+
+  .custom-select-value {
+    color: var(--bs-gray-800) !important;
+  }
+
+  .custom-select-placeholder {
+    color: var(--bs-gray-500) !important;
+  }
+
+  .custom-select-dropdown {
+    background-color: var(--bs-body-bg) !important;
+    border-color: var(--bs-gray-300) !important;
+  }
 }
 
 @keyframes customSelectDropdownFade {

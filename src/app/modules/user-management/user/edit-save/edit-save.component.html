@@ -3,219 +3,272 @@
   [title]="modalTitle"
   [subtitle]="'USER_FORM.TITLE' | translate"
   [width]="'900px'"
-  (closed)="closeModal()"
-  (submitted)="submit()"
   variant="center"
   [showFooter]="true"
+  (closed)="closeModal()"
+  (submitted)="submit()"
 >
-  <form class="form w-100" [formGroup]="form" novalidate>
-    <div class="row">
+  <form class="form" [formGroup]="form" novalidate>
+    <div class="row g-8">
 
       <!-- NAME -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.NAME' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.NAME' | translate }}
+          </label>
 
-        <input
-          class="form-control form-control-lg"
-          formControlName="name"
-          [placeholder]="'USER_FORM.NAME' | translate"
-          [ngClass]="{
-            'is-invalid': isInvalid('name')
-          }"
-        />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            autocomplete="off"
+            [placeholder]="'USER_FORM.NAME' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('name') }"
+          />
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('name')">
-          {{ 'USER_FORM.REQUIRED_NAME' | translate }}
+          <div *ngIf="isInvalid('name')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'USER_FORM.REQUIRED_NAME' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SURNAME -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.SURNAME' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.SURNAME' | translate }}
+          </label>
 
-        <input
-          class="form-control form-control-lg"
-          formControlName="surname"
-          [placeholder]="'USER_FORM.SURNAME' | translate"
-          [ngClass]="{
-            'is-invalid': isInvalid('surname')
-          }"
-        />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="surname"
+            autocomplete="off"
+            [placeholder]="'USER_FORM.SURNAME' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('surname') }"
+          />
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('surname')">
-          {{ 'USER_FORM.REQUIRED_SURNAME' | translate }}
+          <div *ngIf="isInvalid('surname')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'USER_FORM.REQUIRED_SURNAME' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- EMAIL -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.EMAIL' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.EMAIL' | translate }}
+          </label>
 
-        <input
-          type="email"
-          class="form-control form-control-lg"
-          formControlName="email"
-          [placeholder]="'USER_FORM.EMAIL' | translate"
-          [ngClass]="{
-            'is-invalid': isInvalid('email')
-          }"
-        />
+          <input
+            type="email"
+            class="form-control"
+            formControlName="email"
+            autocomplete="off"
+            [placeholder]="'USER_FORM.EMAIL' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('email') }"
+          />
 
-        <ng-container *ngIf="isInvalid('email')">
-          <div class="invalid-feedback d-block" *ngIf="f['email'].errors?.['required']">
-            {{ 'USER_FORM.REQUIRED_EMAIL' | translate }}
+          <div *ngIf="isInvalid('email')" class="fv-plugins-message-container">
+            <div
+              *ngIf="f['email'].errors?.['required']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'USER_FORM.REQUIRED_EMAIL' | translate }}
+            </div>
+
+            <div
+              *ngIf="f['email'].errors?.['email']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'USER_FORM.INVALID_EMAIL' | translate }}
+            </div>
           </div>
-          <div class="invalid-feedback d-block" *ngIf="f['email'].errors?.['email']">
-            {{ 'USER_FORM.INVALID_EMAIL' | translate }}
-          </div>
-        </ng-container>
+        </div>
       </div>
 
       <!-- USERNAME -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.USERNAME' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.USERNAME' | translate }}
+          </label>
 
-        <input
-          class="form-control form-control-lg"
-          formControlName="username"
-          [placeholder]="'USER_FORM.USERNAME' | translate"
-          [ngClass]="{
-            'is-invalid': isInvalid('username')
-          }"
-        />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="username"
+            autocomplete="off"
+            [placeholder]="'USER_FORM.USERNAME' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('username') }"
+          />
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('username')">
-          {{ 'USER_FORM.REQUIRED_USERNAME' | translate }}
+          <div *ngIf="isInvalid('username')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'USER_FORM.REQUIRED_USERNAME' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- PASSWORD -->
-      <div class="col-md-6 fv-row mb-8" *ngIf="form.controls['id'].value == 0">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.PASSWORD' | translate }}
-        </label>
+      <div
+        *ngIf="form.controls['id'].value == 0"
+        class="col-md-6"
+      >
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.PASSWORD' | translate }}
+          </label>
 
-        <input
-          type="password"
-          class="form-control form-control-lg"
-          formControlName="password"
-          [placeholder]="'USER_FORM.PASSWORD' | translate"
-          [ngClass]="{
-            'is-invalid': isInvalid('password')
-          }"
-        />
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+            autocomplete="new-password"
+            [placeholder]="'USER_FORM.PASSWORD' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('password') }"
+          />
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('password')">
-          {{ 'USER_FORM.REQUIRED_PASSWORD' | translate }}
+          <div *ngIf="isInvalid('password')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'USER_FORM.REQUIRED_PASSWORD' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- CONFIRM PASSWORD -->
-      <div class="col-md-6 fv-row mb-8" *ngIf="form.controls['id'].value == 0">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.CONFIRM_PASSWORD' | translate }}
-        </label>
+      <div
+        *ngIf="form.controls['id'].value == 0"
+        class="col-md-6"
+      >
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.CONFIRM_PASSWORD' | translate }}
+          </label>
 
-        <input
-          type="password"
-          class="form-control form-control-lg"
-          formControlName="cPassword"
-          [placeholder]="'USER_FORM.CONFIRM_PASSWORD' | translate"
-          [ngClass]="{
-            'is-invalid': isInvalid('cPassword')
-          }"
-        />
+          <input
+            type="password"
+            class="form-control"
+            formControlName="cPassword"
+            autocomplete="new-password"
+            [placeholder]="'USER_FORM.CONFIRM_PASSWORD' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('cPassword') }"
+          />
 
-        <div class="invalid-feedback d-block" *ngIf="f['cPassword'].errors?.['required'] && isInvalid('cPassword')">
-          {{ 'USER_FORM.REQUIRED_CONFIRM_PASSWORD' | translate }}
-        </div>
+          <div
+            *ngIf="isInvalid('cPassword')"
+            class="fv-plugins-message-container"
+          >
+            <div
+              *ngIf="f['cPassword'].errors?.['required']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'USER_FORM.REQUIRED_CONFIRM_PASSWORD' | translate }}
+            </div>
 
-        <div class="invalid-feedback d-block" *ngIf="f['cPassword'].errors?.['ConfirmPassword']">
-          {{ 'USER_FORM.PASSWORD_NOT_MATCH' | translate }}
+            <div
+              *ngIf="f['cPassword'].errors?.['ConfirmPassword']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'USER_FORM.PASSWORD_NOT_MATCH' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- PHONE -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.PHONE' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.PHONE' | translate }}
+          </label>
 
-        <input
-          type="tel"
-          class="form-control form-control-lg"
-          formControlName="phone"
-          mask="(000) 000 00 00"
-          [showMaskTyped]="true"
-          [dropSpecialCharacters]="false"
-          autocomplete="off"
-          placeholder="(___) ___ __ __"
-          [ngClass]="{
-            'is-invalid': isInvalid('phone')
-          }"
-        />
+          <input
+            type="tel"
+            class="form-control"
+            formControlName="phone"
+            mask="(000) 000 00 00"
+            [showMaskTyped]="true"
+            [dropSpecialCharacters]="false"
+            autocomplete="off"
+            placeholder="(___) ___ __ __"
+            [ngClass]="{ 'is-invalid': isInvalid('phone') }"
+          />
 
-        <ng-container *ngIf="isInvalid('phone')">
-          <div class="invalid-feedback d-block" *ngIf="f['phone'].errors?.['required']">
-            {{ 'USER_FORM.REQUIRED_PHONE' | translate }}
+          <div *ngIf="isInvalid('phone')" class="fv-plugins-message-container">
+            <div
+              *ngIf="f['phone'].errors?.['required']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'USER_FORM.REQUIRED_PHONE' | translate }}
+            </div>
+
+            <div
+              *ngIf="f['phone'].errors?.['pattern']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'USER_FORM.INVALID_PHONE' | translate }}
+            </div>
           </div>
-          <div class="invalid-feedback d-block" *ngIf="f['phone'].errors?.['pattern']">
-            {{ 'USER_FORM.INVALID_PHONE' | translate }}
-          </div>
-        </ng-container>
+        </div>
       </div>
 
       <!-- ROLE -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.ROLE' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.ROLE' | translate }}
+          </label>
 
-        <app-custom-select
-          [size]="'lg'"
-          formControlName="roles"
-          [items]="roleList"
-          bindLabel="name"
-          bindValue="id"
-          [multiple]="false"
-          [clearable]="true"
-          [placeholder]="'USER_FORM.SELECT_ROLE' | translate"
-          [invalid]="isInvalid('roles')"
-        >
-        </app-custom-select>
+          <app-custom-select
+            formControlName="roles"
+            [items]="roleList"
+            bindLabel="name"
+            bindValue="id"
+            [multiple]="false"
+            [clearable]="true"
+            [placeholder]="'USER_FORM.SELECT_ROLE' | translate"
+            [invalid]="isInvalid('roles')"
+          >
+          </app-custom-select>
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('roles')">
-          {{ 'USER_FORM.REQUIRED_ROLE' | translate }}
+          <div *ngIf="isInvalid('roles')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'USER_FORM.REQUIRED_ROLE' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- ORGANIZATION -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'USER_FORM.ORGANIZATION' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="form-label fw-semibold fs-6 mb-2">
+            {{ 'USER_FORM.ORGANIZATION' | translate }}
+          </label>
 
-        <app-custom-select
-          [size]="'lg'"
-          formControlName="organizations"
-          [items]="organizationList"
-          bindLabel="name"
-          bindValue="id"
-          [multiple]="false"
-          [clearable]="true"
-          [placeholder]="'USER_FORM.SELECT_ORGANIZATION' | translate"
-          [invalid]="isInvalid('organizations')"
-        >
-        </app-custom-select>
+          <app-custom-select
+            formControlName="organizations"
+            [items]="organizationList"
+            bindLabel="name"
+            bindValue="id"
+            [multiple]="false"
+            [clearable]="true"
+            [placeholder]="'USER_FORM.SELECT_ORGANIZATION' | translate"
+            [invalid]="isInvalid('organizations')"
+          >
+          </app-custom-select>
+        </div>
       </div>
+
     </div>
   </form>
 </app-custom-modal>

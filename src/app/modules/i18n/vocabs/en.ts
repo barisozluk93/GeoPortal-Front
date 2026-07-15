@@ -959,6 +959,7 @@ export const locale = {
           "HIDE": "Hide Results",
           "HIDE_AREAS": "Hide Areas of Interest",
           "SHOW": "Show Results",
+          "EDIT_REQUEST": "Edit AOI"
         },
         "SORT": {
           "TITLE": "Sort",

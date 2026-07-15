@@ -1,138 +1,265 @@
-<app-custom-modal [isOpen]="isModalOpen" [title]="modalTitle" [subtitle]="'LAYER_FORM.TITLE' | translate"
-  [width]="'900px'" (closed)="closeModal()" (submitted)="submit()" variant="center" [showFooter]="true">
-  <form class="form w-100" [formGroup]="form" novalidate>
+<app-custom-modal
+  [isOpen]="isModalOpen"
+  [title]="modalTitle"
+  [subtitle]="'LAYER_FORM.TITLE' | translate"
+  [width]="'900px'"
+  variant="center"
+  [showFooter]="true"
+  (closed)="closeModal()"
+  (submitted)="submit()"
+>
+  <form class="form" [formGroup]="form" novalidate>
 
-    <!-- TOP CHECK -->
-    <div class="mb-6">
+    <!-- VISIBLE -->
+    <div class="mb-8">
       <label class="form-check form-check-custom form-check-solid">
-        <input type="checkbox" class="form-check-input" formControlName="isVisible" />
-        <span class="form-check-label">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          formControlName="isVisible"
+        />
+
+        <span class="form-check-label fw-semibold text-gray-700">
           {{ 'LAYER_FORM.VISIBLE' | translate }}
         </span>
       </label>
     </div>
 
-    <div class="row">
+    <div class="row g-8">
 
       <!-- NAME -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.NAME' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'LAYER_FORM.NAME' | translate }}
+          </label>
 
-        <input type="text" formControlName="name" class="form-control form-control-lg"
-          [placeholder]="'LAYER_FORM.NAME' | translate" [ngClass]="{ 'is-invalid': isInvalid('name') }" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            autocomplete="off"
+            [placeholder]="'LAYER_FORM.NAME' | translate"
+            [ngClass]="{
+              'is-invalid': isInvalid('name')
+            }"
+          />
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('name')">
-          {{ 'LAYER_FORM.REQUIRED_NAME' | translate }}
+          <div
+            *ngIf="isInvalid('name')"
+            class="fv-plugins-message-container"
+          >
+            <div class="fv-help-block text-danger">
+              {{ 'LAYER_FORM.REQUIRED_NAME' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
-    <!-- TYPE -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.TYPE' | translate }}
-        </label>
+      <!-- TYPE -->
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'LAYER_FORM.TYPE' | translate }}
+          </label>
 
-        <app-custom-select formControlName="type" [size]="'lg'" [items]="layerTypes" bindLabel="label" bindValue="value" [clearable]="true"
-          [placeholder]="'LAYER_FORM.SELECT_A_TYPE' | translate" [invalid]="isInvalid('type')">
-        </app-custom-select>
+          <app-custom-select
+            formControlName="type"
+            [items]="layerTypes"
+            bindLabel="label"
+            bindValue="value"
+            [clearable]="true"
+            [placeholder]="'LAYER_FORM.SELECT_A_TYPE' | translate"
+            [invalid]="isInvalid('type')"
+          >
+          </app-custom-select>
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('type')">
-          {{ 'LAYER_FORM.REQUIRED_TYPE' | translate }}
+          <div
+            *ngIf="isInvalid('type')"
+            class="fv-plugins-message-container"
+          >
+            <div class="fv-help-block text-danger">
+              {{ 'LAYER_FORM.REQUIRED_TYPE' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- URL (FULL WIDTH) -->
-      <div class="col-12 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.URL' | translate }}
-        </label>
+      <!-- URL -->
+      <div class="col-12">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'LAYER_FORM.URL' | translate }}
+          </label>
 
-        <input type="text" formControlName="url" class="form-control form-control-lg"
-          [placeholder]="'LAYER_FORM.URL' | translate" [ngClass]="{ 'is-invalid': isInvalid('url') }" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="url"
+            autocomplete="off"
+            [placeholder]="'LAYER_FORM.URL' | translate"
+            [ngClass]="{
+              'is-invalid': isInvalid('url')
+            }"
+          />
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('url')">
-          {{ 'LAYER_FORM.REQUIRED_URL' | translate }}
+          <div
+            *ngIf="isInvalid('url')"
+            class="fv-plugins-message-container"
+          >
+            <div class="fv-help-block text-danger">
+              {{ 'LAYER_FORM.REQUIRED_URL' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- LAYER NAME -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.LAYER_NAME' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'LAYER_FORM.LAYER_NAME' | translate }}
+          </label>
 
-        <input type="text" formControlName="layerName" class="form-control form-control-lg"
-          [placeholder]="'LAYER_FORM.LAYER_NAME' | translate" [ngClass]="{ 'is-invalid': isInvalid('layerName') }" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="layerName"
+            autocomplete="off"
+            [placeholder]="'LAYER_FORM.LAYER_NAME' | translate"
+            [ngClass]="{
+              'is-invalid': isInvalid('layerName')
+            }"
+          />
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('layerName')">
-          {{ 'LAYER_FORM.REQUIRED_LAYER_NAME' | translate }}
+          <div
+            *ngIf="isInvalid('layerName')"
+            class="fv-plugins-message-container"
+          >
+            <div class="fv-help-block text-danger">
+              {{ 'LAYER_FORM.REQUIRED_LAYER_NAME' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- FORMAT -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.FORMAT' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="form-label fw-semibold fs-6 mb-2">
+            {{ 'LAYER_FORM.FORMAT' | translate }}
+          </label>
 
-        <input type="text" formControlName="format" class="form-control form-control-lg"
-          [placeholder]="'LAYER_FORM.FORMAT' | translate" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="format"
+            autocomplete="off"
+            [placeholder]="'LAYER_FORM.FORMAT' | translate"
+          />
+        </div>
       </div>
 
       <!-- VERSION -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.VERSION' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="form-label fw-semibold fs-6 mb-2">
+            {{ 'LAYER_FORM.VERSION' | translate }}
+          </label>
 
-        <input type="text" formControlName="version" class="form-control form-control-lg"
-          [placeholder]="'LAYER_FORM.VERSION' | translate" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="version"
+            autocomplete="off"
+            [placeholder]="'LAYER_FORM.VERSION' | translate"
+          />
+        </div>
       </div>
 
       <!-- OPACITY -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.OPACITY' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'LAYER_FORM.OPACITY' | translate }}
+          </label>
 
-        <input type="number" step="0.1" min="0" max="1" formControlName="opacity"
-          class="form-control form-control-lg" [placeholder]="'LAYER_FORM.OPACITY' | translate"
-          [ngClass]="{ 'is-invalid': isInvalid('opacity') }" />
+          <input
+            type="number"
+            class="form-control"
+            formControlName="opacity"
+            step="0.1"
+            min="0"
+            max="1"
+            [placeholder]="'LAYER_FORM.OPACITY' | translate"
+            [ngClass]="{
+              'is-invalid': isInvalid('opacity')
+            }"
+          />
 
-        <ng-container *ngIf="isInvalid('opacity')">
-          <div class="invalid-feedback d-block" *ngIf="f['opacity'].errors?.['required']">
-            {{ 'LAYER_FORM.REQUIRED_OPACITY' | translate }}
+          <div
+            *ngIf="isInvalid('opacity')"
+            class="fv-plugins-message-container"
+          >
+            <div
+              *ngIf="f['opacity'].errors?.['required']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'LAYER_FORM.REQUIRED_OPACITY' | translate }}
+            </div>
+
+            <div
+              *ngIf="
+                f['opacity'].errors?.['min'] ||
+                f['opacity'].errors?.['max']
+              "
+              class="fv-help-block text-danger"
+            >
+              {{ 'LAYER_FORM.OPACITY_RANGE' | translate }}
+            </div>
           </div>
-
-          <div class="invalid-feedback d-block" *ngIf="f['opacity'].errors?.['min'] || f['opacity'].errors?.['max']">
-            {{ 'LAYER_FORM.OPACITY_RANGE' | translate }}
-          </div>
-        </ng-container>
+        </div>
       </div>
 
       <!-- ORDER NO -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder">
-          {{ 'LAYER_FORM.ORDER_NO' | translate }}
-        </label>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'LAYER_FORM.ORDER_NO' | translate }}
+          </label>
 
-        <input type="number" min="1" formControlName="orderNo" class="form-control form-control-lg"
-          [placeholder]="'LAYER_FORM.ORDER_NO' | translate" [ngClass]="{ 'is-invalid': isInvalid('orderNo') }" />
+          <input
+            type="number"
+            class="form-control"
+            formControlName="orderNo"
+            min="1"
+            [placeholder]="'LAYER_FORM.ORDER_NO' | translate"
+            [ngClass]="{
+              'is-invalid': isInvalid('orderNo')
+            }"
+          />
 
-        <ng-container *ngIf="isInvalid('orderNo')">
-          <div class="invalid-feedback d-block" *ngIf="f['orderNo'].errors?.['required']">
-            {{ 'LAYER_FORM.REQUIRED_ORDER_NO' | translate }}
+          <div
+            *ngIf="isInvalid('orderNo')"
+            class="fv-plugins-message-container"
+          >
+            <div
+              *ngIf="f['orderNo'].errors?.['required']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'LAYER_FORM.REQUIRED_ORDER_NO' | translate }}
+            </div>
+
+            <div
+              *ngIf="f['orderNo'].errors?.['min']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'LAYER_FORM.MIN_ORDER_NO' | translate }}
+            </div>
           </div>
-
-          <div class="invalid-feedback d-block" *ngIf="f['orderNo'].errors?.['min']">
-            {{ 'LAYER_FORM.MIN_ORDER_NO' | translate }}
-          </div>
-        </ng-container>
+        </div>
       </div>
 
     </div>
-
   </form>
 </app-custom-modal>

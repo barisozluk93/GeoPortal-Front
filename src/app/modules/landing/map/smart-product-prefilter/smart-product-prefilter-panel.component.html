@@ -127,33 +127,27 @@
 
             <div class="aoi-card-actions-wrap">
               <div class="aoi-card-actions">
-                <button
-                  type="button"
-                  class="btn btn-icon btn-sm btn-light-primary"
-                  title="Talep Güncelle"
-                  aria-label="Talep Güncelle"
-                  (click)="editArea(area); $event.stopPropagation()"
-                >
-                  <i class="fa-solid fa-object-ungroup text-primary"></i>
-                </button>
-
                 <div class="aoi-menu-anchor" (click)="stopEvent($event)">
                   <button
                     type="button"
-                    class="btn btn-icon btn-sm btn-light"
+                    class="btn btn-icon btn-sm-minimal"
                     (click)="toggleAreaMenu(area.id, $event)"
                   >
                     <i class="fa-solid fa-ellipsis-vertical text-primary"></i>
                   </button>
 
                   <div class="aoi-menu menu menu-sub menu-sub-dropdown show py-2" *ngIf="openedMenuAreaId === area.id">
+                    <button type="button" class="menu-link border-0 w-100" (click)="editArea(area); $event.stopPropagation()">
+                    <i class="fa-solid fa-object-ungroup me-3"></i>
+                    <span>{{ 'MAP.SMART_FILTER.PREFILTER.EDIT_REQUEST' | translate }}</span>
+                  </button>
                   <button type="button" class="menu-link border-0 w-100" (click)="beginRename(area, $event)">
                     <i class="fa-solid fa-pen me-3"></i>
                     <span>{{ 'MAP.SMART_FILTER.PREFILTER.RENAME_AREA' | translate }}</span>
                   </button>
                   <button type="button" class="menu-link border-0 w-100" (click)="createNewRequest(area, $event)">
                     <i class="fa-solid fa-cart-plus me-3"></i>
-                    <span>Yeni Talep</span>
+                    <span>{{ 'MAP.SMART_FILTER.PREFILTER.NEW_REQUEST' | translate }}</span>
                   </button>
                   <button type="button" class="menu-link border-0 w-100" (click)="exportArea(area, 'shp')">
                     <i class="fa-solid fa-file-zipper me-3"></i>
@@ -174,7 +168,7 @@
 
               <button
                 type="button"
-                class="btn btn-icon btn-sm btn-light aoi-results-toggle"
+                class="btn btn-icon btn-sm-minimal aoi-results-toggle"
                 [title]="resultsCollapsed
                   ? ('MAP.SMART_FILTER.PREFILTER.SHOW' | translate)
                   : ('MAP.SMART_FILTER.PREFILTER.HIDE' | translate)"

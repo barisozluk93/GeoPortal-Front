@@ -131,7 +131,7 @@
                 </div>
 
                 <div class="position-relative flex-shrink-0" (click)="$event.stopPropagation()">
-                  <button type="button" class="btn btn-icon btn-sm btn-light text-primary"
+                  <button type="button" class="btn btn-icon btn-sm-minimal text-primary"
                     (click)="toggleProductDropdown(product)">
                     <i class="fa-solid fa-ellipsis-vertical text-primary"></i>
                   </button>
@@ -172,7 +172,7 @@
                   <img _ngcontent-ng-c335023454="" fill="currentColor" src="data:image/svg+xml,%3csvg%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M8%2010.5V2H5.665L6.5%200H2.5L0%206H4L5.25%203H7V3.5V4.5V5V6V6.5V7.5V9.5H4V7H3V10.5L1.5%2012H2.915L4.415%2010.5H5V12H6V10.5H6.585L8.085%2012H9.5L8%2010.5ZM4.585%202L4.17%203L4.005%203.4L3.34%205H1.5L3.165%201H5L4.585%202ZM8%200L7.585%201H10.5L9%204.6V6H9.5L12%200H8Z'%20 fill='%23000000'/%3e%3c/svg%3e" draggable="false">
                   {{ product.satellite }}</span>
 
-                <button type="button" class="btn btn-icon btn-sm btn-light text-primary ms-auto"
+                <button type="button" class="btn btn-icon btn-sm-minimal text-primary ms-auto"
                   (click)="toggleExpanded(product); $event.stopPropagation()">
                   <i class="fa-solid text-primary"
                     [ngClass]="isExpanded(product) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>

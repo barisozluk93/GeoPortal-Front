@@ -8,8 +8,8 @@
 
 /* Metronic utility classes handle the layout; only component-specific geometry stays here. */
 .smart-product-thumb {
-    width: 112px;
-    height: 92px;
+    width: 88px;
+    height: 88px;
 }
 
 .smart-product-label,
@@ -152,7 +152,7 @@
 
 .smart-sort-option {
     display: inline-flex;
-    height: 36px;
+    height: 30px;
     flex: 0 0 auto;
     align-items: center;
     overflow: hidden;
@@ -160,6 +160,7 @@
     border-radius: 0.475rem;
     background: var(--bs-body-bg);
     color: var(--bs-gray-700);
+    padding: 5px 5px;
 }
 
 .smart-sort-option--active {
@@ -168,7 +169,6 @@
 }
 
 .smart-sort-option__label {
-    padding: 0 8px;
     font-size: 11px;
     font-weight: 600;
     line-height: 34px;
@@ -210,4 +210,11 @@
     height: 16px;
     margin: 0 2px;
     background: var(--bs-border-color);
+}
+
+.btn-sm-minimal {
+    height: 25px !important;
+    width: 25px !important;
+    border-radius: 0.475rem !important;
+    padding: 5px !important;
 }

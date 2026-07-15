@@ -3,221 +3,328 @@
   [title]="modalTitle"
   [subtitle]="'ADDRESS_FORM.TITLE' | translate"
   [width]="'900px'"
-  (closed)="closeModal()"
-  (submitted)="submit()"
   variant="center"
   [showFooter]="true"
+  (closed)="closeModal()"
+  (submitted)="submit()"
 >
-  <form class="form w-100" [formGroup]="form" novalidate>
-    <div class="row">
+  <form class="form" [formGroup]="form" novalidate>
+    <div class="row g-8">
 
       <!-- NAME -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'NAME' | translate }}
-        </label>
-        <input
-          class="form-control form-control-lg"
-          formControlName="name"
-          [placeholder]="'NAME' | translate"
-          [ngClass]="{ 'is-invalid': isInvalid('name') }"
-        />
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('name')">
-          {{ 'NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'NAME' | translate }}
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            autocomplete="off"
+            [placeholder]="'NAME' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('name') }"
+          />
+
+          <div *ngIf="isInvalid('name')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SURNAME -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'SURNAME' | translate }}
-        </label>
-        <input
-          class="form-control form-control-lg"
-          formControlName="surname"
-          [placeholder]="'SURNAME' | translate"
-          [ngClass]="{ 'is-invalid': isInvalid('surname') }"
-        />
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('surname')">
-          {{ 'SURNAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'SURNAME' | translate }}
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="surname"
+            autocomplete="off"
+            [placeholder]="'SURNAME' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('surname') }"
+          />
+
+          <div *ngIf="isInvalid('surname')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'SURNAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- PHONE -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'PHONE' | translate }}
-        </label>
-        <input
-          type="tel"
-          class="form-control form-control-lg"
-          formControlName="phone"
-          mask="(000) 000 00 00"
-          [showMaskTyped]="true"
-          [dropSpecialCharacters]="false"
-          placeholder="(___) ___ __ __"
-          [ngClass]="{ 'is-invalid': isInvalid('phone') }"
-        />
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'PHONE' | translate }}
+          </label>
 
-        <div
-          class="invalid-feedback d-block"
-          *ngIf="f['phone'].errors?.['required'] && (f['phone'].dirty || f['phone'].touched)"
-        >
-          {{ 'PHONE' | translate }} {{ 'IS_REQUIRED' | translate }}
-        </div>
+          <input
+            type="tel"
+            class="form-control"
+            formControlName="phone"
+            mask="(000) 000 00 00"
+            [showMaskTyped]="true"
+            [dropSpecialCharacters]="false"
+            autocomplete="off"
+            placeholder="(___) ___ __ __"
+            [ngClass]="{ 'is-invalid': isInvalid('phone') }"
+          />
 
-        <div
-          class="invalid-feedback d-block"
-          *ngIf="f['phone'].errors?.['pattern'] && (f['phone'].dirty || f['phone'].touched)"
-        >
-          {{ 'INVALID_PHONE' | translate }}
+          <div *ngIf="isInvalid('phone')" class="fv-plugins-message-container">
+            <div
+              *ngIf="f['phone'].errors?.['required']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'PHONE' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+
+            <div
+              *ngIf="f['phone'].errors?.['pattern']"
+              class="fv-help-block text-danger"
+            >
+              {{ 'INVALID_PHONE' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- COUNTRY -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'COUNTRY' | translate }}
-        </label>
-        <input
-          class="form-control form-control-lg"
-          formControlName="country"
-          [placeholder]="'COUNTRY' | translate"
-          [ngClass]="{ 'is-invalid': isInvalid('country') }"
-        />
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('country')">
-          {{ 'COUNTRY' | translate }} {{ 'IS_REQUIRED' | translate }}
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'COUNTRY' | translate }}
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="country"
+            autocomplete="off"
+            [placeholder]="'COUNTRY' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('country') }"
+          />
+
+          <div *ngIf="isInvalid('country')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'COUNTRY' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- CITY -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'CITY' | translate }}
-        </label>
-        <input
-          class="form-control form-control-lg"
-          formControlName="city"
-          [placeholder]="'CITY' | translate"
-          [ngClass]="{ 'is-invalid': isInvalid('city') }"
-        />
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('city')">
-          {{ 'CITY' | translate }} {{ 'IS_REQUIRED' | translate }}
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'CITY' | translate }}
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="city"
+            autocomplete="off"
+            [placeholder]="'CITY' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('city') }"
+          />
+
+          <div *ngIf="isInvalid('city')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'CITY' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- DISTRICT -->
-      <div class="col-md-6 fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'DISTRICT' | translate }}
-        </label>
-        <input
-          class="form-control form-control-lg"
-          formControlName="district"
-          [placeholder]="'DISTRICT' | translate"
-          [ngClass]="{ 'is-invalid': isInvalid('district') }"
-        />
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('district')">
-          {{ 'DISTRICT' | translate }} {{ 'IS_REQUIRED' | translate }}
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'DISTRICT' | translate }}
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="district"
+            autocomplete="off"
+            [placeholder]="'DISTRICT' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('district') }"
+          />
+
+          <div *ngIf="isInvalid('district')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'DISTRICT' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- ADDRESS -->
-      <div class="col-12 fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'ADDRESS' | translate }}
-        </label>
-        <textarea
-          class="form-control form-control-lg"
-          formControlName="address"
-          [placeholder]="'ADDRESS' | translate"
-          [ngClass]="{ 'is-invalid': isInvalid('address') }"
-        ></textarea>
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('address')">
-          {{ 'ADDRESS' | translate }} {{ 'IS_REQUIRED' | translate }}
+      <div class="col-12">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'ADDRESS' | translate }}
+          </label>
+
+          <textarea
+            class="form-control"
+            rows="4"
+            formControlName="address"
+            [placeholder]="'ADDRESS' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('address') }"
+          ></textarea>
+
+          <div *ngIf="isInvalid('address')" class="fv-plugins-message-container">
+            <div class="fv-help-block text-danger">
+              {{ 'ADDRESS' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- ADDRESS HEADER -->
-      <div class="col-12 fv-row mb-8 select-field">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'ADDRESS_HEADER' | translate }}
-        </label>
-        <input
-          class="form-control form-control-lg"
-          formControlName="addressHeader"
-          [placeholder]="'ADDRESS_HEADER' | translate"
-          [ngClass]="{ 'is-invalid': isInvalid('addressHeader') }"
-        />
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('addressHeader')">
-          {{ 'ADDRESS_HEADER' | translate }} {{ 'IS_REQUIRED' | translate }}
+      <div class="col-12">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'ADDRESS_HEADER' | translate }}
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="addressHeader"
+            autocomplete="off"
+            [placeholder]="'ADDRESS_HEADER' | translate"
+            [ngClass]="{ 'is-invalid': isInvalid('addressHeader') }"
+          />
+
+          <div
+            *ngIf="isInvalid('addressHeader')"
+            class="fv-plugins-message-container"
+          >
+            <div class="fv-help-block text-danger">
+              {{ 'ADDRESS_HEADER' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- INVOICE TYPE -->
-      <div class="col-12 fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900">
-          {{ 'INVOICE_TYPE' | translate }}
-        </label>
+      <div class="col-12">
+        <div class="fv-row">
+          <label class="required form-label fw-semibold fs-6 mb-2">
+            {{ 'INVOICE_TYPE' | translate }}
+          </label>
 
-        <app-custom-select
-          [size]="'lg'"
-          formControlName="invoiceType"
-          [items]="invoiceTypes"
-          bindLabel="name"
-          bindValue="id"
-          [clearable]="true"
-          [placeholder]="'SELECT_INVOICE_TYPE' | translate"
-          [invalid]="isInvalid('invoiceType')"
-        ></app-custom-select>
+          <app-custom-select
+            formControlName="invoiceType"
+            [items]="invoiceTypes"
+            bindLabel="name"
+            bindValue="id"
+            [clearable]="true"
+            [placeholder]="'SELECT_INVOICE_TYPE' | translate"
+            [invalid]="isInvalid('invoiceType')"
+          >
+          </app-custom-select>
 
-        <div class="invalid-feedback d-block" *ngIf="isInvalid('invoiceType')">
-          {{ 'INVOICE_TYPE' | translate }} {{ 'IS_REQUIRED' | translate }}
+          <div
+            *ngIf="isInvalid('invoiceType')"
+            class="fv-plugins-message-container"
+          >
+            <div class="fv-help-block text-danger">
+              {{ 'INVOICE_TYPE' | translate }} {{ 'IS_REQUIRED' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- CORPORATE -->
       <ng-container *ngIf="form.controls['invoiceType'].value == 2">
 
-        <div class="col-md-6 fv-row mb-8">
-          <label class="form-label fw-bolder text-gray-900">
-            {{ 'TAX_NO' | translate }}
-          </label>
-          <input
-            class="form-control form-control-lg"
-            formControlName="vkn"
-            [ngClass]="{ 'is-invalid': isInvalid('vkn') }"
-          />
-          <div class="invalid-feedback d-block" *ngIf="isInvalid('vkn')">
-            {{ 'TAX_NO' | translate }} {{ 'IS_REQUIRED' | translate }}
+        <!-- TAX NO -->
+        <div class="col-md-6">
+          <div class="fv-row">
+            <label class="required form-label fw-semibold fs-6 mb-2">
+              {{ 'TAX_NO' | translate }}
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="vkn"
+              autocomplete="off"
+              [placeholder]="'TAX_NO' | translate"
+              [ngClass]="{ 'is-invalid': isInvalid('vkn') }"
+            />
+
+            <div *ngIf="isInvalid('vkn')" class="fv-plugins-message-container">
+              <div class="fv-help-block text-danger">
+                {{ 'TAX_NO' | translate }} {{ 'IS_REQUIRED' | translate }}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="col-md-6 fv-row mb-8">
-          <label class="form-label fw-bolder text-gray-900">
-            {{ 'TAX_OFFICE' | translate }}
-          </label>
-          <input
-            class="form-control form-control-lg"
-            formControlName="vergiDairesi"
-            [ngClass]="{ 'is-invalid': isInvalid('vergiDairesi') }"
-          />
-          <div class="invalid-feedback d-block" *ngIf="isInvalid('vergiDairesi')">
-            {{ 'TAX_OFFICE' | translate }} {{ 'IS_REQUIRED' | translate }}
+        <!-- TAX OFFICE -->
+        <div class="col-md-6">
+          <div class="fv-row">
+            <label class="required form-label fw-semibold fs-6 mb-2">
+              {{ 'TAX_OFFICE' | translate }}
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="vergiDairesi"
+              autocomplete="off"
+              [placeholder]="'TAX_OFFICE' | translate"
+              [ngClass]="{ 'is-invalid': isInvalid('vergiDairesi') }"
+            />
+
+            <div
+              *ngIf="isInvalid('vergiDairesi')"
+              class="fv-plugins-message-container"
+            >
+              <div class="fv-help-block text-danger">
+                {{ 'TAX_OFFICE' | translate }} {{ 'IS_REQUIRED' | translate }}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="col-md-6 fv-row mb-8">
-          <label class="form-label fw-bolder text-gray-900">
-            {{ 'FIRM_NAME' | translate }}
-          </label>
-          <input
-            class="form-control form-control-lg"
-            formControlName="firmaAdi"
-            [ngClass]="{ 'is-invalid': isInvalid('firmaAdi') }"
-          />
-          <div class="invalid-feedback d-block" *ngIf="isInvalid('firmaAdi')">
-            {{ 'FIRM_NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+        <!-- FIRM NAME -->
+        <div class="col-12">
+          <div class="fv-row">
+            <label class="required form-label fw-semibold fs-6 mb-2">
+              {{ 'FIRM_NAME' | translate }}
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="firmaAdi"
+              autocomplete="off"
+              [placeholder]="'FIRM_NAME' | translate"
+              [ngClass]="{ 'is-invalid': isInvalid('firmaAdi') }"
+            />
+
+            <div
+              *ngIf="isInvalid('firmaAdi')"
+              class="fv-plugins-message-container"
+            >
+              <div class="fv-help-block text-danger">
+                {{ 'FIRM_NAME' | translate }} {{ 'IS_REQUIRED' | translate }}
+              </div>
+            </div>
           </div>
         </div>
 
