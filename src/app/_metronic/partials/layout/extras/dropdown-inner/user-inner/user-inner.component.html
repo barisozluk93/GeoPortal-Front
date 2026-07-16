@@ -1,94 +1,142 @@
 <ng-container *ngIf="user">
-  <div class="user-menu__header px-5 py-4">
-    <div class="user-menu__profile-card d-flex align-items-center rounded-3 p-3">
-      <div class="symbol symbol-45px me-4 flex-shrink-0">
-        <img *ngIf="user?.fileId == undefined" src="./assets/media/avatars/blank.png" alt="user-avatar" />
-        <img *ngIf="user?.fileId != undefined" [src]="user?.fileResult?.fileContents" alt="user-avatar" />
+  <div
+    class="d-flex flex-column h-100 bg-white rounded"
+    data-kt-menu-dismiss="false"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="d-flex align-items-center px-5 py-4 border-bottom">
+      <div class="symbol symbol-45px me-3 flex-shrink-0">
+        <img
+          *ngIf="user?.fileId == undefined"
+          src="./assets/media/avatars/blank.png"
+          alt="user-avatar"
+        />
+        <img
+          *ngIf="user?.fileId != undefined"
+          [src]="user?.fileResult?.fileContents"
+          alt="user-avatar"
+        />
       </div>
 
-      <div class="d-flex flex-column min-w-0">
-        <div class="fw-bold fs-6 user-menu__name text-truncate">
+      <div class="min-w-0">
+        <div class="fw-bold text-gray-900 fs-6 text-truncate">
           {{ user.name }} {{ user.surname }}
         </div>
-
-        <div class="user-menu__email fs-7 text-truncate">
+        <div class="fw-semibold text-muted fs-8 text-truncate">
           {{ user.email }}
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="separator mx-5 my-2 user-menu__separator"></div>
+    <div class="py-2">
+      <div class="menu-item px-3">
+        <a routerLink="/profile/settings" class="menu-link px-3 py-3 rounded-2">
+          <span class="menu-icon me-3">
+            <i class="fa-solid fa-user text-gray-500 fs-6"></i>
+          </span>
+          <span class="menu-title fw-semibold text-gray-800">
+            {{ 'MY_PROFILE' | translate }}
+          </span>
+        </a>
+      </div>
 
-  <div class="menu-item px-3">
-    <a routerLink="/profile/settings" class="menu-link px-3 rounded-3">
-      <span class="menu-icon">
-        <i class="fa-solid fa-user fs-5"></i>
-      </span>
-      <span class="menu-title">{{ 'MY_PROFILE' | translate }}</span>
-    </a>
-  </div>
+      <div class="menu-item px-3" *ngIf="!isAdmin">
+        <a routerLink="/ordermanagement" class="menu-link px-3 py-3 rounded-2">
+          <span class="menu-icon me-3">
+            <i class="fa-solid fa-box text-gray-500 fs-6"></i>
+          </span>
+          <span class="menu-title fw-semibold text-gray-800">
+            {{ 'MY_ORDERS' | translate }}
+          </span>
+        </a>
+      </div>
 
-  <div class="menu-item px-3" *ngIf="!isAdmin">
-    <a routerLink="/ordermanagement" class="menu-link px-3 rounded-3">
-      <span class="menu-icon">
-        <i class="fa-solid fa-box fs-5"></i>
-      </span>
-      <span class="menu-title">{{ 'MY_ORDERS' | translate }}</span>
-    </a>
-  </div>
-
-  <div class="menu-item px-3 user-menu__lang-item" [class.show]="langDropdownOpen" (mouseenter)="openLangDropdown()"
-    (mouseleave)="closeLangDropdown()">
-    <a class="menu-link px-3 rounded-3 cursor-pointer" (click)="toggleLangDropdown($event)">
-      <span class="menu-icon">
-        <i class="fa-solid fa-language fs-5"></i>
-      </span>
-
-      <span class="menu-title">{{ 'LANGUAGE' | translate }}</span>
-
-      <span class="ms-auto d-flex align-items-center me-2">
-        <img class="w-20px h-20px rounded-1 me-2" [src]="language.flag" alt="language-flag" />
-        <span class="fs-7 user-menu__lang-label">
-          {{ ('LANG' | translate) === 'tr' ? language.nameTr : language.nameEn }}
-        </span>
-      </span>
-
-      <span class="menu-arrow"></span>
-    </a>
-
-    <div class="user-menu__subdropdown menu-sub menu-sub-dropdown menu-column menu-rounded fw-semibold py-2 w-200px"
-      [class.show]="langDropdownOpen" (mouseenter)="openLangDropdown()" (mouseleave)="closeLangDropdown()">
-      <div *ngFor="let l of langs" class="menu-item px-3">
-        <a class="menu-link px-3 rounded-3 d-flex align-items-center cursor-pointer"
-          [ngClass]="{ active: l.lang === language.lang }" (click)="selectLanguage(l.lang)">
-          <span class="symbol symbol-20px me-3">
-            <img class="rounded-1" [src]="l.flag" alt="language-flag" />
+      <div
+        class="menu-item px-3 language-item"
+        [class.show]="langDropdownOpen"
+        data-kt-menu-dismiss="false"
+      >
+        <button
+          type="button"
+          class="menu-link language-trigger w-100 border-0 px-3 py-3 rounded-2"
+          data-kt-menu-dismiss="false"
+          (click)="toggleLangDropdown($event)"
+        >
+          <span class="menu-icon me-3">
+            <i class="fa-solid fa-language text-gray-500 fs-6"></i>
           </span>
 
-          <span class="menu-title">
-            {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
+          <span class="menu-title fw-semibold text-gray-800 text-start">
+            {{ 'LANGUAGE' | translate }}
           </span>
 
-          <span class="ms-auto" *ngIf="l.lang === language.lang">
-            <i class="fa-solid fa-check text-primary"></i>
+          <span class="ms-auto d-flex align-items-center">
+            <span class="symbol symbol-20px me-2">
+              <img class="rounded-1" [src]="language.flag" alt="language-flag" />
+            </span>
+
+            <i
+              class="fa-solid fa-chevron-right text-gray-500 fs-9 language-arrow"
+              [class.rotate-180]="langDropdownOpen"
+            ></i>
+          </span>
+        </button>
+
+        <div
+          class="language-dropdown menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-3 bg-white shadow"
+          [class.show]="langDropdownOpen"
+          data-kt-menu-dismiss="false"
+          (click)="$event.stopPropagation()"
+        >
+          <div
+            *ngFor="let l of langs"
+            class="menu-item"
+            data-kt-menu-dismiss="false"
+          >
+            <a
+              class="menu-link px-5 py-3 cursor-pointer"
+              style="margin: 0 8px"
+              data-kt-menu-dismiss="false"
+              [ngClass]="{ active: l.lang === language.lang }"
+              (click)="selectLanguage($event, l.lang)"
+            >
+              <span class="symbol symbol-20px me-3">
+                <img class="rounded-1" [src]="l.flag" alt="flag" />
+              </span>
+
+              <span
+                class="menu-title fw-bolder"
+                [ngClass]="l.lang === language.lang ? 'text-primary' : ''"
+              >
+                {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
+              </span>
+
+              <span *ngIf="l.lang === language.lang" class="ms-auto">
+                <i class="fa-solid fa-check text-primary fs-7"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-top p-3">
+      <div class="menu-item">
+        <a
+          (click)="logout()"
+          class="menu-link logout-link px-3 py-3 rounded-2 cursor-pointer"
+        >
+          <span class="menu-icon me-3">
+            <i class="ki-duotone ki-exit-right text-danger fs-5">
+              <span class="path1"></span>
+              <span class="path2"></span>
+            </i>
+          </span>
+          <span class="menu-title fw-semibold text-danger">
+            {{ 'AUTH.GENERAL.SIGNOUT_BUTTON' | translate }}
           </span>
         </a>
       </div>
     </div>
-  </div>
-
-  <div class="separator mx-5 my-2 user-menu__separator"></div>
-
-  <div class="menu-item px-3">
-    <a (click)="logout()" class="menu-link px-3 rounded-3 cursor-pointer user-menu__logout">
-      <span class="menu-icon me-5">
-        <i class="ki-duotone ki-exit-right fs-5 text-danger">
-          <span class="path1"></span>
-          <span class="path2"></span>
-        </i>
-      </span>
-      <span class="menu-title">{{ 'AUTH.GENERAL.SIGNOUT_BUTTON' | translate }}</span>
-    </a>
   </div>
 </ng-container>

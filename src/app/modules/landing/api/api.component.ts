@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -19,7 +19,14 @@ import { ProductModel } from '../marketplace/models/product.model';
   templateUrl: './api.component.html',
   styleUrl: './api.component.scss',
 })
-export class ApiComponent {
+export class ApiComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('heroSection')
+  heroSection!: ElementRef<HTMLElement>;
+
+  hideScrollCue = false;
+
+  private observer!: IntersectionObserver;
+
   readonly basketManagementService = inject(BasketManagementService);
   readonly basketService = inject(BasketService);
   readonly authService = inject(AuthService);
@@ -183,5 +190,30 @@ export class ApiComponent {
       'danger',
       this.translate.instant('MESSAGES.ERROR')
     );
+  }
+
+  ngAfterViewInit(): void {
+    this.observer = new IntersectionObserver(
+      ([entry]) => {
+        // Hero görünmeye devam ediyorsa buton görünür.
+        this.hideScrollCue = entry.intersectionRatio < 0.8;
+      },
+      {
+        threshold: [0, 0.8, 1]
+      }
+    );
+
+    this.observer.observe(this.heroSection.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
+  }
+
+  scrollToSection(id: string): void {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
   }
 }

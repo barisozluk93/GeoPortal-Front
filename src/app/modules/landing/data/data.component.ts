@@ -1,28 +1,48 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-
-type SearchResult = {
-  display_name: string;
-  lat: string;
-  lon: string;
-  geojson?: any;
-};
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 
 @Component({
   selector: 'app-data',
   templateUrl: './data.component.html',
-  styleUrl: './data.component.scss'
+  styleUrls: ['./data.component.scss']
 })
-export class DataComponent implements AfterViewInit {
-  readonly router = inject(Router);
+export class DataComponent implements AfterViewInit, OnDestroy {
 
-  readonly searchQuery = signal('');
-  readonly loading = signal(false);
+  @ViewChild('heroSection')
+  heroSection!: ElementRef<HTMLElement>;
 
-  ngAfterViewInit() {
-    
+  hideScrollCue = false;
+
+  private observer!: IntersectionObserver;
+
+  ngAfterViewInit(): void {
+    this.observer = new IntersectionObserver(
+      ([entry]) => {
+        // Hero görünmeye devam ediyorsa buton görünür.
+        this.hideScrollCue = entry.intersectionRatio < 0.8;
+      },
+      {
+        threshold: [0, 0.8, 1]
+      }
+    );
+
+    this.observer.observe(this.heroSection.nativeElement);
   }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
+  }
+
+  scrollToSection(id: string): void {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
+
 }

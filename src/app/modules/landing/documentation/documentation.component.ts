@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 interface DocNavItem {
@@ -25,7 +25,14 @@ interface DocEndpoint {
   templateUrl: './documentation.component.html',
   styleUrls: ['./documentation.component.scss']
 })
-export class DocumentationComponent {
+export class DocumentationComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('heroSection')
+  heroSection!: ElementRef<HTMLElement>;
+
+  hideScrollCue = false;
+
+  private observer!: IntersectionObserver;
+
   readonly baseUrl = environment.appUrl;
 
   readonly navItems: DocNavItem[] = [
@@ -227,4 +234,30 @@ private getScrollParent(element: HTMLElement): HTMLElement | Window {
       ? 'badge badge-light-success fw-bold px-4 py-3'
       : 'badge badge-light-danger fw-bold px-4 py-3';
   }
+
+  ngAfterViewInit(): void {
+    this.observer = new IntersectionObserver(
+      ([entry]) => {
+        // Hero görünmeye devam ediyorsa buton görünür.
+        this.hideScrollCue = entry.intersectionRatio < 0.8;
+      },
+      {
+        threshold: [0, 0.8, 1]
+      }
+    );
+
+    this.observer.observe(this.heroSection.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
+  }
+
+  scrollToSection(id: string): void {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
 }
+

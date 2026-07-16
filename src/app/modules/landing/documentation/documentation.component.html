@@ -1,6 +1,6 @@
 <div class="bg-body py-10">
   <div class="container-fluid">
-    <div class="card border  shadow-sm overflow-hidden documentation-hero-card mb-10">
+    <div class="#heroSection" class="card border shadow-sm overflow-hidden documentation-hero-card mb-10">
       <div class="card-body p-0">
         <div class="row g-0 align-items-stretch documentation-hero-row">
           <div class="col-12 col-xl-7">
@@ -101,9 +101,16 @@
             </div>
           </div>
         </div>
+
+        <a class="data-scroll-cue" [class.hidden]="hideScrollCue" (click)="scrollToSection('sidebar')">
+          <span class="data-scroll-cue__halo"></span>
+          <span class="data-scroll-cue__button">
+            <i class="ki-outline ki-double-down fs-2"></i>
+          </span>
+        </a>
       </div>
     </div>
-    <div class="row g-7">
+    <div id="sidebar" class="row g-7">
       <div class="col-12 col-xl-3">
         <aside
           id="kt_documentation_sidebar"

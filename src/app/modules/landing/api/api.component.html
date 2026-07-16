@@ -1,6 +1,6 @@
 <div class="bg-body py-10">
   <div class="container-fluid">
-    <div class="card border  shadow-sm overflow-hidden api-card mb-10">
+    <div id="#heroSection" class="card border  shadow-sm overflow-hidden api-card mb-10">
       <div class="card-body p-0">
         <div class="row g-0 align-items-stretch api-row">
 
@@ -95,10 +95,17 @@
           </div>
 
         </div>
+
+        <a class="data-scroll-cue" [class.hidden]="hideScrollCue" (click)="scrollToSection('usage-flow')">
+          <span class="data-scroll-cue__halo"></span>
+          <span class="data-scroll-cue__button">
+            <i class="ki-outline ki-double-down fs-2"></i>
+          </span>
+        </a>
       </div>
     </div>
 
-    <div class="text-center py-8 mb-8">
+    <div id="usage-flow" class="text-center py-8 mb-8">
       <span class="badge badge-light-primary mb-4">
         {{ 'API_PAGE.SECTION2_KICKER' | translate }}
       </span>

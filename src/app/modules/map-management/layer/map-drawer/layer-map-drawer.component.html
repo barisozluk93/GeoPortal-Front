@@ -1,48 +1,57 @@
-<div
-  class="map-preview-drawer-backdrop"
-  *ngIf="isOpen"
-  (click)="close()"
-></div>
+<ng-container *ngIf="isOpen">
+  <div
+    class="modal-backdrop fade show"
+    (click)="close()"
+  ></div>
 
-<aside
-  class="layer-drawer"
-  [class.open]="isOpen"
->
-  <div class="layer-drawer__header">
-    <div class="layer-drawer__title">
-      <i class="fa-solid fa-map-location-dot text-primary"></i>
-
-      <span>
-        {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
-      </span>
-    </div>
-
-    <div class="layer-drawer__actions">
-      <button
-          type="button"
-          class="btn btn-sm btn-light-danger d-flex align-items-center gap-2"
-          (click)="close()"
-          [attr.aria-label]="'CLOSE' | translate"
-        >
-          <i class="fas fa-times"></i>
-
-          <span>
-            {{ 'CLOSE' | translate }}
-          </span>
-        </button>
-    </div>
-  </div>
-
-  <div class="layer-drawer__body">
+  <div
+    class="modal fade show d-block rounded-0"
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    (click)="close()"
+  >
     <div
-      class="layer-map"
-      *ngIf="isOpen"
+      class="modal-dialog custom-modal-dialog-right m-0 ms-auto"
+      role="document"
+      (click)="$event.stopPropagation()"
     >
-      <app-map
-        [refreshKey]="refreshKey"
-        [previewMode]="true"
-      >
-      </app-map>
+      <div class="modal-content rounded-0 border-0 shadow-lg">
+        <div class="modal-header d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-3 min-w-0">
+            <div class="symbol symbol-40px flex-shrink-0">
+              <span class="symbol-label bg-light-primary">
+                <i class="ki-outline ki-map fs-2 text-primary"></i>
+              </span>
+            </div>
+
+            <div class="d-flex flex-column min-w-0">
+              <h2 class="modal-title fw-bold text-gray-900 mb-0 text-truncate">
+                {{ 'MARKETPLACE.CARD.MAP_PREVIEW' | translate }}
+              </h2>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-sm btn-light-danger d-flex align-items-center gap-2 flex-shrink-0"
+            (click)="close()"
+            [attr.aria-label]="'CLOSE' | translate"
+          >
+            <i class="ki-outline ki-cross fs-2"></i>
+            <span>{{ 'CLOSE' | translate }}</span>
+          </button>
+        </div>
+
+        <div class="modal-body p-0 overflow-hidden">
+          <app-map
+            class="d-block w-100 h-100 layer-map-preview"
+            [refreshKey]="refreshKey"
+            [previewMode]="true"
+          >
+          </app-map>
+        </div>
+      </div>
     </div>
   </div>
-</aside>
+</ng-container>

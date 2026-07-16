@@ -1,33 +1,45 @@
-<div id="kt_header" class="modern-header" [class.scrolled]="isScrolled">
-  <div id="kt_header_container" [ngClass]="[
-      headerContainerCssClasses,
-      isMobile ? 'mobile-padding' : 'desktop-padding'
-    ]" class="modern-header-container">
-    <!-- LEFT / BRAND -->
-    <div class="modern-header-left">
-      <div class="d-flex d-lg-none align-items-center me-3">
-        <button type="button" class="btn btn-icon mobile-toggle-btn" id="kt_aside_toggle" aria-label="Menüyü aç">
-          <span [inlineSVG]="'./assets/media/icons/duotune/abstract/abs015.svg'" class="svg-icon svg-icon-2"></span>
-        </button>
-      </div>
+<div id="kt_header" class="header bg-body border-bottom position-fixed top-0 start-0 end-0">
+  <div
+    id="kt_header_container"
+    class="container-xxl d-flex align-items-center justify-content-between h-100"
+    [ngClass]="headerContainerCssClasses"
+  >
+    <!-- Logo -->
+    <div class="header-brand d-flex align-items-center flex-shrink-0">
+      <button
+        type="button"
+        id="kt_aside_toggle"
+        class="btn btn-icon btn-active-light-primary d-flex d-lg-none me-2"
+        aria-label="Menüyü aç"
+      >
+        <span
+          [inlineSVG]="'./assets/media/icons/duotune/abstract/abs015.svg'"
+          class="svg-icon svg-icon-2"
+        ></span>
+      </button>
 
-      <a (click)="onBrandClick()" class="app-header__brand text-decoration-none">
-        <div class="app-header__brand-top">
-          <img [src]="('LANG' | translate) === 'tr'
-    ? './assets/media/logos/tusas_logo_tr.png'
-    : './assets/media/logos/tusas_logo_eng.png'" alt="GeoPortal" class="w-100 app-header__logo-img" />
-        </div>
+      <a
+        class="d-flex align-items-center text-decoration-none cursor-pointer"
+        (click)="onBrandClick()"
+      >
+        <img
+          [src]="('LANG' | translate) === 'tr'
+            ? './assets/media/logos/tusas_logo_tr.png'
+            : './assets/media/logos/tusas_logo_eng.png'"
+          alt="GeoPortal"
+          class="header-logo"
+        />
       </a>
     </div>
 
-    <!-- CENTER MENU -->
-    <div class="modern-header-center">
-      <app-header-menu *ngIf="!isMobile"></app-header-menu>
+    <!-- Header menu -->
+    <div class="header-navigation d-none d-lg-flex align-items-center justify-content-center min-w-0">
+      <app-header-menu class="d-flex align-items-center justify-content-center w-100"></app-header-menu>
     </div>
 
-    <!-- RIGHT / TOPBAR -->
-    <div class="modern-header-right">
-      <app-topbar class="d-flex align-items-center flex-shrink-0"></app-topbar>
+    <!-- Topbar -->
+    <div class="header-topbar d-flex align-items-center justify-content-end flex-shrink-0">
+      <app-topbar class="d-flex align-items-center"></app-topbar>
     </div>
   </div>
 </div>

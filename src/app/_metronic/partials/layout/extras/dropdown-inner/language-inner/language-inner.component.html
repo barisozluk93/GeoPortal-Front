@@ -1,23 +1,19 @@
-<div
-  *ngFor="let l of langs"
-  class="menu-item px-3"
-  (click)="selectLanguage(l.lang)"
->
+<div *ngFor="let l of langs" class="menu-item">
   <a
-    class="menu-link px-3 d-flex align-items-center"
+    class="menu-link px-5 py-3 cursor-pointer" style="margin: 0 8px;"
     [ngClass]="{ active: l.lang === language.lang }"
+    (click)="selectLanguage(l.lang)"
   >
     <span class="symbol symbol-20px me-3">
       <img class="rounded-1" [src]="l.flag" alt="flag" />
     </span>
 
-    <span class="menu-title">
+    <span class="menu-title fw-bolder" [ngClass]="l.lang === language.lang ? 'text-primary' : ''">
       {{ ('LANG' | translate) === 'tr' ? l.nameTr : l.nameEn }}
     </span>
 
-    <i
-      *ngIf="l.lang === language.lang"
-      class="fa-solid fa-check text-primary ms-auto"
-    ></i>
+    <span *ngIf="l.lang === language.lang" class="ms-auto">
+      <i class="fa-solid fa-check text-primary fs-7"></i>
+    </span>
   </a>
 </div>

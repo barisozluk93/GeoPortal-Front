@@ -7,7 +7,7 @@
  <div class="d-inline-flex align-items-center">
 <img [src]="('LANG' | translate) === 'tr'
  ? './assets/media/logos/tusas_logo_tr.png'
- : './assets/media/logos/tusas_logo_eng.png'" alt="GeoPortal" class="h-40px mw-200px" /> </div>
+ : './assets/media/logos/tusas_logo_eng.png'" alt="GeoPortal" class="h-75px mw-200px" /> </div>
  </a>
  </div>
 
@@ -32,10 +32,6 @@
  </ng-container>
 
  <div class="mb-8">
- <label class="form-label fw-bolder d-block mb-4">
- {{ 'AUTH.REGISTER.USER_TYPE' | translate }}
- </label>
-
  <div class="d-flex flex-wrap">
  <button type="button" class="btn w-50"
  [ngClass]="activeTabId === 'bireysel' ? 'btn-primary' : 'btn-light-primary'"

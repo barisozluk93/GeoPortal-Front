@@ -189,7 +189,7 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
     }
 
     const dropdown = document.createElement('div');
-    dropdown.className = 'custom-select-dropdown';
+    dropdown.className = 'custom-select-dropdown py-2 w-100';
 
     const list = document.createElement('div');
     list.className = 'custom-select-dropdown-list';
@@ -240,7 +240,7 @@ export class CustomSelectComponent implements ControlValueAccessor, OnDestroy, A
       ? Array.isArray(this.value) && this.value.includes(item[this.bindValue])
       : item[this.bindValue] == this.value;
 
-    option.className = `custom-select-dropdown-item${isActive ? ' active' : ''}`;
+    option.className = `custom-select-dropdown-item px-5 py-3${isActive ? ' active' : ''}`;
     option.innerHTML = `
       <span class="custom-select-dropdown-item__label">${this.escapeHtml(item[this.bindLabel] ?? '')}</span>
       ${isActive ? '<span class="custom-select-dropdown-item__check">✓</span>' : ''}

@@ -136,21 +136,27 @@
                     <i class="fa-solid fa-ellipsis-vertical text-primary"></i>
                   </button>
 
-                  <div class="menu menu-sub menu-sub-dropdown menu-column show py-2 smart-product-menu"
+                  <div class="menu menu-sub menu-sub-dropdown menu-column show smart-product-menu py-2"
                     *ngIf="openedDropdownId === product.id">
-                    <button type="button" class="menu-link border-0 w-100 px-3 py-2" (click)="onZoomToExtent(product)">
-                      <i class="fa-solid fa-location-crosshairs me-3"></i>
-                      <span>{{ 'MAP.SMART_FILTER.ZOOM_TO_EXTENT' | translate }}</span>
-                    </button>
-                    <button #metadataButton type="button" class="menu-link border-0 w-100 px-3 py-2"
-                      (click)="onViewMetadata(product, $event, metadataButton)">
-                      <i class="fa-solid fa-circle-info me-3"></i>
-                      <span>{{ 'MAP.SMART_FILTER.VIEW_METADATA' | translate }}</span>
-                    </button>
-                    <button type="button" class="menu-link border-0 w-100 px-3 py-2" (click)="onAddToCart(product)">
-                      <i class="fa-solid fa-cart-plus me-3"></i>
-                      <span>{{ 'MAP.SMART_FILTER.ADD_TO_CART' | translate }}</span>
-                    </button>
+                    <div class="menu-item">
+                      <a class="menu-link px-5 py-3 d-flex align-items-center border-0" (click)="onZoomToExtent(product)">
+                        <i class="fw-bolder fa-solid fa-location-crosshairs me-3"></i>
+                        <span class="menu-title fw-bolder">{{ 'MAP.SMART_FILTER.ZOOM_TO_EXTENT' | translate }}</span>
+                      </a>
+                    </div>
+                    <div class="menu-item">
+                      <a #metadataButton class="menu-link px-5 py-3 d-flex align-items-center border-0"
+                        (click)="onViewMetadata(product, $event, metadataButton)">
+                        <i class="fw-bolder fa-solid fa-circle-info me-3"></i>
+                        <span class="menu-title fw-bolder">{{ 'MAP.SMART_FILTER.VIEW_METADATA' | translate }}</span>
+                      </a>
+                    </div>
+                    <div class="menu-item">
+                      <a class="menu-link px-5 py-3 d-flex align-items-center border-0" (click)="onAddToCart(product)">
+                        <i class="fw-bolder fa-solid fa-cart-plus me-3"></i>
+                        <span class="menu-title fw-bolder">{{ 'MAP.SMART_FILTER.ADD_TO_CART' | translate }}</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

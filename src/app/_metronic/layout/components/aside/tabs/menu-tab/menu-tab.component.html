@@ -1,67 +1,87 @@
-<!--begin::Menu-->
+<!--begin::Aside Menu-->
 <div
-  class="menu menu-column menu-rounded fw-semibold fs-6 modern-menu"
   id="kt_aside_menu"
+  class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6"
   data-kt-menu="true"
 >
-  <div id="kt_aside_menu_wrapper" class="modern-menu-wrapper">
-    <ng-container *ngFor="let menu of menuList">
-      <div
-        *ngIf="menu.childMenus?.length == 0 && !menu.isForbid"
-        class="menu-item"
-      >
-        <a
-          class="menu-link without-sub"
-          [routerLink]="menu.url"
-          routerLinkActive="active"
-        >
-          <span class="menu-title">
-            {{ ("LANG" | translate) === "tr" ? menu.name : menu.nameEn }}
-          </span>
-        </a>
-      </div>
+  <ng-container *ngFor="let menu of menuList">
 
-      <div
-        *ngIf="menu.childMenus && menu.childMenus.length > 0 && !menu.isForbid"
-        class="menu-item menu-accordion"
-        data-kt-menu-trigger="click"
-        routerLinkActive="here show"
+    <!-- Normal Menu -->
+    <div
+      class="menu-item"
+      *ngIf="(!menu.childMenus || menu.childMenus.length === 0) && !menu.isForbid"
+    >
+      <a
+        class="menu-link"
+        [routerLink]="menu.url"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
       >
-        <span class="menu-link">
-          <span class="menu-title">
-            {{ ("LANG" | translate) === "tr" ? menu.name : menu.nameEn }}
-          </span>
+        <span class="menu-title">
+          {{
+            ("LANG" | translate) === "tr"
+              ? menu.name
+              : menu.nameEn
+          }}
+        </span>
+      </a>
+    </div>
 
-          <span class="menu-arrow"></span>
+    <!-- Accordion -->
+    <div
+      class="menu-item menu-accordion"
+      *ngIf="menu.childMenus && menu.childMenus.length > 0 && !menu.isForbid"
+      data-kt-menu-trigger="click"
+      routerLinkActive="here show"
+    >
+      <span class="menu-link">
+        <span class="menu-title">
+          {{
+            ("LANG" | translate) === "tr"
+              ? menu.name
+              : menu.nameEn
+          }}
         </span>
 
-        <div class="menu-sub menu-sub-accordion">
-          <ng-container *ngFor="let childMenu of menu.childMenus">
-            <div *ngIf="!childMenu.isForbid" class="menu-item">
-              <a
-                class="menu-link without-sub"
-                routerLinkActive="active"
-                [routerLink]="childMenu.url"
-              >
-                <span class="menu-title">
-                  {{
-                    ("LANG" | translate) === "tr"
-                      ? childMenu.name
-                      : childMenu.nameEn
-                  }}
-                </span>
-              </a>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-    </ng-container>
+        <span class="menu-arrow"></span>
+      </span>
 
-    <div class="menu-item">
-      <div class="menu-content">
-        <div class="separator mx-1 my-5 opacity-25"></div>
+      <!-- Sub Menu -->
+      <div class="menu-sub menu-sub-accordion">
+
+        <ng-container *ngFor="let childMenu of menu.childMenus">
+
+          <div
+            class="menu-item"
+            *ngIf="!childMenu.isForbid"
+          >
+            <a
+              class="menu-link"
+              [routerLink]="childMenu.url"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <span class="menu-title">
+                {{
+                  ("LANG" | translate) === "tr"
+                    ? childMenu.name
+                    : childMenu.nameEn
+                }}
+              </span>
+            </a>
+          </div>
+
+        </ng-container>
+
       </div>
+    </div>
+
+  </ng-container>
+
+  <div class="menu-item">
+    <div class="menu-content">
+      <div class="separator my-5 opacity-25"></div>
     </div>
   </div>
 </div>
-<!--end::Menu-->
+<!--end::Aside Menu-->

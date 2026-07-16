@@ -44,6 +44,7 @@ export class LayerComponent implements OnInit, OnDestroy {
   columnListTr: ColumnModel[] = [
     { name: 'Id', index: 'id', visibility: false },
     { name: 'Ad', index: 'name', visibility: true },
+    { name: 'URL', index: 'url', visibility: true },
     { name: 'Tip', index: 'type', visibility: true },
     { name: 'Katman Adı', index: 'layerName', visibility: true },
     { name: 'Görünür Mü?', index: 'isVisible', visibility: true },
@@ -55,6 +56,7 @@ export class LayerComponent implements OnInit, OnDestroy {
   columnListEn: ColumnModel[] = [
     { name: 'Id', index: 'id', visibility: false },
     { name: 'Name', index: 'name', visibility: true },
+    { name: 'URL', index: 'url', visibility: true },
     { name: 'Type', index: 'type', visibility: true },
     { name: 'Layer Name', index: 'layerName', visibility: true },
     { name: 'Visible', index: 'isVisible', visibility: true },

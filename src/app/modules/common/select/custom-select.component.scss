@@ -156,11 +156,10 @@ app-custom-select {
   width: max-content;
   min-width: var(--custom-select-trigger-width, 190px);
   max-width: 300px;
-  padding: 6px !important;
   overflow: hidden auto;
   background-color: var(--bs-body-bg) !important;
   border: 1px solid var(--bs-gray-300) !important;
-  border-radius: 3px !important;
+  border-radius: 8px !important;
   box-shadow: var(--bs-dropdown-box-shadow) !important;
   animation: customSelectDropdownFade 0.14s ease;
 }
@@ -174,12 +173,11 @@ app-custom-select {
 .custom-select-dropdown-item {
   display: flex;
   align-items: center;
-  width: 100%;
   min-height: 34px;
-  padding: 6px 12px;
+  margin: 0 8px !important;
   background: transparent;
-  font-size: 12px;
   text-align: left;
+  border-radius: 5px !important;
   white-space: nowrap;
   cursor: pointer;
   outline: 0;
@@ -189,10 +187,13 @@ app-custom-select {
 
   &:hover,
   &:focus,
-  &:focus-visible,
-  &.active {
+  &:focus-visible {
     background-color: var(--bs-primary-light) !important;
-    border-radius: 10px !important;
+  }
+
+  &.active {
+    color: var(--bs-primary) !important;
+    background-color: var(--bs-primary-light) !important;
   }
 }
 
@@ -202,6 +203,8 @@ app-custom-select {
   color: inherit !important;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .custom-select-dropdown-item__check {
@@ -210,7 +213,8 @@ app-custom-select {
   margin-left: auto;
   flex-shrink: 0;
   color: var(--bs-primary) !important;
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -221,8 +225,8 @@ app-custom-select {
   align-items: center;
   justify-content: center;
   color: var(--bs-gray-600) !important;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 /* Metronic dark mode değişkenleriyle otomatik uyum. */

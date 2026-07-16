@@ -33,9 +33,9 @@
   --bs-success-rgb: 80, 205, 137;
 }
 
-// .header {
-//   height: 92px !important;
-// }
+.header {
+  height: 56px !important;
+}
 
 .wrapper {
   padding-top: 0 !important;
@@ -381,16 +381,6 @@ i.text-danger,
 ::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .header,
-  .navbar {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-}
-
 
 /* FINAL CLEANUP */
 section,

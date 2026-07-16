@@ -1,110 +1,20 @@
 :host {
   display: none;
-  min-width: 190px;
-  padding: 8px 0 !important;
-  overflow: visible !important;
-
-  background-color: var(--bs-body-bg) !important;
-  border: 1px solid var(--bs-gray-200) !important;
-  border-radius: 0.475rem !important;
-  box-shadow: var(--bs-dropdown-box-shadow) !important;
-  color: var(--bs-gray-700) !important;
 }
 
-:host.show,
-:host.menu-sub-dropdown.show {
-  display: block !important;
-}
-
-.menu-item {
-  width: 100%;
-  margin: 0 !important;
-  padding: 0 6px !important;
-  background: transparent !important;
-}
-
-.menu-link {
+:host.show {
   display: flex !important;
-  align-items: center !important;
-  width: 100%;
-  min-height: 36px;
-  padding: 0 12px !important;
-  gap: 10px;
-
-  color: var(--app-soft-text) !important;
-  background-color: transparent !important;
-  border: 0 !important;
-  border-radius: 0.475rem !important;
-  box-shadow: none !important;
-  outline: 0 !important;
-
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  line-height: 1.2 !important;
-  text-decoration: none !important;
-  white-space: nowrap;
-  cursor: pointer;
-
-  transition:
-    color .2s ease,
-    background-color .2s ease !important;
-
-  .menu-title,
-  span,
-  i {
-    color: var(--app-soft-text) !important;
-  }
-
-  &:hover,
-  &:focus,
-  &:focus-visible,
-  &.active,
-  &[aria-expanded='true'],
-  &.show {
-    color: var(--bs-primary) !important;
-    background-color: var(--bs-primary-light) !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    outline: 0 !important;
-  }
 }
 
-.menu-item.active > .menu-link,
-.menu-item.show > .menu-link,
-.menu-item.hover > .menu-link {
-  color: var(--bs-primary) !important;
-  background-color: var(--bs-primary-light) !important;
-}
-
-.symbol {
-  width: 20px;
-  min-width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-
-  img {
-    display: block;
-    width: 20px;
-    height: 20px;
-    object-fit: cover;
-    border-radius: 4px !important;
-  }
-}
 
 .menu-title {
-  min-width: 0;
-  overflow: hidden;
-  flex: 1 1 auto;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.fa-check {
-  width: 16px;
-  min-width: 16px;
-  margin-left: auto;
-  flex-shrink: 0;
-  color: var(--bs-primary) !important;
-  font-size: 13px;
-  text-align: center;
+  &:hover,
+  &:focus {
+    background: var(--bs-primary-light) !important;
+  }
+
+  &:active {
+    color: var(--bs-primary) !important;
+  }
 }

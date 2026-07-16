@@ -1,7 +1,13 @@
 <button
-        type="button"
-        class="btn btn-danger btn-floating btn-lg"
-        id="btn-back-to-top"
-        >
-  <i class="fas fa-arrow-up"></i>
+  type="button"
+  class="scrolltop btn btn-icon btn-primary shadow"
+  [class.show]="isVisible"
+  [attr.aria-hidden]="!isVisible"
+  aria-label="Yukarı çık"
+  (click)="scrollToTop()"
+>
+  <i class="ki-duotone ki-arrow-up fs-2">
+    <span class="path1 text-white"></span>
+    <span class="path2 text-white"></span>
+  </i>
 </button>

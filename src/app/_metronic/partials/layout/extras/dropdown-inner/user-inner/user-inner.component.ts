@@ -19,6 +19,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   @HostBinding('attr.data-kt-menu')
   dataKtMenu = 'true';
 
+  @HostBinding('attr.data-kt-menu-dismiss')
+  dataKtMenuDismiss = 'false';
+
   isAdmin = false;
   langDropdownOpen = false;
 
@@ -65,12 +68,21 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   toggleLangDropdown(event: MouseEvent): void {
     event.preventDefault();
     event.stopPropagation();
+    event.stopImmediatePropagation();
+
     this.langDropdownOpen = !this.langDropdownOpen;
   }
 
-  selectLanguage(lang: string): void {
+  selectLanguage(event: MouseEvent, lang: string): void {
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
     this.translationService.setLanguage(lang);
     this.setLanguage(lang);
+
+    // Yalnızca dil alt menüsünü kapatır.
+    // Ana user-inner Metronic menüsü açık kalır.
     this.langDropdownOpen = false;
   }
 
@@ -89,7 +101,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribe.forEach((sb) => sb.unsubscribe());
+    this.unsubscribe.forEach((subscription) => subscription.unsubscribe());
   }
 }
 

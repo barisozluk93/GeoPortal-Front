@@ -1,99 +1,93 @@
-<div class="notification-menu">
-  <div class="notification-menu__header px-5 py-4">
-    <div class="notification-menu__header-left">
-      <div class="notification-menu__icon">
-        <i class="fa-solid fa-bell"></i>
-      </div>
+<div class="d-flex flex-column h-100 bg-white rounded">
 
-      <div class="notification-menu__title-wrap">
-        <div class="notification-menu__title">
-          {{ 'NOTIFICATIONS' | translate }}
-        </div>
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between px-6 py-5 border-bottom bg-white">
+    <div>
+      <h3 class="fw-bold text-gray-900 mb-1">
+        {{ 'NOTIFICATIONS' | translate }}
+      </h3>
 
-        <div class="notification-menu__subtitle">
-          {{ totalNotificationCount }} {{ 'NOTIFICATION' | translate }}
-        </div>
-      </div>
+      <span class="text-muted fw-semibold fs-7">
+        {{ totalNotificationCount }} {{ 'NOTIFICATION' | translate }}
+      </span>
     </div>
 
-    <div
+    <span
       *ngIf="unreadedNotificationCount > 0"
-      class="notification-menu__unread-badge"
-    >
-      {{ unreadedNotificationCount }} {{ 'UNREAD' | translate }}
-    </div>
+      class="badge badge-light-danger fw-bold px-4 py-2">
+      {{ unreadedNotificationCount }}
+      {{ 'UNREAD' | translate }}
+    </span>
   </div>
 
-  <div class="separator mx-5 my-0 notification-menu__separator"></div>
+  <ng-container *ngIf="notifications.length > 0; else emptyState">
 
-  <div class="notification-menu__body">
-    <ng-container *ngIf="notifications.length > 0; else emptyState">
-      <div class="scroll-y mh-375px px-4 py-4">
-        <div
-          *ngFor="let notification of notifications"
-          class="notification-card"
-          [ngClass]="{ 'notification-card--unread': !notification.isRead }"
-          (click)="goToPage(notification)"
-        >
-          <div class="notification-card__left">
-            <div class="notification-card__icon-wrap">
-              <div class="notification-card__icon">
-                <i class="fa-solid fa-bell"></i>
-              </div>
-            </div>
+    <div class="scroll-y mh-375px">
 
-            <div class="notification-card__content">
-              <div class="notification-card__top">
-                <div
-                  class="notification-card__message"
-                  [ngClass]="{
-                    'notification-card__message--read': notification.isRead,
-                    'notification-card__message--unread': !notification.isRead
-                  }"
-                >
-                  {{ notification.body }}
-                </div>
+      <div
+        *ngFor="let notification of notifications"
+        class="notification-item d-flex align-items-center px-6 py-4"
+        [class.unread]="!notification.isRead"
+        (click)="goToPage(notification)">
 
-                <span
-                  *ngIf="!notification.isRead"
-                  class="notification-card__dot"
-                ></span>
-              </div>
+        <div class="symbol symbol-40px me-4">
+          <span class="symbol-label bg-light-primary">
+            <i class="fa-solid fa-bell text-primary fs-5"></i>
+          </span>
+        </div>
 
-              <div class="notification-card__bottom">
-                <span class="notification-card__date">
-                  {{ notification.createdAt | date:'dd.MM.yyyy HH:mm' }}
-                </span>
-              </div>
-            </div>
+        <div class="flex-grow-1 min-w-0">
+
+          <div
+            class="fw-bold fs-6 text-gray-900 text-truncate">
+            {{ notification.body }}
           </div>
 
-          <button
-            type="button"
-            class="notification-card__delete-btn"
-            (click)="$event.stopPropagation(); delete(notification.id)"
-            aria-label="Delete notification"
-          >
-            <i class="fa-solid fa-trash"></i>
-          </button>
+          <div class="text-muted fs-8 mt-1">
+            {{ notification.createdAt | date:'dd.MM.yyyy HH:mm' }}
+          </div>
+
         </div>
+
+        <span
+          *ngIf="!notification.isRead"
+          class="bullet bullet-dot bg-primary h-7px w-7px mx-4">
+        </span>
+
+        <button
+          class="btn btn-icon btn-sm btn-active-light-danger"
+          (click)="$event.stopPropagation(); delete(notification.id)">
+
+          <i class="fa-solid fa-trash fs-6 text-gray-500"></i>
+
+        </button>
+
       </div>
-    </ng-container>
 
-    <ng-template #emptyState>
-      <div class="notification-empty">
-        <div class="notification-empty__icon">
-          <i class="fa-regular fa-bell"></i>
-        </div>
+    </div>
 
-        <div class="notification-empty__title">
-          {{ 'NO_DATA_AVAILABLE' | translate }}
-        </div>
+  </ng-container>
 
-        <div class="notification-empty__subtitle">
-          {{ 'NOTIFICATIONS' | translate }}
-        </div>
+  <ng-template #emptyState>
+
+    <div class="py-15 text-center">
+
+      <div class="symbol symbol-60px mb-4">
+        <span class="symbol-label bg-light-primary">
+          <i class="fa-regular fa-bell text-primary fs-2"></i>
+        </span>
       </div>
-    </ng-template>
-  </div>
+
+      <div class="fw-bold text-gray-800 fs-5 mb-2">
+        {{ 'NO_DATA_AVAILABLE' | translate }}
+      </div>
+
+      <div class="text-muted">
+        {{ 'NOTIFICATIONS' | translate }}
+      </div>
+
+    </div>
+
+  </ng-template>
+
 </div>

@@ -9,7 +9,7 @@ import { TranslationService } from '../../../../../../modules/i18n';
 })
 export class LanguageInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class')
-  class = 'menu menu-sub menu-sub-dropdown menu-column menu-rounded border border-gray-200 shadow-sm py-2 fs-6 w-200px';
+  class = '';
 
   @HostBinding('attr.data-kt-menu')
   dataKtMenu = 'true';

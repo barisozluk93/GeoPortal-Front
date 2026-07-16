@@ -1,82 +1,126 @@
-<app-basket *ngIf="!isAdmin" class="d-flex align-items-center me-3">
-</app-basket>
+<div class="topbar d-flex align-items-center h-100">
 
-<div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3">
-  <button type="button" class="btn btn-primary" (click)="routeToLogin()">
-    {{ 'LOG_IN' | translate }}
-  </button>
-</div>
+  <!-- Basket -->
+  <app-basket
+    *ngIf="!isAdmin"
+    class="topbar-item d-flex align-items-center h-100"
+  ></app-basket>
 
-<div *ngIf="!isCurrentUserExist" class="d-flex align-items-center me-3" id="kt_header_language_menu_toggle">
-  <div class="cursor-pointer symbol symbol-40px" data-kt-menu-trigger="{default: 'hover'}"
-    data-kt-menu-placement="bottom-end" title="{{ 'LANGUAGE' | translate }}">
-    <img *ngIf="language?.flag" [src]="language.flag" alt="{{ 'LANGUAGE' | translate }}" />
-  </div>
-
-  <app-language-inner></app-language-inner>
-</div>
-
-<div
-  *ngIf="isCurrentUserExist"
-  class="d-flex align-items-center me-3"
-  id="kt_header_user_menu_toggle"
->
+  <!-- Login -->
   <div
-    class="cursor-pointer symbol symbol-40px user-profile-symbol"
-    data-kt-menu-trigger="{default: 'hover'}"
-    data-kt-menu-placement="bottom-end"
-    title="{{ 'USER_PROFILE' | translate }}"
+    *ngIf="!isCurrentUserExist"
+    class="topbar-item d-flex align-items-center h-100"
   >
-    <ng-container
-      *ngIf="
-        user?.fileId != null &&
-        user?.fileResult?.fileContents;
-        else defaultUserIcon
-      "
+    <button
+      type="button"
+      class="btn btn-sm btn-primary h-42px px-5 fw-bold"
+      (click)="routeToLogin()"
     >
-      <img
-        class="user-profile-image"
-        [src]="user?.fileResult?.fileContents"
-        alt="{{ 'USER_PROFILE' | translate }}"
-      />
-    </ng-container>
-
-    <ng-template #defaultUserIcon>
-      <div class="user-profile-placeholder">
-        <i class="fa-solid fa-user"></i>
-      </div>
-    </ng-template>
+      {{ 'LOG_IN' | translate }}
+    </button>
   </div>
 
-  <app-user-inner></app-user-inner>
-</div>
-
-<div *ngIf="isCurrentUserExist" class="d-flex align-items-center me-3" id="kt_header_notification_menu_toggle">
-  <div class="cursor-pointer symbol symbol-40px notification-symbol" [ngClass]="{
-      'has-unread': unreadedNotificationCount > 0,
-      'is-animating': isNotificationAnimating
-    }" (mouseenter)="loadNotifications()" data-kt-menu-trigger="{default: 'hover'}" data-kt-menu-placement="bottom-end"
-    title="{{ 'NOTIFICATIONS' | translate }}">
-    <span class="symbol-label position-relative notification-symbol-label">
-      <i class="fa-bell notification-bell" [ngClass]="
-          unreadedNotificationCount > 0
-            ? 'fa-solid'
-            : 'fa-regular'
-        "></i>
-
-      <span *ngIf="unreadedNotificationCount > 0" class="notification-badge">
-        {{
-        unreadedNotificationCount > 99
-        ? '99+'
-        : unreadedNotificationCount
-        }}
+  <!-- Language -->
+  <div
+    *ngIf="!isCurrentUserExist"
+    id="kt_header_language_menu_toggle"
+    class="topbar-item d-flex align-items-center h-100"
+  >
+    <div
+      class="btn btn-icon btn-active-light-primary w-42px h-42px language-trigger"
+      data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+      data-kt-menu-attach="parent"
+      data-kt-menu-placement="bottom-end"
+      [title]="'LANGUAGE' | translate"
+    >
+      <span class="symbol symbol-30px">
+        <img
+          *ngIf="language?.flag"
+          [src]="language.flag"
+          [alt]="'LANGUAGE' | translate"
+        />
       </span>
+    </div>
 
-      <span *ngIf="unreadedNotificationCount > 0" class="notification-pulse"></span>
-    </span>
+    <app-language-inner
+      class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-2 w-200px"
+    ></app-language-inner>
   </div>
 
-  <app-notifications-inner [notifications]="notifications" [totalNotificationCount]="totalNotificationCount"
-    [unreadedNotificationCount]="unreadedNotificationCount">
-  </app-notifications-inner>
+  <!-- Notifications -->
+  <div
+    *ngIf="isCurrentUserExist"
+    id="kt_header_notification_menu_toggle"
+    class="topbar-item d-flex align-items-center h-100"
+  >
+    <div
+      class="btn btn-icon btn-active-light-primary w-42px h-42px position-relative topbar-action"
+      [ngClass]="{ 'is-animating': isNotificationAnimating }"
+      (mouseenter)="loadNotifications()"
+      data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+      data-kt-menu-attach="parent"
+      data-kt-menu-placement="bottom-end"
+      [title]="'NOTIFICATIONS' | translate"
+    >
+      <i
+        class="fa-bell fs-3"
+        [ngClass]="unreadedNotificationCount > 0
+          ? 'fa-solid text-primary'
+          : 'fa-regular text-gray-700'"
+      ></i>
+
+      <span
+        *ngIf="unreadedNotificationCount > 0"
+        class="position-absolute topbar-badge badge badge-circle badge-danger fw-bold"
+      >
+        {{ unreadedNotificationCount > 99 ? '99+' : unreadedNotificationCount }}
+      </span>
+    </div>
+
+    <app-notifications-inner
+      class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-400px mw-100"
+      [notifications]="notifications"
+      [totalNotificationCount]="totalNotificationCount"
+      [unreadedNotificationCount]="unreadedNotificationCount"
+    ></app-notifications-inner>
+  </div>
+
+  <!-- User -->
+  <div
+    *ngIf="isCurrentUserExist"
+    id="kt_header_user_menu_toggle"
+    class="topbar-item d-flex align-items-center h-100"
+  >
+    <div
+      class="btn btn-icon btn-active-light-primary w-42px h-42px p-0 topbar-user"
+      data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+      data-kt-menu-attach="parent"
+      data-kt-menu-placement="bottom-end"
+      [title]="'USER_PROFILE' | translate"
+    >
+      <ng-container
+        *ngIf="user?.fileId != null && user?.fileResult?.fileContents; else defaultUserIcon"
+      >
+        <span class="symbol symbol-38px">
+          <img
+            [src]="user?.fileResult?.fileContents"
+            [alt]="'USER_PROFILE' | translate"
+          />
+        </span>
+      </ng-container>
+
+      <ng-template #defaultUserIcon>
+        <span class="symbol symbol-38px">
+          <span class="symbol-label bg-light-primary">
+            <i class="fa-solid fa-user text-primary fs-3"></i>
+          </span>
+        </span>
+      </ng-template>
+    </div>
+
+    <app-user-inner
+      class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-4 w-275px"
+    ></app-user-inner>
+  </div>
+
 </div>

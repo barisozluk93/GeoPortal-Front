@@ -1,16 +1,18 @@
-<div class="basket-card" (click)="showBasket()">
-  <div class="basket-left">
-    <div class="basket-icon-box">
-      <i
-        [inlineSVG]="'./assets/media/icons/duotune/ecommerce/ecm001.svg'"
-        class="svg-icon basket-icon"
-      ></i>
+<button *ngIf="basket?.length"
+  type="button"
+  class="btn btn-icon btn-active-light-primary w-35px h-35px w-md-40px h-md-40px position-relative"
+  (click)="showBasket()"
+  aria-label="Basket"
+>
+  <i
+    [inlineSVG]="'./assets/media/icons/duotune/ecommerce/ecm001.svg'"
+    class="svg-icon svg-icon-2 text-gray-700"
+  ></i>
 
-      <span *ngIf="basket?.length" class="basket-badge">
-        {{ basket.length }}
-      </span>
-    </div>
-
-    <!-- <span class="basket-total">{{ total | currency:'₺':'symbol' }}</span> -->
-  </div>
-</div>
+  <span
+    *ngIf="basket?.length"
+    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary w-20px h-20px fs-9"
+  >
+    {{ basket.length > 99 ? '99+' : basket.length }}
+  </span>
+</button>

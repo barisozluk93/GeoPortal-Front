@@ -9,7 +9,7 @@
 }
 
 .toolbar-left {
-  top: 13px;
+  top: 5px;
   right: 5px;
 }
 
@@ -266,8 +266,12 @@
 }
 
 @media (max-width: 767.98px) {
+  .mobile-hidden-action {
+    display: none !important;
+  }
+
   .toolbar-left {
-    top: 8px;
+    top: 5px;
     right: 8px;
   }
 
@@ -414,4 +418,37 @@
   font-size: 13px;
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+
+.rotate-north-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.rotate-north-icon__arrow {
+  font-size: 16px !important;
+}
+
+.rotate-north-icon__label {
+  position: absolute;
+  top: -2px;
+  right: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 10px;
+  height: 10px;
+  padding: 0 1px;
+  border-radius: 3px;
+  background: var(--bs-body-bg);
+  color: var(--bs-primary);
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 900;
+  pointer-events: none;
 }

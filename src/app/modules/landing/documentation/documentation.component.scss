@@ -9,7 +9,7 @@
 .documentation-hero-row,
 .documentation-hero,
 .documentation-sidebar-panel {
-  min-height: calc(100vh - 150px);
+  min-height: calc(100vh - 120px);
 }
 
 /* -------------------------------------------------------
@@ -68,7 +68,7 @@
   z-index: 2;
   width: 72%;
   max-width: 720px;
-  padding-left: 27%;
+  padding-left: 24%;
   padding-right: 2.25rem;
 }
 
@@ -125,6 +125,15 @@
 /* -------------------------------------------------------
    RESPONSIVE
 ------------------------------------------------------- */
+@media (min-width: 1800px) {
+  .documentation-hero-content {
+    width: 82%;
+    max-width: 820px;
+    padding-left: 16%;
+    padding-right: 3rem;
+  }
+}
+
 @media (max-width: 1599.98px) {
   .documentation-hero-image {
     width: 51%;
@@ -254,4 +263,95 @@
   .documentation-meta-row > [class*='col-'] {
     width: 100%;
   }
+}
+
+.data-card{
+    position:relative;
+}
+
+.data-scroll-cue{
+    position:absolute;
+    left:50%;
+    bottom:28px;
+    transform:translateX(-50%);
+    z-index:100;
+    cursor:pointer;
+    transition:
+        opacity .35s ease,
+        transform .35s ease;
+    opacity:1;
+}
+
+.data-scroll-cue.hidden{
+    opacity:0;
+    pointer-events:none;
+    transform:
+        translateX(-50%)
+        translateY(20px);
+}
+
+.data-scroll-cue__button{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    color:var(--bs-primary);
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.15);
+    transition:.3s;
+    animation:scrollBounce 2s infinite;
+}
+
+.data-scroll-cue__button:hover{
+    transform:scale(1.08);
+    background:var(--bs-primary);
+    color:#fff !important;
+    box-shadow:
+        0 18px 40px rgba(var(--bs-primary-rgb),.35);
+}
+
+.data-scroll-cue__halo{
+    position:absolute;
+    inset:-10px;
+    border-radius:50%;
+    background:
+        radial-gradient(
+            rgba(var(--bs-primary-rgb),.25),
+            transparent 70%
+        );
+    animation:pulse 2.5s infinite;
+}
+
+@keyframes scrollBounce{
+    0%,20%,50%,80%,100%{
+        transform:translateY(0);
+    }
+
+    40%{
+        transform:translateY(8px);
+    }
+
+    60%{
+        transform:translateY(4px);
+    }
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(.9);
+        opacity:.6;
+    }
+
+    70%{
+        transform:scale(1.3);
+        opacity:0;
+    }
+
+    100%{
+        transform:scale(.9);
+        opacity:0;
+    }
 }

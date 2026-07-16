@@ -1,246 +1,104 @@
 :host {
   display: none;
-  min-width: 285px;
+  width: 320px;
+  background: #fff;
+  border-radius: 0.75rem;
   overflow: visible !important;
-
-  background: #ffffff !important;
-  border: 1px solid #eef0f4 !important;
-  border-radius: 16px !important;
-
-  box-shadow:
-    0 12px 36px rgba(15, 23, 42, 0.1),
-    0 2px 8px rgba(15, 23, 42, 0.04) !important;
-
-  color: #000 !important;
 }
 
 :host.show {
   display: block !important;
 }
 
-:host.user-menu-dropdown,
-:host.menu,
-:host.menu-sub-dropdown {
-  overflow: visible !important;
-  background: #ffffff !important;
-}
-
-.user-menu__header {
-  background: #ffffff !important;
-}
-
-.user-menu__profile-card {
-  background: var(--bs-primary-light) !important;
-
-  border: 1px solid rgba(var(--bs-primary-rgb), 0.12) !important;
-  border-radius: 14px !important;
-}
-
-.user-menu__name {
-  color: #000 !important;
-  font-weight: 700 !important;
-}
-
-.user-menu__email,
-.user-menu__lang-label {
-  color: #000 !important;
-  font-weight: 500 !important;
-}
-
-.user-menu__separator {
-  border-top: 1px solid #eef0f4 !important;
-  opacity: 1;
-}
-
-.menu-item {
-  background: transparent !important;
-}
-
 .menu-link {
   min-height: 44px;
-
-  display: flex;
-  align-items: center;
-
-  border-radius: 10px !important;
-  border: 1px solid transparent !important;
-
-  background: transparent !important;
-
-  font-size: 13px;
-  font-weight: 500;
-
   transition:
-    background-color 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease,
-    transform 0.18s ease;
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover,
+  &:focus {
+    background: var(--bs-primary-light) !important;
+  }
 }
 
-.menu-title:hover,
-.menu-title.show > .menu-link {
-  background: var(--bs-primary-light) !important;
-  color: var(--bs-primary) !important;
-}
-
-.menu-link:hover,
-.menu-item.show > .menu-link {
-  background: var(--bs-primary-light) !important;
-  color: var(--bs-primary) !important;
-}
-
-.menu-link:hover {
-  transform: translateX(2px);
-}
-
-.menu-icon {
-  width: 1.85rem;
-  min-width: 1.85rem;
-  justify-content: center;
-}
-
-.menu-arrow {
-  color: #000 !important;
-}
-
-.menu-item.show > .menu-link .menu-arrow,
-.menu-link:hover .menu-arrow {
-  color: var(--bs-primary) !important;
-}
-
-.user-menu__lang-item {
-  position: relative !important;
+.language-item {
+  position: relative;
   overflow: visible !important;
 }
 
-/* Menü ile alt dropdown arasındaki hover boşluğunu kapatır. */
-.user-menu__lang-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 100%;
-  width: 12px;
-  height: 100%;
-  z-index: 999998;
+.language-trigger {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  text-align: left;
 }
 
-.user-menu__subdropdown {
+.language-arrow {
+  transition: transform 0.15s ease;
+}
+
+.language-arrow.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.language-dropdown {
   display: none !important;
   position: absolute !important;
   top: 0 !important;
   right: calc(100% + 8px) !important;
   left: auto !important;
-  z-index: 999999 !important;
-
-  width: 224px !important;
-  min-width: 224px !important;
-  padding: 6px !important;
-
-  background: #ffffff !important;
-  border: 1px solid #e4e6ef !important;
-  border-radius: 6px !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14) !important;
-
-  overflow: visible !important;
+  width: 225px !important;
+  min-width: 225px !important;
+  z-index: 2100 !important;
+  overflow: hidden;
 }
 
-.user-menu__lang-item.show .user-menu__subdropdown,
-.user-menu__lang-item:hover .user-menu__subdropdown,
-.user-menu__subdropdown.show {
+.language-dropdown.show {
   display: block !important;
 }
 
-.user-menu__subdropdown .menu-item {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.user-menu__subdropdown .menu-item + .menu-item {
-  margin-top: 2px !important;
-}
-
-.user-menu__subdropdown .menu-link {
-  width: 100%;
-  min-height: 36px !important;
-  padding: 7px 10px !important;
-
-  display: flex;
-  align-items: center;
-
-  background: transparent !important;
-  color: #181c32 !important;
-  border: 0 !important;
-  border-radius: 4px !important;
-
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  line-height: 1.2;
-
-  transform: none !important;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease !important;
-}
-
-.user-menu__subdropdown .menu-link:hover {
+.language-dropdown .menu-link:hover,
+.language-dropdown .menu-link:focus,
+.language-dropdown .menu-link.active {
   background: var(--bs-primary-light) !important;
-  color: var(--bs-primary) !important;
-  transform: none !important;
 }
 
-.user-menu__subdropdown .menu-link.active {
-  background: var(--bs-primary-light) !important;
+.language-dropdown .menu-link.active .menu-title {
   color: var(--bs-primary) !important;
 }
 
-.user-menu__subdropdown .menu-link.active .menu-title,
-.user-menu__subdropdown .menu-link.active span,
-.user-menu__subdropdown .menu-link.active i,
-.user-menu__subdropdown .menu-link.active .fa-check {
-  color: var(--bs-primary) !important;
-}
-
-.user-menu__subdropdown .symbol {
+.symbol.symbol-20px,
+.symbol.symbol-20px img {
   width: 20px !important;
-  height: 20px !important;
   min-width: 20px !important;
-}
-
-.user-menu__subdropdown .symbol img {
-  width: 20px !important;
+  max-width: 20px !important;
   height: 20px !important;
-  border-radius: 3px !important;
-  object-fit: cover;
+  min-height: 20px !important;
+  max-height: 20px !important;
 }
 
-.user-menu__logout {
-  color: #000 !important;
+.symbol.symbol-20px img {
+  display: block !important;
+  object-fit: cover !important;
 }
 
-.user-menu__logout:hover {
-  background: rgba(var(--bs-danger-rgb), 0.08) !important;
-  color: var(--bs-danger) !important;
-  border-color: rgba(var(--bs-danger-rgb), 0.12) !important;
+.logout-link:hover,
+.logout-link:focus {
+  background: var(--bs-danger-light) !important;
 }
 
-.user-menu__logout:hover .menu-title,
-.user-menu__logout:hover .menu-icon i,
-.user-menu__logout:hover .ki-duotone,
-.user-menu__logout:hover span {
-  color: var(--bs-danger) !important;
-}
+@media (max-width: 767.98px) {
+  :host {
+    width: min(320px, calc(100vw - 24px));
+  }
 
-.symbol img {
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.symbol.symbol-45px {
-  width: 46px;
-  height: 46px;
-
-  img {
-    width: 46px;
-    height: 46px;
+  .language-dropdown {
+    top: 0 !important;
+    right: calc(100% + 8px) !important;
+    left: auto !important;
+    width: 220px !important;
+    min-width: 220px !important;
+    z-index: 2100 !important;
   }
 }

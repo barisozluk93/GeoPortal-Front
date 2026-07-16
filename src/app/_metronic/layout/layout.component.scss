@@ -13,25 +13,3 @@
     transition: opacity 1s ease-in-out;
   }
 }
-
-
-:host ::ng-deep app-header.landing-map-mode {
-  height: 56px !important;
-  min-height: 56px !important;
-}
-
-:host ::ng-deep app-header.landing-map-mode #kt_header_container {
-  height: 56px !important;
-  min-height: 56px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-// :host ::ng-deep app-header.landing-map-mode img {
-//   height: 32px !important;
-// }
-
-:host ::ng-deep app-header.landing-map-mode .menu-link {
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-}

@@ -1,216 +1,173 @@
 :host {
   display: block;
-}
-
-.modern-menu {
-  padding: 0 !important;
-  margin: 0 !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-.modern-menu-wrapper {
   width: 100%;
-
-  padding: 0 !important;
-  margin: 0 !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
+  height: 100%;
 }
 
-/* MENU ITEM */
-.modern-menu .menu-item {
-  margin: 0 !important;
-  padding: 0 !important;
-
-  background: transparent !important;
+#kt_aside_menu {
+  width: 100%;
+  padding: 0.75rem 1.25rem 1rem;
 }
 
-/* MENU LINK */
-.modern-menu .menu-link {
-  position: relative;
+/* Menü item aralığı */
+#kt_aside_menu.menu .menu-item {
+  margin-bottom: 0.25rem;
+}
 
+/* Bütün menü linkleri */
+#kt_aside_menu.menu .menu-item > .menu-link {
   display: flex;
   align-items: center;
-
-  min-height: 44px;
-  padding: 0.7rem 0.9rem;
-
-  border-radius: 0 !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-
-  text-decoration: none;
-
+  min-height: 46px;
+  padding: 0.75rem 1rem;
+  border-radius: 0.475rem;
+  background-color: transparent;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-/* TITLE */
-.modern-menu .menu-title {
+/* Bütün menü yazıları bold */
+#kt_aside_menu.menu .menu-item > .menu-link .menu-title {
   flex: 1;
-  min-width: 0;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--bs-gray-800);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  transition: color 0.2s ease;
 }
 
-/* HEADER GİBİ UNDERLINE */
-.modern-menu > .modern-menu-wrapper > .menu-item > .menu-link::after {
-  content: "";
-
-  position: absolute;
-  left: 0.9rem;
-  bottom: 6px;
-
-  width: 0;
-  height: 2px;
-
-  border-radius: 999px;
-
-  background: currentColor;
-
-  transition: width 0.2s ease;
-}
-
-/* SADECE PARENT ITEM ACTIVE UNDERLINE */
-.modern-menu
-  > .modern-menu-wrapper
-  > .menu-item
-  > .menu-link.active::after,
-.modern-menu
-  > .modern-menu-wrapper
-  > .menu-item
-  > .menu-link.router-link-active::after,
-.modern-menu
-  > .modern-menu-wrapper
-  > .menu-item.here
-  > .menu-link::after,
-.modern-menu
-  > .modern-menu-wrapper
-  > .menu-item.show
-  > .menu-link::after,
-.modern-menu
-  > .modern-menu-wrapper
-  > .menu-item.menu-accordion.show
-  > .menu-link::after,
-.modern-menu
-  > .modern-menu-wrapper
-  > .menu-item.menu-accordion.here
-  > .menu-link::after {
-  width: 26px;
-}
-
-/* ARROW */
-.modern-menu .menu-arrow {
-  margin-left: auto;
-
-  transition: transform 0.2s ease;
-}
-
-/* OPEN */
-.modern-menu .menu-accordion.show > .menu-link .menu-arrow {
-  transform: rotate(90deg);
-}
-
-/* ACCORDION FIX */
-.modern-menu .menu-sub,
-.modern-menu .menu-sub-dropdown,
-.modern-menu .menu-sub-accordion {
-  position: static !important;
-  inset: auto !important;
-  transform: none !important;
-
-  display: block;
-
-  width: 100% !important;
-  min-width: 100% !important;
-  max-width: 100% !important;
-
-  float: none !important;
-  z-index: auto !important;
-
-  margin: 0 !important;
-  padding: 0 0 0 1rem !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-/* CLOSED */
-.modern-menu .menu-accordion:not(.show) > .menu-sub {
-  display: none !important;
-}
-
-/* OPEN */
-.modern-menu .menu-accordion.show > .menu-sub,
-.modern-menu .menu-accordion.here > .menu-sub {
-  display: block !important;
-}
-
-/* SUB ITEMS */
-.modern-menu .menu-sub .menu-item {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* SUB LINKS */
-.modern-menu .menu-sub .menu-link {
-  min-height: 38px;
-  padding: 0.55rem 0.8rem;
-
-  border-radius: 6px !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-
+/* Accordion oku */
+#kt_aside_menu.menu .menu-item > .menu-link .menu-arrow {
+  color: var(--bs-gray-500);
   transition:
     color 0.2s ease,
-    background-color 0.2s ease;
+    transform 0.2s ease;
 }
 
-/* HEADER İLE AYNI HOVER */
-.modern-menu .menu-sub .menu-link:hover {
-  background-color: rgba(var(--bs-primary-rgb), 0.08) !important;
-  color: var(-app-primary) !important;
+/* Hover */
+#kt_aside_menu.menu .menu-item > .menu-link:hover {
+  background-color: var(--bs-primary-light) !important;
 }
 
-/* HEADER İLE AYNI ACTIVE */
-.modern-menu .menu-sub .menu-link.active,
-.modern-menu .menu-sub .menu-link.router-link-active {
-  background-color: rgba(var(--bs-primary-rgb), 0.08) !important;
-  color: var(-app-primary) !important;
+#kt_aside_menu.menu .menu-item > .menu-link:hover .menu-title,
+#kt_aside_menu.menu .menu-item > .menu-link:hover .menu-arrow {
+  color: var(--bs-primary) !important;
 }
 
-/* SUBMENU UNDERLINE YOK */
-.modern-menu .menu-sub .menu-link::after,
-.modern-menu .menu-sub .menu-link.active::after,
-.modern-menu .menu-sub .menu-link.router-link-active::after {
-  display: none !important;
-  content: none !important;
-  width: 0 !important;
+/* Seçili normal veya alt menü */
+#kt_aside_menu.menu .menu-item > .menu-link.active {
+  background-color: var(--bs-primary-light) !important;
 }
 
-/* MOBILE */
-@media (max-width: 991.98px) {
-  .modern-menu .menu-link {
-    min-height: 42px;
-    padding: 0.65rem 0.8rem;
+#kt_aside_menu.menu .menu-item > .menu-link.active .menu-title,
+#kt_aside_menu.menu .menu-item > .menu-link.active .menu-arrow {
+  color: var(--bs-primary) !important;
+  font-weight: 700 !important;
+}
+
+/* İçerisinde seçili child bulunan ana accordion */
+#kt_aside_menu.menu
+  .menu-item.menu-accordion.here
+  > .menu-link {
+  background-color: var(--bs-primary-light) !important;
+}
+
+#kt_aside_menu.menu
+  .menu-item.menu-accordion.here
+  > .menu-link
+  .menu-title,
+#kt_aside_menu.menu
+  .menu-item.menu-accordion.here
+  > .menu-link
+  .menu-arrow {
+  color: var(--bs-primary) !important;
+  font-weight: 700 !important;
+}
+
+/* Açılmış accordion */
+#kt_aside_menu.menu
+  .menu-item.menu-accordion.show
+  > .menu-link {
+  background-color: var(--bs-primary-light) !important;
+}
+
+#kt_aside_menu.menu
+  .menu-item.menu-accordion.show
+  > .menu-link
+  .menu-title,
+#kt_aside_menu.menu
+  .menu-item.menu-accordion.show
+  > .menu-link
+  .menu-arrow {
+  color: var(--bs-primary) !important;
+}
+
+/* Alt menü */
+#kt_aside_menu.menu .menu-sub {
+  padding: 0.35rem 0 0.35rem 1.25rem;
+}
+
+#kt_aside_menu.menu .menu-sub .menu-item {
+  margin-bottom: 0.2rem;
+}
+
+#kt_aside_menu.menu .menu-sub .menu-item > .menu-link {
+  min-height: 42px;
+  padding: 0.625rem 1rem;
+}
+
+#kt_aside_menu.menu
+  .menu-sub
+  .menu-item
+  > .menu-link
+  .menu-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Seçili alt menü */
+#kt_aside_menu.menu
+  .menu-sub
+  .menu-item
+  > .menu-link.active {
+  background-color: var(--bs-primary-light) !important;
+}
+
+#kt_aside_menu.menu
+  .menu-sub
+  .menu-item
+  > .menu-link.active
+  .menu-title {
+  color: var(--bs-primary) !important;
+}
+
+/* Ayırıcı */
+#kt_aside_menu .menu-content {
+  padding: 0 0.75rem;
+}
+
+/* Dark tema */
+[data-bs-theme="dark"] {
+  #kt_aside_menu.menu
+    .menu-item
+    > .menu-link
+    .menu-title {
+    color: var(--bs-gray-300);
   }
 
-  .modern-menu .menu-sub,
-  .modern-menu .menu-sub-dropdown,
-  .modern-menu .menu-sub-accordion {
-    padding-left: 0.75rem !important;
+  #kt_aside_menu.menu
+    .menu-item
+    > .menu-link:hover,
+  #kt_aside_menu.menu
+    .menu-item
+    > .menu-link.active,
+  #kt_aside_menu.menu
+    .menu-item.menu-accordion.here
+    > .menu-link,
+  #kt_aside_menu.menu
+    .menu-item.menu-accordion.show
+    > .menu-link {
+    background-color: rgba(var(--bs-primary-rgb), 0.15) !important;
   }
 }

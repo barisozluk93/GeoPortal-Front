@@ -11,7 +11,7 @@
         <i class="fa-solid fa-layer-group fs-2"></i>
       </button>
 
-      <button type="button" class="btn btn-icon btn-light map-action-btn"
+      <button type="button" class="btn btn-icon btn-light map-action-btn mobile-hidden-action"
         [ngClass]="{ 'map-action-btn--active': activeTool === 'search' }" [title]="'MAP.ACTIONS.SEARCH' | translate"
         (click)="searchClicked.emit()">
         <i class="fa-solid fa-search fs-2"></i>
@@ -25,7 +25,7 @@
         <i class="fa-solid fa-circle-info fs-2"></i>
       </button>
 
-      <div class="map-action-dropdown">
+      <div class="map-action-dropdown mobile-hidden-action">
 
         <button type="button" class="btn btn-icon btn-light map-action-btn" [ngClass]="{
     'map-action-btn--active':
@@ -153,7 +153,10 @@
             [attr.aria-label]="'MAP.ACTIONS.ROTATE_MAP' | translate"
             [title]="'MAP.ACTIONS.ROTATE_MAP' | translate"
             (click)="toggleCompass($event)">
-            <i class="fa-solid fa-rotate-right"></i>
+            <span class="rotate-north-icon" aria-hidden="true">
+              <i class="fa-solid fa-rotate-right rotate-north-icon__arrow text-primary"></i>
+              <span class="rotate-north-icon__label text-primary">N</span>
+            </span>
           </button>
 
           <button type="button"

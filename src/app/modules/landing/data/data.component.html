@@ -1,6 +1,6 @@
 <div class="bg-body py-10">
   <div class="container-fluid">
-    <div class="card border  shadow-sm overflow-hidden data-card mb-10">
+    <div class="#heroSection card border shadow-sm overflow-hidden data-card mb-10">
       <div class="card-body p-0">
         <div class="row g-0 align-items-stretch data-row">
 
@@ -30,7 +30,8 @@
 
           <!-- SAĞ: ÖZET PANELİ -->
           <div class="col-12 col-xl-5 position-relative data-summary-column">
-            <div class="position-relative d-flex flex-column justify-content-center bg-primary h-100 p-6 p-lg-8 p-xxl-10 data-summary-panel">
+            <div
+              class="position-relative d-flex flex-column justify-content-center bg-primary h-100 p-6 p-lg-8 p-xxl-10 data-summary-panel">
               <div class="position-relative z-index-2">
                 <div class="mb-5">
                   <span class="badge badge-light text-primary fw-bold fs-8 mb-4">
@@ -43,7 +44,8 @@
                 </div>
 
                 <div class="d-flex flex-column gap-3">
-                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div
+                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
                         <i class="ki-outline ki-geolocation fs-2x text-white"></i>
@@ -59,7 +61,8 @@
                     </div>
                   </div>
 
-                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div
+                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
                         <i class="ki-outline ki-code fs-2x text-white"></i>
@@ -75,7 +78,8 @@
                     </div>
                   </div>
 
-                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div
+                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
                         <i class="ki-outline ki-data fs-2x text-white"></i>
@@ -94,12 +98,17 @@
               </div>
             </div>
           </div>
-
         </div>
+        <a class="data-scroll-cue" [class.hidden]="hideScrollCue" (click)="scrollToSection('data-use-cases')">
+          <span class="data-scroll-cue__halo"></span>
+          <span class="data-scroll-cue__button">
+            <i class="ki-outline ki-double-down fs-2"></i>
+          </span>
+        </a>
       </div>
     </div>
 
-    <div class="text-center mb-10 mb-lg-12">
+    <div id="data-use-cases" class="text-center mb-10 mb-lg-12 data-section-anchor">
       <span class="badge badge-light-primary fs-7 fw-bold mb-4">
         {{ 'DATA_PAGE.USE_CASES' | translate }}
       </span>
@@ -212,7 +221,7 @@
     </div>
 
     <div class="card card-flush border  shadow-sm">
-      <div class="card-header border-0 pt-8 px-7 px-lg-10">
+      <!-- <div class="card-header border-0 pt-8 px-7 px-lg-10">
         <div class="card-title">
           <div class="d-flex align-items-center">
             <div class="symbol symbol-45px me-4">
@@ -230,74 +239,78 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="card-body pt-5 px-7 px-lg-10 pb-8 pb-lg-10">
-        <div class="timeline-label">
-          <div class="timeline-item">
-            <div class="timeline-label fw-bold text-gray-700 fs-6">01</div>
-            <div class="timeline-badge">
-              <i class="ki-outline ki-abstract-26 text-primary fs-2"></i>
-            </div>
-            <div class="timeline-content ps-3 pb-8">
-              <div class="d-flex align-items-center mb-2">
-                <div class="symbol symbol-40px me-4">
+      <div class="card card-bordered">
+        <div class="card-body p-8 p-lg-10">
+          <div class="row g-8">
+
+            <div class="col-12 col-lg-4">
+              <div class="d-flex align-items-start gap-5">
+                <div class="symbol symbol-55px flex-shrink-0">
                   <span class="symbol-label bg-light-primary">
-                    <i class="ki-outline ki-magnifier fs-2 text-primary"></i>
+                    <i class="ki-outline ki-magnifier fs-2x text-primary"></i>
                   </span>
                 </div>
-                <h4 class="text-gray-900 fw-bold fs-5 mb-0">
-                  {{ 'DATA_PAGE.FLOW_1_TITLE' | translate }}
-                </h4>
-              </div>
-              <p class="text-gray-600 fw-semibold fs-6 lh-lg mb-0 ms-14">
-                {{ 'DATA_PAGE.FLOW_1_DESC' | translate }}
-              </p>
-            </div>
-          </div>
 
-          <div class="timeline-item">
-            <div class="timeline-label fw-bold text-gray-700 fs-6">02</div>
-            <div class="timeline-badge">
-              <i class="ki-outline ki-abstract-26 text-primary fs-2"></i>
+                <div>
+                  <span class="badge badge-light-primary mb-3">01</span>
+
+                  <h4 class="text-gray-900 fw-bold fs-3 mb-3">
+                    {{ 'DATA_PAGE.FLOW_1_TITLE' | translate }}
+                  </h4>
+
+                  <p class="text-gray-600 fw-semibold lh-lg mb-0">
+                    {{ 'DATA_PAGE.FLOW_1_DESC' | translate }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div class="timeline-content ps-3 pb-8">
-              <div class="d-flex align-items-center mb-2">
-                <div class="symbol symbol-40px me-4">
+
+            <div class="col-12 col-lg-4">
+              <div class="d-flex align-items-start gap-5">
+                <div class="symbol symbol-55px flex-shrink-0">
                   <span class="symbol-label bg-light-primary">
-                    <i class="ki-outline ki-data fs-2 text-primary"></i>
+                    <i class="ki-outline ki-data fs-2x text-primary"></i>
                   </span>
                 </div>
-                <h4 class="text-gray-900 fw-bold fs-5 mb-0">
-                  {{ 'DATA_PAGE.FLOW_2_TITLE' | translate }}
-                </h4>
-              </div>
-              <p class="text-gray-600 fw-semibold fs-6 lh-lg mb-0 ms-14">
-                {{ 'DATA_PAGE.FLOW_2_DESC' | translate }}
-              </p>
-            </div>
-          </div>
 
-          <div class="timeline-item">
-            <div class="timeline-label fw-bold text-gray-700 fs-6">03</div>
-            <div class="timeline-badge">
-              <i class="ki-outline ki-abstract-26 text-primary fs-2"></i>
+                <div>
+                  <span class="badge badge-light-primary mb-3">02</span>
+
+                  <h4 class="text-gray-900 fw-bold fs-3 mb-3">
+                    {{ 'DATA_PAGE.FLOW_2_TITLE' | translate }}
+                  </h4>
+
+                  <p class="text-gray-600 fw-semibold lh-lg mb-0">
+                    {{ 'DATA_PAGE.FLOW_2_DESC' | translate }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div class="timeline-content ps-3">
-              <div class="d-flex align-items-center mb-2">
-                <div class="symbol symbol-40px me-4">
+
+            <div class="col-12 col-lg-4">
+              <div class="d-flex align-items-start gap-5">
+                <div class="symbol symbol-55px flex-shrink-0">
                   <span class="symbol-label bg-light-primary">
-                    <i class="ki-outline ki-geolocation fs-2 text-primary"></i>
+                    <i class="ki-outline ki-geolocation fs-2x text-primary"></i>
                   </span>
                 </div>
-                <h4 class="text-gray-900 fw-bold fs-5 mb-0">
-                  {{ 'DATA_PAGE.FLOW_3_TITLE' | translate }}
-                </h4>
+
+                <div>
+                  <span class="badge badge-light-primary mb-3">03</span>
+
+                  <h4 class="text-gray-900 fw-bold fs-3 mb-3">
+                    {{ 'DATA_PAGE.FLOW_3_TITLE' | translate }}
+                  </h4>
+
+                  <p class="text-gray-600 fw-semibold lh-lg mb-0">
+                    {{ 'DATA_PAGE.FLOW_3_DESC' | translate }}
+                  </p>
+                </div>
               </div>
-              <p class="text-gray-600 fw-semibold fs-6 lh-lg mb-0 ms-14">
-                {{ 'DATA_PAGE.FLOW_3_DESC' | translate }}
-              </p>
             </div>
+
           </div>
         </div>
       </div>

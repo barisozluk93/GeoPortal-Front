@@ -1,6 +1,66 @@
-#btn-back-to-top {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: none;
+:host {
+  display: contents;
+}
+
+.scrolltop {
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 24px !important;
+  z-index: 1099 !important;
+
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--bs-primary) !important;
+  color: var(--bs-primary-inverse, #fff) !important;
+  box-shadow: 0 0.5rem 1.5rem rgba(var(--bs-primary-rgb), 0.32) !important;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.94);
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* TS tarafındaki [class.show] ile birebir eşleşir. */
+.scrolltop.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+.scrolltop:hover {
+  transform: translateY(-3px) scale(1.03) !important;
+  box-shadow: 0 0.75rem 2rem rgba(var(--bs-primary-rgb), 0.42) !important;
+  color: #fff !important;
+}
+
+.scrolltop:active {
+  transform: translateY(-1px) scale(0.97) !important;
+  color: #fff !important;
+}
+
+.scrolltop i {
+  color: #fff !important;
+}
+
+@media (max-width: 991.98px) {
+  .scrolltop {
+    right: 16px !important;
+    bottom: 16px !important;
+    width: 42px;
+    height: 42px;
+  }
 }

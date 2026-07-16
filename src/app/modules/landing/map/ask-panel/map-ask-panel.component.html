@@ -1,11 +1,11 @@
 <div class="d-flex flex-column w-100 h-100 min-h-0 overflow-hidden bg-body" (click)="$event.stopPropagation()">
   <div
     *ngIf="coordinateText"
-    class="d-flex align-items-center flex-shrink-0 gap-2 px-4 py-2 bg-light-warning border-bottom border-warning border-opacity-25"
+    class="d-flex align-items-center flex-shrink-0 gap-2 px-4 py-2 bg-light-primary border-bottom border-primary border-opacity-25"
   >
     <span class="symbol symbol-25px flex-shrink-0">
-      <span class="symbol-label bg-warning bg-opacity-15">
-        <i class="fa-solid fa-location-dot text-warning fs-7"></i>
+      <span class="symbol-label bg-opacity-15">
+        <i class="fa-solid fa-location-dot text-primary fs-7"></i>
       </span>
     </span>
 
@@ -14,7 +14,7 @@
     </span>
 
     <span
-      class="badge badge-light-warning fw-bold fs-8 text-truncate"
+      class="badge badge-primary fw-bold fs-8 text-truncate"
       [title]="coordinateText"
     >
       {{ coordinateText }}
@@ -70,7 +70,7 @@
               {{ i + 1 }}
             </span>
 
-            <span class="text-truncate mw-125px fw-semibold fs-8">
+            <span class="text-truncate mw-125px fw-semibold fs-8" [ngClass]="i === activeIndex ? 'text-white' : 'text-primary'">
               {{ footprint.imageId || footprint.productName || footprint.name || ('MAP.ASK.FOOTPRINT' | translate) }}
             </span>
           </button>

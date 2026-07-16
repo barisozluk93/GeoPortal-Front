@@ -5,20 +5,20 @@
 @media (max-width: 991px) {
   :host {
     position: fixed !important;
-    top: 64px !important;
+    top: 56px !important;
     left: 0 !important;
     bottom: 0 !important;
     z-index: 1040 !important;
-    height: calc(100vh - 64px) !important;
-    max-height: calc(100vh - 64px) !important;
+    height: calc(100vh - 56px) !important;
+    max-height: calc(100vh - 56px) !important;
     overflow: hidden !important;
     background: #ffffff;
   }
 
   .aside-primary,
   .aside-secondary {
-    height: calc(100vh - 64px) !important;
-    max-height: calc(100vh - 64px) !important;
+    height: calc(100vh - 56px) !important;
+    max-height: calc(100vh - 56px) !important;
     overflow-y: auto !important;
   }
 
@@ -38,13 +38,13 @@
 
   ::ng-deep #kt_aside,
   ::ng-deep .aside {
-    top: 64px !important;
-    height: calc(100vh - 64px) !important;
+    top: 56px !important;
+    height: calc(100vh - 56px) !important;
     z-index: 1040 !important;
   }
 
   ::ng-deep .drawer-overlay {
-    top: 64px !important;
-    height: calc(100vh - 64px) !important;
+    top: 56px !important;
+    height: calc(100vh - 56px) !important;
   }
 }

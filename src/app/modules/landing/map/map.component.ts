@@ -233,8 +233,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private readonly defaultCenter = fromLonLat([35.2433, 38.9637]);
   private readonly defaultZoom = 3;
 
-  private readonly drawColor = "#263685";
-  private readonly drawFillColor = "rgba(38, 54, 133, 0.14)";
+  // Açık ve koyu altlıklarda görünür, yüksek kontrastlı çizim renkleri.
+private readonly drawColor = "#2DD4BF";
+private readonly drawHaloColor = "rgba(255,255,255,.98)";
+private readonly drawFillColor = "rgba(45,212,191,.18)";
 
   // AOI bazlı yeni fiyatlandırma. Tarife değiştiğinde yalnızca bu değerler güncellenir.
   private readonly satelliteImageUnitPriceTryPerKm2 = 1000;
@@ -367,42 +369,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     style: (feature) => {
       const aoiId = feature.get("aoiId") as string | undefined;
       const isHovered = !!aoiId && aoiId === this.hoveredAoiId;
-      return new Style({
-        stroke: new Stroke({
-          color: this.drawColor,
-          width: isHovered ? 5 : 2,
-        }),
-        fill: new Fill({
-          color: isHovered ? "rgba(38,54,133,.22)" : "rgba(38,54,133,.12)",
-        }),
-        image: new CircleStyle({
-          radius: isHovered ? 7 : 5,
-          fill: new Fill({ color: this.drawColor }),
-          stroke: new Stroke({ color: "#fff", width: 2 }),
-        }),
-      });
+      return this.createDrawingStyle(isHovered);
     },
   });
 
   private measureLayer = new VectorLayer({
     source: this.measureSource,
     zIndex: 10000,
-    style: new Style({
-      stroke: new Stroke({
-        color: this.drawColor,
-        width: 3,
-      }),
-      image: new CircleStyle({
-        radius: 5,
-        fill: new Fill({
-          color: this.drawColor,
-        }),
-        stroke: new Stroke({
-          color: "#ffffff",
-          width: 2,
-        }),
-      }),
-    }),
+    style: () => this.createDrawingStyle(),
   });
 
   constructor(
@@ -2980,6 +2954,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     });
 
     this.updateCustomScaleBar();
+
+    const initialCenter = this.map.getView().getCenter();
+    if (initialCenter) {
+      this.setCoordinate(initialCenter);
+    }
   }
 
   private registerMapEvents(): void {
@@ -3022,15 +3001,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.measureDraw = new Draw({
       source: this.measureSource,
       type: mode === "distance" ? "LineString" : "Polygon",
-      style: new Style({
-        stroke: new Stroke({ color: this.drawColor, width: 3 }),
-        fill: new Fill({ color: this.drawFillColor }),
-        image: new CircleStyle({
-          radius: 5,
-          fill: new Fill({ color: this.drawColor }),
-          stroke: new Stroke({ color: "#ffffff", width: 2 }),
-        }),
-      }),
+      style: () => this.createDrawingStyle(),
     });
 
     this.measureDraw.on("drawstart", (event) => {
@@ -4371,26 +4342,45 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.map.addInteraction(this.polygonDraw);
   }
 
-  private getAreaDrawStyle(): Style {
-    return new Style({
-      stroke: new Stroke({
-        color: this.drawColor,
-        width: 3,
-      }),
-      fill: new Fill({
-        color: "rgba(38, 54, 133, 0.22)",
-      }),
-      image: new CircleStyle({
-        radius: 6,
-        fill: new Fill({
-          color: this.drawColor,
-        }),
+  private getAreaDrawStyle(): Style[] {
+    return this.createDrawingStyle();
+  }
+
+  /**
+   * Çizgiyi önce kalın beyaz halo, sonra parlak ana çizgi olarak çizer.
+   * Böylece uydu, gece ve açık renkli altlıklarda aynı anda görünür kalır.
+   */
+  private createDrawingStyle(isHovered = false): Style[] {
+    return [
+      new Style({
         stroke: new Stroke({
-          color: "#ffffff",
-          width: 2,
+          color: this.drawHaloColor,
+          width: isHovered ? 8 : 6,
+          lineCap: "round",
+          lineJoin: "round",
+        }),
+        image: new CircleStyle({
+          radius: isHovered ? 9 : 7,
+          fill: new Fill({ color: this.drawHaloColor }),
         }),
       }),
-    });
+      new Style({
+        stroke: new Stroke({
+          color: this.drawColor,
+          width: isHovered ? 5 : 3,
+          lineCap: "round",
+          lineJoin: "round",
+        }),
+        fill: new Fill({
+          color: isHovered ? "rgba(0, 229, 255, 0.25)" : this.drawFillColor,
+        }),
+        image: new CircleStyle({
+          radius: isHovered ? 7 : 5,
+          fill: new Fill({ color: this.drawColor }),
+          stroke: new Stroke({ color: "#ffffff", width: 2 }),
+        }),
+      }),
+    ];
   }
 
   private bindAreaDrawEvents(): void {

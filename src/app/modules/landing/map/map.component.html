@@ -4,7 +4,7 @@
   <input #areaFileInput type="file" class="d-none" accept=".zip,.geojson,.json,.kml,.kmz"
     (change)="uploadAreaFile($event)" (cancel)="activeTool = null" />
 
-  <div class="map-status-bar bg-body border  shadow-sm">
+  <div class="map-status-bar bg-body border shadow-sm">
     <div class="map-coordinate-section">
       <span class="map-coordinate-text text-gray-800 fw-semibold">{{ currentCoordinateText }}</span>
 
@@ -15,28 +15,28 @@
           <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>
 
-        <ul class="dropdown-menu dropdown-menu-end map-options-menu" [class.show]="isCoordinateMenuOpen"
+        <ul class="dropdown-menu dropdown-menu-end map-options-menu py-2" [class.show]="isCoordinateMenuOpen"
           (click)="$event.stopPropagation()">
-          <li class="menu-item px-3">
-            <button type="button" class="menu-link px-3 d-flex align-items-center w-100 border-0"
+          <li class="menu-item">
+            <a class="menu-link px-5 py-3 d-flex align-items-center border-0"
               [ngClass]="{ active: coordinateFormat === 'dd' }" (click)="setCoordinateFormat('dd', $event)">
-              <span class="menu-title">
+              <span class="menu-title fw-bolder">
                 {{ 'MAP.COORDINATE_OPTIONS.DECIMAL_DEGREE' | translate }}
               </span>
 
               <i *ngIf="coordinateFormat === 'dd'" class="fa-solid fa-check text-primary ms-auto"></i>
-            </button>
+            </a>
           </li>
 
-          <li class="menu-item px-3">
-            <button type="button" class="menu-link px-3 d-flex align-items-center w-100 border-0"
+          <li class="menu-item">
+            <a class="menu-link px-5 py-3 d-flex align-items-center border-0"
               [ngClass]="{ active: coordinateFormat === 'dms' }" (click)="setCoordinateFormat('dms', $event)">
-              <span class="menu-title">
+              <span class="menu-title fw-bolder">
                 {{ 'MAP.COORDINATE_OPTIONS.DEGREE_MINUTE_SECOND' | translate }}
               </span>
 
               <i *ngIf="coordinateFormat === 'dms'" class="fa-solid fa-check text-primary ms-auto"></i>
-            </button>
+            </a>
           </li>
         </ul>
       </div>
