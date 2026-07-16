@@ -132,8 +132,8 @@ const menuList: HeaderMenuModel[] = [
   // },
   {
     id: 7,
-    name: 'Keşfet',
-    nameEn: 'Explore',
+    name: 'Harita',
+    nameEn: 'Map',
     url: '/landing/map',
     icon: undefined,
     isDeleted: false,

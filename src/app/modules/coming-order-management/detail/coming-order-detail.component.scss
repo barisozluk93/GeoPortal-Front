@@ -12,3 +12,12 @@
 #kt_order_detail_sidebar {
   top: 110px;
 }
+
+
+:host ::ng-deep [data-bs-toggle="collapse"][aria-expanded="true"] .collapse-chevron i {
+  transform: rotate(180deg);
+}
+
+.collapse-chevron i {
+  transition: transform 0.2s ease;
+}

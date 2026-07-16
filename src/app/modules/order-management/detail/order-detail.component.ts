@@ -12,6 +12,14 @@ import { OrderModel } from '../../coming-order-management/models/order.model';
 import { OrderProductModel } from '../../coming-order-management/models/orderproduct.model';
 
 
+
+interface OrderAoiGroupView {
+  key: string;
+  aoiName: string;
+  products: OrderProductModel[];
+  totalPrice: number;
+}
+
 interface OrderProcessingOptionView {
   key: string;
   name: string;
@@ -372,6 +380,55 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         this.copiedMap[itemId] = false;
       }, 2000);
     }).catch(() => {});
+  }
+
+
+  get apiServiceItems(): OrderProductModel[] {
+    return (this.order?.orderProducts ?? []).filter(item => this.isApiKey(item));
+  }
+
+  get apiServiceTotal(): number {
+    return this.apiServiceItems.reduce((sum, item) => sum + this.getItemTotal(item), 0);
+  }
+
+  get aoiGroups(): OrderAoiGroupView[] {
+    const groups = new Map<string, OrderAoiGroupView>();
+
+    for (const item of this.order?.orderProducts ?? []) {
+      if (this.isApiKey(item)) {
+        continue;
+      }
+
+      const aoiName = this.getAoiName(item);
+      const key = this.normalizeAoiKey(aoiName);
+      const existing = groups.get(key);
+
+      if (existing) {
+        existing.products.push(item);
+        existing.totalPrice += this.getItemTotal(item);
+        continue;
+      }
+
+      groups.set(key, {
+        key,
+        aoiName,
+        products: [item],
+        totalPrice: this.getItemTotal(item),
+      });
+    }
+
+    return Array.from(groups.values());
+  }
+
+  trackByAoiGroup(index: number, group: OrderAoiGroupView): string {
+    return `${group.key}-${index}`;
+  }
+
+  private normalizeAoiKey(value: string): string {
+    return value
+      .trim()
+      .toLocaleLowerCase('tr-TR')
+      .replace(/\s+/g, '-') || 'ilgi-alani';
   }
 
   getTotalProductCount(): number {

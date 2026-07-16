@@ -1017,7 +1017,7 @@ export const locale = {
           "START_DATE_REQUIRED": "Start date is required.",
           "END_DATE_REQUIRED": "End date is required.",
           "GSD": "GSD",
-          "PRIORITY": "Priority" 
+          "PRIORITY": "Priority"
         }
       },
     },
@@ -1334,6 +1334,16 @@ export const locale = {
       ACQUISITION_END: 'Acquisition End',
       NADIR_ANGLE: 'Nadir Angle',
       IMAGE_TYPE: 'Image Type',
+      "DIGITAL_SERVICE": "Digital Service",
+      "API_SERVICES": "API Services",
+      "AOI_GROUP": "Area of Interest",
+      "PRODUCT_COUNT_SUFFIX": "products",
+      "GENERAL_TOTAL": "Grand Total",
+      "PLATFORM": "Platform",
+      "PRIORITY_LEVEL": "Priority Level",
+      "PRIORITY_STANDARD": "Standard",
+      "PRIORITY_HIGH": "High",
+      "PRIORITY_URGENT": "Urgent",
       ALERTS: {
         GET_ORDER_ERROR: 'An error occurred while fetching order details.',
         STATUS_UPDATED: 'Order status has been updated successfully.',
@@ -1551,7 +1561,34 @@ export const locale = {
       "NDVI": "NDVI Analysis",
       "OFF_NADIR_ANGLE": "Nadir Angle",
       "IMAGE_TYPE": "Image Type"
-    }
+    },
+    BASKET: {
+      DIGITAL_SERVICE: "Digital Service",
+      API_SERVICES: "API Services",
+      AOI: "Area of Interest",
+
+      PRODUCT: "product",
+
+      GENERAL_TOTAL: "Grand Total",
+
+      API_SERVICE: "API Service",
+
+      UNIT_PRICE: "Unit Price",
+      QUANTITY: "Quantity",
+
+      REQUEST_AREA: "Requested Area",
+      IMAGE_UNIT_PRICE: "Image Unit Price",
+
+      SATELLITE_IMAGE: "Satellite Image",
+
+      PROCESSING_OPTIONS: "Image Processing Options",
+      PROCESSING_TOTAL: "Image Processing Total",
+      NO_PROCESSING_OPTIONS: "No image processing options selected.",
+
+      READY_IMAGE: "Ready Satellite Image",
+      NEW_IMAGE_REQUEST: "New Satellite Image Request",
+      GROUP: "Group"
+    },
     // END (TR-EN-LANGUAGE-BRANCH)
   },
 };

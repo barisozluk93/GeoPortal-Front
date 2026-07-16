@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 w-100">
               <div>
                 <h2 class="fw-bold text-gray-900 fs-2 mb-1">{{ 'MY_BASKET' | translate }}</h2>
-                <div class="text-muted fw-semibold fs-7">{{ numberOfItem }} ürün · {{ groupCount }} grup</div>
+                <div class="text-muted fw-semibold fs-7">{{ numberOfItem }} {{ 'BASKET.PRODUCT' | translate }} · {{ groupCount }} {{ 'BASKET.GROUP' | translate }}</div>
               </div>
 
               <div *ngIf="basket.length" class="badge badge-light-primary fs-6 fw-bold px-4 py-3">
@@ -46,28 +46,34 @@
                       </div>
 
                       <div class="min-w-0">
-                        <div class="text-muted fw-bold fs-8 text-uppercase mb-1">Dijital Servis</div>
-                        <h3 class="fw-bold text-gray-900 fs-4 mb-1">API Servisleri</h3>
-                        <span class="text-muted fw-semibold fs-8">{{ serviceItems.length }} ürün</span>
+                        <div class="text-muted fw-bold fs-8 text-uppercase mb-1">{{ 'BASKET.DIGITAL_SERVICE' | translate }}</div>
+                        <h3 class="fw-bold text-gray-900 fs-4 mb-1">{{ 'BASKET.API_SERVICES' | translate }}</h3>
+                        <span class="text-muted fw-semibold fs-8">{{ serviceItems.length }} {{ 'BASKET.PRODUCT' | translate }}</span>
                       </div>
                     </div>
 
                     <div class="d-flex align-items-center gap-4 ms-auto">
                       <div class="d-flex flex-column align-items-end">
-                        <small class="text-muted fw-semibold">Genel Toplam</small>
+                        <small class="text-muted fw-semibold">{{ 'BASKET.GENERAL_TOTAL' | translate }}</small>
                         <strong class="text-gray-900">{{ formatMoney(serviceTotalPrice) }} ₺</strong>
                       </div>
                       <span class="btn btn-icon btn-sm btn-light-primary flex-shrink-0">
-                        <i class="ki-outline ki-down fs-3"></i>
+                        <i class="ki-outline ki-right fs-3 collapse-arrow"></i>
                       </span>
                     </div>
                   </header>
 
                   <div id="basketApiServicesBody" class="collapse">
                     <div class="card-body pt-0 d-flex flex-column gap-5">
-                      <article *ngFor="let item of serviceItems; trackBy: trackByBasketItem" class="card border  shadow-none">
+                      <article *ngFor="let item of serviceItems; let serviceIndex = index; trackBy: trackByBasketItem" class="card border  shadow-none">
                         <div class="card-body p-0">
-                          <header class="card-body pb-4 d-flex flex-wrap align-items-center justify-content-between gap-5">
+                          <header
+                            class="card-body pb-4 d-flex flex-wrap align-items-center justify-content-between gap-5 cursor-pointer user-select-none"
+                            role="button"
+                            data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#basketApiItemBody' + serviceIndex"
+                            aria-expanded="false"
+                            [attr.aria-controls]="'basketApiItemBody' + serviceIndex">
                             <div class="d-flex align-items-center gap-4 min-w-0">
                               <div class="symbol symbol-50px flex-shrink-0">
                                 <span class="symbol-label bg-light-info">
@@ -76,42 +82,51 @@
                               </div>
 
                               <div class="min-w-0">
-                                <div class="text-muted fw-bold fs-8 text-uppercase mb-1">Dijital Servis</div>
+                                <div class="text-muted fw-bold fs-8 text-uppercase mb-1">{{ 'BASKET.DIGITAL_SERVICE' | translate }}</div>
                                 <h2 class="fw-bold text-gray-900 fs-4 mb-2">{{ item.product?.name || '-' }}</h2>
                               </div>
                             </div>
 
                             <div class="d-flex align-items-center gap-4">
                               <div class="d-flex flex-column align-items-end">
-                                <small class="text-muted fw-semibold">Genel Toplam</small>
+                                <small class="text-muted fw-semibold">{{ 'BASKET.GENERAL_TOTAL' | translate }}</small>
                                 <strong class="text-gray-900">{{ formatMoney(item.displayTotalPrice) }} ₺</strong>
                               </div>
 
-                              <button type="button" (click)="openDeleteModal(item.productId)" class="btn btn-icon btn-sm btn-light-danger">
+                              <span class="btn btn-icon btn-sm btn-light-primary flex-shrink-0">
+                                <i class="ki-outline ki-right fs-3 collapse-arrow"></i>
+                              </span>
+
+                              <button
+                                type="button"
+                                (click)="$event.stopPropagation(); openDeleteModal(item.productId)"
+                                class="btn btn-icon btn-sm btn-light-danger">
                                 <i class="ki-outline ki-trash fs-2 text-danger"></i>
                               </button>
                             </div>
                           </header>
 
-                          <div class="card-body pt-0">
-                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 p-4 bg-light rounded">
+                          <div [id]="'basketApiItemBody' + serviceIndex" class="collapse">
+                            <div class="card-body pt-0">
+                              <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 p-4 bg-light rounded">
                               <div class="d-flex align-items-center gap-2 text-gray-900 fw-semibold">
                                 <i class="ki-outline ki-code text-primary"></i>
-                                <span>API Servisi</span>
+                                <span>{{ 'BASKET.API_SERVICE' | translate }}</span>
                               </div>
 
                               <div class="d-flex flex-wrap gap-5 text-gray-700 fw-semibold">
-                                <span>Birim Fiyat <strong>{{ formatMoney(item.unitPrice) }} ₺</strong></span>
-                                <span>Adet <strong>{{ item.numberOf || 1 }}</strong></span>
+                                <span>{{ 'BASKET.UNIT_PRICE' | translate }} <strong>{{ formatMoney(item.unitPrice) }} ₺</strong></span>
+                                <span>{{ 'BASKET.QUANTITY' | translate }} <strong>{{ item.numberOf || 1 }}</strong></span>
                               </div>
                             </div>
 
                             <div class="d-flex align-items-center justify-content-between gap-5 mt-5 p-5 bg-light-primary rounded text-primary">
                               <div class="d-flex flex-column min-w-0">
                                 <strong class="mb-1">API Key</strong>
-                                <small class="fw-semibold">{{ item.numberOf || 1 }} adet × {{ formatMoney(item.unitPrice) }} ₺</small>
+                                <small class="fw-semibold">{{ item.numberOf || 1 }} {{ 'BASKET.QUANTITY_SUFFIX' | translate }} × {{ formatMoney(item.unitPrice) }} ₺</small>
                               </div>
                               <strong class="text-nowrap">{{ formatMoney(item.displayTotalPrice) }} ₺</strong>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -136,28 +151,34 @@
                       </div>
 
                       <div class="min-w-0">
-                        <div class="text-muted fw-bold fs-8 text-uppercase mb-1">İlgi Alanı</div>
+                        <div class="text-muted fw-bold fs-8 text-uppercase mb-1">{{ 'BASKET.AOI' | translate }}</div>
                         <h3 class="fw-bold text-gray-900 fs-4 mb-1">{{ group.aoiName }}</h3>
-                        <span class="text-muted fw-semibold fs-8">{{ group.products.length }} ürün</span>
+                        <span class="text-muted fw-semibold fs-8">{{ group.products.length }} {{ 'BASKET.PRODUCT' | translate }}</span>
                       </div>
                     </div>
 
                     <div class="d-flex align-items-center gap-4 ms-auto">
                       <div class="d-flex flex-column align-items-end">
-                        <small class="text-muted fw-semibold">Genel Toplam</small>
+                        <small class="text-muted fw-semibold">{{ 'BASKET.GENERAL_TOTAL' | translate }}</small>
                         <strong class="text-gray-900">{{ formatMoney(group.totalPrice) }} ₺</strong>
                       </div>
                       <span class="btn btn-icon btn-sm btn-light-primary flex-shrink-0">
-                        <i class="ki-outline ki-down fs-3"></i>
+                        <i class="ki-outline ki-right fs-3 collapse-arrow"></i>
                       </span>
                     </div>
                   </header>
 
                   <div [id]="'basketAoiBody' + groupIndex" class="collapse">
                     <div class="card-body pt-0 d-flex flex-column gap-5">
-                      <article *ngFor="let item of group.products; trackBy: trackByBasketItem" class="card border  shadow-none">
+                      <article *ngFor="let item of group.products; let itemIndex = index; trackBy: trackByBasketItem" class="card border  shadow-none">
                         <div class="card-body p-0">
-                          <header class="card-body pb-4 d-flex flex-wrap align-items-center justify-content-between gap-5">
+                          <header
+                            class="card-body pb-4 d-flex flex-wrap align-items-center justify-content-between gap-5 cursor-pointer user-select-none"
+                            role="button"
+                            data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#basketAoiItemBody' + groupIndex + '-' + itemIndex"
+                            aria-expanded="false"
+                            [attr.aria-controls]="'basketAoiItemBody' + groupIndex + '-' + itemIndex">
                             <div class="d-flex align-items-center gap-4 min-w-0">
                               <div class="symbol symbol-50px flex-shrink-0">
                                 <span class="symbol-label bg-light-primary">
@@ -167,7 +188,12 @@
 
                               <div class="min-w-0">
                                 <div class="text-muted fw-bold fs-8 text-uppercase mb-1">
-                                  {{ item.product?.isCustomArea ? 'Yeni Uydu Görüntüsü Talebi' : 'Hazır Uydu Görüntüsü' }}
+                                  <ng-container *ngIf="item.product?.isCustomArea; else readySatelliteImage">
+                                    {{ 'BASKET.NEW_IMAGE_REQUEST' | translate }}
+                                  </ng-container>
+                                  <ng-template #readySatelliteImage>
+                                    {{ 'BASKET.READY_IMAGE' | translate }}
+                                  </ng-template>
                                 </div>
                                 <h2 class="fw-bold text-gray-900 fs-4 mb-2">{{ item.product?.name || '-' }}</h2>
                               </div>
@@ -175,36 +201,37 @@
 
                             <div class="d-flex align-items-center gap-4">
                               <div class="d-flex flex-column align-items-end">
-                                <small class="text-muted fw-semibold">Genel Toplam</small>
+                                <small class="text-muted fw-semibold">{{ 'BASKET.GENERAL_TOTAL' | translate }}</small>
                                 <strong class="text-gray-900">{{ formatMoney(item.displayTotalPrice) }} ₺</strong>
                               </div>
 
-                              <button type="button" (click)="openDeleteModal(item.productId)" class="btn btn-icon btn-sm btn-light-danger">
+                              <span class="btn btn-icon btn-sm btn-light-primary flex-shrink-0">
+                                <i class="ki-outline ki-right fs-3 collapse-arrow"></i>
+                              </span>
+
+                              <button
+                                type="button"
+                                (click)="$event.stopPropagation(); openDeleteModal(item.productId)"
+                                class="btn btn-icon btn-sm btn-light-danger">
                                 <i class="ki-outline ki-trash fs-2 text-danger"></i>
                               </button>
                             </div>
                           </header>
-
-                          <div class="d-flex align-items-start gap-3 mx-6 mb-5 p-4 rounded bg-light-primary">
-                            <i class="ki-outline ki-geolocation fs-3 text-primary mt-1"></i>
-                            <div class="d-flex flex-column min-w-0">
-                              <span class="text-muted fw-semibold fs-8 mb-1">İlgi Alanı</span>
-                              <strong class="text-gray-900 text-break">{{ group.aoiName }}</strong>
-                            </div>
-                          </div>
-
+                          <div
+                            [id]="'basketAoiItemBody' + groupIndex + '-' + itemIndex"
+                            class="collapse">
                           <div class="card-body pt-0">
                             <div class="row g-4">
                               <div class="col-12 col-md-6">
                                 <div class="h-100 d-flex flex-column border  rounded p-4">
-                                  <span class="text-muted fw-semibold fs-7 mb-1">Talep Alanı</span>
+                                  <span class="text-muted fw-semibold fs-7 mb-1">{{ 'BASKET.REQUEST_AREA' | translate }}</span>
                                   <strong class="text-gray-900">{{ formatArea(item.requestAreaKm2) }} km²</strong>
                                 </div>
                               </div>
 
                               <div class="col-12 col-md-6">
                                 <div class="h-100 d-flex flex-column border  rounded p-4">
-                                  <span class="text-muted fw-semibold fs-7 mb-1">Görüntü Birim Fiyatı</span>
+                                  <span class="text-muted fw-semibold fs-7 mb-1">{{ 'BASKET.IMAGE_UNIT_PRICE' | translate }}</span>
                                   <strong class="text-gray-900">{{ formatMoney(item.unitPrice) }} TL/km²</strong>
                                 </div>
                               </div>
@@ -214,7 +241,7 @@
                           <div class="card-body pt-0">
                             <div class="d-flex align-items-center justify-content-between gap-5 p-5 bg-light rounded">
                               <div class="d-flex flex-column min-w-0">
-                                <strong class="text-gray-900 mb-1">Uydu Görüntüsü</strong>
+                                <strong class="text-gray-900 mb-1">{{ 'BASKET.SATELLITE_IMAGE' | translate }}</strong>
                                 <small class="text-muted fw-semibold">
                                   {{ formatArea(item.requestAreaKm2) }} km² × {{ formatMoney(item.unitPrice) }} TL/km²
                                 </small>
@@ -226,7 +253,7 @@
                               <div class="d-flex align-items-center justify-content-between px-5 py-4 border-bottom ">
                                 <span class="fw-semibold text-gray-900">
                                   <i class="ki-outline ki-setting-2 me-2"></i>
-                                  Görüntü İşleme Seçenekleri
+                                  {{ 'BASKET.PROCESSING_OPTIONS' | translate }}
                                 </span>
                                 <span class="badge badge-light-success">{{ item.processingOptions.length }}</span>
                               </div>
@@ -249,26 +276,27 @@
                             <ng-template #noProcessing>
                               <div class="d-flex align-items-center gap-2 mt-5 p-4 bg-light rounded text-muted">
                                 <i class="ki-outline ki-information-5"></i>
-                                Görüntü işleme seçeneği bulunmuyor.
+                                {{ 'BASKET.NO_PROCESSING_OPTIONS' | translate }}
                               </div>
                             </ng-template>
 
                             <div class="d-flex flex-column gap-3 mt-5">
                               <div class="d-flex align-items-center justify-content-between gap-5 p-5 bg-light rounded">
                                 <div class="d-flex flex-column min-w-0">
-                                  <strong class="text-gray-900 mb-1">Görüntü İşleme Toplamı</strong>
-                                  <small class="text-muted fw-semibold">{{ item.processingOptions.length }} görüntü işleme seçeneği</small>
+                                  <strong class="text-gray-900 mb-1">{{ 'BASKET.PROCESSING_TOTAL' | translate }}</strong>
+                                  <small class="text-muted fw-semibold">{{ item.processingOptions.length }} {{ 'BASKET.PROCESSING_OPTION_COUNT' | translate }}</small>
                                 </div>
                                 <strong class="text-gray-900 text-nowrap">+ {{ formatMoney(item.processingTotalPrice) }} ₺</strong>
                               </div>
 
                               <div class="d-flex align-items-center justify-content-between bg-light-primary rounded p-4 text-primary">
-                                <span>Genel Toplam</span>
+                                <span>{{ 'BASKET.GENERAL_TOTAL' | translate }}</span>
                                 <strong>{{ formatMoney(item.displayTotalPrice) }} ₺</strong>
                               </div>
                             </div>
                           </div>
-                        </div>
+                                                  </div>
+</div>
                       </article>
                     </div>
                   </div>
@@ -300,14 +328,14 @@
             <div>
               <div class="text-primary fw-bold fs-8 text-uppercase mb-1">{{ 'ORDER_SUMMARY' | translate }}</div>
               <h3 class="fw-bold text-gray-900 fs-3 mb-1">{{ 'TOTAL' | translate }}</h3>
-              <span class="text-muted fw-semibold fs-7">{{ numberOfItem }} ürün · {{ groupCount }} grup</span>
+              <span class="text-muted fw-semibold fs-7">{{ numberOfItem }} {{ 'BASKET.PRODUCT' | translate }} · {{ groupCount }} {{ 'BASKET.GROUP' | translate }}</span>
             </div>
           </div>
 
           <div class="card-body pt-0 pb-8">
             <div class="d-flex flex-column">
               <div *ngIf="serviceItems.length" class="d-flex align-items-center justify-content-between gap-5 py-4 border-bottom  border-bottom-dashed">
-                <span class="text-gray-700 fw-semibold">API Servisleri</span>
+                <span class="text-gray-700 fw-semibold">{{ 'BASKET.API_SERVICES' | translate }}</span>
                 <strong class="text-gray-900">{{ formatMoney(serviceTotalPrice) }} ₺</strong>
               </div>
 

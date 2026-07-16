@@ -11,3 +11,11 @@
     border-right: 1px solid var(--bs-gray-300);
   }
 }
+
+:host ::ng-deep [data-bs-toggle="collapse"][aria-expanded="true"] .collapse-chevron i {
+  transform: rotate(180deg);
+}
+
+.collapse-chevron i {
+  transition: transform 0.2s ease;
+}

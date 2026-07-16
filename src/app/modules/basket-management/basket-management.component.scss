@@ -13,3 +13,18 @@
 [data-bs-toggle='collapse'][aria-expanded='false'] .ki-down {
   transform: rotate(-90deg);
 }
+
+
+
+.ki-down {
+  transition: transform 0.2s ease;
+}
+
+/* Coming-order-detail ile aynı collapse/expand ok yönü */
+.collapse-arrow {
+  transition: transform 0.2s ease;
+}
+
+[aria-expanded='true'] .collapse-arrow {
+  transform: rotate(90deg);
+}

@@ -422,6 +422,75 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  get apiServiceItems(): OrderProductModel[] {
+    return (this.order?.orderProducts || []).filter((item) => this.isApiKey(item));
+  }
+
+  get apiServiceTotal(): number {
+    return this.apiServiceItems.reduce(
+      (sum, item) => sum + this.getCalculatedTotal(item),
+      0
+    );
+  }
+
+  get aoiGroups(): Array<{
+    aoiName: string;
+    products: OrderProductModel[];
+    totalPrice: number;
+  }> {
+    const groups = new Map<string, OrderProductModel[]>();
+
+    for (const item of this.order?.orderProducts || []) {
+      if (this.isApiKey(item)) {
+        continue;
+      }
+
+      const aoiName = this.getAoiName(item) || this.translate.instant('COMING_ORDER_DETAIL.AOI_GROUP');
+      const products = groups.get(aoiName) || [];
+      products.push(item);
+      groups.set(aoiName, products);
+    }
+
+    return Array.from(groups.entries()).map(([aoiName, products]) => ({
+      aoiName,
+      products,
+      totalPrice: products.reduce(
+        (sum, item) => sum + this.getCalculatedTotal(item),
+        0
+      )
+    }));
+  }
+
+  getPriorityLabel(priority: string | null | undefined): string {
+    const normalized = String(priority || '').trim().toLocaleLowerCase('tr-TR');
+
+    switch (normalized) {
+      case 'standard':
+      case 'standart':
+        return this.translate.instant('COMING_ORDER_DETAIL.PRIORITY_STANDARD');
+      case 'high':
+      case 'yüksek':
+      case 'yuksek':
+        return this.translate.instant('COMING_ORDER_DETAIL.PRIORITY_HIGH');
+      case 'urgent':
+      case 'acil':
+        return this.translate.instant('COMING_ORDER_DETAIL.PRIORITY_URGENT');
+      default:
+        return priority || '-';
+    }
+  }
+
+  trackByOrderProduct(index: number, item: OrderProductModel): number {
+    return item?.id ?? index;
+  }
+
+  trackByAoiGroup(
+    index: number,
+    group: { aoiName: string; products: OrderProductModel[]; totalPrice: number }
+  ): string {
+    return group?.aoiName || String(index);
+  }
+
   getTotalProductCount(): number {
     return this.order?.orderProducts?.length || 0;
   }

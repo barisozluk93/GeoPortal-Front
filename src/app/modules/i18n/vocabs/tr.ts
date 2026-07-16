@@ -1018,7 +1018,7 @@ export const locale = {
                     "START_DATE_REQUIRED": "Başlangıç tarihi zorunludur.",
                     "END_DATE_REQUIRED": "Bitiş tarihi zorunludur.",
                     "GSD": "GSD",
-                    "PRIORITY": "Öncelik Seviyesi" 
+                    "PRIORITY": "Öncelik Seviyesi"
                 }
             },
         },
@@ -1321,6 +1321,16 @@ export const locale = {
             ACQUISITION_END: 'Alım Bitiş',
             NADIR_ANGLE: 'Nadir Açısı',
             IMAGE_TYPE: 'Görüntü Tipi',
+            "DIGITAL_SERVICE": "Dijital Servis",
+            "API_SERVICES": "API Servisleri",
+            "AOI_GROUP": "İlgi Alanı",
+            "PRODUCT_COUNT_SUFFIX": "ürün",
+            "GENERAL_TOTAL": "Genel Toplam",
+            "PLATFORM": "Platform",
+            "PRIORITY_LEVEL": "Öncelik Seviyesi",
+            "PRIORITY_STANDARD": "Standart",
+            "PRIORITY_HIGH": "Yüksek",
+            "PRIORITY_URGENT": "Acil",
             ALERTS: {
                 GET_ORDER_ERROR: 'Sipariş detayı alınırken bir hata oluştu.',
                 STATUS_UPDATED: 'Sipariş durumu başarıyla güncellendi.',
@@ -1511,7 +1521,34 @@ export const locale = {
             "NDVI": "NDVI Analizi",
             "OFF_NADIR_ANGLE": "Nadir Açısı",
             "IMAGE_TYPE": "Görüntü Tipi"
-        }
+        },
+        BASKET: {
+            GROUP: "Grup",
+            DIGITAL_SERVICE: "Dijital Servis",
+            API_SERVICES: "API Servisleri",
+            AOI: "İlgi Alanı",
+
+            PRODUCT: "ürün",
+
+            GENERAL_TOTAL: "Genel Toplam",
+
+            API_SERVICE: "API Servisi",
+
+            UNIT_PRICE: "Birim Fiyat",
+            QUANTITY: "Adet",
+
+            REQUEST_AREA: "Talep Alanı",
+            IMAGE_UNIT_PRICE: "Görüntü Birim Fiyatı",
+
+            SATELLITE_IMAGE: "Uydu Görüntüsü",
+
+            PROCESSING_OPTIONS: "Görüntü İşleme Seçenekleri",
+            PROCESSING_TOTAL: "Görüntü İşleme Toplamı",
+            NO_PROCESSING_OPTIONS: "Görüntü işleme seçeneği bulunmuyor.",
+
+            READY_IMAGE: "Hazır Uydu Görüntüsü",
+            NEW_IMAGE_REQUEST: "Yeni Uydu Görüntüsü Talebi"
+        },
         // END (TR-EN-LANGUAGE-BRANCH)
     }
 };
