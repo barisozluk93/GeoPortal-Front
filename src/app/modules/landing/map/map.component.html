@@ -71,8 +71,8 @@
     </app-map-toolbar>
 
     <div class="map-panels-container" *ngIf="isLayerManagerOpen">
-      <app-map-panel-shell [isHeaderExist]="false" icon="fa-solid fa-layer-group" [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
-        panelClass="map-panel-shell--layer-manager" [minimized]="panelUiState.layerManager.minimized"
+      <app-map-panel-shell panelId="layer-manager" [isHeaderExist]="false" [showHeader]="false" icon="fa-solid fa-layer-group" [title]="'MAP.ACTIONS.LAYER_MANAGER' | translate"
+        panelClass="map-panel-shell--layer-manager" [draggable]="false" [resizable]="false" [dockable]="false" [minimized]="panelUiState.layerManager.minimized"
         [maximized]="panelUiState.layerManager.maximized" (closeClicked)="closeLayerManager()"
         (minimizeClicked)="togglePanelMinimize('layerManager')" (maximizeClicked)="togglePanelMaximize('layerManager')">
         <app-layer-manager [layers]="layers"
@@ -82,7 +82,7 @@
     </div>
 
     <div class="map-panels-container" *ngIf="isAskPanelOpen">
-      <app-map-panel-shell [isHeaderExist]="false" icon="fa-solid fa-circle-info" [title]="'MAP.ASK.TITLE' | translate"
+      <app-map-panel-shell panelId="ask" [isHeaderExist]="false" icon="fa-solid fa-circle-info" [title]="'MAP.ASK.TITLE' | translate"
         panelClass="map-panel-shell--ask" [minimized]="panelUiState.ask.minimized"
         [maximized]="panelUiState.ask.maximized" (closeClicked)="closeAskPanel()"
         (minimizeClicked)="togglePanelMinimize('ask')" (maximizeClicked)="togglePanelMaximize('ask')">
@@ -98,7 +98,7 @@
       [class.map-draggable-panel--results-collapsed]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen"
       [class.map-draggable-panel--prefilter-collapsed]="isPrefilterPanelCollapsed"
       *ngIf="isSmartPrefilterPanelOpen || isSmartFilterPanelOpen || isPrefilterPanelCollapsed || isResultsPanelCollapsed || isSmartProductRequestPanelOpen">
-      <app-map-panel-shell *ngIf="!(isPrefilterPanelCollapsed && isResultsPanelCollapsed && !isSmartProductRequestPanelOpen)" icon="fa-solid fa-grip" [panelClass]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen
+      <app-map-panel-shell panelId="smart-filter" *ngIf="!(isPrefilterPanelCollapsed && isResultsPanelCollapsed && !isSmartProductRequestPanelOpen)" icon="fa-solid fa-grip" [panelClass]="isResultsPanelCollapsed && !isSmartProductRequestPanelOpen
           ? 'map-panel-shell--combined-smart-filter map-panel-shell--results-collapsed'
           : 'map-panel-shell--combined-smart-filter'" [title]="'MAP.SMART_FILTER.TITLE' | translate"
         [minimized]="panelUiState.smartFilter.minimized" [maximized]="panelUiState.smartFilter.maximized"
@@ -156,26 +156,25 @@
         <span>{{ 'MAP.SMART_FILTER.PREFILTER.AREAS' | translate }}</span>
       </button>
 
-      <div *ngIf="isMetadataPanelOpen" class="smart-metadata-hover-panel card shadow-sm border border-gray-200"
+      <div *ngIf="isMetadataPanelOpen" class="smart-metadata-hover-panel"
         [style.top.px]="smartMetadataPanelPosition.top" [style.left.px]="smartMetadataPanelPosition.left"
-        (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (mouseup)="$event.stopPropagation()">
-        <div class="smart-advanced-filter-hover-panel__header">
-          <span class="smart-metadata-hover-panel__title">
-            <i class="fa-solid fa-circle-info text-primary"></i>
-            <span>{{ selectedMetadataProductName || ('MAP.SMART_FILTER.METADATA' | translate) }}</span>
-          </span>
-          <button type="button" class="btn btn-sm btn-light-danger py-1"
-            title="{{ 'CLOSE' | translate }}" (click)="closeMetadataPanel()">
-            <i class="fa-solid fa-xmark fs-8 me-2"></i>
-            <span class="fs-8">{{ 'CLOSE' | translate }}</span>
-          </button>
-        </div>
-
-        <app-smart-product-metadata-panel class="smart-metadata-hover-panel__content"
-          [loading]="isMetadataLoading" [productName]="selectedMetadataProductName"
-          [metadataRows]="metadataRows" [rawText]="metadataRawText"
-          (closeClicked)="closeMetadataPanel()">
-        </app-smart-product-metadata-panel>
+        (click)="$event.stopPropagation()"
+        (mousedown)="$event.stopPropagation()"
+        (pointerdown)="$event.stopPropagation()">
+        <app-map-panel-shell
+          panelId="metadata"
+          icon="fa-solid fa-circle-info"
+          [title]="selectedMetadataProductName || ('MAP.SMART_FILTER.METADATA' | translate)"
+          panelClass="map-panel-shell--metadata"
+          [minimized]="panelUiState.metadata.minimized"
+          (closeClicked)="closeMetadataPanel()"
+          (minimizeClicked)="togglePanelMinimize('metadata')">
+          <app-smart-product-metadata-panel class="smart-metadata-hover-panel__content"
+            [loading]="isMetadataLoading" [productName]="selectedMetadataProductName"
+            [metadataRows]="metadataRows" [rawText]="metadataRawText"
+            (closeClicked)="closeMetadataPanel()">
+          </app-smart-product-metadata-panel>
+        </app-map-panel-shell>
       </div>
 
       <div *ngIf="isSmartAdvancedFilterPanelOpen" class="smart-advanced-filter-hover-panel card shadow-sm border border-gray-200"
@@ -204,7 +203,7 @@
     </div>
 
     <div class="map-layer-manager-floating" *ngIf="isSearchPanelOpen" (mouseenter)="openSearchPanel()">
-      <app-map-panel-shell [isHeaderExist]="false" icon="fa-solid fa-search" [title]="'MAP.ACTIONS.SEARCH' | translate"
+      <app-map-panel-shell panelId="search" [isHeaderExist]="false" [showHeader]="false" [draggable]="false" [resizable]="false" [dockable]="false" icon="fa-solid fa-search" [title]="'MAP.ACTIONS.SEARCH' | translate"
         [minimized]="panelUiState.search.minimized" [maximized]="panelUiState.search.maximized"
         (closeClicked)="closeSearchPanel()" (minimizeClicked)="togglePanelMinimize('search')"
         (maximizeClicked)="togglePanelMaximize('search')">
@@ -213,7 +212,7 @@
     </div>
 
     <div class="map-layer-manager-floating" *ngIf="isGoToCoordinatePanelOpen" (mouseenter)="openGoToCoordinatePanel()">
-      <app-map-panel-shell icon="" [title]="''" [minimized]="panelUiState.coordinate.minimized"
+      <app-map-panel-shell panelId="coordinate" icon="" [title]="''" [minimized]="panelUiState.coordinate.minimized"
         [maximized]="panelUiState.coordinate.maximized" (closeClicked)="closeGoToCoordinatePanel()"
         (minimizeClicked)="togglePanelMinimize('coordinate')" (maximizeClicked)="togglePanelMaximize('coordinate')">
         <app-go-to-coordinate-panel (coordinateSelected)="focusCoordinate($event)">
@@ -222,7 +221,7 @@
     </div>
 
     <div class="map-layer-manager-floating" *ngIf="isExportPanelOpen" (mouseenter)="openExportPanel()">
-      <app-map-panel-shell [isHeaderExist]="false" icon="fa-solid fa-print" [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate"
+      <app-map-panel-shell panelId="export" [isHeaderExist]="false" icon="fa-solid fa-print" [title]="'MAP.ACTIONS.EXPORT_IMAGE' | translate"
         [minimized]="panelUiState.export.minimized" [maximized]="panelUiState.export.maximized"
         (closeClicked)="closeExportPanel()" (minimizeClicked)="togglePanelMinimize('export')"
         (maximizeClicked)="togglePanelMaximize('export')">

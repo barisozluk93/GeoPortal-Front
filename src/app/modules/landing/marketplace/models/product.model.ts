@@ -93,4 +93,5 @@ export class ProductModel {
   userId?: number | null;
   sourceType?: number | null;
   requestHash?: string | null;
+  priority?: string | null;
 }

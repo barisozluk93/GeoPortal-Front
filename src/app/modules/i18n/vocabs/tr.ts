@@ -703,6 +703,9 @@ export const locale = {
             "KICKER": "Harita",
             "TITLE": "Harita",
             "PANEL": {
+                "RESET_LAYOUT": "İlk konum ve boyuta dön",
+                "PIN": "Bulunduğu yerde sabitle",
+                "UNPIN": "Sabitlemeyi kaldır",
                 "KICKER": "Katmanlar",
                 "TITLE": "Katman Yöneticisi",
                 "SUBTITLE": "Altlıklar / Katmanlar",
@@ -1013,7 +1016,9 @@ export const locale = {
                     "PROCESS_OPTION_REQUIRED": "En az bir işlem seçeneği seçiniz.",
                     "IMAGE_TYPE_REQUIRED": "Görüntü tipi zorunludur.",
                     "START_DATE_REQUIRED": "Başlangıç tarihi zorunludur.",
-                    "END_DATE_REQUIRED": "Bitiş tarihi zorunludur."
+                    "END_DATE_REQUIRED": "Bitiş tarihi zorunludur.",
+                    "GSD": "GSD",
+                    "PRIORITY": "Öncelik Seviyesi" 
                 }
             },
         },

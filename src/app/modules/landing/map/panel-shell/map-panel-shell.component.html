@@ -1,22 +1,64 @@
 <div
-  class="map-panel-shell card rounded-0 border shadow-lg"
+  class="map-panel-shell card border shadow-lg"
   [ngClass]="[
     panelClass,
-    minimized && !panelClass.includes('map-panel-shell--combined-smart-filter') ? 'map-panel-shell--minimized' : '',
-    maximized ? 'map-panel-shell--maximized' : ''
+    minimized ? 'map-panel-shell--minimized' : '',
+    maximized ? 'map-panel-shell--maximized' : '',
+    pinned ? 'map-panel-shell--pinned' : '',
+    draggable && !pinned ? 'map-panel-shell--draggable' : '',
+    positioned && !maximized ? 'map-panel-shell--positioned' : '',
+    resizable && !pinned && !maximized && !minimized ? 'map-panel-shell--resizable' : ''
   ]"
+  [ngStyle]="shellStyle"
+  (pointerdown)="startDrag($event)"
 >
-  <div class="card-header min-h-35px px-2 border-bottom bg-white" *ngIf="isHeaderExist">
-    <div class="card-title min-w-0 flex-grow-1 m-0" [title]="title">
-      <i *ngIf="icon" [class]="icon + ' text-primary fs-6 me-2'"></i>
-      <!-- <span class="text-gray-800 fw-semibold fs-7 text-truncate">{{ title }}</span> -->
+  <div *ngIf="showHeader" class="map-panel-shell__toolbar card-header min-h-35px px-2 border-bottom bg-body">
+    <div class="card-title min-w-0 flex-grow-1 m-0">
+      <span *ngIf="icon" class="map-panel-shell__title-icon flex-shrink-0">
+        <i [class]="icon + ' text-primary fs-6'"></i>
+      </span>
+      <span *ngIf="isHeaderExist" class="text-gray-800 fw-bold fs-7 text-truncate" [title]="title">
+        {{ title }}
+      </span>
     </div>
 
-    <div class="card-toolbar flex-shrink-0">
+    <div class="card-toolbar flex-shrink-0 gap-1">
+      <button
+        type="button"
+        class="map-panel-header-icon btn btn-icon btn-light"
+        [attr.title]="'MAP.PANEL.RESET_LAYOUT' | translate"
+        [attr.aria-label]="'MAP.PANEL.RESET_LAYOUT' | translate"
+        (click)="resetLayout($event)"
+      >
+        <i class="fa-solid fa-arrow-rotate-left fs-8"></i>
+      </button>
+
+      <button
+        *ngIf="dockable"
+        type="button"
+        class="map-panel-header-icon btn btn-icon btn-light-primary"
+        [attr.title]="(pinned ? 'MAP.PANEL.UNPIN' : 'MAP.PANEL.PIN') | translate"
+        [attr.aria-label]="(pinned ? 'MAP.PANEL.UNPIN' : 'MAP.PANEL.PIN') | translate"
+        (click)="togglePin($event)"
+      >
+        <i [class]="pinned ? 'fa-solid fa-lock fs-8' : 'fa-solid fa-thumbtack fs-8'"></i>
+      </button>
+
+      <button
+        type="button"
+        class="map-panel-header-icon btn btn-icon btn-light"
+        [attr.title]="(minimized ? 'MAP.PANEL.EXPAND' : 'MAP.PANEL.COLLAPSE') | translate"
+        [attr.aria-label]="(minimized ? 'MAP.PANEL.EXPAND' : 'MAP.PANEL.COLLAPSE') | translate"
+        (click)="onMinimize($event)"
+      >
+        <i [class]="minimized ? 'fa-solid fa-chevron-down fs-8' : 'fa-solid fa-chevron-up fs-8'"></i>
+      </button>
+
       <button
         type="button"
         class="btn btn-sm btn-light-danger py-1 px-2"
         [attr.title]="'CLOSE' | translate"
+        [attr.aria-label]="'CLOSE' | translate"
         (click)="onClose($event)"
       >
         <i class="fa-solid fa-xmark fs-8 me-2"></i>
@@ -25,7 +67,21 @@
     </div>
   </div>
 
-  <div class="card-body p-0 min-h-0 overflow-auto" *ngIf="!minimized || panelClass.includes('map-panel-shell--combined-smart-filter')">
+  <div
+    *ngIf="!minimized"
+    class="map-panel-shell__body card-body p-0 min-h-0 overflow-auto"
+  >
     <ng-content></ng-content>
   </div>
+
+  <ng-container *ngIf="resizable && !pinned && !maximized && !minimized">
+    <div class="map-panel-resize-zone map-panel-resize-zone--n" (pointerdown)="startResize($event, 'n')"></div>
+    <div class="map-panel-resize-zone map-panel-resize-zone--s" (pointerdown)="startResize($event, 's')"></div>
+    <div class="map-panel-resize-zone map-panel-resize-zone--e" (pointerdown)="startResize($event, 'e')"></div>
+    <div class="map-panel-resize-zone map-panel-resize-zone--w" (pointerdown)="startResize($event, 'w')"></div>
+    <div class="map-panel-resize-zone map-panel-resize-zone--ne" (pointerdown)="startResize($event, 'ne')"></div>
+    <div class="map-panel-resize-zone map-panel-resize-zone--nw" (pointerdown)="startResize($event, 'nw')"></div>
+    <div class="map-panel-resize-zone map-panel-resize-zone--se" (pointerdown)="startResize($event, 'se')"></div>
+    <div class="map-panel-resize-zone map-panel-resize-zone--sw" (pointerdown)="startResize($event, 'sw')"></div>
+  </ng-container>
 </div>

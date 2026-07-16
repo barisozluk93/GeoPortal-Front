@@ -702,11 +702,14 @@ export const locale = {
       "KICKER": "Map",
       "TITLE": "Map",
       "PANEL": {
+        "RESET_LAYOUT": "Reset position and size",
+        "PIN": "Pin in current position",
+        "UNPIN": "Unpin",
+        "COLLAPSE": "Collapse",
+        "EXPAND": "Expand",
         "KICKER": "Layers",
         "TITLE": "Layer Manager",
         "SUBTITLE": "Basemaps / Overlays",
-        "COLLAPSE": "Collapse",
-        "EXPAND": "Expand",
         "CLOSE": "Close"
       },
       "ACTIONS": {
@@ -1012,7 +1015,9 @@ export const locale = {
           "PROCESS_OPTION_REQUIRED": "Select at least one processing option.",
           "IMAGE_TYPE_REQUIRED": "Image type is required.",
           "START_DATE_REQUIRED": "Start date is required.",
-          "END_DATE_REQUIRED": "End date is required."
+          "END_DATE_REQUIRED": "End date is required.",
+          "GSD": "GSD",
+          "PRIORITY": "Priority" 
         }
       },
     },

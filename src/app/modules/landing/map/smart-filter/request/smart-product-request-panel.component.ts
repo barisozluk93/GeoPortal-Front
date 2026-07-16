@@ -38,6 +38,18 @@ export class SmartProductRequestPanelComponent implements OnChanges {
     { label: 'Stereo', value: 'stereo' },
   ];
 
+  readonly priorities = [
+    { label: 'Standart', value: 'Standard' },
+    { label: 'Yüksek', value: 'High' },
+    { label: 'Acil', value: 'Urgent' },
+  ];
+
+  readonly gsdOptions = [
+    { label: '30 cm', value: 0.3 },
+    { label: '50 cm', value: 0.5 },
+    { label: '1 m', value: 1 },
+  ];
+
   readonly platforms = [
     { label: 'MSP1', value: 'MSP1' },
     { label: 'MSP2', value: 'MSP2' },
@@ -176,6 +188,8 @@ export class SmartProductRequestPanelComponent implements OnChanges {
     product.areaKm2 = this.getAreaKm2();
 
     product.imageType = null;
+    product.priority = null;
+    product.resolution = 0.5;
     product.satellite = null;
     product.acquisitionStartDate = null;
     product.acquisitionEndDate = null;

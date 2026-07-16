@@ -137,3 +137,220 @@
     height: calc(100vh - 84px);
   }
 }
+:host {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.map-panel-shell {
+  position: relative;
+}
+
+/* Collapse her panelde yalnızca header yüksekliğini bırakır. */
+.map-panel-shell--minimized {
+  min-height: 38px !important;
+  height: 38px !important;
+  max-height: 38px !important;
+}
+
+.map-panel-shell--minimized > .card-header {
+  width: 100%;
+  border-bottom: 0 !important;
+}
+
+.map-panel-shell--draggable {
+  cursor: grab;
+}
+
+.map-panel-shell--draggable:active {
+  cursor: grabbing;
+}
+
+.map-panel-shell--pinned {
+  cursor: default;
+}
+
+.map-panel-shell--draggable button,
+.map-panel-shell--draggable a,
+.map-panel-shell--draggable input,
+.map-panel-shell--draggable select,
+.map-panel-shell--draggable textarea,
+.map-panel-shell--draggable label,
+.map-panel-shell--draggable [contenteditable="true"],
+.map-panel-shell--draggable [role="button"],
+.map-panel-shell--draggable .no-panel-drag {
+  cursor: auto;
+}
+
+/* Panel ilk açıldığında kendi mevcut wrapper/SCSS konumunu ve panel tipine ait
+   başlangıç boyutunu korur. Fixed moda yalnızca drag, resize veya sabitleme ile geçer. */
+.map-panel-shell--positioned {
+  position: fixed;
+  z-index: 1250;
+  max-width: none;
+  max-height: none;
+}
+
+.map-panel-shell--resizable {
+  overflow: hidden;
+}
+
+.map-panel-resize-zone {
+  position: absolute;
+  z-index: 20;
+  display: block;
+  touch-action: none;
+}
+
+.map-panel-resize-zone--n,
+.map-panel-resize-zone--s {
+  right: 8px;
+  left: 8px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.map-panel-resize-zone--n { top: -4px; }
+.map-panel-resize-zone--s { bottom: -4px; }
+
+.map-panel-resize-zone--e,
+.map-panel-resize-zone--w {
+  top: 8px;
+  bottom: 8px;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.map-panel-resize-zone--e { right: -4px; }
+.map-panel-resize-zone--w { left: -4px; }
+
+.map-panel-resize-zone--ne,
+.map-panel-resize-zone--nw,
+.map-panel-resize-zone--se,
+.map-panel-resize-zone--sw {
+  width: 12px;
+  height: 12px;
+}
+
+.map-panel-resize-zone--ne {
+  top: -4px;
+  right: -4px;
+  cursor: nesw-resize;
+}
+
+.map-panel-resize-zone--nw {
+  top: -4px;
+  left: -4px;
+  cursor: nwse-resize;
+}
+
+.map-panel-resize-zone--se {
+  right: -4px;
+  bottom: -4px;
+  cursor: nwse-resize;
+}
+
+.map-panel-resize-zone--sw {
+  bottom: -4px;
+  left: -4px;
+  cursor: nesw-resize;
+}
+
+:host-context(.map-panel-is-dragging) .map-panel-shell,
+:host-context(.map-panel-is-dragging) .map-panel-shell *,
+:host-context(.map-panel-is-resizing) .map-panel-shell,
+:host-context(.map-panel-is-resizing) .map-panel-shell * {
+  user-select: none !important;
+}
+
+/* Header içindeki başlık, ikon ve aksiyonların tamamı aynı merkez çizgisindedir. */
+.map-panel-shell__toolbar {
+  display: flex;
+  min-height: 42px !important;
+  height: 42px;
+  align-items: center !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.map-panel-shell__toolbar .card-title,
+.map-panel-shell__toolbar .card-toolbar {
+  display: flex;
+  min-height: 42px !important;
+  height: 42px;
+  align-items: center !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.map-panel-shell__toolbar .card-title {
+  gap: 8px;
+}
+
+.map-panel-shell__title-icon {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.map-panel-shell__title-icon > i {
+  display: block;
+  margin: 0 !important;
+  line-height: 1;
+}
+
+.map-panel-header-icon {
+  display: inline-flex !important;
+  width: 24px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+.map-panel-header-icon > i {
+  display: block;
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+.map-panel-shell__toolbar .btn-light-danger {
+  display: inline-flex;
+  min-height: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1;
+}
+
+.map-panel-shell__toolbar .btn-light-danger > i,
+.map-panel-shell__toolbar .btn-light-danger > span {
+  line-height: 1;
+}
+
+/* Header bulunmayan Layer Manager ilk tasarımdaki doğal içerik boyutunda kalır. */
+.map-panel-shell--layer-manager {
+  width: fit-content !important;
+  min-width: 200px !important;
+  max-width: 360px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: calc(100vh - 130px) !important;
+}
+
+.map-panel-shell--layer-manager > .card-body {
+  width: auto;
+  height: auto;
+  min-height: 0;
+}
