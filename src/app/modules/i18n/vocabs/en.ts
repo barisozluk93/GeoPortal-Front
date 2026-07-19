@@ -449,92 +449,146 @@ export const locale = {
       }
     },
     "DATA_PAGE": {
-      "LOADING": "Loading data...",
-      "KICKER": "Data Access",
-      "TITLE": "Access satellite data with the method that fits your needs",
-      "COPY": "Our platform offers two different ways to access data: query and purchase data through the Map with region-based search, or buy an API key and integrate data into your own systems through API endpoints.",
-      "SEARCH_TITLE": "Region-based data search",
-      "SEARCH_PLACEHOLDER": "Enter a country, city, district, or neighborhood",
-      "SEARCH_BUTTON": "Search",
-      "SEARCH_HINT": "Search works only on a regional basis. You will be redirected to the map using a country, city, district, or neighborhood query.",
-      "ACTION_MARKETPLACE": "Marketplace",
-      "ACTION_API": "API",
-      "ACTION_MAP": "Map",
-      "SUMMARY_KICKER": "Data Flows",
-      "SUMMARY_TITLE": "2 different access methods",
-      "CARD_1_TITLE": "Marketplace",
-      "CARD_1_DESC": "Filter, review, and directly purchase ready-made data products.",
-      "CARD_2_TITLE": "Query Through Map",
-      "CARD_2_DESC": "Search by region, select or draw an area, view the queried data, and purchase it.",
-      "CARD_3_TITLE": "API Access",
-      "CARD_3_DESC": "Purchase an API key and integrate data into your own systems through endpoints.",
-      "MAP_SHORTCUT": "Search Data on Map",
-      "USE_CASES": "Access Methods",
-      "SECTION2_TITLE": "Two different ways to reach your data",
-      "SECTION2_COPY": "We provide multiple data access flows on a single platform: region-based querying through the map, and API integration for enterprise use.",
-      "ACCESS_1_TITLE": "Purchase Through Marketplace",
-      "ACCESS_1_DESC": "Review, compare, and directly purchase ready-made satellite imagery and processed data products.",
-      "ACCESS_1_ITEM_1": "Ready-made data catalog",
-      "ACCESS_1_ITEM_2": "Filtering and preview",
-      "ACCESS_1_ITEM_3": "Cart and purchase flow",
-      "ACCESS_1_ACTION": "Go to Marketplace",
-      "ACCESS_2_TITLE": "Query and Purchase Through Map",
-      "ACCESS_2_DESC": "Search by country, city, district, or neighborhood; select or draw an area on the map, view the matching data, and continue to purchase.",
-      "ACCESS_2_ITEM_1": "Region-based search",
-      "ACCESS_2_ITEM_2": "Area selection and drawing",
-      "ACCESS_2_ITEM_3": "Viewing and selling queried data",
-      "ACCESS_2_ACTION": "Explore",
-      "ACCESS_3_TITLE": "Access with API Key",
-      "ACCESS_3_DESC": "Purchase an API key to query polygon-based data through endpoints, manage processing flows, and integrate outputs into your own applications.",
-      "ACCESS_3_ITEM_1": "Purchase API key",
-      "ACCESS_3_ITEM_2": "Endpoint-based data access",
-      "ACCESS_3_ITEM_3": "Enterprise system integration",
-      "ACCESS_3_ACTION": "Go to API",
-      "FLOW_1_TITLE": "Choose the Method",
-      "FLOW_1_DESC": "Select the most suitable method for your needs: Map, or API access.",
-      "FLOW_2_TITLE": "Find the Data",
-      "FLOW_2_DESC": "Run region-based queries, or call data through the API.",
-      "FLOW_3_TITLE": "Purchase or Integrate",
-      "FLOW_3_DESC": "Purchase the data directly or connect it to your systems with an API key."
+      "KICKER": "Satellite Data Access",
+      "TITLE": "Define your area of interest, discover imagery or request a new acquisition",
+      "COPY": "Use GeoPortal to select your working area on the map. Purchase archived satellite imagery intersecting your area or create a new imagery request with parameters tailored to your needs.",
+      "HERO_MAP_ACTION": "Explore Data on the Map",
+      "HERO_WORKFLOW_ACTION": "How It Works",
+      "SUMMARY_KICKER": "Map-Based Access",
+      "SUMMARY_TITLE": "One map, two ordering options",
+      "SUMMARY_MAP_TITLE": "Define your area of interest",
+      "SUMMARY_MAP_DESC": "Search an address, draw a polygon or rectangle, or upload a supported area file.",
+      "SUMMARY_ORDER_TITLE": "Archived image or new acquisition",
+      "SUMMARY_ORDER_DESC": "Purchase an intersecting archive image or create a new acquisition request with your own parameters.",
+      "SUMMARY_DELIVERY_TITLE": "Download from Order Details",
+      "SUMMARY_DELIVERY_DESC": "When the order is completed, the download link is provided directly on the order detail page.",
+      "WORKFLOW_KICKER": "End-to-End Workflow",
+      "WORKFLOW_TITLE": "Reach satellite imagery in four essential steps",
+      "WORKFLOW_COPY": "The entire process—from creating an area of interest and pricing to order tracking and delivery—is managed within GeoPortal.",
+      "OVERVIEW_1_TITLE": "Define Your Area of Interest",
+      "OVERVIEW_1_DESC": "Search on the map, draw an area or upload a file.",
+      "OVERVIEW_2_TITLE": "Discover Imagery",
+      "OVERVIEW_2_DESC": "Review existing satellite imagery intersecting your area.",
+      "OVERVIEW_3_TITLE": "Purchase or Create a Request",
+      "OVERVIEW_3_DESC": "Add an archived image to your cart or order a new acquisition.",
+      "OVERVIEW_4_TITLE": "Download from Order Details",
+      "OVERVIEW_4_DESC": "Access the download link for your completed order.",
+      "AOI_TITLE": "Create your area of interest on the map",
+      "AOI_DESC": "Quickly define your working area using search, drawing or file-upload tools. The system uses this area for data queries and pricing.",
+      "AOI_SEARCH": "Address and region search",
+      "AOI_DRAW": "Polygon or rectangle drawing",
+      "AOI_UPLOAD": "GeoJSON, KML or ZIP area upload",
+      "AOI_AREA": "Automatic area calculation",
+      "CALLOUT_SEARCH": "Address Search",
+      "CALLOUT_AOI_TOOLS": "Area of Interest Tools",
+      "ARCHIVE_TITLE": "Discover intersecting archived satellite imagery",
+      "ARCHIVE_DESC": "GeoPortal automatically lists archived images intersecting the selected area of interest and displays their footprints on the map.",
+      "ARCHIVE_DATE": "Acquisition date",
+      "ARCHIVE_CLOUD": "Cloud coverage",
+      "ARCHIVE_PLATFORM": "Satellite and platform",
+      "ARCHIVE_FOOTPRINT": "Footprint and preview",
+      "CALLOUT_SELECTED_AOI": "Selected Area of Interest",
+      "CALLOUT_RESULTS": "Satellite Image Results",
+      "CALLOUT_FOOTPRINT": "Intersecting Footprints",
+      "PURCHASE_TITLE": "Purchase archived imagery with transparent pricing",
+      "PURCHASE_DESC": "The total price is automatically calculated from image coverage and the image-processing services you select.",
+      "IMAGE_COST": "Image Cost",
+      "IMAGE_FORMULA": "Total image area × image unit price",
+      "PROCESS_COST": "Processing Cost",
+      "PROCESS_FORMULA": "Total image area × selected processing unit price",
+      "TOTAL_COST": "Order Total",
+      "TOTAL_FORMULA": "Image cost + processing cost",
+      "CALLOUT_TOTAL_AREA": "Total Image Area",
+      "CALLOUT_PROCESSING": "Processing Options",
+      "CALLOUT_TOTAL_PRICE": "Grand Total",
+      "NEW_ORDER_TITLE": "Create a new satellite imagery order",
+      "NEW_ORDER_DESC": "When no suitable archive image is available, select technical and operational parameters to request a new acquisition for your area of interest.",
+      "PARAM_GSD": "GSD / resolution",
+      "PARAM_CLOUD": "Cloud-cover limit",
+      "PARAM_DATE": "Date range",
+      "PARAM_PLATFORM": "Platform selection",
+      "PARAM_OFFNADIR": "Off-nadir angle",
+      "PARAM_PROCESSING": "Image processing",
+      "CALLOUT_PARAMETERS": "Acquisition Parameters",
+      "CALLOUT_PROCESSING_OPTIONS": "Processing Options",
+      "CALLOUT_ADD_CART": "Add to Cart",
+      "DELIVERY_TITLE": "Track your order and download your data",
+      "DELIVERY_DESC": "When your archived imagery or new acquisition order is completed, the download link is published on your order detail page.",
+      "STATUS_CREATED": "Order created",
+      "STATUS_PREPARING": "Data is being prepared",
+      "STATUS_COMPLETED": "Order completed",
+      "STATUS_DOWNLOAD": "Download link ready",
+      "CALLOUT_ORDER_TOTAL": "Order Total",
+      "CALLOUT_CONFIRM_ORDER": "Confirm Order",
+      "API_KICKER": "Alternative Access",
+      "API_TITLE": "Integrate satellite data into your own systems",
+      "API_DESC": "Alongside the primary map-based workflow, purchase an API key for programmatic access through authorized endpoints.",
+      "MAP_ACTION": "Open the Map",
+      "API_ACTION": "Explore API Access"
     },
-    "API_PAGE": {
-      "KICKER": "API Access",
-      "TITLE": "Integrate satellite data into your systems by purchasing an API key",
-      "COPY": "After purchasing an API key, you can request satellite imagery, start the image processing flow, monitor the process status with a processId, and retrieve the completed processed data through the API endpoints.",
-      "BUY_API_KEY": "Buy API Key",
-      "DOCUMENTATION": "Documentation",
-      "ENDPOINTS_KICKER": "API Flow",
-      "ENDPOINTS_TITLE": "End-to-end process flow with 3 core endpoints",
-      "ENDPOINT_1_TITLE": "Retrieve satellite data and start processing",
-      "ENDPOINT_1_DESC": "After purchasing an API key, you can retrieve satellite imagery and start the image processing workflow with this endpoint. It returns a processId.",
-      "ENDPOINT_2_TITLE": "Query process status",
-      "ENDPOINT_2_DESC": "The current status of the workflow is checked using the returned processId, allowing you to track whether the process has completed.",
-      "ENDPOINT_3_TITLE": "Retrieve processed image",
-      "ENDPOINT_3_DESC": "Once the process is completed, you can retrieve the processed data and final imagery through this endpoint using the processId.",
-      "SECTION2_KICKER": "Usage Flow",
-      "SECTION2_TITLE": "Manage satellite data retrieval and processing through the API",
-      "SECTION2_COPY": "Once you purchase an API key, you can request satellite data, start the image processing workflow, monitor the process status, and integrate the completed output into your applications through a single API flow.",
-      "ACCESS_1_TITLE": "Authorized Access with API Key",
-      "ACCESS_1_DESC": "To use the API endpoints, an API key must be purchased first. This key grants access only to authorized endpoints.",
-      "ACCESS_1_ITEM_1": "Purchase API key",
-      "ACCESS_1_ITEM_2": "Authorized endpoint access",
-      "ACCESS_1_ITEM_3": "Controlled integration flow",
-      "ACCESS_2_TITLE": "Retrieve Satellite Imagery and Start Processing",
-      "ACCESS_2_DESC": "Through the getSatelliteDatas endpoint, satellite imagery can be retrieved and the image processing workflow can be started in the same flow.",
-      "ACCESS_2_ITEM_1": "Request satellite imagery",
-      "ACCESS_2_ITEM_2": "Start processing workflow",
-      "ACCESS_2_ITEM_3": "Generate processId",
-      "ACCESS_3_TITLE": "Track Status and Retrieve Result",
-      "ACCESS_3_DESC": "Use getStatus/{processId} to monitor the workflow, and once completed, use getProcessedSatelliteImage/{processId} to retrieve the final processed data.",
-      "ACCESS_3_ITEM_1": "Status query",
-      "ACCESS_3_ITEM_2": "Monitor completed jobs",
-      "ACCESS_3_ITEM_3": "Retrieve processed data",
-      "FLOW_1_TITLE": "Purchase API Key",
-      "FLOW_1_DESC": "First, purchase an API key to gain authorized access to the endpoints.",
-      "FLOW_2_TITLE": "Request Data and Start the Process",
-      "FLOW_2_DESC": "Use the getSatelliteDatas endpoint to retrieve satellite imagery and start the processing workflow.",
-      "FLOW_3_TITLE": "Monitor Status and Get the Result",
-      "FLOW_3_DESC": "Query getStatus with the processId first, and once completed, retrieve the final result with getProcessedSatelliteImage."
+    API_PAGE: {
+      KICKER: 'GeoPortal Public API',
+      TITLE: 'Automate satellite data workflows with secure API access',
+      COPY: 'Purchase an API key to access our separate Public API microservice; search archive imagery, retrieve metadata, create quotations, order archive or new acquisitions, and integrate completed deliveries into your systems.',
+      BUY_API_KEY: 'Buy API Key',
+      DOCUMENTATION: 'API Documentation',
+      BILLING_NOTICE: {
+        TITLE: 'API access and imagery charges are separate',
+        DESCRIPTION: 'The API key grants service access. Satellite imagery and processing services are billed separately according to area and selected services.'
+      },
+      MODEL: {
+        KICKER: 'Commercial Model',
+        TITLE: 'One API with two separate billing layers',
+        ITEM_1_TITLE: 'API access',
+        ITEM_1_DESC: 'Secure, quota-controlled Public API access with x-api-key.',
+        ITEM_2_TITLE: 'Search and quotation',
+        ITEM_2_DESC: 'Imagery discovery, metadata and pre-purchase pricing.',
+        ITEM_3_TITLE: 'Portal checkout',
+        ITEM_3_DESC: 'Orders are created through the API and paid on the GeoPortal checkout page.',
+        ITEM_4_TITLE: 'Controlled delivery',
+        ITEM_4_DESC: 'Time-limited download links are returned only for paid and completed orders.'
+      },
+      CAPABILITIES: {
+        KICKER: 'Public API Products',
+        TITLE: 'API capabilities exposed to external systems',
+        DESCRIPTION: 'Internal map endpoints are not exposed. The following services are provided through a separate x-api-key protected microservice using the same business rules.',
+        SEARCH: { TITLE: 'Imagery Search API', DESCRIPTION: 'Lists archive imagery intersecting the AOI using technical filters.' },
+        DETAIL: { TITLE: 'Imagery Detail API', DESCRIPTION: 'Returns footprint, metadata, preview and commercial details.' },
+        QUOTE: { TITLE: 'Pricing Quote API', DESCRIPTION: 'Creates a time-limited quote from imagery area, unit price and processing options.' },
+        ARCHIVE_ORDER: { TITLE: 'Archive Order API', DESCRIPTION: 'Converts a valid quote into an archive imagery order.' },
+        ACQUISITION: { TITLE: 'New Acquisition API', DESCRIPTION: 'Creates a new satellite acquisition request with AOI and tasking parameters.' },
+        STATUS: { TITLE: 'Order Status API', DESCRIPTION: 'Returns payment, preparation and delivery status.' },
+        DELIVERY: { TITLE: 'Delivery API', DESCRIPTION: 'Returns signed download links for completed and paid orders.' },
+        OPTIONS: { TITLE: 'Catalog Options API', DESCRIPTION: 'Provides current satellites, image types and processing options.' }
+      },
+      FLOW: {
+        KICKER: 'End-to-End Flow',
+        TITLE: 'Create orders through the API and manage checkout and delivery securely',
+        DESCRIPTION: 'The Public API automates ordering; payment card information never passes through the API.',
+        STEP_1_TITLE: 'Get an API key',
+        STEP_1_DESC: 'Send the active key in the x-api-key header of every request.',
+        STEP_2_TITLE: 'Search and quote',
+        STEP_2_DESC: 'Find imagery and create a current quote with selected services.',
+        STEP_3_TITLE: 'Create the order',
+        STEP_3_DESC: 'The API returns an order ID and a secure GeoPortal payment URL.',
+        STEP_4_TITLE: 'Track and download',
+        STEP_4_DESC: 'Track the paid order and retrieve delivery links when completed.'
+      },
+      PRICING: {
+        KICKER: 'Billing',
+        TITLE: 'API subscription and imagery purchases are separated',
+        DESCRIPTION: 'This model keeps API costs predictable while charging imagery according to actual use.',
+        API_ACCESS_TITLE: 'API access charge',
+        API_ACCESS_DESC: 'Covers key validity, request quota, technical support and enabled services.',
+        DATA_TITLE: 'Imagery and processing charge',
+        DATA_DESC: 'Imagery area × imagery unit price + imagery area × selected processing service unit prices.',
+        PAYMENT_DESC: 'The order is created through the API and returns paymentUrl. The customer completes payment on the secure GeoPortal checkout page; the API never receives card details.'
+      },
+      CTA: {
+        KICKER: 'Start Integrating',
+        TITLE: 'Bring GeoPortal workflows into your own systems',
+        DESCRIPTION: 'Purchase an API key, review the technical documentation and connect securely to the separate Public API microservice.'
+      }
     },
     "CONTACT": {
       "HERO": {
@@ -584,117 +638,121 @@ export const locale = {
         }
       }
     },
-    "API_DOC": {
-      "SIDEBAR": {
-        "KICKER": "API Documentation",
-        "TITLE": "GeoPortal API Key Usage",
-        "SUBTITLE": "This document explains how to use the authorized endpoints with the purchased API key."
+    API_DOC: {
+      SIDEBAR: {
+        KICKER: 'Public API Documentation',
+        TITLE: 'GeoPortal Public API v1',
+        SUBTITLE: 'Search, quotation, ordering, status and delivery services.',
+        BILLING_NOTE: 'The API key only grants access. Imagery and processing are charged separately per order.'
       },
-      "NAV": {
-        "OVERVIEW": "Overview",
-        "AUTHENTICATION": "Authentication",
-        "RESPONSE_FORMAT": "Response Format",
-        "SATELLITE_DATA": "Satellite Data Listing",
-        "START_PROCESSING": "Start Processing",
-        "PROCESS_STATUS": "Process Status",
-        "PROCESSED_RESULT": "Processed Image Result",
-        "PRODUCT_MODEL": "Product Model",
-        "ERROR_CODES": "Error Codes"
+      HERO: {
+        KICKER: 'Developer Documentation',
+        TITLE: 'GeoPortal Public API',
+        DESCRIPTION: 'End-to-end integration guide for the x-api-key protected Public API microservice, independent from the map application internal services.',
+        BASE_URL: 'Base URL',
+        AUTHENTICATION: 'Authentication',
+        AVAILABLE_ENDPOINTS: 'Endpoints'
       },
-      "HERO": {
-        "KICKER": "API Documentation",
-        "VERSION": "Version 1.0",
-        "TITLE": "GeoPortal API Documentation",
-        "DESCRIPTION": "This document is prepared for listing satellite data, starting the image processing workflow, tracking the processing status, and retrieving the processed result by using API-key authorized endpoints.",
-        "BASE_URL": "Base URL",
-        "AUTHENTICATION": "Authentication",
-        "AVAILABLE_ENDPOINTS": "Available Endpoints",
-        "SERVICE": "Service",
-        "SERVICE_VALUE": "Map Service"
+      NAV: {
+        OVERVIEW: 'Overview',
+        BUSINESS_MODEL: 'Commercial Model',
+        AUTHENTICATION: 'Authentication',
+        RESPONSE_FORMAT: 'Response Format',
+        CATALOG_OPTIONS: 'Catalog Options',
+        IMAGERY_SEARCH: 'Imagery Search',
+        IMAGERY_DETAIL: 'Imagery Detail',
+        PRICING_QUOTE: 'Pricing Quote',
+        ARCHIVE_ORDER: 'Archive Order',
+        ACQUISITION_ORDER: 'New Acquisition Order',
+        ORDER_STATUS: 'Order Status',
+        ORDER_DELIVERY: 'Delivery',
+        ERRORS: 'Error Codes'
       },
-      "AUTH": {
-        "KICKER": "Authentication",
-        "TITLE": "API Key Usage",
-        "DESCRIPTION": "The",
-        "DESCRIPTION_CONTINUE": "header is required for all requests. The API key only works on authorized endpoints."
+      OVERVIEW: {
+        TITLE: 'Public API architecture',
+        DESCRIPTION: 'This API does not expose endpoints used by the Angular map application. It is designed as a separate microservice operating on the same domain services and pricing rules.'
       },
-      "RESPONSE": {
-        "KICKER": "Standard Response",
-        "TITLE": "General Response Format",
-        "DESCRIPTION": "All endpoints return responses in a similar format."
+      BUSINESS_MODEL: {
+        TITLE: 'API access and satellite imagery are separate products',
+        DESCRIPTION: 'An API key grants automation and integration rights; it does not grant imagery ownership or unlimited downloads.',
+        ACCESS_TITLE: 'API subscription',
+        ACCESS_DESC: 'Covers x-api-key, quota, key validity, logging, rate limits and technical support.',
+        DATA_TITLE: 'Per-order imagery sales',
+        DATA_DESC: 'Archive imagery, new acquisitions and processing services are calculated by area for every order.',
+        PAYMENT_DESC: 'The API returns paymentUrl after order creation. Payment is completed in the GeoPortal portal; the delivery endpoint returns no files before payment.'
       },
-      "MODEL": {
-        "KICKER": "Model",
-        "TITLE": "ProductModel",
-        "DESCRIPTION": "Satellite data returned from the first endpoint is listed in this model structure."
+      AUTH: {
+        TITLE: 'Using x-api-key',
+        DESCRIPTION: 'Every endpoint request must include a purchased and active key in the x-api-key header.'
       },
-      "ERRORS": {
-        "KICKER": "Errors",
-        "TITLE": "Error Codes",
-        "CODES": {
-          "200": "Successful request",
-          "400": "Invalid request body or missing parameter",
-          "401": "API key is missing",
-          "403": "The API key is not authorized for this endpoint",
-          "404": "Record or process not found",
-          "500": "Server-side error"
+      RESPONSE: {
+        TITLE: 'Standard response envelope',
+        DESCRIPTION: 'All services use a common response containing isSuccess, message, data and errors.'
+      },
+      GROUPS: { CATALOG: 'Catalog', IMAGERY: 'Satellite Imagery', COMMERCE: 'Pricing', ORDERS: 'Orders' },
+      COMMON: {
+        ENDPOINT: 'Endpoint',
+        AUTHENTICATION: 'Authentication',
+        REQUEST_BODY: 'Request Body',
+        RESPONSE_EXAMPLE: 'Response Example',
+        CURL_EXAMPLE: 'cURL Example',
+        NOTES: 'Notes'
+      },
+      TABLE: { STATUS_CODE: 'Status Code', DESCRIPTION: 'Description' },
+      ENDPOINTS: {
+        CATALOG_OPTIONS: {
+          TITLE: 'Get catalog options',
+          DESCRIPTION: 'Returns current satellites, image types and processing options used in search and ordering.',
+          NOTES: { 0: 'Processing unit prices should be retrieved from this endpoint.', 1: 'Clients should not maintain hard-coded option lists.' }
+        },
+        IMAGERY_SEARCH: {
+          TITLE: 'Search archive satellite imagery',
+          DESCRIPTION: 'Returns paginated archive imagery intersecting the supplied AOI and technical filters.',
+          NOTES: { 0: 'wkt must be a Polygon or MultiPolygon.', 1: 'EPSG:4326 is used by default.', 2: 'This endpoint is discovery-only and does not grant download rights.' }
+        },
+        IMAGERY_DETAIL: {
+          TITLE: 'Get imagery details',
+          DESCRIPTION: 'Returns technical metadata, footprint, preview and current imagery unit price.',
+          NOTES: { 0: 'Download links are not returned before order completion.', 1: 'The unit price is informative; use the quote endpoint for final pricing.' }
+        },
+        PRICING_QUOTE: {
+          TITLE: 'Create a pricing quote',
+          DESCRIPTION: 'Creates a time-limited quote using request area, imagery unit price and selected processing options.',
+          NOTES: { 0: 'Imagery cost = total imagery area × imagery unit price.', 1: 'Processing cost = total imagery area × selected service unit prices.', 2: 'Create a new quote after expiry.' }
+        },
+        ARCHIVE_ORDER: {
+          TITLE: 'Create an archive imagery order',
+          DESCRIPTION: 'Converts a valid quoteId into an order and returns a secure GeoPortal payment link.',
+          NOTES: { 0: 'The API does not accept card or banking details.', 1: 'Payment is completed through paymentUrl in the portal.', 2: 'Preparation does not begin before payment.' }
+        },
+        ACQUISITION_ORDER: {
+          TITLE: 'Create a new acquisition order',
+          DESCRIPTION: 'Creates a new tasking request with AOI, GSD, dates, cloud, off-nadir, platform and processing options.',
+          NOTES: { 0: 'Parameter eligibility is validated server-side.', 1: 'New acquisition may require provider approval.', 2: 'The response includes payment URL and initial order status.' }
+        },
+        ORDER_STATUS: {
+          TITLE: 'Get order status',
+          DESCRIPTION: 'Returns payment, preparation and delivery readiness status.',
+          NOTES: { 0: 'Possible statuses include WaitingPayment, Paid, Preparing, Completed, Cancelled and Failed.', 1: 'Polling clients must respect rate limits.' }
+        },
+        ORDER_DELIVERY: {
+          TITLE: 'Get order delivery links',
+          DESCRIPTION: 'Returns time-limited signed download links for a paid and completed order.',
+          NOTES: { 0: 'Unpaid orders may return 409 or 403.', 1: 'Links are unavailable until completion.', 2: 'Signed links expire at expiresAt.' }
         }
       },
-      "COMMON": {
-        "ENDPOINT": "Endpoint",
-        "AUTHENTICATION": "Authentication",
-        "APIKEY_REQUIRED": "x-api-key header is required.",
-        "HEADERS": "Headers",
-        "REQUEST_BODY": "Request Body",
-        "RESPONSE_EXAMPLE": "Response Example",
-        "CURL_EXAMPLE": "cURL Example",
-        "NOTES": "Notes",
-        "YES": "Yes",
-        "NO": "No"
-      },
-      "TABLE": {
-        "KEY": "Key",
-        "VALUE": "Value",
-        "REQUIRED": "Required",
-        "STATUS_CODE": "Status Code",
-        "DESCRIPTION": "Description"
-      },
-      "ENDPOINTS": {
-        "SATELLITE_DATA": {
-          "TITLE": "Get Satellite Data",
-          "DESCRIPTION": "Lists the related satellite images based on the submitted polygon area. Returns a ProductModel list in the response.",
-          "NOTES": {
-            "0": "Polygon coordinates must be sent in longitude, latitude order.",
-            "1": "The polygon may be sent as a closed ring where the first and last points are the same.",
-            "2": "This endpoint can only be used with an authorized API key."
-          }
-        },
-        "START_PROCESSING": {
-          "TITLE": "Start Satellite Image Processing",
-          "DESCRIPTION": "Starts the image processing workflow for the selected satellite data. The operation does not return the final result immediately; it returns a processId.",
-          "NOTES": {
-            "0": "This endpoint starts an asynchronous job.",
-            "1": "The processing result is not returned immediately.",
-            "2": "In the next step, the process status should be queried using processId."
-          }
-        },
-        "PROCESS_STATUS": {
-          "TITLE": "Query Processing Status",
-          "DESCRIPTION": "Returns the current status of the started image processing job.",
-          "NOTES": {
-            "0": "Possible status values are: Queued, Processing, Completed, Failed.",
-            "1": "If the operation is not completed, the final image result is not returned by this endpoint.",
-            "2": "When the status is Completed, the 4th endpoint should be used."
-          }
-        },
-        "PROCESSED_RESULT": {
-          "TITLE": "Get Processed Satellite Image",
-          "DESCRIPTION": "After the image processing operation is completed, returns the processed satellite image information and output links using processId.",
-          "NOTES": {
-            "0": "This endpoint returns meaningful data only after the processing is completed.",
-            "1": "If the processing is not finished yet, the status may not be Completed.",
-            "2": "The result may include raster, preview, and classification outputs."
-          }
+      ERRORS: {
+        TITLE: 'HTTP error codes',
+        CODES: {
+          200: 'Successful request',
+          400: 'Invalid request or missing field',
+          401: 'Missing or invalid x-api-key',
+          403: 'API key is unauthorized or delivery conditions are not met',
+          404: 'Imagery, quote or order not found',
+          409: 'Order state conflicts with requested operation',
+          422: 'AOI or commercial parameters failed validation',
+          429: 'Rate limit exceeded',
+          500: 'Unexpected server error'
         }
       }
     },
@@ -1583,6 +1641,7 @@ export const locale = {
 
       PROCESSING_OPTIONS: "Image Processing Options",
       PROCESSING_TOTAL: "Image Processing Total",
+      "PROCESSING_OPTION_COUNT": "Image Processing Option Count",
       NO_PROCESSING_OPTIONS: "No image processing options selected.",
 
       READY_IMAGE: "Ready Satellite Image",

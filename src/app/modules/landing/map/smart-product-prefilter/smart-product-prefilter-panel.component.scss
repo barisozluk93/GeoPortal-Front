@@ -13,57 +13,90 @@
   box-sizing: border-box;
 }
 
+.smart-date-filter {
+  padding: 14px;
+  border: 1px solid var(--bs-gray-200);
+  border-radius: .625rem;
+  background: var(--bs-gray-100);
+}
+
+.smart-section-heading {
+  min-height: 28px;
+}
+
 .aoi-list {
   position: relative;
   overflow: visible !important;
-}
-
-.aoi-list > .aoi-card {
-  position: relative;
-  z-index: 1;
-  overflow: visible !important;
-}
-
-.aoi-list > .aoi-card.aoi-card--menu-open {
-  z-index: 9999 !important;
+  border-radius: .625rem !important;
+  background: var(--bs-body-bg);
 }
 
 .aoi-card {
   position: relative;
+  z-index: 1;
   width: 100%;
   min-width: 0;
   overflow: visible !important;
-  border-radius: 3px !important;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  border-bottom: 1px solid var(--bs-gray-200);
+  background: var(--bs-body-bg);
+  transition: background-color .15s ease, box-shadow .15s ease;
+
+  &:first-child {
+    border-radius: .625rem .625rem 0 0;
+  }
+
+  &:last-child {
+    border-bottom: 0;
+    border-radius: 0 0 .625rem .625rem;
+  }
+
+  &:only-child {
+    border-radius: .625rem;
+  }
 
   &:hover {
-    border-color: var(--bs-primary) !important;
+    z-index: 2;
+    background: var(--bs-gray-100);
+  }
+
+  &.border-primary,
+  &.bg-light-primary {
+    border-color: var(--bs-gray-200) !important;
+    background: var(--bs-primary-light) !important;
+    box-shadow: inset 3px 0 0 var(--bs-primary);
   }
 
   &--editing {
     box-shadow: inset 3px 0 0 var(--bs-warning) !important;
   }
+
+  &--menu-open {
+    z-index: 9999 !important;
+  }
 }
 
-.aoi-card > .card-body {
+.aoi-card-body {
   position: relative;
-  z-index: auto;
   min-width: 0;
   overflow: visible !important;
-}
-
-.aoi-card--menu-open > .card-body {
-  z-index: 9999;
 }
 
 .aoi-card-layout {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: start;
+  grid-template-columns: 18px minmax(0, 1fr) max-content;
+  align-items: center;
   gap: 10px;
   width: 100%;
   min-width: 0;
   overflow: visible !important;
+}
+
+.aoi-card-radio {
+  position: static;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  align-self: center;
 }
 
 .aoi-card-content {
@@ -78,16 +111,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--bs-gray-900) !important;
+  text-decoration: none !important;
 }
 
 .aoi-card-actions-wrap {
   position: relative;
-  z-index: auto;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 2px;
   min-width: max-content;
+  white-space: nowrap;
   overflow: visible !important;
 }
 
@@ -95,97 +130,68 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  width: 100%;
   overflow: visible !important;
 }
 
 .aoi-menu-anchor {
   position: relative;
   z-index: 10000;
-  flex: 0 0 auto;
   overflow: visible !important;
 }
 
-.aoi-results-toggle {
-  flex: 0 0 auto;
-}
-
-/*
- * Menü kart akışının dışında, üç nokta butonunun hemen altında açılır.
- * Metronic'in menu-sub-dropdown transform/inset kuralları özellikle eziliyor.
- */
 .aoi-menu.menu-sub-dropdown {
   position: absolute !important;
   top: calc(100% + 6px) !important;
   right: 0 !important;
-  bottom: auto !important;
   left: auto !important;
   inset: auto 0 auto auto !important;
   transform: none !important;
-
   z-index: 10001 !important;
   display: block !important;
-  min-width: 210px;
+  min-width: 220px;
   margin: 0 !important;
-  overflow: visible !important;
-
-  border: 1px solid var(--bs-gray-300);
-  border-radius: 8px !important;
+  padding: 8px 0 !important;
+  border: 1px solid var(--bs-gray-200);
+  border-radius: .625rem !important;
   background: var(--bs-body-bg) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+  box-shadow: var(--bs-dropdown-box-shadow) !important;
 
   .menu-link {
-    min-height: 34px;
-    background: transparent;
-    text-align: left;
-    border-radius: 5px !important;
-    margin: 0 8px !important; 
-    text-align: left;
+    min-height: 36px;
+    margin: 0 8px;
+    border-radius: .475rem !important;
 
     &:hover,
     &:focus {
-      background: var(--bs-primary-light) !important;
+      background: var(--bs-gray-100) !important;
+      color: var(--bs-primary) !important;
     }
   }
 }
 
-.btn-light:hover,
-.btn-light:focus,
-.btn-light:active {
-  background: var(--bs-gray-100) !important;
-  color: var(--bs-primary) !important;
-}
-
 .form-select.w-auto {
   width: auto !important;
-  min-width: 76px;
-  max-width: 90px;
+  min-width: 72px;
+  max-width: 88px;
+}
+
+.btn-sm-minimal {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: .475rem !important;
+  background: transparent !important;
+
+  &:hover,
+  &:focus {
+    background: var(--bs-gray-200) !important;
+  }
 }
 
 @media (max-width: 767.98px) {
   .aoi-card-layout {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: 18px minmax(0, 1fr) max-content;
+    gap: 8px;
   }
-
-  .aoi-card-actions-wrap {
-    grid-column: 2;
-    width: 100%;
-  }
-
-  .aoi-card-actions {
-    justify-content: flex-end;
-  }
-
-  .aoi-menu {
-    min-width: 190px;
-  }
-}
-
-.btn-sm-minimal {
-    height: 25px !important;
-    width: 25px !important;
-    border-radius: 0.475rem !important;
-    padding: 5px !important;
 }

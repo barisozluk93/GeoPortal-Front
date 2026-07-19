@@ -3,35 +3,31 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 
 @Component({
   selector: 'app-data',
   templateUrl: './data.component.html',
-  styleUrls: ['./data.component.scss']
+  styleUrls: ['./data.component.scss'],
 })
 export class DataComponent implements AfterViewInit, OnDestroy {
-
-  @ViewChild('heroSection')
-  heroSection!: ElementRef<HTMLElement>;
+  @ViewChild('heroSection') heroSection!: ElementRef<HTMLElement>;
 
   hideScrollCue = false;
-
-  private observer!: IntersectionObserver;
+  private observer?: IntersectionObserver;
 
   ngAfterViewInit(): void {
     this.observer = new IntersectionObserver(
       ([entry]) => {
-        // Hero görünmeye devam ediyorsa buton görünür.
         this.hideScrollCue = entry.intersectionRatio < 0.8;
       },
-      {
-        threshold: [0, 0.8, 1]
-      }
+      { threshold: [0, 0.8, 1] }
     );
 
-    this.observer.observe(this.heroSection.nativeElement);
+    if (this.heroSection?.nativeElement) {
+      this.observer.observe(this.heroSection.nativeElement);
+    }
   }
 
   ngOnDestroy(): void {
@@ -41,8 +37,7 @@ export class DataComponent implements AfterViewInit, OnDestroy {
   scrollToSection(id: string): void {
     document.getElementById(id)?.scrollIntoView({
       behavior: 'smooth',
-      block: 'start'
+      block: 'start',
     });
   }
-
 }

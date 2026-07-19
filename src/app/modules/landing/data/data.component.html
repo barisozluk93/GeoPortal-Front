@@ -1,10 +1,9 @@
-<div class="bg-body py-10">
+<div class="bg-body py-10 data-page-shell">
   <div class="container-fluid">
-    <div class="#heroSection card border shadow-sm overflow-hidden data-card mb-10">
+    <!-- HERO: İlk tasarım korunmuştur -->
+    <div #heroSection class="card border shadow-sm overflow-hidden data-card mb-10">
       <div class="card-body p-0">
         <div class="row g-0 align-items-stretch data-row">
-
-          <!-- SOL: GÖRSEL + DATA İÇERİĞİ -->
           <div class="col-12 col-xl-7">
             <div class="position-relative overflow-hidden bg-white h-100 data-hero">
               <div class="position-absolute top-0 start-0 bottom-0 data-hero-image"></div>
@@ -20,78 +19,71 @@
                     {{ 'DATA_PAGE.TITLE' | translate }}
                   </h1>
 
-                  <p class="text-gray-700 fw-semibold fs-6 fs-lg-5 lh-lg mb-0 data-hero-copy">
+                  <p class="text-gray-700 fw-semibold fs-6 fs-lg-5 lh-lg mb-7 data-hero-copy">
                     {{ 'DATA_PAGE.COPY' | translate }}
                   </p>
+
+                  <div class="d-flex flex-column flex-sm-row gap-3">
+                    <a routerLink="/landing/map" class="btn btn-primary px-7">
+                      <i class="ki-outline ki-geolocation fs-2 me-2"></i>
+                      {{ 'DATA_PAGE.HERO_MAP_ACTION' | translate }}
+                    </a>
+                    <button type="button" class="btn btn-light-primary px-7" (click)="scrollToSection('workflow')">
+                      <i class="ki-outline ki-route fs-2 me-2"></i>
+                      {{ 'DATA_PAGE.HERO_WORKFLOW_ACTION' | translate }}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- SAĞ: ÖZET PANELİ -->
           <div class="col-12 col-xl-5 position-relative data-summary-column">
-            <div
-              class="position-relative d-flex flex-column justify-content-center bg-primary h-100 p-6 p-lg-8 p-xxl-10 data-summary-panel">
+            <div class="position-relative d-flex flex-column justify-content-center bg-primary h-100 p-6 p-lg-8 p-xxl-10 data-summary-panel">
               <div class="position-relative z-index-2">
                 <div class="mb-5">
                   <span class="badge badge-light text-primary fw-bold fs-8 mb-4">
                     {{ 'DATA_PAGE.SUMMARY_KICKER' | translate }}
                   </span>
-
                   <h2 class="text-white fw-bolder fs-1 mb-0">
                     {{ 'DATA_PAGE.SUMMARY_TITLE' | translate }}
                   </h2>
                 </div>
 
                 <div class="d-flex flex-column gap-3">
-                  <div
-                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
                         <i class="ki-outline ki-geolocation fs-2x text-white"></i>
                       </span>
                     </div>
-                    <div class="min-w-0">
-                      <div class="text-white fw-bold fs-6 mb-1">
-                        {{ 'DATA_PAGE.CARD_2_TITLE' | translate }}
-                      </div>
-                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">
-                        {{ 'DATA_PAGE.CARD_2_DESC' | translate }}
-                      </div>
+                    <div>
+                      <div class="text-white fw-bold fs-6 mb-1">{{ 'DATA_PAGE.SUMMARY_MAP_TITLE' | translate }}</div>
+                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{ 'DATA_PAGE.SUMMARY_MAP_DESC' | translate }}</div>
                     </div>
                   </div>
 
-                  <div
-                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
-                        <i class="ki-outline ki-code fs-2x text-white"></i>
+                        <i class="ki-outline ki-satellite fs-2x text-white"></i>
                       </span>
                     </div>
-                    <div class="min-w-0">
-                      <div class="text-white fw-bold fs-6 mb-1">
-                        {{ 'DATA_PAGE.CARD_3_TITLE' | translate }}
-                      </div>
-                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">
-                        {{ 'DATA_PAGE.CARD_3_DESC' | translate }}
-                      </div>
+                    <div>
+                      <div class="text-white fw-bold fs-6 mb-1">{{ 'DATA_PAGE.SUMMARY_ORDER_TITLE' | translate }}</div>
+                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{ 'DATA_PAGE.SUMMARY_ORDER_DESC' | translate }}</div>
                     </div>
                   </div>
 
-                  <div
-                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
-                        <i class="ki-outline ki-data fs-2x text-white"></i>
+                        <i class="ki-outline ki-cloud-download fs-2x text-white"></i>
                       </span>
                     </div>
-                    <div class="min-w-0">
-                      <div class="text-white fw-bold fs-6 mb-1">
-                        {{ 'DATA_PAGE.USE_CASES' | translate }}
-                      </div>
-                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">
-                        {{ 'DATA_PAGE.SECTION2_COPY' | translate }}
-                      </div>
+                    <div>
+                      <div class="text-white fw-bold fs-6 mb-1">{{ 'DATA_PAGE.SUMMARY_DELIVERY_TITLE' | translate }}</div>
+                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{ 'DATA_PAGE.SUMMARY_DELIVERY_DESC' | translate }}</div>
                     </div>
                   </div>
                 </div>
@@ -99,220 +91,211 @@
             </div>
           </div>
         </div>
-        <a class="data-scroll-cue" [class.hidden]="hideScrollCue" (click)="scrollToSection('data-use-cases')">
+
+        <button type="button" class="data-scroll-cue border-0 bg-transparent" [class.hidden]="hideScrollCue" (click)="scrollToSection('workflow')">
           <span class="data-scroll-cue__halo"></span>
-          <span class="data-scroll-cue__button">
-            <i class="ki-outline ki-double-down fs-2"></i>
-          </span>
-        </a>
+          <span class="data-scroll-cue__button"><i class="ki-outline ki-double-down fs-2"></i></span>
+        </button>
       </div>
     </div>
 
-    <div id="data-use-cases" class="text-center mb-10 mb-lg-12 data-section-anchor">
-      <span class="badge badge-light-primary fs-7 fw-bold mb-4">
-        {{ 'DATA_PAGE.USE_CASES' | translate }}
-      </span>
-
-      <h2 class="text-gray-900 fw-bolder fs-2x fs-lg-2hx mb-4">
-        {{ 'DATA_PAGE.SECTION2_TITLE' | translate }}
-      </h2>
-
-      <p class="text-gray-600 fs-5 fw-semibold lh-lg mw-750px mx-auto mb-0">
-        {{ 'DATA_PAGE.SECTION2_COPY' | translate }}
-      </p>
+    <!-- WORKFLOW INTRO -->
+    <div id="workflow" class="text-center py-8 mb-8 data-section-anchor">
+      <span class="badge badge-light-primary fs-7 fw-bold mb-4">{{ 'DATA_PAGE.WORKFLOW_KICKER' | translate }}</span>
+      <h2 class="text-gray-900 fw-bolder fs-2x fs-lg-2hx mb-4">{{ 'DATA_PAGE.WORKFLOW_TITLE' | translate }}</h2>
+      <p class="text-gray-600 fs-5 fw-semibold lh-lg mw-850px mx-auto mb-0">{{ 'DATA_PAGE.WORKFLOW_COPY' | translate }}</p>
     </div>
 
-    <div class="row justify-content-center g-6 g-xl-8 mb-15">
-      <div class="col-12 col-md-6 col-xl-5">
-        <div class="card card-flush border  shadow-sm h-100 hover-elevate-up">
-          <div class="card-body d-flex flex-column p-7 p-lg-9">
-            <div class="symbol symbol-60px mb-7">
-              <span class="symbol-label bg-light-primary">
-                <i class="ki-outline ki-geolocation fs-2x text-primary"></i>
-              </span>
+    <div class="row g-5 mb-15">
+      <div class="col-12 col-md-6 col-xl-3" *ngFor="let step of [1,2,3,4]">
+        <div class="card card-bordered h-100 hover-elevate-up">
+          <div class="card-body p-6">
+            <div class="d-flex align-items-center mb-4">
+              <span class="badge badge-primary me-3">0{{ step }}</span>
+              <div class="symbol symbol-45px"><span class="symbol-label bg-light-primary"><i class="ki-outline fs-2 text-primary" [ngClass]="step === 1 ? 'ki-geolocation' : step === 2 ? 'ki-satellite' : step === 3 ? 'ki-basket-ok' : 'ki-cloud-download'"></i></span></div>
             </div>
-
-            <h3 class="text-gray-900 fw-bolder fs-2 mb-4">
-              {{ 'DATA_PAGE.ACCESS_2_TITLE' | translate }}
-            </h3>
-
-            <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-7">
-              {{ 'DATA_PAGE.ACCESS_2_DESC' | translate }}
-            </p>
-
-            <div class="d-flex flex-column gap-4 mb-8">
-              <div class="d-flex align-items-center">
-                <i class="ki-outline ki-check-circle fs-2 text-primary me-3"></i>
-                <span class="text-gray-700 fs-6 fw-semibold">
-                  {{ 'DATA_PAGE.ACCESS_2_ITEM_1' | translate }}
-                </span>
-              </div>
-
-              <div class="d-flex align-items-center">
-                <i class="ki-outline ki-check-circle fs-2 text-primary me-3"></i>
-                <span class="text-gray-700 fs-6 fw-semibold">
-                  {{ 'DATA_PAGE.ACCESS_2_ITEM_2' | translate }}
-                </span>
-              </div>
-
-              <div class="d-flex align-items-center">
-                <i class="ki-outline ki-check-circle fs-2 text-primary me-3"></i>
-                <span class="text-gray-700 fs-6 fw-semibold">
-                  {{ 'DATA_PAGE.ACCESS_2_ITEM_3' | translate }}
-                </span>
-              </div>
-            </div>
-
-            <a routerLink="/landing/map" class="btn btn-light-primary mt-auto">
-              {{ 'DATA_PAGE.ACCESS_2_ACTION' | translate }}
-              <i class="ki-outline ki-arrow-right fs-3 ms-2"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-6 col-xl-5">
-        <div class="card card-flush border  shadow-sm h-100 hover-elevate-up">
-          <div class="card-body d-flex flex-column p-7 p-lg-9">
-            <div class="symbol symbol-60px mb-7">
-              <span class="symbol-label bg-light-primary">
-                <i class="ki-outline ki-code fs-2x text-primary"></i>
-              </span>
-            </div>
-
-            <h3 class="text-gray-900 fw-bolder fs-2 mb-4">
-              {{ 'DATA_PAGE.ACCESS_3_TITLE' | translate }}
-            </h3>
-
-            <p class="text-gray-600 fs-6 fw-semibold lh-lg mb-7">
-              {{ 'DATA_PAGE.ACCESS_3_DESC' | translate }}
-            </p>
-
-            <div class="d-flex flex-column gap-4 mb-8">
-              <div class="d-flex align-items-center">
-                <i class="ki-outline ki-check-circle fs-2 text-primary me-3"></i>
-                <span class="text-gray-700 fs-6 fw-semibold">
-                  {{ 'DATA_PAGE.ACCESS_3_ITEM_1' | translate }}
-                </span>
-              </div>
-
-              <div class="d-flex align-items-center">
-                <i class="ki-outline ki-check-circle fs-2 text-primary me-3"></i>
-                <span class="text-gray-700 fs-6 fw-semibold">
-                  {{ 'DATA_PAGE.ACCESS_3_ITEM_2' | translate }}
-                </span>
-              </div>
-
-              <div class="d-flex align-items-center">
-                <i class="ki-outline ki-check-circle fs-2 text-primary me-3"></i>
-                <span class="text-gray-700 fs-6 fw-semibold">
-                  {{ 'DATA_PAGE.ACCESS_3_ITEM_3' | translate }}
-                </span>
-              </div>
-            </div>
-
-            <a routerLink="/landing/api" class="btn btn-light-primary mt-auto">
-              {{ 'DATA_PAGE.ACCESS_3_ACTION' | translate }}
-              <i class="ki-outline ki-arrow-right fs-3 ms-2"></i>
-            </a>
+            <h3 class="text-gray-900 fw-bold fs-4 mb-3">{{ ('DATA_PAGE.OVERVIEW_' + step + '_TITLE') | translate }}</h3>
+            <p class="text-gray-600 fw-semibold lh-lg mb-0">{{ ('DATA_PAGE.OVERVIEW_' + step + '_DESC') | translate }}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="card card-flush border  shadow-sm">
-      <!-- <div class="card-header border-0 pt-8 px-7 px-lg-10">
-        <div class="card-title">
-          <div class="d-flex align-items-center">
-            <div class="symbol symbol-45px me-4">
-              <span class="symbol-label bg-light-primary">
-                <i class="ki-outline ki-route fs-2 text-primary"></i>
-              </span>
-            </div>
-            <div>
-              <div class="text-gray-900 fw-bolder fs-3">
-                {{ 'DATA_PAGE.USE_CASES' | translate }}
+    <!-- 01 AOI -->
+    <section class="card card-bordered shadow-sm mb-15 overflow-hidden">
+      <div class="card-body p-0">
+        <div class="row g-0 align-items-stretch">
+          <div class="col-12 col-xl-4">
+            <div class="h-100 d-flex flex-column justify-content-center p-7 p-lg-10 bg-light-primary">
+              <span class="badge badge-primary align-self-start mb-5">01</span>
+              <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'DATA_PAGE.AOI_TITLE' | translate }}</h2>
+              <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-7">{{ 'DATA_PAGE.AOI_DESC' | translate }}</p>
+              <div class="d-flex flex-column gap-4">
+                <div class="d-flex align-items-center" *ngFor="let item of ['SEARCH','DRAW','UPLOAD','AREA']">
+                  <i class="ki-outline ki-check-circle fs-2 text-primary me-3"></i>
+                  <span class="text-gray-700 fw-semibold">{{ ('DATA_PAGE.AOI_' + item) | translate }}</span>
+                </div>
               </div>
-              <div class="text-gray-500 fw-semibold fs-7">
-                {{ 'DATA_PAGE.SECTION2_COPY' | translate }}
+            </div>
+          </div>
+          <div class="col-12 col-xl-8 p-5 p-lg-8">
+            <div class="data-browser-frame position-relative">
+              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <div class="d-flex gap-2"><span></span><span></span><span></span></div>
+                <span class="text-gray-500 fw-semibold fs-8">GeoPortal / Map</span>
+              </div>
+              <div class="position-relative data-shot-wrap">
+                <img src="assets/media/data-page/01-map-aoi.png" class="w-100 d-block" alt="GeoPortal area of interest selection" />
               </div>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
+    </section>
 
-      <div class="card card-bordered">
-        <div class="card-body p-8 p-lg-10">
-          <div class="row g-8">
-
-            <div class="col-12 col-lg-4">
-              <div class="d-flex align-items-start gap-5">
-                <div class="symbol symbol-55px flex-shrink-0">
-                  <span class="symbol-label bg-light-primary">
-                    <i class="ki-outline ki-magnifier fs-2x text-primary"></i>
-                  </span>
-                </div>
-
-                <div>
-                  <span class="badge badge-light-primary mb-3">01</span>
-
-                  <h4 class="text-gray-900 fw-bold fs-3 mb-3">
-                    {{ 'DATA_PAGE.FLOW_1_TITLE' | translate }}
-                  </h4>
-
-                  <p class="text-gray-600 fw-semibold lh-lg mb-0">
-                    {{ 'DATA_PAGE.FLOW_1_DESC' | translate }}
-                  </p>
+    <!-- 02 ARCHIVE -->
+    <section class="card card-bordered shadow-sm mb-15 overflow-hidden">
+      <div class="card-body p-0">
+        <div class="row g-0 align-items-stretch flex-xl-row-reverse">
+          <div class="col-12 col-xl-4">
+            <div class="h-100 d-flex flex-column justify-content-center p-7 p-lg-10">
+              <span class="badge badge-primary align-self-start mb-5">02</span>
+              <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'DATA_PAGE.ARCHIVE_TITLE' | translate }}</h2>
+              <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-7">{{ 'DATA_PAGE.ARCHIVE_DESC' | translate }}</p>
+              <div class="row g-3">
+                <div class="col-6" *ngFor="let item of ['DATE','CLOUD','PLATFORM','FOOTPRINT']">
+                  <div class="border rounded p-4 h-100 bg-light">
+                    <i class="ki-outline ki-check fs-3 text-primary me-2"></i>
+                    <span class="text-gray-700 fw-semibold fs-7">{{ ('DATA_PAGE.ARCHIVE_' + item) | translate }}</span>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div class="col-12 col-lg-4">
-              <div class="d-flex align-items-start gap-5">
-                <div class="symbol symbol-55px flex-shrink-0">
-                  <span class="symbol-label bg-light-primary">
-                    <i class="ki-outline ki-data fs-2x text-primary"></i>
-                  </span>
-                </div>
-
-                <div>
-                  <span class="badge badge-light-primary mb-3">02</span>
-
-                  <h4 class="text-gray-900 fw-bold fs-3 mb-3">
-                    {{ 'DATA_PAGE.FLOW_2_TITLE' | translate }}
-                  </h4>
-
-                  <p class="text-gray-600 fw-semibold lh-lg mb-0">
-                    {{ 'DATA_PAGE.FLOW_2_DESC' | translate }}
-                  </p>
-                </div>
+          </div>
+          <div class="col-12 col-xl-8 p-5 p-lg-8 bg-light">
+            <div class="data-browser-frame position-relative">
+              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <div class="d-flex gap-2"><span></span><span></span><span></span></div>
+                <span class="text-gray-500 fw-semibold fs-8">GeoPortal / Satellite Results</span>
+              </div>
+              <div class="position-relative data-shot-wrap">
+                <img src="assets/media/data-page/02-satellite-results.png" class="w-100 d-block" alt="Satellite imagery results" />
               </div>
             </div>
-
-            <div class="col-12 col-lg-4">
-              <div class="d-flex align-items-start gap-5">
-                <div class="symbol symbol-55px flex-shrink-0">
-                  <span class="symbol-label bg-light-primary">
-                    <i class="ki-outline ki-geolocation fs-2x text-primary"></i>
-                  </span>
-                </div>
-
-                <div>
-                  <span class="badge badge-light-primary mb-3">03</span>
-
-                  <h4 class="text-gray-900 fw-bold fs-3 mb-3">
-                    {{ 'DATA_PAGE.FLOW_3_TITLE' | translate }}
-                  </h4>
-
-                  <p class="text-gray-600 fw-semibold lh-lg mb-0">
-                    {{ 'DATA_PAGE.FLOW_3_DESC' | translate }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- 03 READY IMAGE & PRICING -->
+    <section class="card card-bordered shadow-sm mb-15 overflow-hidden">
+      <div class="card-body p-0">
+        <div class="row g-0 align-items-stretch">
+          <div class="col-12 col-xl-4">
+            <div class="h-100 d-flex flex-column justify-content-center p-7 p-lg-10 bg-light-primary">
+              <span class="badge badge-primary align-self-start mb-5">03</span>
+              <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'DATA_PAGE.PURCHASE_TITLE' | translate }}</h2>
+              <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-7">{{ 'DATA_PAGE.PURCHASE_DESC' | translate }}</p>
+
+              <div class="card card-bordered mb-4"><div class="card-body p-5"><div class="text-primary fw-bold fs-7 mb-2">{{ 'DATA_PAGE.IMAGE_COST' | translate }}</div><div class="text-gray-900 fw-bolder fs-4">{{ 'DATA_PAGE.IMAGE_FORMULA' | translate }}</div></div></div>
+              <div class="card card-bordered mb-4"><div class="card-body p-5"><div class="text-primary fw-bold fs-7 mb-2">{{ 'DATA_PAGE.PROCESS_COST' | translate }}</div><div class="text-gray-900 fw-bolder fs-4">{{ 'DATA_PAGE.PROCESS_FORMULA' | translate }}</div></div></div>
+              <div class="bg-primary rounded p-5"><div class="text-white text-opacity-75 fw-bold fs-7 mb-2">{{ 'DATA_PAGE.TOTAL_COST' | translate }}</div><div class="text-white fw-bolder fs-3">{{ 'DATA_PAGE.TOTAL_FORMULA' | translate }}</div></div>
+            </div>
+          </div>
+          <div class="col-12 col-xl-8 p-5 p-lg-8">
+            <div class="data-browser-frame position-relative">
+              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom"><div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">GeoPortal / Ready Image Pricing</span></div>
+              <div class="position-relative data-shot-wrap">
+                <img src="assets/media/data-page/03-ready-image-pricing.png" class="w-100 d-block" alt="Ready satellite image pricing" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 NEW ORDER -->
+    <section class="card card-bordered shadow-sm mb-15 overflow-hidden">
+      <div class="card-body p-0">
+        <div class="row g-0 align-items-stretch flex-xl-row-reverse">
+          <div class="col-12 col-xl-4">
+            <div class="h-100 d-flex flex-column justify-content-center p-7 p-lg-10">
+              <span class="badge badge-primary align-self-start mb-5">04</span>
+              <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'DATA_PAGE.NEW_ORDER_TITLE' | translate }}</h2>
+              <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-7">{{ 'DATA_PAGE.NEW_ORDER_DESC' | translate }}</p>
+              <div class="row g-3">
+                <div class="col-6" *ngFor="let item of ['GSD','CLOUD','DATE','PLATFORM','OFFNADIR','PROCESSING']">
+                  <div class="border rounded p-4 h-100 bg-light hover-elevate-up"><span class="text-gray-800 fw-bold fs-7">{{ ('DATA_PAGE.PARAM_' + item) | translate }}</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xl-8 p-5 p-lg-8 bg-light">
+            <div class="data-browser-frame position-relative">
+              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom"><div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">GeoPortal / New Image Request</span></div>
+              <div class="position-relative data-shot-wrap">
+                <img src="assets/media/data-page/04-new-image-order.png" class="w-100 d-block" alt="New satellite image request" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 DELIVERY -->
+    <section class="card card-bordered shadow-sm mb-15 overflow-hidden">
+      <div class="card-body p-0">
+        <div class="row g-0 align-items-stretch">
+          <div class="col-12 col-xl-4">
+            <div class="h-100 d-flex flex-column justify-content-center p-7 p-lg-10 bg-light-primary">
+              <span class="badge badge-primary align-self-start mb-5">05</span>
+              <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'DATA_PAGE.DELIVERY_TITLE' | translate }}</h2>
+              <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-7">{{ 'DATA_PAGE.DELIVERY_DESC' | translate }}</p>
+              <div class="timeline-label">
+                <div class="timeline-item" *ngFor="let item of ['CREATED','PREPARING','COMPLETED','DOWNLOAD']">
+                  <div class="timeline-label fw-bold text-gray-600 fs-8">•</div>
+                  <div class="timeline-badge"><i class="fa fa-genderless text-primary fs-1"></i></div>
+                  <div class="timeline-content fw-semibold text-gray-800 ps-3">{{ ('DATA_PAGE.STATUS_' + item) | translate }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xl-8 p-5 p-lg-8">
+            <div class="data-browser-frame position-relative">
+              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom"><div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">GeoPortal / Order Summary</span></div>
+              <div class="position-relative data-shot-wrap">
+                <img src="assets/media/data-page/05-order-summary.png" class="w-100 d-block" alt="GeoPortal order summary" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- API ALTERNATIVE + CTA -->
+    <div class="card border-0 bg-primary overflow-hidden data-api-cta">
+      <div class="card-body p-8 p-lg-12 position-relative">
+        <div class="row align-items-center g-8 position-relative z-index-2">
+          <div class="col-12 col-lg-8">
+            <span class="badge badge-light text-primary fw-bold mb-4">{{ 'DATA_PAGE.API_KICKER' | translate }}</span>
+            <h2 class="text-white fw-bolder fs-2x mb-4">{{ 'DATA_PAGE.API_TITLE' | translate }}</h2>
+            <p class="text-white text-opacity-75 fs-5 fw-semibold lh-lg mb-0">{{ 'DATA_PAGE.API_DESC' | translate }}</p>
+          </div>
+          <div class="col-12 col-lg-4">
+            
+            <div class="d-flex flex-column flex-sm-row flex-lg-column gap-3 justify-content-lg-end">
+              <button routerLink="/landing/map" class="btn btn-light-primary">
+                <i class="ki-outline ki-geolocation fs-2 me-2"></i>
+                {{ 'DATA_PAGE.MAP_ACTION' | translate }}
+              </button>
+              <button routerLink="/landing/api" class="btn btn-outline btn-outline-dashed btn-outline-white text-white">
+                <i class="ki-outline ki-code fs-2 me-2"></i>
+                {{ 'DATA_PAGE.API_ACTION' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <i class="ki-outline ki-satellite position-absolute end-0 bottom-0 text-white opacity-10 data-cta-icon"></i>
       </div>
     </div>
   </div>

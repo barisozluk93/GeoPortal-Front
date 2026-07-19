@@ -303,3 +303,285 @@
     display:none!important;
   }
 }
+
+/* =======================================================
+   MOBILE: TEK EKRAN CONTACT
+   Beyaz bölüm üstte, mavi form altta. Scroll cue/ekstra alan yok.
+======================================================= */
+@media (max-width: 767.98px) {
+  :host {
+    display: block;
+    width: 100%;
+    height: calc(100svh - var(--kt-app-header-height, 55px));
+    height: calc(100dvh - var(--kt-app-header-height, 55px));
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  :host > .bg-body {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 12px !important;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  :host > .bg-body > .container-fluid {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .contact-card {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .contact-card > .card-body,
+  .contact-row {
+    height: 100%;
+    min-height: 0 !important;
+  }
+
+  .contact-row {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .contact-row > .col-12:first-child {
+    flex: 0 0 38%;
+    height: 38%;
+    min-height: 0;
+  }
+
+  .contact-form-column {
+    flex: 1 1 62%;
+    height: 62%;
+    min-height: 0;
+  }
+
+  .contact-hero,
+  .contact-form-panel {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  .contact-hero-image {
+    width: 42%;
+    height: 100%;
+    bottom: 0 !important;
+    opacity: .55;
+    background-position: center;
+  }
+
+  .contact-hero-image::after {
+    background: linear-gradient(
+      90deg,
+      rgba(255,255,255,.04) 0%,
+      rgba(255,255,255,.30) 42%,
+      rgba(255,255,255,.86) 78%,
+      #fff 100%
+    );
+  }
+
+  .contact-hero-overlay {
+    background: linear-gradient(
+      90deg,
+      rgba(255,255,255,.12) 0%,
+      rgba(255,255,255,.70) 38%,
+      #fff 68%,
+      #fff 100%
+    );
+  }
+
+  .contact-hero > .position-relative.z-index-2 {
+    padding: 14px 16px !important;
+    align-items: center !important;
+  }
+
+  .contact-hero-content {
+    width: 100%;
+    max-width: none;
+    padding: 0 0 0 20% !important;
+  }
+
+  .contact-hero-content > .badge {
+    margin-bottom: 8px !important;
+    font-size: 9px !important;
+  }
+
+  .contact-hero-title {
+    margin-bottom: 8px !important;
+    font-size: clamp(20px, 6vw, 28px) !important;
+    line-height: 1.08 !important;
+  }
+
+  .contact-hero-copy {
+    margin-bottom: 10px !important;
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+  }
+
+  .contact-feature-row {
+    --bs-gutter-x: 8px;
+    --bs-gutter-y: 6px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    margin: 0;
+  }
+
+  .contact-feature-row > [class*='col-'] {
+    width: auto;
+    padding: 0;
+  }
+
+  .contact-feature-card {
+    min-height: 0;
+    padding: 7px !important;
+    border-radius: 10px !important;
+  }
+
+  .contact-feature-card .symbol {
+    width: 30px !important;
+    height: 30px !important;
+    margin-right: 7px !important;
+  }
+
+  .contact-feature-card .symbol-label {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .contact-feature-card .symbol i {
+    font-size: 16px !important;
+  }
+
+  .contact-feature-card .text-gray-900 {
+    font-size: 10px !important;
+    line-height: 1.15 !important;
+    margin-bottom: 2px !important;
+  }
+
+  .contact-feature-card .text-gray-600 {
+    font-size: 8px !important;
+    line-height: 1.2 !important;
+  }
+
+  .contact-form-panel {
+    padding: 12px 16px !important;
+    justify-content: center !important;
+  }
+
+  .contact-form-panel > .position-relative.z-index-2 {
+    width: 100%;
+  }
+
+  .contact-form-panel .mb-5 {
+    margin-bottom: 7px !important;
+  }
+
+  .contact-form-panel .badge {
+    margin-bottom: 0 !important;
+    font-size: 9px !important;
+  }
+
+  .contact-form-panel form .row {
+    --bs-gutter-x: 8px;
+    --bs-gutter-y: 6px;
+  }
+
+  .contact-form-panel form .col-md-6 {
+    width: 50%;
+  }
+
+  .contact-form-panel .form-label {
+    margin-bottom: 2px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .contact-form-panel .form-control {
+    min-height: 29px;
+    height: 29px;
+    padding: 4px 8px;
+    border-radius: 7px;
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .contact-form-panel textarea.form-control {
+    min-height: 43px;
+    height: 43px;
+    resize: none;
+  }
+
+  .contact-form-panel .col-12.pt-2 {
+    padding-top: 2px !important;
+  }
+
+  .contact-form-panel .btn {
+    min-height: 31px;
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+}
+
+/* Çok kısa telefon ekranlarında da kart viewport içinde kalır. */
+@media (max-width: 767.98px) and (max-height: 700px) {
+  :host > .bg-body {
+    padding: 8px !important;
+  }
+
+  .contact-row > .col-12:first-child {
+    flex-basis: 35%;
+    height: 35%;
+  }
+
+  .contact-form-column {
+    flex-basis: 65%;
+    height: 65%;
+  }
+
+  .contact-hero > .position-relative.z-index-2,
+  .contact-form-panel {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .contact-hero-copy {
+    margin-bottom: 6px !important;
+  }
+
+  .contact-feature-card .text-gray-600 {
+    display: none;
+  }
+
+  .contact-form-panel form .row {
+    --bs-gutter-y: 4px;
+  }
+
+  .contact-form-panel .form-control {
+    min-height: 26px;
+    height: 26px;
+  }
+
+  .contact-form-panel textarea.form-control {
+    min-height: 36px;
+    height: 36px;
+  }
+}

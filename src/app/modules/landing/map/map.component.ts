@@ -1080,6 +1080,17 @@ private readonly drawFillColor = "rgba(45,212,191,.18)";
 
     this.userAreaSource.clear();
     this.userAreaOrigin = null;
+
+    // Bu metot panelin başlığındaki X butonundan çağrılır.
+    // Yalnızca kullanıcı X ile kapattığında prefilter içindeki ilgi alanı
+    // listesi ve seçime bağlı durumlar tamamen sıfırlanır.
+    this.aoiItems = [];
+    this.selectedAoiId = null;
+    this.hoveredAoiId = null;
+    this.editingAoiId = null;
+    this.totalSelectedAreaM2 = 0;
+    this.aoiCounter = 0;
+
     this.clearSmartFilterResults();
 
     this.isMetadataPanelOpen = false;

@@ -202,9 +202,112 @@
     background: var(--bs-border-color);
 }
 
+.smart-product-list {
+  overflow: visible !important;
+  border-radius: .625rem !important;
+}
+
+.smart-product-item {
+  border-bottom: 1px solid var(--bs-gray-200);
+  transition: background-color .15s ease, box-shadow .15s ease;
+
+  &:first-child { border-radius: .625rem .625rem 0 0; }
+  &:last-child { border-bottom: 0; border-radius: 0 0 .625rem .625rem; }
+  &:only-child { border-radius: .625rem; }
+
+  &:hover {
+    z-index: 2;
+    background: var(--bs-gray-100) !important;
+  }
+
+  &.border-primary,
+  &.bg-light-primary {
+    border-color: var(--bs-gray-200) !important;
+    background: var(--bs-primary-light) !important;
+    box-shadow: inset 3px 0 0 var(--bs-primary);
+  }
+}
+
+.smart-product-thumb {
+  border-radius: 0 !important;
+}
+
+.smart-product-item:first-child .smart-product-thumb {
+  border-top-left-radius: .625rem !important;
+}
+
+.smart-product-item:last-child .smart-product-thumb {
+  border-bottom-left-radius: .625rem !important;
+}
+
+
+/* Checkbox remains over the thumbnail, but uses the same compact Metronic
+   form-check geometry as the prefilter list item. */
+.smart-product-thumb-select {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.smart-product-select {
+  position: static;
+  width: 16px;
+  height: 16px;
+  margin: 0 !important;
+  border-color: var(--bs-gray-500);
+  background-color: rgba(255, 255, 255, .96);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .24);
+  cursor: pointer;
+}
+
+.smart-product-select:checked {
+  border-color: var(--bs-primary);
+  background-color: var(--bs-primary);
+}
+
+/* Card, table and expand/collapse actions use the exact same minimal button
+   language as the prefilter list item. */
 .btn-sm-minimal {
-    height: 25px !important;
-    width: 25px !important;
-    border-radius: 0.475rem !important;
-    padding: 5px !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: .475rem !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--bs-primary) !important;
+
+  &:hover,
+  &:focus,
+  &.bg-light-primary {
+    background: var(--bs-gray-200) !important;
+  }
+
+  i {
+    color: var(--bs-primary) !important;
+    font-size: 13px;
+  }
+}
+
+/* The table row action menu opens from its own ellipsis button. */
+.table-responsive {
+  overflow: visible;
+}
+
+.smart-product-table-menu {
+  top: calc(100% + 4px) !important;
+  right: 0 !important;
+  left: auto !important;
+}
+
+tbody tr {
+  cursor: pointer;
 }

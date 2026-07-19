@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -14,18 +21,25 @@ import {
 } from '../../basket-management/models/basket.model';
 import { ProductModel } from '../marketplace/models/product.model';
 
+interface ApiCapability {
+  icon: string;
+  titleKey: string;
+  descriptionKey: string;
+  method: 'GET' | 'POST';
+  path: string;
+}
+
 @Component({
   selector: 'app-api',
   templateUrl: './api.component.html',
-  styleUrl: './api.component.scss',
+  styleUrls: ['./api.component.scss'],
 })
 export class ApiComponent implements AfterViewInit, OnDestroy {
   @ViewChild('heroSection')
   heroSection!: ElementRef<HTMLElement>;
 
   hideScrollCue = false;
-
-  private observer!: IntersectionObserver;
+  private observer?: IntersectionObserver;
 
   readonly basketManagementService = inject(BasketManagementService);
   readonly basketService = inject(BasketService);
@@ -34,12 +48,71 @@ export class ApiComponent implements AfterViewInit, OnDestroy {
   readonly router = inject(Router);
   readonly translate = inject(TranslateService);
 
-  readonly baseUrl: string = environment.appUrl;
+  readonly apiBaseUrl = `${environment.appUrl}/geoportal-public-api/v1`;
+
+  readonly capabilities: ApiCapability[] = [
+    {
+      icon: 'ki-search-list',
+      titleKey: 'API_PAGE.CAPABILITIES.SEARCH.TITLE',
+      descriptionKey: 'API_PAGE.CAPABILITIES.SEARCH.DESCRIPTION',
+      method: 'POST',
+      path: '/imagery/search',
+    },
+    {
+      icon: 'ki-information-5',
+      titleKey: 'API_PAGE.CAPABILITIES.DETAIL.TITLE',
+      descriptionKey: 'API_PAGE.CAPABILITIES.DETAIL.DESCRIPTION',
+      method: 'GET',
+      path: '/imagery/{imageId}',
+    },
+    {
+      icon: 'ki-calculator',
+      titleKey: 'API_PAGE.CAPABILITIES.QUOTE.TITLE',
+      descriptionKey: 'API_PAGE.CAPABILITIES.QUOTE.DESCRIPTION',
+      method: 'POST',
+      path: '/pricing/quote',
+    },
+    {
+      icon: 'ki-basket',
+      titleKey: 'API_PAGE.CAPABILITIES.ARCHIVE_ORDER.TITLE',
+      descriptionKey: 'API_PAGE.CAPABILITIES.ARCHIVE_ORDER.DESCRIPTION',
+      method: 'POST',
+      path: '/orders/archive',
+    },
+    {
+      icon: 'ki-satellite',
+      titleKey: 'API_PAGE.CAPABILITIES.ACQUISITION.TITLE',
+      descriptionKey: 'API_PAGE.CAPABILITIES.ACQUISITION.DESCRIPTION',
+      method: 'POST',
+      path: '/orders/acquisition',
+    },
+    {
+      icon: 'ki-time',
+      titleKey: 'API_PAGE.CAPABILITIES.STATUS.TITLE',
+      descriptionKey: 'API_PAGE.CAPABILITIES.STATUS.DESCRIPTION',
+      method: 'GET',
+      path: '/orders/{orderId}',
+    },
+    {
+      icon: 'ki-cloud-download',
+      titleKey: 'API_PAGE.CAPABILITIES.DELIVERY.TITLE',
+      descriptionKey: 'API_PAGE.CAPABILITIES.DELIVERY.DESCRIPTION',
+      method: 'GET',
+      path: '/orders/{orderId}/delivery',
+    },
+    {
+      icon: 'ki-setting-2',
+      titleKey: 'API_PAGE.CAPABILITIES.OPTIONS.TITLE',
+      descriptionKey: 'API_PAGE.CAPABILITIES.OPTIONS.DESCRIPTION',
+      method: 'GET',
+      path: '/catalog/options',
+    },
+  ];
 
   private readonly apiProductId = 1;
   private readonly apiProductPrice = 1000;
-  private readonly apiAoiId = 'api-services';
-  private readonly apiAoiName = 'API Servisleri';
+  private readonly apiAoiId = 'public-api-access';
+  private readonly apiAoiName = 'GeoPortal Public API';
 
   routeToDoc(): void {
     this.router.navigate(['/landing/documentation']);
@@ -131,21 +204,17 @@ export class ApiComponent implements AfterViewInit, OnDestroy {
       isDeleted: false,
       numberOf: 1,
       totalPrice: this.apiProductPrice,
-
       aoiId: this.apiAoiId,
       aoiName: this.apiAoiName,
       aoiWkt: null,
       requestWkt: null,
       intersectionWkt: null,
-
       requestAreaKm2: 1,
       unitPrice: this.apiProductPrice,
       baseTotalPrice: this.apiProductPrice,
-
       processingOptions,
       processingTotalPrice: 0,
       calculatedTotalPrice: this.apiProductPrice,
-
       itemType: 'processingService',
     };
   }
@@ -154,31 +223,27 @@ export class ApiComponent implements AfterViewInit, OnDestroy {
     return {
       id: this.apiProductId,
       categoryId: 2,
-      name: 'API Key',
+      name: 'GeoPortal Public API Key',
       price: this.apiProductPrice,
       priceStr: `₺${this.apiProductPrice}`,
       currency: 'TRY',
       isDeleted: false,
       isCustomArea: false,
       userId,
-      sourceLabel: 'API Servisi',
-      provider: 'API',
+      sourceLabel: 'Public API',
+      provider: 'GeoPortal',
     };
   }
 
   private readGuestBasket(): BasketModel[] {
     try {
       const storedBasket = localStorage.getItem('basket');
-
       if (!storedBasket) {
         return [];
       }
 
       const parsedBasket = JSON.parse(storedBasket);
-
-      return Array.isArray(parsedBasket)
-        ? (parsedBasket as BasketModel[])
-        : [];
+      return Array.isArray(parsedBasket) ? parsedBasket as BasketModel[] : [];
     } catch (error) {
       console.error('Yerel sepet okunamadı:', error);
       return [];
@@ -193,14 +258,15 @@ export class ApiComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    if (!this.heroSection?.nativeElement) {
+      return;
+    }
+
     this.observer = new IntersectionObserver(
       ([entry]) => {
-        // Hero görünmeye devam ediyorsa buton görünür.
         this.hideScrollCue = entry.intersectionRatio < 0.8;
       },
-      {
-        threshold: [0, 0.8, 1]
-      }
+      { threshold: [0, 0.8, 1] }
     );
 
     this.observer.observe(this.heroSection.nativeElement);
@@ -213,7 +279,7 @@ export class ApiComponent implements AfterViewInit, OnDestroy {
   scrollToSection(id: string): void {
     document.getElementById(id)?.scrollIntoView({
       behavior: 'smooth',
-      block: 'start'
+      block: 'start',
     });
   }
 }
