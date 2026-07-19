@@ -1,5 +1,6 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Location, formatDate } from '@angular/common';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,6 +10,7 @@ import { OrderModel } from '../../coming-order-management/models/order.model';
 import { OrderProductModel } from '../../coming-order-management/models/orderproduct.model';
 import { ComingOrderManagementService } from '../coming-order-management.service';
 import { AlertService } from 'src/app/_metronic/partials/layout/alert/alert.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-coming-order-detail',
@@ -33,15 +35,28 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
   selectedPreviewProduct: OrderProductModel | null = null;
   selectedPreviewWkt: string | null = null;
 
+  isProductHistoryModalOpen = false;
+  productHistoryLoading = false;
+  productHistoryError = '';
+  productHistoryItems: any[] = [];
+  productHistoryTotalCount = 0;
+  productHistoryPageNumber = 1;
+  productHistoryPageSize = 10;
+  selectedProductHistoryRecordId = '';
+  selectedProductHistoryLabel = '';
+  expandedProductHistoryItems = new Set<string>();
+  private readonly ignoredProductHistoryFields = new Set<string>(['id','createddate','updateddate','createduserid','updateduserid','deleteddate','deleteduserid','isdeleted','concurrencystamp','passwordhash','passwordsalt','refreshtoken','refreshtokenexpiredate','rowversion']);
+
   private destroy$ = new Subject<void>();
 
   constructor(
     private comingOrderManagementService: ComingOrderManagementService,
-    private translate: TranslateService,
+    public translate: TranslateService,
     private route: ActivatedRoute,
     @Inject(LOCALE_ID) public locale: string,
     private location: Location,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -842,6 +857,33 @@ export class ComingOrderDetailComponent implements OnInit, OnDestroy {
     const parsed = Number(value);
     return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
   }
+
+
+  openProductHistoryModal(item: OrderProductModel): void {
+    this.selectedProductHistoryRecordId = item?.id != null ? String(item.id) : '';
+    this.selectedProductHistoryLabel = `${item?.product?.name || (this.translate.currentLang === 'tr' ? 'Ürün' : 'Product')} #${this.selectedProductHistoryRecordId}`;
+    this.productHistoryPageNumber = 1; this.productHistoryItems = []; this.productHistoryTotalCount = 0; this.productHistoryError = ''; this.expandedProductHistoryItems.clear(); this.isProductHistoryModalOpen = true;
+    if (!this.selectedProductHistoryRecordId) { this.productHistoryError = this.translate.currentLang === 'tr' ? 'Ürün kayıt kimliği bulunamadı.' : 'Product record identifier could not be found.'; return; }
+    this.loadProductHistory();
+  }
+  closeProductHistoryModal(): void { this.isProductHistoryModalOpen = false; this.expandedProductHistoryItems.clear(); }
+  loadProductHistory(): void {
+    if (!this.selectedProductHistoryRecordId) return;
+    this.productHistoryLoading = true; this.productHistoryError = '';
+    const params = new HttpParams().set('PageNumber', String(this.productHistoryPageNumber)).set('PageSize', String(this.productHistoryPageSize)).set('entityType', 'OrderProduct').set('recordId', this.selectedProductHistoryRecordId);
+    this.http.get<any>(`${environment.apiUrl}/History/Paginate`, { params }).subscribe({ next: result => { const data = result?.data ?? result?.Data; this.productHistoryItems = data?.items ?? data?.Items ?? []; this.productHistoryTotalCount = data?.totalCount ?? data?.TotalCount ?? 0; this.productHistoryLoading = false; }, error: () => { this.productHistoryLoading = false; this.productHistoryError = this.translate.currentLang === 'tr' ? 'Ürün tarihçesi alınırken bir hata oluştu.' : 'An error occurred while loading product history.'; } });
+  }
+  onProductHistoryPageChange(pageNumber: number): void { this.productHistoryPageNumber = pageNumber; this.loadProductHistory(); }
+  getProductHistoryOperationLabel(operationType: string): string { const v=String(operationType||'').toLowerCase(); if(v==='create')return this.translate.currentLang==='tr'?'Ekleme':'Create'; if(v==='update')return this.translate.currentLang==='tr'?'Güncelleme':'Update'; if(v==='delete')return this.translate.currentLang==='tr'?'Silme':'Delete'; if(v==='statusupdate')return this.translate.currentLang==='tr'?'Durum Güncelleme':'Status Update'; return operationType||'-'; }
+  getProductHistoryOperationBadgeClass(operationType: string): string { const v=String(operationType||'').toLowerCase(); if(v==='create')return 'badge-light-success'; if(v==='update')return 'badge-light-warning'; if(v==='delete')return 'badge-light-danger'; if(v==='statusupdate')return 'badge-light-info'; return 'badge-light-primary'; }
+  getProductHistoryChanges(item:any):Array<{field:string;oldValue:any;newValue:any}>{ const raw=item?.changesJson??item?.ChangesJson; if(!raw)return[]; try{ const p=typeof raw==='string'?JSON.parse(raw):raw; if(Array.isArray(p))return p.map((c:any)=>({field:c?.field??c?.Field??c?.propertyName??c?.PropertyName??'-',oldValue:c?.oldValue??c?.OldValue??null,newValue:c?.newValue??c?.NewValue??null})); return Object.keys(p).map(k=>{const v=p[k];return{field:k,oldValue:v?.oldValue??v?.OldValue??null,newValue:v?.newValue??v?.NewValue??v??null};}); }catch{return[{field:'-',oldValue:null,newValue:raw}];}}
+  getVisibleProductHistoryChanges(item:any){ return this.getProductHistoryChanges(item).filter(c=>!this.ignoredProductHistoryFields.has(String(c.field||'').replace(/\s+/g,'').toLowerCase())); }
+  getProductHistoryOperationType(item:any):string{return String(item?.operationType??item?.OperationType??'').toLowerCase();}
+  getProductHistoryItemKey(item:any):string{return String(item?.id??item?.Id??`${item?.createdDate??item?.CreatedDate??''}-${item?.operationType??item?.OperationType??''}`);}
+  toggleProductHistoryDetails(item:any):void{const k=this.getProductHistoryItemKey(item);this.expandedProductHistoryItems.has(k)?this.expandedProductHistoryItems.delete(k):this.expandedProductHistoryItems.add(k);}
+  isProductHistoryDetailsOpen(item:any):boolean{return this.expandedProductHistoryItems.has(this.getProductHistoryItemKey(item));}
+  getProductHistorySummaryText(item:any):string{const c=this.getVisibleProductHistoryChanges(item).length,o=this.getProductHistoryOperationType(item);if(o==='create')return this.translate.currentLang==='tr'?`Yeni kayıt oluşturuldu · ${c} alan`:`New record created · ${c} fields`;if(o==='delete')return this.translate.currentLang==='tr'?`Kayıt silindi · ${c} alan`:`Record deleted · ${c} fields`;if(o==='statusupdate')return this.translate.currentLang==='tr'?`${c} durum alanı değişti`:`${c} status fields changed`;return this.translate.currentLang==='tr'?`${c} alan değişti`:`${c} fields changed`;}
+  formatProductHistoryValue(value:any):string{if(value===null||value===undefined||value==='')return '-';return typeof value==='object'?JSON.stringify(value):String(value);}
 
   goBack(): void {
     this.location.back();

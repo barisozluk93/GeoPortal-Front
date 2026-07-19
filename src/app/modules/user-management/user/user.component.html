@@ -9,5 +9,6 @@
   [totalCount]="totalCount" [columnList]="columnList" (paginationModelChange)="paginationModelChange($event)"
   (newButtonClick)="openSaveModal($event)" (filterModelChange)="onFilterModelChange($event)"
   (editButtonClick)="openEditModal($event)" (deleteButtonClick)="openDeleteModal($event)" (exportExcelClick)="exportExcel($event)"
-  class="card card-xxl-stretch border-0 mb-5 mb-xl-8" [hasEditPermission]="hasEditPermission" [hasExportPermission]="hasExportPermission"
+  [historyEntityType]="'User'" [historyRecordIdField]="'id'"
+      class="card card-xxl-stretch border-0 mb-5 mb-xl-8" [hasEditPermission]="hasEditPermission" [hasExportPermission]="hasExportPermission"
   [hasDeletePermission]="hasDeletePermission" [hasNewRecordPermission]="hasNewRecordPermission"></app-datatable>

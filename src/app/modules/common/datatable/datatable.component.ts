@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ColumnModel } from 'src/app/models/column-model';
 import { PaginationModel } from 'src/app/models/pagination.model';
 import { AuthService } from '../../auth';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from 'src/environments/environment';
 
 export interface DatatableFilterModel {
   [key: string]: any;
@@ -26,6 +28,8 @@ export class DataTableComponent implements OnInit, OnDestroy {
   @Input() hasMapPreviewPermission: boolean = false;
   @Input() hasExportPermission: boolean = false;
   @Input() filterModel: DatatableFilterModel = {};
+  @Input() historyEntityType: string = '';
+  @Input() historyRecordIdField: string = 'id';
 
   @Output() paginationModelChange: EventEmitter<PaginationModel> = new EventEmitter<PaginationModel>();
   @Output() newButtonClick: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -38,6 +42,36 @@ export class DataTableComponent implements OnInit, OnDestroy {
 
   permissionList: number[] = [];
   showFilters: boolean = false;
+
+  isHistoryModalOpen: boolean = false;
+  historyLoading: boolean = false;
+  historyError: string = '';
+  historyItems: any[] = [];
+  historyTotalCount: number = 0;
+  historyPageNumber: number = 1;
+  historyPageSize: number = 10;
+  selectedHistoryRecordId: string = '';
+  selectedHistoryEntityType: string = '';
+  selectedHistoryRecordLabel: string = '';
+
+  expandedHistoryItems = new Set<string>();
+
+  private readonly ignoredHistoryFields = new Set<string>([
+    'id',
+    'createddate',
+    'updateddate',
+    'createduserid',
+    'updateduserid',
+    'deleteddate',
+    'deleteduserid',
+    'isdeleted',
+    'concurrencystamp',
+    'passwordhash',
+    'passwordsalt',
+    'refreshtoken',
+    'refreshtokenexpiredate',
+    'rowversion'
+  ]);
 
   typeFilterOptions = [
     { label: 'Base Map', value: 1 },
@@ -101,7 +135,11 @@ export class DataTableComponent implements OnInit, OnDestroy {
     { label: 'SUPPORT_MANAGEMENT.STATUS_SPAM', value: 'Spam' },
   ];
 
-  constructor(private authService: AuthService, private translate: TranslateService) { }
+  constructor(
+    private authService: AuthService,
+    public translate: TranslateService,
+    private http: HttpClient
+  ) { }
 
   ngOnInit(): void {
     this.statusFilterOptions.forEach(item => {
@@ -191,6 +229,188 @@ export class DataTableComponent implements OnInit, OnDestroy {
   onPageChanges(): void {
     this.paginationModelChange.emit(this.paginationModel);
   }
+
+  openHistoryModal(data: any): void {
+    const recordId = data?.[this.historyRecordIdField];
+    const entityType = this.historyEntityType || data?.entityType || data?.entityName;
+
+    this.selectedHistoryRecordId = recordId?.toString() ?? '';
+    this.selectedHistoryEntityType = entityType?.toString() ?? '';
+    this.selectedHistoryRecordLabel = data?.name || data?.title || data?.code || this.selectedHistoryRecordId;
+    this.historyPageNumber = 1;
+    this.historyItems = [];
+    this.historyTotalCount = 0;
+    this.historyError = '';
+    this.isHistoryModalOpen = true;
+
+    if (!this.selectedHistoryEntityType || !this.selectedHistoryRecordId) {
+      this.historyError = this.translate.currentLang === 'tr'
+        ? 'History sorgusu için entity tipi veya kayıt kimliği eksik.'
+        : 'Entity type or record identifier is missing for the history query.';
+      return;
+    }
+
+    this.loadHistory();
+  }
+
+  closeHistoryModal(): void {
+    this.isHistoryModalOpen = false;
+  }
+
+  loadHistory(): void {
+    if (!this.selectedHistoryEntityType || !this.selectedHistoryRecordId) {
+      return;
+    }
+
+    this.historyLoading = true;
+    this.historyError = '';
+
+    const params = new HttpParams()
+      .set('PageNumber', this.historyPageNumber.toString())
+      .set('PageSize', this.historyPageSize.toString())
+      .set('entityType', this.selectedHistoryEntityType)
+      .set('recordId', this.selectedHistoryRecordId);
+
+    this.http.get<any>(`${environment.apiUrl}/History/Paginate`, { params }).subscribe({
+      next: (result) => {
+        const data = result?.data ?? result?.Data;
+        this.historyItems = data?.items ?? data?.Items ?? [];
+        this.historyTotalCount = data?.totalCount ?? data?.TotalCount ?? 0;
+        this.historyLoading = false;
+      },
+      error: () => {
+        this.historyLoading = false;
+        this.historyError = this.translate.currentLang === 'tr'
+          ? 'Kayıt tarihçesi alınırken bir hata oluştu.'
+          : 'An error occurred while loading record history.';
+      }
+    });
+  }
+
+  onHistoryPageChange(pageNumber: number): void {
+    this.historyPageNumber = pageNumber;
+    this.loadHistory();
+  }
+
+  getHistoryOperationLabel(operationType: string): string {
+    const value = (operationType || '').toLowerCase();
+
+    if (value === 'create') return this.translate.currentLang === 'tr' ? 'Ekleme' : 'Create';
+    if (value === 'update') return this.translate.currentLang === 'tr' ? 'Güncelleme' : 'Update';
+    if (value === 'delete') return this.translate.currentLang === 'tr' ? 'Silme' : 'Delete';
+    if (value === 'statusupdate') return this.translate.currentLang === 'tr' ? 'Durum Güncelleme' : 'Status Update';
+
+    return operationType || '-';
+  }
+
+  getHistoryOperationBadgeClass(operationType: string): string {
+    const value = (operationType || '').toLowerCase();
+
+    if (value === 'create') return 'badge-light-success';
+    if (value === 'update') return 'badge-light-warning';
+    if (value === 'delete') return 'badge-light-danger';
+    if (value === 'statusupdate') return 'badge-light-info';
+
+    return 'badge-light-primary';
+  }
+
+  getHistoryChanges(item: any): Array<{ field: string; oldValue: any; newValue: any }> {
+    const raw = item?.changesJson ?? item?.ChangesJson;
+    if (!raw) return [];
+
+    try {
+      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+
+      if (Array.isArray(parsed)) {
+        return parsed.map((change: any) => ({
+          field: change.field ?? change.Field ?? change.propertyName ?? change.PropertyName ?? '-',
+          oldValue: change.oldValue ?? change.OldValue ?? '-',
+          newValue: change.newValue ?? change.NewValue ?? '-'
+        }));
+      }
+
+      return Object.keys(parsed).map((key) => {
+        const value = parsed[key];
+        return {
+          field: key,
+          oldValue: value?.oldValue ?? value?.OldValue ?? '-',
+          newValue: value?.newValue ?? value?.NewValue ?? value ?? '-'
+        };
+      });
+    } catch {
+      return [{ field: '-', oldValue: '-', newValue: raw }];
+    }
+  }
+
+  formatHistoryValue(value: any): string {
+    if (value === null || value === undefined || value === '') return '-';
+    if (typeof value === 'object') return JSON.stringify(value);
+    return value.toString();
+  }
+
+
+  getVisibleHistoryChanges(item: any): Array<{ field: string; oldValue: any; newValue: any }> {
+    return this.getHistoryChanges(item).filter((change) => {
+      const normalizedField = (change.field || '').replace(/\s+/g, '').toLowerCase();
+      return !this.ignoredHistoryFields.has(normalizedField);
+    });
+  }
+
+  getHistoryOperationType(item: any): string {
+    return ((item?.operationType ?? item?.OperationType ?? '') as string).toLowerCase();
+  }
+
+  getHistoryItemKey(item: any): string {
+    return String(
+      item?.id ??
+      item?.Id ??
+      `${item?.createdDate ?? item?.CreatedDate ?? ''}-${item?.operationType ?? item?.OperationType ?? ''}`
+    );
+  }
+
+  toggleHistoryDetails(item: any): void {
+    const key = this.getHistoryItemKey(item);
+
+    if (this.expandedHistoryItems.has(key)) {
+      this.expandedHistoryItems.delete(key);
+      return;
+    }
+
+    this.expandedHistoryItems.add(key);
+  }
+
+  isHistoryDetailsOpen(item: any): boolean {
+    return this.expandedHistoryItems.has(this.getHistoryItemKey(item));
+  }
+
+  getHistorySummaryText(item: any): string {
+    const count = this.getVisibleHistoryChanges(item).length;
+    const operation = this.getHistoryOperationType(item);
+
+    if (operation === 'create') {
+      return this.translate.currentLang === 'tr'
+        ? `Yeni kayıt oluşturuldu · ${count} alan`
+        : `New record created · ${count} fields`;
+    }
+
+    if (operation === 'delete') {
+      return this.translate.currentLang === 'tr'
+        ? `Kayıt silindi · ${count} alan`
+        : `Record deleted · ${count} fields`;
+    }
+
+    if (operation === 'statusupdate') {
+      return this.translate.currentLang === 'tr'
+        ? `${count} durum alanı değişti`
+        : `${count} status fields changed`;
+    }
+
+    return this.translate.currentLang === 'tr'
+      ? `${count} alan değişti`
+      : `${count} fields changed`;
+  }
+
+
 
 
   onDateFilterChange(

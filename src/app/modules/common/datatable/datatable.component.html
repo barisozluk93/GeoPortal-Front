@@ -20,47 +20,27 @@
 
     <div class="card-toolbar">
       <div class="d-flex align-items-center flex-wrap gap-2">
-        <button
-          *ngIf="hasMapPreviewPermission"
-          type="button"
-          class="btn btn-icon btn-light-primary btn-sm"
-          (click)="onMapPreviewClick()"
-          [title]="'MARKETPLACE.CARD.MAP_PREVIEW' | translate">
+        <button *ngIf="hasMapPreviewPermission" type="button" class="btn btn-icon btn-light-primary btn-sm"
+          (click)="onMapPreviewClick()" [title]="'MARKETPLACE.CARD.MAP_PREVIEW' | translate">
           <i class="ki-outline ki-map fs-5"></i>
         </button>
 
-        <button
-          *ngIf="hasExportPermission"
-          type="button"
-          class="btn btn-icon btn-light-success btn-sm"
-          (click)="onExportExcelClick()"
-          [title]="'EXPORT' | translate">
+        <button *ngIf="hasExportPermission" type="button" class="btn btn-icon btn-light-success btn-sm"
+          (click)="onExportExcelClick()" [title]="'EXPORT' | translate">
           <i class="fa-solid fa-file-excel fs-5"></i>
         </button>
 
-        <button
-          type="button"
-          class="btn btn-icon btn-sm"
-          [ngClass]="showFilters ? 'btn-primary' : 'btn-light-primary'"
-          (click)="toggleFilters()"
-          [title]="'FILTERS' | translate">
+        <button type="button" class="btn btn-icon btn-sm" [ngClass]="showFilters ? 'btn-primary' : 'btn-light-primary'"
+          (click)="toggleFilters()" [title]="'FILTERS' | translate">
           <i class="fa-solid fa-filter fs-5"></i>
         </button>
 
-        <button
-          *ngIf="showFilters"
-          type="button"
-          class="btn btn-light-danger btn-sm"
-          (click)="clearAllFilters()">
+        <button *ngIf="showFilters" type="button" class="btn btn-light-danger btn-sm" (click)="clearAllFilters()">
           <i class="fa-solid fa-filter-circle-xmark me-2"></i>
           {{ 'CLEAR_FILTERS' | translate }}
         </button>
 
-        <button
-          *ngIf="hasNewRecordPermission"
-          type="button"
-          class="btn btn-primary btn-sm"
-          (click)="openSaveModal()">
+        <button *ngIf="hasNewRecordPermission" type="button" class="btn btn-primary btn-sm" (click)="openSaveModal()">
           <i class="fa-solid fa-plus me-2"></i>
           {{ 'MENU.NEW' | translate }}
         </button>
@@ -76,15 +56,11 @@
         <thead>
           <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase bg-light">
             <ng-container *ngFor="let column of columnList">
-              <th
-                *ngIf="column.visibility && column.index != null"
-                class="min-w-125px px-6 py-4">
+              <th *ngIf="column.visibility && column.index != null" class="min-w-125px px-6 py-4">
                 {{ column.name | translate }}
               </th>
 
-              <th
-                *ngIf="column.visibility && column.index == null"
-                class="text-end min-w-125px px-6 py-4">
+              <th *ngIf="column.visibility && column.index == null" class="text-end min-w-125px px-6 py-4">
                 {{ column.name | translate }}
               </th>
             </ng-container>
@@ -94,139 +70,84 @@
             <ng-container *ngFor="let column of columnList">
               <th *ngIf="column.visibility && column.index != null" class="px-6 py-3">
                 <ng-container [ngSwitch]="column.index">
-                  <app-custom-select
-                    *ngSwitchCase="'orderStatusStr'"
-                    size="sm"
-                    [items]="orderStatusFilterOptions"
-                    bindLabel="label"
-                    bindValue="value"
-                    [placeholder]="'ALL' | translate"
-                    [clearable]="true"
+                  <app-custom-select *ngSwitchCase="'orderStatusStr'" size="sm" [items]="orderStatusFilterOptions"
+                    bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
                     [ngModel]="getFilterValue(column.index)"
                     (ngModelChange)="onColumnFilterChange(column.index, $event)">
                   </app-custom-select>
 
-                  <app-custom-select
-                    *ngSwitchCase="'type'"
-                    size="sm"
-                    [items]="typeFilterOptions"
-                    bindLabel="label"
-                    bindValue="value"
-                    [placeholder]="'ALL' | translate"
-                    [clearable]="true"
+                  <app-custom-select *ngSwitchCase="'type'" size="sm" [items]="typeFilterOptions" bindLabel="label"
+                    bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
                     [ngModel]="getFilterValue(column.index)"
                     (ngModelChange)="onColumnFilterChange(column.index, $event)">
                   </app-custom-select>
 
-                  <app-custom-select
-                    *ngSwitchCase="'isVisible'"
-                    size="sm"
-                    [items]="booleanFilterOptions"
-                    bindLabel="label"
-                    bindValue="value"
-                    [placeholder]="'ALL' | translate"
-                    [clearable]="true"
+                  <app-custom-select *ngSwitchCase="'isVisible'" size="sm" [items]="booleanFilterOptions"
+                    bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
                     [ngModel]="getFilterValue(column.index)"
                     (ngModelChange)="onColumnFilterChange(column.index, $event)">
                   </app-custom-select>
 
-                  <app-custom-select
-                    *ngSwitchCase="'isDeleted'"
-                    size="sm"
-                    [items]="statusFilterOptions"
-                    bindLabel="label"
-                    bindValue="value"
-                    [placeholder]="'ALL' | translate"
-                    [clearable]="true"
+                  <app-custom-select *ngSwitchCase="'isDeleted'" size="sm" [items]="statusFilterOptions"
+                    bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
                     [ngModel]="getFilterValue(column.index)"
                     (ngModelChange)="onColumnFilterChange(column.index, $event)">
                   </app-custom-select>
 
-                  <app-custom-select
-                    *ngSwitchCase="'status'"
-                    size="sm"
-                    [items]="supportStatusFilterOptions"
-                    bindLabel="label"
-                    bindValue="value"
-                    [placeholder]="'ALL' | translate"
-                    [clearable]="true"
+                  <app-custom-select *ngSwitchCase="'status'" size="sm" [items]="supportStatusFilterOptions"
+                    bindLabel="label" bindValue="value" [placeholder]="'ALL' | translate" [clearable]="true"
                     [ngModel]="getFilterValue(column.index)"
                     (ngModelChange)="onColumnFilterChange(column.index, $event)">
                   </app-custom-select>
 
                   <div *ngSwitchCase="'lastMessageAtDisplay'" class="d-flex flex-column gap-2">
-                    <input
-                      type="date"
-                      class="form-control form-control-sm"
+                    <input type="date" class="form-control form-control-sm"
                       [value]="getFilterValue('lastMessageAtUtcFrom') || ''"
                       [max]="getMaxStartDate('lastMessageAtUtcTo')"
                       (change)="onDateFilterChange('lastMessageAtUtcFrom', 'lastMessageAtUtcTo', 'from', $event)"
                       [placeholder]="'START_DATE' | translate" />
 
-                    <input
-                      type="date"
-                      class="form-control form-control-sm"
-                      [value]="getFilterValue('lastMessageAtUtcTo') || ''"
-                      [min]="getMinEndDate('lastMessageAtUtcFrom')"
+                    <input type="date" class="form-control form-control-sm"
+                      [value]="getFilterValue('lastMessageAtUtcTo') || ''" [min]="getMinEndDate('lastMessageAtUtcFrom')"
                       (change)="onDateFilterChange('lastMessageAtUtcTo', 'lastMessageAtUtcFrom', 'to', $event)"
                       [placeholder]="'END_DATE' | translate" />
                   </div>
 
                   <div *ngSwitchCase="'orderDate'" class="d-flex flex-column gap-2">
-                    <input
-                      type="date"
-                      class="form-control form-control-sm"
-                      [value]="getFilterValue('orderDateFrom') || ''"
-                      [max]="getMaxStartDate('orderDateTo')"
+                    <input type="date" class="form-control form-control-sm"
+                      [value]="getFilterValue('orderDateFrom') || ''" [max]="getMaxStartDate('orderDateTo')"
                       (change)="onDateFilterChange('orderDateFrom', 'orderDateTo', 'from', $event)"
                       [placeholder]="'START_DATE' | translate" />
 
-                    <input
-                      type="date"
-                      class="form-control form-control-sm"
-                      [value]="getFilterValue('orderDateTo') || ''"
-                      [min]="getMinEndDate('orderDateFrom')"
+                    <input type="date" class="form-control form-control-sm"
+                      [value]="getFilterValue('orderDateTo') || ''" [min]="getMinEndDate('orderDateFrom')"
                       (change)="onDateFilterChange('orderDateTo', 'orderDateFrom', 'to', $event)"
                       [placeholder]="'END_DATE' | translate" />
                   </div>
 
                   <div *ngSwitchCase="'priceStr'" class="d-flex flex-column gap-2">
-                    <input
-                      type="number"
-                      class="form-control form-control-sm"
-                      [value]="getFilterValue('priceMin')"
+                    <input type="number" class="form-control form-control-sm" [value]="getFilterValue('priceMin')"
                       (input)="onColumnFilterChange('priceMin', toNumberOrNull($any($event.target).value))"
-                      [placeholder]="'MIN_PRICE' | translate"
-                      min="0"
-                      step="0.01" />
+                      [placeholder]="'MIN_PRICE' | translate" min="0" step="0.01" />
 
-                    <input
-                      type="number"
-                      class="form-control form-control-sm"
-                      [value]="getFilterValue('priceMax')"
+                    <input type="number" class="form-control form-control-sm" [value]="getFilterValue('priceMax')"
                       (input)="onColumnFilterChange('priceMax', toNumberOrNull($any($event.target).value))"
-                      [placeholder]="'MAX_PRICE' | translate"
-                      min="0"
-                      step="0.01" />
+                      [placeholder]="'MAX_PRICE' | translate" min="0" step="0.01" />
                   </div>
 
                   <span *ngSwitchCase="'fileResult'"></span>
 
                   <div *ngSwitchDefault class="position-relative">
-                    <i class="fa-solid fa-magnifying-glass position-absolute top-50 translate-middle-y ms-4 text-gray-500 fs-7"></i>
-                    <input
-                      type="text"
-                      class="form-control form-control-sm ps-10"
-                      [value]="getFilterValue(column.index)"
+                    <i
+                      class="fa-solid fa-magnifying-glass position-absolute top-50 translate-middle-y ms-4 text-gray-500 fs-7"></i>
+                    <input type="text" class="form-control form-control-sm ps-10" [value]="getFilterValue(column.index)"
                       (input)="onColumnFilterChange(column.index, $any($event.target).value)"
                       [placeholder]="column.name | translate" />
                   </div>
                 </ng-container>
               </th>
 
-              <th
-                *ngIf="column.visibility && column.index == null"
-                class="text-end min-w-125px px-6 py-3">
+              <th *ngIf="column.visibility && column.index == null" class="text-end min-w-125px px-6 py-3">
               </th>
             </ng-container>
           </tr>
@@ -279,8 +200,7 @@
                 </span>
               </td>
 
-              <td
-                *ngIf="
+              <td *ngIf="
                   column.visibility &&
                   column.index != null &&
                   column.index != 'fileResult' &&
@@ -289,44 +209,37 @@
                   column.index != 'isDeleted' &&
                   column.index != 'status' &&
                   column.index != 'orderStatusStr'
-                "
-                class="px-6">
+                " class="px-6">
                 <span class="text-gray-800 fw-semibold text-nowrap">
                   {{ data[column.index] }}
                 </span>
               </td>
 
               <td *ngIf="column.visibility && column.index == null" class="text-end px-6">
-                <div
-                  *ngIf="
-                    !data['isSystemData'] &&
-                    !data['isDeleted'] &&
-                    (hasEditPermission || hasDeletePermission || hasShowPermission)
-                  "
-                  class="d-flex align-items-center justify-content-end gap-2 datatable-actions">
-                  <button
-                    *ngIf="hasShowPermission"
-                    type="button"
-                    class="btn btn-icon btn-light-primary btn-sm"
-                    (click)="onRowClick(data['id'])">
-                    <i class="fa-solid fa-eye"></i>
-                  </button>
+                <div class="d-flex align-items-center justify-content-end gap-2 datatable-actions">
+                  <ng-container *ngIf="!data['isSystemData']">
+                    <button type="button" class="btn btn-icon btn-light-info btn-sm" (click)="openHistoryModal(data)"
+                      [title]="translate.currentLang === 'tr' ? 'Tarihçe' : 'History'">
+                      <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                  </ng-container>
 
-                  <button
-                    *ngIf="hasEditPermission"
-                    type="button"
-                    class="btn btn-icon btn-light-warning btn-sm"
-                    (click)="openEditModal(data['id'])">
-                    <i class="fa-solid fa-pen"></i>
-                  </button>
+                  <ng-container *ngIf="!data['isSystemData'] && !data['isDeleted']">
+                    <button *ngIf="hasShowPermission" type="button" class="btn btn-icon btn-light-primary btn-sm"
+                      (click)="onRowClick(data['id'])">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
 
-                  <button
-                    *ngIf="hasDeletePermission"
-                    type="button"
-                    class="btn btn-icon btn-light-danger btn-sm"
-                    (click)="openDeleteModal(data['id'])">
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
+                    <button *ngIf="hasEditPermission" type="button" class="btn btn-icon btn-light-warning btn-sm"
+                      (click)="openEditModal(data['id'])">
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+
+                    <button *ngIf="hasDeletePermission" type="button" class="btn btn-icon btn-light-danger btn-sm"
+                      (click)="openDeleteModal(data['id'])">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </ng-container>
                 </div>
               </td>
             </ng-container>
@@ -353,23 +266,138 @@
       </table>
     </div>
 
-    <div
-      *ngIf="totalCount > paginationModel.pageSize"
+    <div *ngIf="totalCount > paginationModel.pageSize"
       class="datatable-footer d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between gap-3 px-6 py-4 border-top border-gray-200">
       <div class="text-muted fs-7 fw-semibold">
         {{ totalCount || 0 }} {{ 'RECORDS' | translate }}
       </div>
 
-      <ngb-pagination
-        [collectionSize]="totalCount"
-        [(page)]="paginationModel.pageNumber"
-        [pageSize]="paginationModel.pageSize"
-        [maxSize]="5"
-        [rotate]="true"
-        [ellipses]="false"
-        [boundaryLinks]="false"
+      <ngb-pagination [collectionSize]="totalCount" [(page)]="paginationModel.pageNumber"
+        [pageSize]="paginationModel.pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="false"
         (pageChange)="onPageChanges()">
       </ngb-pagination>
     </div>
   </div>
 </div>
+
+
+<app-custom-modal [isOpen]="isHistoryModalOpen"
+  [title]="translate.currentLang === 'tr' ? 'Kayıt Tarihçesi' : 'Record History'"
+  [subtitle]="selectedHistoryEntityType + ' #' + selectedHistoryRecordLabel" [width]="'1100px'" variant="center"
+  [showFooter]="false" (closed)="closeHistoryModal()">
+
+  <div class="history-modal-content">
+    <div *ngIf="historyLoading" class="history-state py-15">
+      <span class="spinner-border text-primary" role="status"></span>
+      <span class="text-muted fw-semibold mt-3">
+        {{ translate.currentLang === 'tr' ? 'Tarihçe yükleniyor...' : 'Loading history...' }}
+      </span>
+    </div>
+
+    <div *ngIf="!historyLoading && historyError" class="alert alert-danger d-flex align-items-center mb-0">
+      <i class="fa-solid fa-circle-exclamation fs-3 me-3"></i>
+      <span>{{ historyError }}</span>
+    </div>
+
+    <div *ngIf="!historyLoading && !historyError" class="table-responsive history-table-wrapper">
+      <table class="table table-row-dashed table-row-gray-200 align-middle gy-4 mb-0 history-table">
+        <thead>
+          <tr class="text-gray-500 fw-bold fs-7 text-uppercase bg-light">
+            <th class="min-w-150px px-5 py-4">{{ translate.currentLang === 'tr' ? 'Tarih' : 'Date' }}</th>
+            <th class="min-w-130px px-5 py-4">{{ translate.currentLang === 'tr' ? 'İşlem' : 'Operation' }}</th>
+            <th class="min-w-160px px-5 py-4">{{ translate.currentLang === 'tr' ? 'Kullanıcı' : 'User' }}</th>
+            <th class="min-w-180px px-5 py-4">{{ translate.currentLang === 'tr' ? 'Açıklama' : 'Description' }}</th>
+            <th class="min-w-350px px-5 py-4">{{ translate.currentLang === 'tr' ? 'Değişiklikler' : 'Changes' }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of historyItems">
+            <td class="px-5 text-nowrap">
+              {{ (item.createdDate || item.CreatedDate) | date:'dd.MM.yyyy HH:mm:ss' }}
+            </td>
+            <td class="px-5">
+              <span class="badge fw-bold"
+                [ngClass]="getHistoryOperationBadgeClass(item.operationType || item.OperationType)">
+                {{ getHistoryOperationLabel(item.operationType || item.OperationType) }}
+              </span>
+            </td>
+            <td class="px-5">
+              <div class="fw-semibold text-gray-800">{{ item.userName || item.UserName || '-' }}</div>
+              <div class="text-muted fs-8">{{ item.userId || item.UserId || '' }}</div>
+            </td>
+            <td class="px-5">{{ item.description || item.Description || '-' }}</td>
+            <td class="px-5">
+              <ng-container *ngIf="getVisibleHistoryChanges(item).length; else noChanges">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-light-primary history-toggle-btn"
+                  (click)="toggleHistoryDetails(item)">
+                  <i
+                    class="fa-solid me-2"
+                    [ngClass]="isHistoryDetailsOpen(item) ? 'fa-chevron-up' : 'fa-chevron-down'">
+                  </i>
+                  {{ getHistorySummaryText(item) }}
+                </button>
+
+                <div *ngIf="isHistoryDetailsOpen(item)" class="history-details-panel mt-3">
+                  <div
+                    *ngFor="let change of getVisibleHistoryChanges(item)"
+                    class="history-change-item">
+
+                    <ng-container [ngSwitch]="getHistoryOperationType(item)">
+                      <div *ngSwitchCase="'create'" class="history-create-row">
+                        <div class="history-field-name">{{ change.field }}</div>
+                        <div class="history-single-value">
+                          {{ formatHistoryValue(change.newValue) }}
+                        </div>
+                      </div>
+
+                      <div *ngSwitchCase="'delete'" class="history-create-row">
+                        <div class="history-field-name">{{ change.field }}</div>
+                        <div class="history-single-value history-delete-value">
+                          {{ formatHistoryValue(change.oldValue) }}
+                        </div>
+                      </div>
+
+                      <div *ngSwitchDefault>
+                        <div class="fw-bold text-gray-800 mb-1">{{ change.field }}</div>
+                        <div class="d-flex flex-wrap align-items-center gap-2 fs-8">
+                          <span class="badge badge-light-danger history-value">
+                            {{ formatHistoryValue(change.oldValue) }}
+                          </span>
+                          <i class="fa-solid fa-arrow-right text-gray-500"></i>
+                          <span class="badge badge-light-success history-value">
+                            {{ formatHistoryValue(change.newValue) }}
+                          </span>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-template #noChanges>
+                <span class="text-muted">-</span>
+              </ng-template>
+            </td>
+          </tr>
+          <tr *ngIf="historyItems.length === 0">
+            <td colspan="5" class="text-center py-12 text-muted fw-semibold">
+              <i class="fa-solid fa-clock-rotate-left fs-2x d-block mb-3 text-gray-400"></i>
+              {{ translate.currentLang === 'tr' ? 'Bu kayda ait tarihçe bulunamadı.' : 'No history found for this
+              record.' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!historyLoading && !historyError && historyTotalCount > historyPageSize"
+      class="d-flex justify-content-center border-top pt-4 mt-4">
+      <ngb-pagination [collectionSize]="historyTotalCount" [page]="historyPageNumber" [pageSize]="historyPageSize"
+        [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="false"
+        (pageChange)="onHistoryPageChange($event)">
+      </ngb-pagination>
+    </div>
+  </div>
+</app-custom-modal>

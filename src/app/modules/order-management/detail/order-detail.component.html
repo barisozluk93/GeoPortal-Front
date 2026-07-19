@@ -314,6 +314,11 @@
                       </small>
                       <strong class="text-gray-900">{{ formatMoney(getItemTotal(item)) }} ₺</strong>
                     </div>
+                    <button type="button" class="btn btn-icon btn-sm btn-light-info flex-shrink-0"
+                      (click)="$event.stopPropagation(); openProductHistoryModal(item)"
+                      [attr.title]="translate.currentLang === 'tr' ? 'Tarihçe' : 'History'">
+                      <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
                     <span class="btn btn-icon btn-sm btn-light-primary flex-shrink-0 collapse-chevron">
                       <i class="ki-outline ki-down fs-3"></i>
                     </span>
@@ -596,3 +601,98 @@
     </div>
   </div>
 </div>
+
+<app-custom-modal [isOpen]="isProductHistoryModalOpen"
+  [title]="translate.currentLang === 'tr' ? 'Ürün Tarihçesi' : 'Product History'"
+  [subtitle]="selectedProductHistoryLabel" [width]="'1100px'" variant="center"
+  [showFooter]="false" (closed)="closeProductHistoryModal()">
+  <div class="history-modal-content">
+    <div *ngIf="productHistoryLoading" class="history-state py-15">
+      <span class="spinner-border text-primary" role="status"></span>
+      <span class="text-muted fw-semibold mt-3">
+        {{ translate.currentLang === 'tr' ? 'Tarihçe yükleniyor...' : 'Loading history...' }}
+      </span>
+    </div>
+
+    <div *ngIf="!productHistoryLoading && productHistoryError" class="alert alert-danger d-flex align-items-center mb-0">
+      <i class="fa-solid fa-circle-exclamation fs-3 me-3"></i>
+      <span>{{ productHistoryError }}</span>
+    </div>
+
+    <div *ngIf="!productHistoryLoading && !productHistoryError" class="table-responsive history-table-wrapper">
+      <table class="table table-row-dashed table-row-gray-200 align-middle gy-4 mb-0 history-table">
+        <thead>
+          <tr class="text-gray-500 fw-bold fs-7 text-uppercase bg-light">
+            <th class="min-w-150px px-5 py-4">{{ translate.currentLang === 'tr' ? 'Tarih' : 'Date' }}</th>
+            <th class="min-w-130px px-5 py-4">{{ translate.currentLang === 'tr' ? 'İşlem' : 'Operation' }}</th>
+            <th class="min-w-160px px-5 py-4">{{ translate.currentLang === 'tr' ? 'Kullanıcı' : 'User' }}</th>
+            <th class="min-w-180px px-5 py-4">{{ translate.currentLang === 'tr' ? 'Açıklama' : 'Description' }}</th>
+            <th class="min-w-350px px-5 py-4">{{ translate.currentLang === 'tr' ? 'Değişiklikler' : 'Changes' }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let historyItem of productHistoryItems">
+            <td class="px-5 text-nowrap">{{ (historyItem.createdDate || historyItem.CreatedDate) | date:'dd.MM.yyyy HH:mm:ss' }}</td>
+            <td class="px-5">
+              <span class="badge fw-bold" [ngClass]="getProductHistoryOperationBadgeClass(historyItem.operationType || historyItem.OperationType)">
+                {{ getProductHistoryOperationLabel(historyItem.operationType || historyItem.OperationType) }}
+              </span>
+            </td>
+            <td class="px-5">
+              <div class="fw-semibold text-gray-800">{{ historyItem.userName || historyItem.UserName || '-' }}</div>
+              <div class="text-muted fs-8">{{ historyItem.userId || historyItem.UserId || '' }}</div>
+            </td>
+            <td class="px-5">{{ historyItem.description || historyItem.Description || '-' }}</td>
+            <td class="px-5">
+              <ng-container *ngIf="getVisibleProductHistoryChanges(historyItem).length; else noProductHistoryChanges">
+                <button type="button" class="btn btn-sm btn-light-primary history-toggle-btn"
+                  (click)="toggleProductHistoryDetails(historyItem)">
+                  <i class="fa-solid me-2" [ngClass]="isProductHistoryDetailsOpen(historyItem) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                  {{ getProductHistorySummaryText(historyItem) }}
+                </button>
+                <div *ngIf="isProductHistoryDetailsOpen(historyItem)" class="history-details-panel mt-3">
+                  <div *ngFor="let change of getVisibleProductHistoryChanges(historyItem)" class="history-change-item">
+                    <ng-container [ngSwitch]="getProductHistoryOperationType(historyItem)">
+                      <div *ngSwitchCase="'create'" class="history-create-row">
+                        <div class="history-field-name">{{ change.field }}</div>
+                        <div class="history-single-value">{{ formatProductHistoryValue(change.newValue) }}</div>
+                      </div>
+                      <div *ngSwitchCase="'delete'" class="history-create-row">
+                        <div class="history-field-name">{{ change.field }}</div>
+                        <div class="history-single-value history-delete-value">{{ formatProductHistoryValue(change.oldValue) }}</div>
+                      </div>
+                      <div *ngSwitchDefault>
+                        <div class="fw-bold text-gray-800 mb-1">{{ change.field }}</div>
+                        <div class="d-flex flex-wrap align-items-center gap-2 fs-8">
+                          <span class="badge badge-light-danger history-value">{{ formatProductHistoryValue(change.oldValue) }}</span>
+                          <i class="fa-solid fa-arrow-right text-gray-500"></i>
+                          <span class="badge badge-light-success history-value">{{ formatProductHistoryValue(change.newValue) }}</span>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #noProductHistoryChanges><span class="text-muted">-</span></ng-template>
+            </td>
+          </tr>
+          <tr *ngIf="productHistoryItems.length === 0">
+            <td colspan="5" class="text-center py-12 text-muted fw-semibold">
+              <i class="fa-solid fa-clock-rotate-left fs-2x d-block mb-3 text-gray-400"></i>
+              {{ translate.currentLang === 'tr' ? 'Bu ürüne ait tarihçe bulunamadı.' : 'No history found for this product.' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!productHistoryLoading && !productHistoryError && productHistoryTotalCount > productHistoryPageSize"
+      class="d-flex justify-content-center border-top pt-4 mt-4">
+      <ngb-pagination [collectionSize]="productHistoryTotalCount" [page]="productHistoryPageNumber"
+        [pageSize]="productHistoryPageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+        [boundaryLinks]="false" (pageChange)="onProductHistoryPageChange($event)">
+      </ngb-pagination>
+    </div>
+  </div>
+</app-custom-modal>
+

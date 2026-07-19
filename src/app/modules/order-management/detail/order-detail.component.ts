@@ -1,6 +1,7 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { formatDate } from '@angular/common';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
@@ -10,6 +11,7 @@ import { OrderStatusEnum } from 'src/app/enums/order-status.enum';
 import { OrderManagementService } from '../order-management.service';
 import { OrderModel } from '../../coming-order-management/models/order.model';
 import { OrderProductModel } from '../../coming-order-management/models/orderproduct.model';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -46,6 +48,24 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   previewUrl: SafeResourceUrl | null = null;
   previewFileName = '';
 
+  isProductHistoryModalOpen = false;
+  productHistoryLoading = false;
+  productHistoryError = '';
+  productHistoryItems: any[] = [];
+  productHistoryTotalCount = 0;
+  productHistoryPageNumber = 1;
+  productHistoryPageSize = 10;
+  selectedProductHistoryRecordId = '';
+  selectedProductHistoryLabel = '';
+  expandedProductHistoryItems = new Set<string>();
+
+  private readonly ignoredProductHistoryFields = new Set<string>([
+    'id', 'createddate', 'updateddate', 'createduserid', 'updateduserid',
+    'deleteddate', 'deleteduserid', 'isdeleted', 'concurrencystamp',
+    'passwordhash', 'passwordsalt', 'refreshtoken',
+    'refreshtokenexpiredate', 'rowversion'
+  ]);
+
   private destroy$ = new Subject<void>();
 
   orderFlowSteps = [
@@ -58,9 +78,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private orderManagementService: OrderManagementService,
-    private translate: TranslateService,
+    public translate: TranslateService,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
+    private http: HttpClient,
     @Inject(LOCALE_ID) public locale: string,
     private location: Location
   ) {}
@@ -891,4 +912,146 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   hasAnyOrderFile(): boolean {
     return this.getOrderWithFiles().length > 0;
   }
+  openProductHistoryModal(item: OrderProductModel): void {
+    this.selectedProductHistoryRecordId = item?.id != null ? String(item.id) : '';
+    this.selectedProductHistoryLabel = `${item?.product?.name || (this.translate.currentLang === 'tr' ? 'Ürün' : 'Product')} #${this.selectedProductHistoryRecordId}`;
+    this.productHistoryPageNumber = 1;
+    this.productHistoryItems = [];
+    this.productHistoryTotalCount = 0;
+    this.productHistoryError = '';
+    this.expandedProductHistoryItems.clear();
+    this.isProductHistoryModalOpen = true;
+
+    if (!this.selectedProductHistoryRecordId) {
+      this.productHistoryError = this.translate.currentLang === 'tr'
+        ? 'Ürün kayıt kimliği bulunamadı.'
+        : 'Product record identifier could not be found.';
+      return;
+    }
+
+    this.loadProductHistory();
+  }
+
+  closeProductHistoryModal(): void {
+    this.isProductHistoryModalOpen = false;
+    this.expandedProductHistoryItems.clear();
+  }
+
+  loadProductHistory(): void {
+    if (!this.selectedProductHistoryRecordId) return;
+
+    this.productHistoryLoading = true;
+    this.productHistoryError = '';
+
+    const params = new HttpParams()
+      .set('PageNumber', String(this.productHistoryPageNumber))
+      .set('PageSize', String(this.productHistoryPageSize))
+      .set('entityType', 'OrderProduct')
+      .set('recordId', this.selectedProductHistoryRecordId);
+
+    this.http.get<any>(`${environment.apiUrl}/History/Paginate`, { params }).subscribe({
+      next: result => {
+        const data = result?.data ?? result?.Data;
+        this.productHistoryItems = data?.items ?? data?.Items ?? [];
+        this.productHistoryTotalCount = data?.totalCount ?? data?.TotalCount ?? 0;
+        this.productHistoryLoading = false;
+      },
+      error: () => {
+        this.productHistoryLoading = false;
+        this.productHistoryError = this.translate.currentLang === 'tr'
+          ? 'Ürün tarihçesi alınırken bir hata oluştu.'
+          : 'An error occurred while loading product history.';
+      }
+    });
+  }
+
+  onProductHistoryPageChange(pageNumber: number): void {
+    this.productHistoryPageNumber = pageNumber;
+    this.loadProductHistory();
+  }
+
+  getProductHistoryOperationLabel(operationType: string): string {
+    const value = String(operationType || '').toLowerCase();
+    if (value === 'create') return this.translate.currentLang === 'tr' ? 'Ekleme' : 'Create';
+    if (value === 'update') return this.translate.currentLang === 'tr' ? 'Güncelleme' : 'Update';
+    if (value === 'delete') return this.translate.currentLang === 'tr' ? 'Silme' : 'Delete';
+    if (value === 'statusupdate') return this.translate.currentLang === 'tr' ? 'Durum Güncelleme' : 'Status Update';
+    return operationType || '-';
+  }
+
+  getProductHistoryOperationBadgeClass(operationType: string): string {
+    const value = String(operationType || '').toLowerCase();
+    if (value === 'create') return 'badge-light-success';
+    if (value === 'update') return 'badge-light-warning';
+    if (value === 'delete') return 'badge-light-danger';
+    if (value === 'statusupdate') return 'badge-light-info';
+    return 'badge-light-primary';
+  }
+
+  getProductHistoryChanges(item: any): Array<{ field: string; oldValue: any; newValue: any }> {
+    const raw = item?.changesJson ?? item?.ChangesJson;
+    if (!raw) return [];
+
+    try {
+      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      if (Array.isArray(parsed)) {
+        return parsed.map((change: any) => ({
+          field: change?.field ?? change?.Field ?? change?.propertyName ?? change?.PropertyName ?? '-',
+          oldValue: change?.oldValue ?? change?.OldValue ?? null,
+          newValue: change?.newValue ?? change?.NewValue ?? null
+        }));
+      }
+
+      return Object.keys(parsed).map(key => {
+        const value = parsed[key];
+        return {
+          field: key,
+          oldValue: value?.oldValue ?? value?.OldValue ?? null,
+          newValue: value?.newValue ?? value?.NewValue ?? value ?? null
+        };
+      });
+    } catch {
+      return [{ field: '-', oldValue: null, newValue: raw }];
+    }
+  }
+
+  getVisibleProductHistoryChanges(item: any): Array<{ field: string; oldValue: any; newValue: any }> {
+    return this.getProductHistoryChanges(item).filter(change =>
+      !this.ignoredProductHistoryFields.has(String(change.field || '').replace(/\s+/g, '').toLowerCase())
+    );
+  }
+
+  getProductHistoryOperationType(item: any): string {
+    return String(item?.operationType ?? item?.OperationType ?? '').toLowerCase();
+  }
+
+  private getProductHistoryItemKey(item: any): string {
+    return String(item?.id ?? item?.Id ?? `${item?.createdDate ?? item?.CreatedDate ?? ''}-${item?.operationType ?? item?.OperationType ?? ''}`);
+  }
+
+  toggleProductHistoryDetails(item: any): void {
+    const key = this.getProductHistoryItemKey(item);
+    this.expandedProductHistoryItems.has(key)
+      ? this.expandedProductHistoryItems.delete(key)
+      : this.expandedProductHistoryItems.add(key);
+  }
+
+  isProductHistoryDetailsOpen(item: any): boolean {
+    return this.expandedProductHistoryItems.has(this.getProductHistoryItemKey(item));
+  }
+
+  getProductHistorySummaryText(item: any): string {
+    const count = this.getVisibleProductHistoryChanges(item).length;
+    const operation = this.getProductHistoryOperationType(item);
+    if (operation === 'create') return this.translate.currentLang === 'tr' ? `Yeni kayıt oluşturuldu · ${count} alan` : `New record created · ${count} fields`;
+    if (operation === 'delete') return this.translate.currentLang === 'tr' ? `Kayıt silindi · ${count} alan` : `Record deleted · ${count} fields`;
+    if (operation === 'statusupdate') return this.translate.currentLang === 'tr' ? `${count} durum alanı değişti` : `${count} status fields changed`;
+    return this.translate.currentLang === 'tr' ? `${count} alan değişti` : `${count} fields changed`;
+  }
+
+  formatProductHistoryValue(value: any): string {
+    if (value === null || value === undefined || value === '') return '-';
+    return typeof value === 'object' ? JSON.stringify(value) : String(value);
+  }
+
 }
