@@ -355,3 +355,29 @@
         opacity:0;
     }
 }
+
+/* ===== Tablet viewport fit ===== */
+@media (min-width:768px) and (max-width:1199.98px){
+  .api-row,
+  .data-row,
+  .documentation-hero-row,
+  .contact-row{
+    min-height:calc(100dvh - 120px)!important;
+  }
+}
+
+/* ===== Phone ===== */
+@media (max-width:767.98px){
+  .api-row,
+  .data-row,
+  .documentation-hero-row,
+  .contact-row{
+    min-height:auto!important;
+  }
+
+  .api-scroll-cue,
+  .data-scroll-cue,
+  .documentation-scroll-cue{
+    display:none!important;
+  }
+}

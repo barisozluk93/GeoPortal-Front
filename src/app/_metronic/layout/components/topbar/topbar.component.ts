@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, NgZone } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
@@ -24,6 +24,9 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
   isCurrentUserExist = true;
   isNotificationAnimating = false;
+  isLanguageMenuOpen = false;
+  isNotificationMenuOpen = false;
+  isUserMenuOpen = false;
   isAdmin = false;
 
   user: UserModel | undefined;
@@ -86,11 +89,13 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
           this.loadNotifications();
           this.loadUnreadedNotificationCount();
+
         } else {
           this.resetState();
         }
       });
   }
+
 
   private resetState(): void {
     this.isAdmin = false;
@@ -100,6 +105,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
     this.unreadedNotificationCount = 0;
     this.totalNotificationCount = 0;
     this.avatarUrl = '';
+    this.closeAllMenus();
   }
 
   private triggerNotificationAnimation(): void {
@@ -245,6 +251,58 @@ export class TopbarComponent implements OnInit, OnDestroy {
   refreshNotificationData(): void {
     this.loadNotifications();
     this.loadUnreadedNotificationCount();
+  }
+
+  toggleLanguageMenu(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const nextState = !this.isLanguageMenuOpen;
+    this.closeAllMenus();
+    this.isLanguageMenuOpen = nextState;
+  }
+
+  closeLanguageMenu(): void {
+    this.isLanguageMenuOpen = false;
+  }
+
+  toggleNotificationMenu(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const nextState = !this.isNotificationMenuOpen;
+    this.closeAllMenus();
+    this.isNotificationMenuOpen = nextState;
+
+    if (nextState) {
+      this.loadNotifications();
+      this.loadUnreadedNotificationCount();
+    }
+  }
+
+  toggleUserMenu(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const nextState = !this.isUserMenuOpen;
+    this.closeAllMenus();
+    this.isUserMenuOpen = nextState;
+  }
+
+  closeAllMenus(): void {
+    this.isLanguageMenuOpen = false;
+    this.isNotificationMenuOpen = false;
+    this.isUserMenuOpen = false;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.closeAllMenus();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.closeAllMenus();
   }
 
   routeToLogin(): void {

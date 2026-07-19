@@ -9,13 +9,13 @@
 }
 
 .toolbar-left {
-  top: 5px;
+  top: 6px;
   right: 5px;
 }
 
 .toolbar-right {
   right: 5px;
-  bottom: 44px;
+  bottom: 39px;
 }
 
 .left-map-toolbar,
@@ -244,7 +244,6 @@
   flex-direction: column;
   gap: 0;
   width: 34px;
-  margin-top: 5px;
   pointer-events: auto;
 }
 
@@ -271,12 +270,12 @@
   }
 
   .toolbar-left {
-    top: 5px;
-    right: 8px;
+    top: 6px;
+    right: 5px;
   }
 
   .toolbar-right {
-    right: 8px;
+    right: 5px;
     bottom: 38px;
   }
 }
@@ -451,4 +450,20 @@
   line-height: 1;
   font-weight: 900;
   pointer-events: none;
+}
+
+
+/* =========================================================
+   MOBILE RIGHT NAVIGATION CONSISTENT GAP
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+  .map-navigation-control {
+    gap: 5px;
+  }
+
+  .compass-control--stacked,
+  .zoom-toolbar {
+    flex: 0 0 auto;
+  }
 }

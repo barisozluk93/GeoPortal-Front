@@ -216,6 +216,21 @@ const menuList: HeaderMenuModel[] = [
     isForbid: false,
     open: false,
   },
+  {
+    id: 16,
+    name: 'Log',
+    nameEn: 'Log',
+    url: '/logmanagement',
+    icon: undefined,
+    permissionId: 67,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: false,
+    open: false,
+  },
 ];
 
 @Component({

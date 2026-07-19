@@ -1,0 +1,18 @@
+<div class="bg-body py-10">
+  <div class="container-fluid">
+    <app-datatable
+      [header]="tableName"
+      [paginationModel]="paginationModel"
+      [dataSource]="dataSource"
+      [totalCount]="totalCount"
+      [columnList]="columnList"
+      (paginationModelChange)="paginationModelChange($event)"
+      (filterModelChange)="onFilterModelChange($event)"
+      class="card card-xxl-stretch border-0 mb-5 mb-xl-8"
+      [hasEditPermission]="false"
+      [hasDeletePermission]="false"
+      [hasNewRecordPermission]="false"
+      [hasShowPermission]="false">
+    </app-datatable>
+  </div>
+</div>

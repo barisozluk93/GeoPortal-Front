@@ -1,25 +1,38 @@
 :host {
   display: none;
-  background: #fff;
-  border-radius: .75rem;
+  overflow: hidden;
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-gray-200);
+  border-radius: 0.75rem;
+  box-shadow: var(--bs-box-shadow);
 }
 
 :host.show {
   display: block !important;
 }
 
-.scroll-y {
-  background: #fff;
+.notification-panel {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+}
+
+.notification-header {
+  background: transparent;
+}
+
+.notification-list {
+  background: transparent;
 }
 
 .notification-item {
   cursor: pointer;
-  background: #fff;
-  transition: all .2s ease;
+  background: transparent;
   border-bottom: 1px solid var(--bs-gray-200);
+  transition: background-color 0.2s ease;
 
   &:last-child {
-    border-bottom: none;
+    border-bottom: 0;
   }
 
   &:hover {
@@ -27,20 +40,16 @@
   }
 
   &.unread {
-    background: #f7faff;
+    background: var(--bs-primary-light);
 
     &:hover {
-      background: #eef4ff;
-    }
-
-    .fw-bold {
-      color: var(--bs-gray-900);
+      background: var(--bs-gray-100);
     }
   }
 }
 
 .symbol-label {
-  transition: .2s;
+  transition: transform 0.2s ease;
 }
 
 .notification-item:hover .symbol-label {
@@ -48,8 +57,8 @@
 }
 
 .btn-icon {
-  opacity: .55;
-  transition: .2s;
+  opacity: 0.55;
+  transition: opacity 0.2s ease;
 }
 
 .notification-item:hover .btn-icon {

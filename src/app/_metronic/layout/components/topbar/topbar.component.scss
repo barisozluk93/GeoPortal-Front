@@ -152,3 +152,109 @@
     gap: 7px;
   }
 }
+
+
+/* Language dropdown: KTMenu'den bağımsız, iOS uyumlu click kontrolü */
+.language-menu-wrapper {
+  position: relative;
+}
+
+.language-trigger.active {
+  color: var(--bs-primary) !important;
+  background-color: var(--bs-primary-light) !important;
+}
+
+::ng-deep app-language-inner.language-dropdown {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  left: auto !important;
+  display: none !important;
+  margin: 0 !important;
+  transform: none !important;
+  z-index: 10050 !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::ng-deep app-language-inner.language-dropdown.show {
+  display: flex !important;
+}
+
+@media (max-width: 575.98px) {
+  ::ng-deep app-language-inner.language-dropdown {
+    position: fixed !important;
+    top: 64px !important;
+    right: 12px !important;
+    left: auto !important;
+    width: 200px !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+}
+
+
+/* User ve notification dropdownları: KTMenu'den bağımsız Angular click kontrolü */
+.notification-menu-wrapper,
+.user-menu-wrapper {
+  position: relative;
+}
+
+.topbar-action.active,
+.topbar-user.active {
+  color: var(--bs-primary) !important;
+  background-color: var(--bs-primary-light) !important;
+}
+
+::ng-deep app-notifications-inner.notification-dropdown,
+::ng-deep app-user-inner.user-dropdown {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  left: auto !important;
+  display: none !important;
+  margin: 0 !important;
+  transform: none !important;
+  z-index: 10050 !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::ng-deep app-notifications-inner.notification-dropdown {
+  width: 400px !important;
+  min-width: 400px !important;
+  max-width: calc(100vw - 24px) !important;
+  box-sizing: border-box !important;
+}
+
+::ng-deep app-user-inner.user-dropdown {
+  width: 275px !important;
+  min-width: 275px !important;
+  max-width: calc(100vw - 24px) !important;
+  box-sizing: border-box !important;
+}
+
+::ng-deep app-notifications-inner.notification-dropdown.show,
+::ng-deep app-user-inner.user-dropdown.show {
+  display: flex !important;
+}
+
+@media (max-width: 575.98px) {
+  ::ng-deep app-notifications-inner.notification-dropdown {
+    position: fixed !important;
+    top: 64px !important;
+    right: 12px !important;
+    left: 12px !important;
+    width: calc(100vw - 24px) !important;
+    min-width: 0 !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  ::ng-deep app-user-inner.user-dropdown {
+    position: fixed !important;
+    top: 64px !important;
+    right: 12px !important;
+    left: auto !important;
+    width: 275px !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+}

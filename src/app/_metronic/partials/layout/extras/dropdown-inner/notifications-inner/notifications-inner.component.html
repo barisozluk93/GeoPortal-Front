@@ -1,7 +1,7 @@
-<div class="d-flex flex-column h-100 bg-white rounded">
+<div class="notification-panel d-flex flex-column h-100">
 
   <!-- Header -->
-  <div class="d-flex align-items-center justify-content-between px-6 py-5 border-bottom bg-white">
+  <div class="notification-header d-flex align-items-center justify-content-between px-6 py-5 border-bottom">
     <div>
       <h3 class="fw-bold text-gray-900 mb-1">
         {{ 'NOTIFICATIONS' | translate }}
@@ -14,64 +14,55 @@
 
     <span
       *ngIf="unreadedNotificationCount > 0"
-      class="badge badge-light-danger fw-bold px-4 py-2">
+      class="badge badge-light-danger fw-bold px-4 py-2"
+    >
       {{ unreadedNotificationCount }}
       {{ 'UNREAD' | translate }}
     </span>
   </div>
 
   <ng-container *ngIf="notifications.length > 0; else emptyState">
-
-    <div class="scroll-y mh-375px">
-
+    <div class="notification-list scroll-y mh-375px">
       <div
         *ngFor="let notification of notifications"
         class="notification-item d-flex align-items-center px-6 py-4"
         [class.unread]="!notification.isRead"
-        (click)="goToPage(notification)">
-
-        <div class="symbol symbol-40px me-4">
+        (click)="goToPage(notification)"
+      >
+        <div class="symbol symbol-40px me-4 flex-shrink-0">
           <span class="symbol-label bg-light-primary">
             <i class="fa-solid fa-bell text-primary fs-5"></i>
           </span>
         </div>
 
         <div class="flex-grow-1 min-w-0">
-
-          <div
-            class="fw-bold fs-6 text-gray-900 text-truncate">
+          <div class="fw-bold fs-6 text-gray-900 text-truncate">
             {{ notification.body }}
           </div>
 
           <div class="text-muted fs-8 mt-1">
             {{ notification.createdAt | date:'dd.MM.yyyy HH:mm' }}
           </div>
-
         </div>
 
         <span
           *ngIf="!notification.isRead"
-          class="bullet bullet-dot bg-primary h-7px w-7px mx-4">
-        </span>
+          class="bullet bullet-dot bg-primary h-7px w-7px mx-4 flex-shrink-0"
+        ></span>
 
         <button
-          class="btn btn-icon btn-sm btn-active-light-danger"
-          (click)="$event.stopPropagation(); delete(notification.id)">
-
+          type="button"
+          class="btn btn-icon btn-sm btn-active-light-danger flex-shrink-0"
+          (click)="$event.stopPropagation(); delete(notification.id)"
+        >
           <i class="fa-solid fa-trash fs-6 text-gray-500"></i>
-
         </button>
-
       </div>
-
     </div>
-
   </ng-container>
 
   <ng-template #emptyState>
-
     <div class="py-15 text-center">
-
       <div class="symbol symbol-60px mb-4">
         <span class="symbol-label bg-light-primary">
           <i class="fa-regular fa-bell text-primary fs-2"></i>
@@ -85,9 +76,7 @@
       <div class="text-muted">
         {{ 'NOTIFICATIONS' | translate }}
       </div>
-
     </div>
-
   </ng-template>
 
 </div>

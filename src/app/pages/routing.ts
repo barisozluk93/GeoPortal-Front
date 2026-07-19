@@ -33,6 +33,12 @@ const Routing: Routes = [
       import('../modules/support-management/support-management.module').then((m) => m.SupportManagementModule),
   },
   {
+    path: 'logmanagement',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('../modules/audit-log-management/audit-log-management.module').then((m) => m.AuditLogManagementModule),
+  },
+  {
     path: 'usermanagement',
     canActivate: [AuthGuard],
     loadChildren: () =>

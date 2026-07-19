@@ -146,7 +146,7 @@ const menuList: HeaderMenuModel[] = [
   //   isForbid: false,
   //   open: false,
   // },
-    {
+  {
     id: 7,
     name: 'Harita',
     nameEn: 'Map',
@@ -231,6 +231,21 @@ const menuList: HeaderMenuModel[] = [
     isForbid: false,
     open: false,
   },
+  {
+    id: 16,
+    name: 'Log',
+    nameEn: 'Log',
+    url: '/logmanagement',
+    icon: undefined,
+    permissionId: 67,
+    isDeleted: false,
+    isSystemData: true,
+    parentId: undefined,
+    parent: undefined,
+    childMenus: [],
+    isForbid: false,
+    open: false,
+  },
 ];
 
 @Component({
@@ -248,25 +263,25 @@ export class MenuTabComponent implements OnInit, AfterViewInit, OnDestroy {
   menuList: MenuModel[] = menuList;
   permissionList: number[] | undefined;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) { }
 
   ngAfterViewInit(): void {
-    
+
   }
 
   ngOnInit(): void {
     this.routingChanges();
 
     this.authService.currentUserSubject.asObservable().subscribe(result => {
-      if(result) {
-        if(result?.roles.includes(RoleEnum.SuperAdmin)) {
+      if (result) {
+        if (result?.roles.includes(RoleEnum.SuperAdmin)) {
           this.isAdmin = true;
         }
-        else{
+        else {
           this.isAdmin = false;
         }
       }
-      else{
+      else {
         this.isAdmin = false;
       }
 

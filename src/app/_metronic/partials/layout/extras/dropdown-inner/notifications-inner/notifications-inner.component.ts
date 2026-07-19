@@ -15,10 +15,8 @@ import { RoleEnum } from 'src/app/enums/role.enum';
 export class NotificationsInnerComponent implements OnInit, OnChanges {
   @HostBinding('class')
   class =
-    'menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-375px border border-gray-200 bg-body shadow-sm notification-menu-dropdown';
+    'menu menu-sub menu-sub-dropdown menu-column fw-semibold w-375px notification-menu-dropdown';
 
-  @HostBinding('attr.data-kt-menu')
-  dataKtMenu = 'true';
 
   @Input() notifications: Array<NotificationModel> = [];
   @Input() unreadedNotificationCount: number = 0;

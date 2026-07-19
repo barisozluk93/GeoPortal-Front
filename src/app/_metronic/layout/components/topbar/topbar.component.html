@@ -24,14 +24,17 @@
   <div
     *ngIf="!isCurrentUserExist"
     id="kt_header_language_menu_toggle"
-    class="topbar-item d-flex align-items-center h-100"
+    class="topbar-item language-menu-wrapper d-flex align-items-center h-100"
+    (click)="$event.stopPropagation()"
   >
-    <div
+    <button
+      type="button"
       class="btn btn-icon btn-active-light-primary w-42px h-42px language-trigger"
-      data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-      data-kt-menu-attach="parent"
-      data-kt-menu-placement="bottom-end"
+      [class.active]="isLanguageMenuOpen"
+      [attr.aria-expanded]="isLanguageMenuOpen"
+      aria-haspopup="menu"
       [title]="'LANGUAGE' | translate"
+      (click)="toggleLanguageMenu($event)"
     >
       <span class="symbol symbol-30px">
         <img
@@ -40,10 +43,13 @@
           [alt]="'LANGUAGE' | translate"
         />
       </span>
-    </div>
+    </button>
 
     <app-language-inner
-      class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-2 w-200px"
+      class="language-dropdown menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-2 w-200px"
+      [class.show]="isLanguageMenuOpen"
+      [attr.aria-hidden]="!isLanguageMenuOpen"
+      (click)="closeLanguageMenu()"
     ></app-language-inner>
   </div>
 
@@ -51,16 +57,18 @@
   <div
     *ngIf="isCurrentUserExist"
     id="kt_header_notification_menu_toggle"
-    class="topbar-item d-flex align-items-center h-100"
+    class="topbar-item notification-menu-wrapper d-flex align-items-center h-100"
+    (click)="$event.stopPropagation()"
   >
-    <div
+    <button
+      type="button"
       class="btn btn-icon btn-active-light-primary w-42px h-42px position-relative topbar-action"
+      [class.active]="isNotificationMenuOpen"
       [ngClass]="{ 'is-animating': isNotificationAnimating }"
-      (mouseenter)="loadNotifications()"
-      data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-      data-kt-menu-attach="parent"
-      data-kt-menu-placement="bottom-end"
+      [attr.aria-expanded]="isNotificationMenuOpen"
+      aria-haspopup="menu"
       [title]="'NOTIFICATIONS' | translate"
+      (click)="toggleNotificationMenu($event)"
     >
       <i
         class="fa-bell fs-3"
@@ -75,10 +83,12 @@
       >
         {{ unreadedNotificationCount > 99 ? '99+' : unreadedNotificationCount }}
       </span>
-    </div>
+    </button>
 
     <app-notifications-inner
-      class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-400px mw-100"
+      class="notification-dropdown menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-400px"
+      [class.show]="isNotificationMenuOpen"
+      [attr.aria-hidden]="!isNotificationMenuOpen"
       [notifications]="notifications"
       [totalNotificationCount]="totalNotificationCount"
       [unreadedNotificationCount]="unreadedNotificationCount"
@@ -89,14 +99,17 @@
   <div
     *ngIf="isCurrentUserExist"
     id="kt_header_user_menu_toggle"
-    class="topbar-item d-flex align-items-center h-100"
+    class="topbar-item user-menu-wrapper d-flex align-items-center h-100"
+    (click)="$event.stopPropagation()"
   >
-    <div
+    <button
+      type="button"
       class="btn btn-icon btn-active-light-primary w-42px h-42px p-0 topbar-user"
-      data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-      data-kt-menu-attach="parent"
-      data-kt-menu-placement="bottom-end"
+      [class.active]="isUserMenuOpen"
+      [attr.aria-expanded]="isUserMenuOpen"
+      aria-haspopup="menu"
       [title]="'USER_PROFILE' | translate"
+      (click)="toggleUserMenu($event)"
     >
       <ng-container
         *ngIf="user?.fileId != null && user?.fileResult?.fileContents; else defaultUserIcon"
@@ -116,10 +129,12 @@
           </span>
         </span>
       </ng-template>
-    </div>
+    </button>
 
     <app-user-inner
-      class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-4 w-275px"
+      class="user-dropdown menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-4 w-275px"
+      [class.show]="isUserMenuOpen"
+      [attr.aria-hidden]="!isUserMenuOpen"
     ></app-user-inner>
   </div>
 
