@@ -67,21 +67,6 @@
         <div class="map-action-dropdown__menu">
           <button type="button"
             class="btn btn-icon btn-light map-action-btn"
-            [title]="'MAP.ACTIONS.MEASURE_LENGTH' | translate"
-            (click)="measureDistanceClicked.emit()">
-            <svg class="measure-tool-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <polyline points="3,17 8,12 13,15 21,7"
-                fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round"></polyline>
-              <circle cx="3" cy="17" r="1.6" fill="currentColor"></circle>
-              <circle cx="8" cy="12" r="1.6" fill="currentColor"></circle>
-              <circle cx="13" cy="15" r="1.6" fill="currentColor"></circle>
-              <circle cx="21" cy="7" r="1.6" fill="currentColor"></circle>
-            </svg>
-          </button>
-
-          <button type="button"
-            class="btn btn-icon btn-light map-action-btn"
             [title]="'MAP.ACTIONS.MEASURE_AREA' | translate"
             (click)="measureAreaClicked.emit()">
             <svg class="measure-tool-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -92,6 +77,21 @@
               <circle cx="19" cy="7" r="1.6" fill="currentColor"></circle>
               <circle cx="17" cy="18" r="1.6" fill="currentColor"></circle>
               <circle cx="7" cy="19" r="1.6" fill="currentColor"></circle>
+            </svg>
+          </button>
+
+          <button type="button"
+            class="btn btn-icon btn-light map-action-btn"
+            [title]="'MAP.ACTIONS.MEASURE_LENGTH' | translate"
+            (click)="measureDistanceClicked.emit()">
+            <svg class="measure-tool-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="3,17 8,12 13,15 21,7"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"></polyline>
+              <circle cx="3" cy="17" r="1.6" fill="currentColor"></circle>
+              <circle cx="8" cy="12" r="1.6" fill="currentColor"></circle>
+              <circle cx="13" cy="15" r="1.6" fill="currentColor"></circle>
+              <circle cx="21" cy="7" r="1.6" fill="currentColor"></circle>
             </svg>
           </button>
         </div>

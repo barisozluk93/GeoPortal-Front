@@ -1,7 +1,7 @@
-<div class="bg-body py-10 data-page-shell">
-  <div class="container-fluid">
+<div class="bg-body data-page-shell">
+  <div class="container-fluid px-0">
     <!-- HERO: İlk tasarım korunmuştur -->
-    <div #heroSection class="card border shadow-sm overflow-hidden data-card mb-10">
+    <div #heroSection class="card border shadow-sm overflow-hidden data-card mb-0">
       <div class="card-body p-0">
         <div class="row g-0 align-items-stretch data-row">
           <div class="col-12 col-xl-7">
@@ -39,7 +39,8 @@
           </div>
 
           <div class="col-12 col-xl-5 position-relative data-summary-column">
-            <div class="position-relative d-flex flex-column justify-content-center bg-primary h-100 p-6 p-lg-8 p-xxl-10 data-summary-panel">
+            <div
+              class="position-relative d-flex flex-column justify-content-center bg-primary h-100 p-6 p-lg-8 p-xxl-10 data-summary-panel">
               <div class="position-relative z-index-2">
                 <div class="mb-5">
                   <span class="badge badge-light text-primary fw-bold fs-8 mb-4">
@@ -51,7 +52,8 @@
                 </div>
 
                 <div class="d-flex flex-column gap-3">
-                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div
+                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
                         <i class="ki-outline ki-geolocation fs-2x text-white"></i>
@@ -59,11 +61,13 @@
                     </div>
                     <div>
                       <div class="text-white fw-bold fs-6 mb-1">{{ 'DATA_PAGE.SUMMARY_MAP_TITLE' | translate }}</div>
-                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{ 'DATA_PAGE.SUMMARY_MAP_DESC' | translate }}</div>
+                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{ 'DATA_PAGE.SUMMARY_MAP_DESC' |
+                        translate }}</div>
                     </div>
                   </div>
 
-                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div
+                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
                         <i class="ki-outline ki-satellite fs-2x text-white"></i>
@@ -71,19 +75,23 @@
                     </div>
                     <div>
                       <div class="text-white fw-bold fs-6 mb-1">{{ 'DATA_PAGE.SUMMARY_ORDER_TITLE' | translate }}</div>
-                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{ 'DATA_PAGE.SUMMARY_ORDER_DESC' | translate }}</div>
+                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{ 'DATA_PAGE.SUMMARY_ORDER_DESC'
+                        | translate }}</div>
                     </div>
                   </div>
 
-                  <div class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
+                  <div
+                    class="d-flex align-items-start bg-white bg-opacity-10 border border-white border-opacity-10 rounded-3 p-4">
                     <div class="symbol symbol-45px me-4 flex-shrink-0">
                       <span class="symbol-label bg-white bg-opacity-10">
                         <i class="ki-outline ki-cloud-download fs-2x text-white"></i>
                       </span>
                     </div>
                     <div>
-                      <div class="text-white fw-bold fs-6 mb-1">{{ 'DATA_PAGE.SUMMARY_DELIVERY_TITLE' | translate }}</div>
-                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{ 'DATA_PAGE.SUMMARY_DELIVERY_DESC' | translate }}</div>
+                      <div class="text-white fw-bold fs-6 mb-1">{{ 'DATA_PAGE.SUMMARY_DELIVERY_TITLE' | translate }}
+                      </div>
+                      <div class="text-white text-opacity-75 fw-semibold fs-8 lh-base">{{
+                        'DATA_PAGE.SUMMARY_DELIVERY_DESC' | translate }}</div>
                     </div>
                   </div>
                 </div>
@@ -92,7 +100,8 @@
           </div>
         </div>
 
-        <button type="button" class="data-scroll-cue border-0 bg-transparent" [class.hidden]="hideScrollCue" (click)="scrollToSection('workflow')">
+        <button type="button" class="data-scroll-cue border-0 bg-transparent" [class.hidden]="hideScrollCue"
+          (click)="scrollToSection('workflow')">
           <span class="data-scroll-cue__halo"></span>
           <span class="data-scroll-cue__button"><i class="ki-outline ki-double-down fs-2"></i></span>
         </button>
@@ -100,10 +109,11 @@
     </div>
 
     <!-- WORKFLOW INTRO -->
-    <div id="workflow" class="text-center py-8 mb-8 data-section-anchor">
+    <div id="workflow" class="text-center pt-10 py-8 mb-8 data-section-anchor">
       <span class="badge badge-light-primary fs-7 fw-bold mb-4">{{ 'DATA_PAGE.WORKFLOW_KICKER' | translate }}</span>
       <h2 class="text-gray-900 fw-bolder fs-2x fs-lg-2hx mb-4">{{ 'DATA_PAGE.WORKFLOW_TITLE' | translate }}</h2>
-      <p class="text-gray-600 fs-5 fw-semibold lh-lg mw-850px mx-auto mb-0">{{ 'DATA_PAGE.WORKFLOW_COPY' | translate }}</p>
+      <p class="text-gray-600 fs-5 fw-semibold lh-lg mw-850px mx-auto mb-0">{{ 'DATA_PAGE.WORKFLOW_COPY' | translate }}
+      </p>
     </div>
 
     <div class="row g-5 mb-15">
@@ -112,10 +122,14 @@
           <div class="card-body p-6">
             <div class="d-flex align-items-center mb-4">
               <span class="badge badge-primary me-3">0{{ step }}</span>
-              <div class="symbol symbol-45px"><span class="symbol-label bg-light-primary"><i class="ki-outline fs-2 text-primary" [ngClass]="step === 1 ? 'ki-geolocation' : step === 2 ? 'ki-satellite' : step === 3 ? 'ki-basket-ok' : 'ki-cloud-download'"></i></span></div>
+              <div class="symbol symbol-45px"><span class="symbol-label bg-light-primary"><i
+                    class="ki-outline fs-2 text-primary"
+                    [ngClass]="step === 1 ? 'ki-geolocation' : step === 2 ? 'ki-satellite' : step === 3 ? 'ki-basket-ok' : 'ki-cloud-download'"></i></span>
+              </div>
             </div>
             <h3 class="text-gray-900 fw-bold fs-4 mb-3">{{ ('DATA_PAGE.OVERVIEW_' + step + '_TITLE') | translate }}</h3>
-            <p class="text-gray-600 fw-semibold lh-lg mb-0">{{ ('DATA_PAGE.OVERVIEW_' + step + '_DESC') | translate }}</p>
+            <p class="text-gray-600 fw-semibold lh-lg mb-0">{{ ('DATA_PAGE.OVERVIEW_' + step + '_DESC') | translate }}
+            </p>
           </div>
         </div>
       </div>
@@ -142,10 +156,12 @@
             <div class="data-browser-frame position-relative">
               <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
                 <div class="d-flex gap-2"><span></span><span></span><span></span></div>
-                <span class="text-gray-500 fw-semibold fs-8">GeoPortal / Map</span>
+                <span class="text-gray-500 fw-semibold fs-8">{{ 'DATA_PAGE.BROWSER.MAP' | translate }}</span>
               </div>
               <div class="position-relative data-shot-wrap">
-                <img src="assets/media/data-page/01-map-aoi.png" class="w-100 d-block" alt="GeoPortal area of interest selection" />
+                <img [src]="('LANG' | translate) === 'tr'
+    ? 'assets/media/data-page/01-map-aoi-tr.png'
+    : 'assets/media/data-page/01-map-aoi-en.png'" class="w-100 d-block" [alt]="'DATA_PAGE.ALT.AOI_SELECTION' | translate" />
               </div>
             </div>
           </div>
@@ -176,10 +192,12 @@
             <div class="data-browser-frame position-relative">
               <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
                 <div class="d-flex gap-2"><span></span><span></span><span></span></div>
-                <span class="text-gray-500 fw-semibold fs-8">GeoPortal / Satellite Results</span>
+                <span class="text-gray-500 fw-semibold fs-8">{{ 'DATA_PAGE.BROWSER.SATELLITE_RESULTS' | translate }}</span>
               </div>
               <div class="position-relative data-shot-wrap">
-                <img src="assets/media/data-page/02-satellite-results.png" class="w-100 d-block" alt="Satellite imagery results" />
+                <img [src]="('LANG' | translate) === 'tr'
+    ? 'assets/media/data-page/02-satellite-results-tr.png'
+    : 'assets/media/data-page/02-satellite-results-en.png'" class="w-100 d-block" [alt]="'DATA_PAGE.ALT.SATELLITE_RESULTS' | translate" />
               </div>
             </div>
           </div>
@@ -197,16 +215,34 @@
               <h2 class="text-gray-900 fw-bolder fs-2x mb-4">{{ 'DATA_PAGE.PURCHASE_TITLE' | translate }}</h2>
               <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-7">{{ 'DATA_PAGE.PURCHASE_DESC' | translate }}</p>
 
-              <div class="card card-bordered mb-4"><div class="card-body p-5"><div class="text-primary fw-bold fs-7 mb-2">{{ 'DATA_PAGE.IMAGE_COST' | translate }}</div><div class="text-gray-900 fw-bolder fs-4">{{ 'DATA_PAGE.IMAGE_FORMULA' | translate }}</div></div></div>
-              <div class="card card-bordered mb-4"><div class="card-body p-5"><div class="text-primary fw-bold fs-7 mb-2">{{ 'DATA_PAGE.PROCESS_COST' | translate }}</div><div class="text-gray-900 fw-bolder fs-4">{{ 'DATA_PAGE.PROCESS_FORMULA' | translate }}</div></div></div>
-              <div class="bg-primary rounded p-5"><div class="text-white text-opacity-75 fw-bold fs-7 mb-2">{{ 'DATA_PAGE.TOTAL_COST' | translate }}</div><div class="text-white fw-bolder fs-3">{{ 'DATA_PAGE.TOTAL_FORMULA' | translate }}</div></div>
+              <div class="card card-bordered mb-4">
+                <div class="card-body p-5">
+                  <div class="text-primary fw-bold fs-7 mb-2">{{ 'DATA_PAGE.IMAGE_COST' | translate }}</div>
+                  <div class="text-gray-900 fw-bolder fs-4">{{ 'DATA_PAGE.IMAGE_FORMULA' | translate }}</div>
+                </div>
+              </div>
+              <div class="card card-bordered mb-4">
+                <div class="card-body p-5">
+                  <div class="text-primary fw-bold fs-7 mb-2">{{ 'DATA_PAGE.PROCESS_COST' | translate }}</div>
+                  <div class="text-gray-900 fw-bolder fs-4">{{ 'DATA_PAGE.PROCESS_FORMULA' | translate }}</div>
+                </div>
+              </div>
+              <div class="bg-primary rounded p-5">
+                <div class="text-white text-opacity-75 fw-bold fs-7 mb-2">{{ 'DATA_PAGE.TOTAL_COST' | translate }}</div>
+                <div class="text-white fw-bolder fs-3">{{ 'DATA_PAGE.TOTAL_FORMULA' | translate }}</div>
+              </div>
             </div>
           </div>
           <div class="col-12 col-xl-8 p-5 p-lg-8">
             <div class="data-browser-frame position-relative">
-              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom"><div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">GeoPortal / Ready Image Pricing</span></div>
+              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">{{ 'DATA_PAGE.BROWSER.READY_IMAGE_PRICING' | translate }}</span>
+              </div>
               <div class="position-relative data-shot-wrap">
-                <img src="assets/media/data-page/03-ready-image-pricing.png" class="w-100 d-block" alt="Ready satellite image pricing" />
+                <img [src]="('LANG' | translate) === 'tr'
+    ? 'assets/media/data-page/03-ready-image-pricing-tr.png'
+    : 'assets/media/data-page/03-ready-image-pricing-en.png'" class="w-100 d-block"
+                  [alt]="'DATA_PAGE.ALT.READY_IMAGE_PRICING' | translate" />
               </div>
             </div>
           </div>
@@ -225,16 +261,21 @@
               <p class="text-gray-600 fs-5 fw-semibold lh-lg mb-7">{{ 'DATA_PAGE.NEW_ORDER_DESC' | translate }}</p>
               <div class="row g-3">
                 <div class="col-6" *ngFor="let item of ['GSD','CLOUD','DATE','PLATFORM','OFFNADIR','PROCESSING']">
-                  <div class="border rounded p-4 h-100 bg-light hover-elevate-up"><span class="text-gray-800 fw-bold fs-7">{{ ('DATA_PAGE.PARAM_' + item) | translate }}</span></div>
+                  <div class="border rounded p-4 h-100 bg-light hover-elevate-up"><span
+                      class="text-gray-800 fw-bold fs-7">{{ ('DATA_PAGE.PARAM_' + item) | translate }}</span></div>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-12 col-xl-8 p-5 p-lg-8 bg-light">
             <div class="data-browser-frame position-relative">
-              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom"><div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">GeoPortal / New Image Request</span></div>
+              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">{{ 'DATA_PAGE.BROWSER.NEW_IMAGE_REQUEST' | translate }}</span>
+              </div>
               <div class="position-relative data-shot-wrap">
-                <img src="assets/media/data-page/04-new-image-order.png" class="w-100 d-block" alt="New satellite image request" />
+                <img [src]="('LANG' | translate) === 'tr'
+    ? 'assets/media/data-page/04-new-image-order-tr.png'
+    : 'assets/media/data-page/04-new-image-order-en.png'" class="w-100 d-block" [alt]="'DATA_PAGE.ALT.NEW_IMAGE_REQUEST' | translate" />
               </div>
             </div>
           </div>
@@ -255,16 +296,21 @@
                 <div class="timeline-item" *ngFor="let item of ['CREATED','PREPARING','COMPLETED','DOWNLOAD']">
                   <div class="timeline-label fw-bold text-gray-600 fs-8">•</div>
                   <div class="timeline-badge"><i class="fa fa-genderless text-primary fs-1"></i></div>
-                  <div class="timeline-content fw-semibold text-gray-800 ps-3">{{ ('DATA_PAGE.STATUS_' + item) | translate }}</div>
+                  <div class="timeline-content fw-semibold text-gray-800 ps-3">{{ ('DATA_PAGE.STATUS_' + item) |
+                    translate }}</div>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-12 col-xl-8 p-5 p-lg-8">
             <div class="data-browser-frame position-relative">
-              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom"><div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">GeoPortal / Order Summary</span></div>
+              <div class="data-browser-bar d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <div class="d-flex gap-2"><span></span><span></span><span></span></div><span class="text-gray-500 fw-semibold fs-8">{{ 'DATA_PAGE.BROWSER.ORDER_SUMMARY' | translate }}</span>
+              </div>
               <div class="position-relative data-shot-wrap">
-                <img src="assets/media/data-page/05-order-summary.png" class="w-100 d-block" alt="GeoPortal order summary" />
+                <img [src]="('LANG' | translate) === 'tr'
+    ? 'assets/media/data-page/05-order-summary-tr.png'
+    : 'assets/media/data-page/05-order-summary-en.png'" class="w-100 d-block" [alt]="'DATA_PAGE.ALT.ORDER_SUMMARY' | translate" />
               </div>
             </div>
           </div>
@@ -282,7 +328,7 @@
             <p class="text-white text-opacity-75 fs-5 fw-semibold lh-lg mb-0">{{ 'DATA_PAGE.API_DESC' | translate }}</p>
           </div>
           <div class="col-12 col-lg-4">
-            
+
             <div class="d-flex flex-column flex-sm-row flex-lg-column gap-3 justify-content-lg-end">
               <button routerLink="/landing/map" class="btn btn-light-primary">
                 <i class="ki-outline ki-geolocation fs-2 me-2"></i>

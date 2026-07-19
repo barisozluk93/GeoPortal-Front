@@ -2,19 +2,39 @@
   display: block;
 }
 
+/* Layout üst alanı + sayfanın üst/alt iç boşluğu.
+   Data ve API sayfalarıyla aynı viewport hesabı. */
+.contact-page-shell {
+  --contact-layout-offset: 59px;
+  --contact-page-gap: 2rem;
+
+  min-height: calc(100dvh - var(--contact-layout-offset));
+  padding: var(--contact-page-gap);
+  box-sizing: border-box;
+}
+
 .contact-card {
+  height: calc(
+    100dvh -
+    var(--contact-layout-offset) -
+    (var(--contact-page-gap) * 2)
+  );
+  min-height: 0;
+  margin: 0;
   border-radius: 1rem;
 }
 
+.contact-card > .card-body,
 .contact-row,
+.contact-row > [class*='col-'],
 .contact-hero,
+.contact-form-column,
 .contact-form-panel {
-  min-height: calc(100vh - 120px);
+  height: 100%;
+  min-height: 0;
 }
 
-/* -------------------------------------------------------
-   SOL HERO
-------------------------------------------------------- */
+/* Sol hero */
 .contact-hero {
   isolation: isolate;
 }
@@ -26,8 +46,6 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  transform: scale(1.015);
-  transform-origin: left center;
 }
 
 .contact-hero-image::after {
@@ -41,12 +59,11 @@
     rgba(255, 255, 255, 0.12) 50%,
     rgba(255, 255, 255, 0.42) 64%,
     rgba(255, 255, 255, 0.78) 82%,
-    #ffffff 100%
+    #fff 100%
   );
   pointer-events: none;
 }
 
-/* Metin başlamadan önce zemin tamamen beyaza yaklaşır. */
 .contact-hero-overlay {
   z-index: 1;
   background: linear-gradient(
@@ -57,8 +74,8 @@
     rgba(255, 255, 255, 0.46) 25%,
     rgba(255, 255, 255, 0.78) 31%,
     rgba(255, 255, 255, 0.94) 37%,
-    #ffffff 44%,
-    #ffffff 100%
+    #fff 44%,
+    #fff 100%
   );
   pointer-events: none;
 }
@@ -81,7 +98,6 @@
   max-width: 625px;
 }
 
-/* Kartlar eski kompakt genişliğine çekildi; diyagonal alanın altına girmez. */
 .contact-feature-row {
   width: 100%;
   max-width: 640px;
@@ -91,20 +107,14 @@
   min-height: 102px;
 }
 
-/* -------------------------------------------------------
-   SAĞ FORM PANELİ
-------------------------------------------------------- */
+/* Sağ form */
 .contact-form-column {
   z-index: 4;
 }
 
 .contact-form-panel {
   background:
-    radial-gradient(
-      circle at 88% 12%,
-      rgba(255, 255, 255, 0.07),
-      transparent 34%
-    ),
+    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.07), transparent 34%),
     var(--bs-primary) !important;
 }
 
@@ -112,19 +122,48 @@
   content: '';
   position: absolute;
   z-index: 0;
-  top: 0;
-  bottom: 0;
-  left: -72px;
+  inset: 0 auto 0 -72px;
   width: 74px;
   background: var(--bs-primary);
   clip-path: polygon(70% 0, 100% 0, 100% 100%, 0 100%, 42% 50%);
   pointer-events: none;
 }
 
+/* Büyük ama kısa ekranlarda içerik taşmasın. */
+@media (min-width: 1200px) and (max-height: 850px) {
+  .contact-hero > .position-relative.z-index-2,
+  .contact-form-panel {
+    padding-top: 1.75rem !important;
+    padding-bottom: 1.75rem !important;
+  }
 
-/* -------------------------------------------------------
-   RESPONSIVE
-------------------------------------------------------- */
+  .contact-hero-content > .badge,
+  .contact-hero-title {
+    margin-bottom: 1rem !important;
+  }
+
+  .contact-hero-copy {
+    margin-bottom: 1.25rem !important;
+  }
+
+  .contact-feature-card {
+    min-height: 88px;
+    padding: 1rem !important;
+  }
+
+  .contact-form-panel .mb-5 {
+    margin-bottom: 1rem !important;
+  }
+
+  .contact-form-panel form .row {
+    --bs-gutter-y: 0.65rem;
+  }
+
+  .contact-form-panel textarea.form-control {
+    min-height: 72px;
+  }
+}
+
 @media (min-width: 1800px) {
   .contact-hero-content {
     width: 82%;
@@ -155,19 +194,6 @@
     width: 53%;
   }
 
-  .contact-hero-overlay {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.08) 15%,
-      rgba(255, 255, 255, 0.34) 23%,
-      rgba(255, 255, 255, 0.7) 32%,
-      rgba(255, 255, 255, 0.94) 41%,
-      #ffffff 49%,
-      #ffffff 100%
-    );
-  }
-
   .contact-hero-content {
     width: 76%;
     padding-left: 23%;
@@ -184,176 +210,10 @@
   }
 }
 
+/* Tablet: beyaz üstte, mavi altta ve tamamı tek viewport içinde. */
 @media (max-width: 1199.98px) {
-  .contact-row,
-  .contact-hero,
-  .contact-form-panel {
-    min-height: auto;
-  }
-
-  .contact-hero {
-    min-height: 560px;
-  }
-
-  .contact-hero-image {
-    width: 60%;
-    opacity: 0.72;
-  }
-
-  .contact-hero-overlay {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0.36) 20%,
-      rgba(255, 255, 255, 0.75) 39%,
-      rgba(255, 255, 255, 0.96) 57%,
-      #ffffff 70%,
-      #ffffff 100%
-    );
-  }
-
-  .contact-hero-content {
-    width: 100%;
-    max-width: 760px;
-    padding-left: 12%;
-    padding-right: 1rem;
-  }
-
-  .contact-feature-row {
-    max-width: 700px;
-  }
-
-  .contact-form-panel::before {
-    display: none;
-  }
-}
-
-@media (max-width: 767.98px) {
-  .contact-hero {
-    min-height: auto;
-  }
-
-  .contact-hero-image {
-    width: 100%;
-    height: 250px;
-    bottom: auto !important;
-    opacity: 0.7;
-    background-position: center 45%;
-  }
-
-  .contact-hero-image::after {
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.14) 38%,
-      rgba(255, 255, 255, 0.62) 70%,
-      #ffffff 100%
-    );
-  }
-
-  .contact-hero-overlay {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.04) 0%,
-      rgba(255, 255, 255, 0.2) 30%,
-      rgba(255, 255, 255, 0.82) 58%,
-      #ffffff 76%,
-      #ffffff 100%
-    );
-  }
-
-  .contact-hero-content {
-    width: 100%;
-    max-width: none;
-    padding: 14rem 0 0;
-  }
-
-  .contact-feature-row {
-    max-width: none;
-  }
-
-  .contact-feature-card {
-    min-height: auto;
-  }
-}
-
-
-/* ===== Tablet viewport fit ===== */
-@media (min-width:768px) and (max-width:1199.98px){
-  .api-row,
-  .data-row,
-  .documentation-hero-row,
-  .contact-row{
-    min-height:calc(100dvh - 120px)!important;
-  }
-}
-
-/* ===== Phone ===== */
-@media (max-width:767.98px){
-  .api-row,
-  .data-row,
-  .documentation-hero-row,
-  .contact-row{
-    min-height:auto!important;
-  }
-
-  .api-scroll-cue,
-  .data-scroll-cue,
-  .documentation-scroll-cue{
-    display:none!important;
-  }
-}
-
-/* =======================================================
-   MOBILE: TEK EKRAN CONTACT
-   Beyaz bölüm üstte, mavi form altta. Scroll cue/ekstra alan yok.
-======================================================= */
-@media (max-width: 767.98px) {
-  :host {
-    display: block;
-    width: 100%;
-    height: calc(100svh - var(--kt-app-header-height, 55px));
-    height: calc(100dvh - var(--kt-app-header-height, 55px));
-    min-height: 0;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  :host > .bg-body {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    padding: 12px !important;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  :host > .bg-body > .container-fluid {
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    min-height: 0;
-    padding-right: 0 !important;
-    padding-left: 0 !important;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  .contact-card {
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    min-height: 0;
-    margin: 0;
-    border-radius: 16px;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  .contact-card > .card-body,
-  .contact-row {
-    height: 100%;
-    min-height: 0 !important;
+  .contact-page-shell {
+    --contact-page-gap: 1.5rem;
   }
 
   .contact-row {
@@ -363,28 +223,80 @@
   }
 
   .contact-row > .col-12:first-child {
-    flex: 0 0 38%;
-    height: 38%;
-    min-height: 0;
+    flex: 0 0 48%;
+    height: 48%;
   }
 
   .contact-form-column {
-    flex: 1 1 62%;
-    height: 62%;
-    min-height: 0;
+    flex: 1 1 52%;
+    height: 52%;
   }
 
-  .contact-hero,
-  .contact-form-panel {
-    height: 100% !important;
-    min-height: 0 !important;
+  .contact-form-panel::before {
+    display: none;
   }
 
   .contact-hero-image {
-    width: 42%;
+    width: 48%;
+    opacity: 0.7;
+  }
+
+  .contact-hero-content {
+    width: 100%;
+    max-width: 780px;
+    padding-left: 18%;
+    padding-right: 1rem;
+  }
+
+  .contact-hero > .position-relative.z-index-2,
+  .contact-form-panel {
+    padding: 1.75rem 2rem !important;
+  }
+
+  .contact-feature-row {
+    max-width: 700px;
+  }
+
+  .contact-feature-card {
+    min-height: 82px;
+  }
+
+  .contact-form-panel form .row {
+    --bs-gutter-y: 0.65rem;
+  }
+
+  .contact-form-panel textarea.form-control {
+    min-height: 64px;
+    resize: none;
+  }
+}
+
+/* Telefon */
+@media (max-width: 767.98px) {
+  .contact-page-shell {
+    --contact-layout-offset: 59px;
+    --contact-page-gap: 1rem;
+  }
+
+  .contact-card {
+    border-radius: 1rem;
+  }
+
+  .contact-row > .col-12:first-child {
+    flex-basis: 42%;
+    height: 42%;
+  }
+
+  .contact-form-column {
+    flex-basis: 58%;
+    height: 58%;
+  }
+
+  .contact-hero-image {
+    width: 44%;
     height: 100%;
     bottom: 0 !important;
-    opacity: .55;
+    opacity: 0.55;
     background-position: center;
   }
 
@@ -409,39 +321,37 @@
   }
 
   .contact-hero > .position-relative.z-index-2 {
-    padding: 14px 16px !important;
-    align-items: center !important;
+    padding: 1rem 1.25rem !important;
   }
 
   .contact-hero-content {
     width: 100%;
     max-width: none;
-    padding: 0 0 0 20% !important;
+    padding: 0 0 0 18%;
   }
 
   .contact-hero-content > .badge {
-    margin-bottom: 8px !important;
-    font-size: 9px !important;
+    margin-bottom: 0.65rem !important;
   }
 
   .contact-hero-title {
-    margin-bottom: 8px !important;
-    font-size: clamp(20px, 6vw, 28px) !important;
-    line-height: 1.08 !important;
+    font-size: clamp(1.75rem, 7vw, 2.35rem) !important;
+    line-height: 1.1 !important;
+    margin-bottom: 0.65rem !important;
   }
 
   .contact-hero-copy {
-    margin-bottom: 10px !important;
-    font-size: 11px !important;
-    line-height: 1.35 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 0.85rem !important;
   }
 
   .contact-feature-row {
-    --bs-gutter-x: 8px;
-    --bs-gutter-y: 6px;
+    --bs-gutter-x: 0.65rem;
+    --bs-gutter-y: 0.65rem;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: 100%;
+    max-width: none;
     margin: 0;
   }
 
@@ -452,57 +362,39 @@
 
   .contact-feature-card {
     min-height: 0;
-    padding: 7px !important;
-    border-radius: 10px !important;
+    padding: 0.75rem !important;
+  }
+
+  .contact-feature-card .symbol,
+  .contact-feature-card .symbol-label {
+    width: 38px !important;
+    height: 38px !important;
   }
 
   .contact-feature-card .symbol {
-    width: 30px !important;
-    height: 30px !important;
-    margin-right: 7px !important;
-  }
-
-  .contact-feature-card .symbol-label {
-    width: 30px !important;
-    height: 30px !important;
-  }
-
-  .contact-feature-card .symbol i {
-    font-size: 16px !important;
+    margin-right: 0.65rem !important;
   }
 
   .contact-feature-card .text-gray-900 {
-    font-size: 10px !important;
-    line-height: 1.15 !important;
-    margin-bottom: 2px !important;
+    font-size: 0.8rem !important;
   }
 
   .contact-feature-card .text-gray-600 {
-    font-size: 8px !important;
-    line-height: 1.2 !important;
+    font-size: 0.7rem !important;
+    line-height: 1.3 !important;
   }
 
   .contact-form-panel {
-    padding: 12px 16px !important;
-    justify-content: center !important;
-  }
-
-  .contact-form-panel > .position-relative.z-index-2 {
-    width: 100%;
+    padding: 1rem 1.25rem !important;
   }
 
   .contact-form-panel .mb-5 {
-    margin-bottom: 7px !important;
-  }
-
-  .contact-form-panel .badge {
-    margin-bottom: 0 !important;
-    font-size: 9px !important;
+    margin-bottom: 0.65rem !important;
   }
 
   .contact-form-panel form .row {
-    --bs-gutter-x: 8px;
-    --bs-gutter-y: 6px;
+    --bs-gutter-x: 0.65rem;
+    --bs-gutter-y: 0.5rem;
   }
 
   .contact-form-panel form .col-md-6 {
@@ -510,61 +402,61 @@
   }
 
   .contact-form-panel .form-label {
-    margin-bottom: 2px !important;
-    font-size: 9px !important;
-    line-height: 1.1 !important;
+    margin-bottom: 0.2rem !important;
+    font-size: 0.72rem !important;
   }
 
   .contact-form-panel .form-control {
-    min-height: 29px;
-    height: 29px;
-    padding: 4px 8px;
-    border-radius: 7px;
-    font-size: 10px;
-    line-height: 1.2;
+    min-height: 36px;
+    height: 36px;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.78rem;
   }
 
   .contact-form-panel textarea.form-control {
-    min-height: 43px;
-    height: 43px;
-    resize: none;
+    min-height: 52px;
+    height: 52px;
   }
 
   .contact-form-panel .col-12.pt-2 {
-    padding-top: 2px !important;
+    padding-top: 0.15rem !important;
   }
 
   .contact-form-panel .btn {
-    min-height: 31px;
-    padding: 5px 10px;
-    font-size: 10px;
+    min-height: 38px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
   }
 }
 
-/* Çok kısa telefon ekranlarında da kart viewport içinde kalır. */
-@media (max-width: 767.98px) and (max-height: 700px) {
-  :host > .bg-body {
-    padding: 8px !important;
+/* Çok kısa telefonlar */
+@media (max-width: 767.98px) and (max-height: 720px) {
+  .contact-page-shell {
+    --contact-page-gap: 0.65rem;
   }
 
   .contact-row > .col-12:first-child {
-    flex-basis: 35%;
-    height: 35%;
+    flex-basis: 38%;
+    height: 38%;
   }
 
   .contact-form-column {
-    flex-basis: 65%;
-    height: 65%;
+    flex-basis: 62%;
+    height: 62%;
   }
 
   .contact-hero > .position-relative.z-index-2,
   .contact-form-panel {
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
   }
 
   .contact-hero-copy {
-    margin-bottom: 6px !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .contact-feature-card {
+    padding: 0.5rem !important;
   }
 
   .contact-feature-card .text-gray-600 {
@@ -572,16 +464,329 @@
   }
 
   .contact-form-panel form .row {
-    --bs-gutter-y: 4px;
+    --bs-gutter-y: 0.3rem;
   }
 
   .contact-form-panel .form-control {
-    min-height: 26px;
-    height: 26px;
+    min-height: 31px;
+    height: 31px;
   }
 
   .contact-form-panel textarea.form-control {
-    min-height: 36px;
-    height: 36px;
+    min-height: 42px;
+    height: 42px;
+  }
+
+  .contact-form-panel .btn {
+    min-height: 33px;
+  }
+}
+
+
+/* =========================================================
+   DATA/API/DOCUMENTATION ile AYNI EĞİK GEÇİŞ
+   ========================================================= */
+@media (min-width:1200px){
+
+  .contact-form-column{
+    overflow: visible;
+  }
+
+  .contact-form-panel{
+    overflow: visible;
+    clip-path:none !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin-left:0 !important;
+  }
+
+  .contact-form-panel::before{
+    content:"";
+    display:block !important;
+    position:absolute;
+    z-index:0;
+    top:0;
+    bottom:0;
+    left:-70px;
+    width:71px;
+    background:var(--bs-primary);
+    clip-path:polygon(100% 0,100% 100%,0 100%);
+    pointer-events:none;
+  }
+
+  .contact-form-panel > .position-relative{
+    position:relative;
+    z-index:2;
+  }
+}
+
+@media (max-width:1199.98px){
+  .contact-form-panel::before{
+    display:none !important;
+  }
+}
+
+/* =========================================================
+   CONTACT - TÜM EKRANLARDA VIEWPORT FIT
+   Mobilde beyaz bölüm üstte, mavi form altta.
+   İlk kart ekran yüksekliği - üst/alt boşluk kadar olur.
+   ========================================================= */
+@media (max-width: 767.98px) {
+  .contact-page-shell {
+    --contact-layout-offset: 59px;
+    --contact-page-gap: .75rem;
+
+    min-height: calc(100dvh - var(--contact-layout-offset)) !important;
+    height: calc(100dvh - var(--contact-layout-offset)) !important;
+    padding: var(--contact-page-gap) !important;
+    overflow: hidden;
+  }
+
+  .contact-card {
+    height: calc(
+      100dvh -
+      var(--contact-layout-offset) -
+      (var(--contact-page-gap) * 2)
+    ) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    border-radius: 1rem;
+  }
+
+  .contact-card > .card-body,
+  .contact-row,
+  .contact-row > [class*='col-'],
+  .contact-hero,
+  .contact-form-column,
+  .contact-form-panel {
+    min-height: 0 !important;
+  }
+
+  .contact-card > .card-body,
+  .contact-row {
+    height: 100% !important;
+  }
+
+  .contact-row {
+    display: grid !important;
+    grid-template-rows: 42% 58%;
+    grid-template-columns: 1fr;
+  }
+
+  .contact-row > .col-12:first-child,
+  .contact-form-column {
+    width: 100% !important;
+    height: 100% !important;
+    flex: none !important;
+  }
+
+  .contact-hero,
+  .contact-form-panel {
+    height: 100% !important;
+  }
+
+  .contact-form-panel::before {
+    display: none !important;
+  }
+
+  /* HERO */
+  .contact-hero > .position-relative.z-index-2 {
+    height: 100% !important;
+    padding: .8rem 1rem !important;
+    align-items: center !important;
+  }
+
+  .contact-hero-image {
+    width: 47% !important;
+    opacity: .52 !important;
+    background-position: left center !important;
+  }
+
+  .contact-hero-overlay {
+    background: linear-gradient(
+      90deg,
+      rgba(255,255,255,.08) 0%,
+      rgba(255,255,255,.58) 34%,
+      #fff 67%,
+      #fff 100%
+    ) !important;
+  }
+
+  .contact-hero-content {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 0 0 18% !important;
+  }
+
+  .contact-hero-content > .badge {
+    margin-bottom: .45rem !important;
+    font-size: .65rem !important;
+  }
+
+  .contact-hero-title {
+    font-size: clamp(1.55rem, 6.8vw, 2.15rem) !important;
+    line-height: 1.04 !important;
+    margin-bottom: .45rem !important;
+    letter-spacing: -.025em;
+  }
+
+  .contact-hero-copy {
+    font-size: clamp(.72rem, 2.8vw, .9rem) !important;
+    line-height: 1.33 !important;
+    margin-bottom: .55rem !important;
+  }
+
+  .contact-feature-row {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: .45rem !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .contact-feature-row > [class*='col-'] {
+    width: auto !important;
+    padding: 0 !important;
+  }
+
+  .contact-feature-card {
+    min-height: 0 !important;
+    padding: .55rem !important;
+  }
+
+  .contact-feature-card .symbol,
+  .contact-feature-card .symbol-label {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .contact-feature-card .symbol {
+    margin-right: .45rem !important;
+  }
+
+  .contact-feature-card i {
+    font-size: 1rem !important;
+  }
+
+  .contact-feature-card .text-gray-900 {
+    font-size: .68rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .contact-feature-card .text-gray-600 {
+    font-size: .58rem !important;
+    line-height: 1.2 !important;
+  }
+
+  /* FORM */
+  .contact-form-panel {
+    padding: .7rem 1rem .8rem !important;
+    justify-content: center !important;
+  }
+
+  .contact-form-panel > .position-relative {
+    width: 100%;
+  }
+
+  .contact-form-panel .mb-5 {
+    margin-bottom: .45rem !important;
+  }
+
+  .contact-form-panel .badge {
+    font-size: .65rem !important;
+  }
+
+  .contact-form-panel form .row {
+    --bs-gutter-x: .55rem;
+    --bs-gutter-y: .4rem;
+  }
+
+  .contact-form-panel form .col-md-6 {
+    width: 50% !important;
+  }
+
+  .contact-form-panel .form-label {
+    margin-bottom: .15rem !important;
+    font-size: .62rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .contact-form-panel .form-control {
+    min-height: 31px !important;
+    height: 31px !important;
+    padding: .35rem .55rem !important;
+    font-size: .7rem !important;
+    border-radius: .65rem !important;
+  }
+
+  .contact-form-panel textarea.form-control {
+    min-height: 43px !important;
+    height: 43px !important;
+    resize: none !important;
+  }
+
+  .contact-form-panel .col-12.pt-2 {
+    padding-top: .05rem !important;
+  }
+
+  .contact-form-panel .btn {
+    min-height: 33px !important;
+    height: 33px !important;
+    padding: .35rem .6rem !important;
+    font-size: .7rem !important;
+  }
+}
+
+/* Çok kısa cihazlar: hâlâ tek ekrana sığdır */
+@media (max-width: 767.98px) and (max-height: 720px) {
+  .contact-page-shell {
+    --contact-page-gap: .5rem;
+  }
+
+  .contact-row {
+    grid-template-rows: 38% 62%;
+  }
+
+  .contact-hero > .position-relative.z-index-2 {
+    padding-top: .45rem !important;
+    padding-bottom: .45rem !important;
+  }
+
+  .contact-hero-copy {
+    margin-bottom: .35rem !important;
+    font-size: .68rem !important;
+  }
+
+  .contact-feature-card {
+    padding: .4rem !important;
+  }
+
+  .contact-feature-card .text-gray-600 {
+    display: none !important;
+  }
+
+  .contact-form-panel {
+    padding-top: .45rem !important;
+    padding-bottom: .5rem !important;
+  }
+
+  .contact-form-panel form .row {
+    --bs-gutter-y: .25rem;
+  }
+
+  .contact-form-panel .form-control {
+    min-height: 28px !important;
+    height: 28px !important;
+  }
+
+  .contact-form-panel textarea.form-control {
+    min-height: 37px !important;
+    height: 37px !important;
+  }
+
+  .contact-form-panel .btn {
+    min-height: 30px !important;
+    height: 30px !important;
   }
 }

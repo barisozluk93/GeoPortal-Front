@@ -524,71 +524,85 @@ export const locale = {
             "API_TITLE": "Uydu verilerini kendi sistemlerinize entegre edin",
             "API_DESC": "Harita tabanlı ana akışın yanında, API key satın alarak yetkili endpointler üzerinden programatik veri erişimi sağlayabilirsiniz.",
             "MAP_ACTION": "Haritaya Git",
-            "API_ACTION": "API Erişimini İncele"
+            "API_ACTION": "API Erişimini İncele",
+            "BROWSER": {
+                "MAP": "GeoPortal / Harita",
+                "SATELLITE_RESULTS": "GeoPortal / Uydu Görüntüsü Sonuçları",
+                "READY_IMAGE_PRICING": "GeoPortal / Hazır Görüntü Fiyatlandırması",
+                "NEW_IMAGE_REQUEST": "GeoPortal / Yeni Görüntü Talebi",
+                "ORDER_SUMMARY": "GeoPortal / Sipariş Özeti"
+            },
+            "ALT": {
+                "AOI_SELECTION": "GeoPortal ilgi alanı seçimi",
+                "SATELLITE_RESULTS": "Uydu görüntüsü sonuçları",
+                "READY_IMAGE_PRICING": "Hazır uydu görüntüsü fiyatlandırması",
+                "NEW_IMAGE_REQUEST": "Yeni uydu görüntüsü talebi",
+                "ORDER_SUMMARY": "GeoPortal sipariş özeti"
+            }
         },
         API_PAGE: {
-          KICKER: 'GeoPortal Public API',
-          TITLE: 'Uydu verisi iş akışlarınızı güvenli API erişimiyle otomatikleştirin',
-          COPY: 'API key satın alarak ayrı Public API mikroservisimize erişin; arşiv görüntüsü arayın, metadata alın, fiyat teklifi oluşturun, hazır görüntü veya yeni çekim siparişi verin ve tamamlanan teslimatları sistemlerinize aktarın.',
-          BUY_API_KEY: 'API Key Satın Al',
-          DOCUMENTATION: 'API Dokümantasyonu',
-          BILLING_NOTICE: {
-            TITLE: 'API erişimi ve veri bedeli ayrıdır',
-            DESCRIPTION: 'API key, servis kullanım hakkı sağlar. Uydu görüntüsü ve görüntü işleme hizmetleri ayrıca alan ve seçilen hizmetlere göre ücretlendirilir.'
-          },
-          MODEL: {
-            KICKER: 'Ticari Model',
-            TITLE: 'Tek API, iki ayrı ücretlendirme katmanı',
-            ITEM_1_TITLE: 'API erişimi',
-            ITEM_1_DESC: 'x-api-key ile güvenli ve kotalı Public API erişimi.',
-            ITEM_2_TITLE: 'Arama ve fiyatlama',
-            ITEM_2_DESC: 'Görüntü keşfi, metadata ve satın alma öncesi teklif.',
-            ITEM_3_TITLE: 'Portal üzerinden ödeme',
-            ITEM_3_DESC: 'Sipariş API ile oluşur; ödeme GeoPortal ödeme sayfasında tamamlanır.',
-            ITEM_4_TITLE: 'Kontrollü teslimat',
-            ITEM_4_DESC: 'Sadece ödenmiş ve tamamlanmış siparişler için süreli indirme bağlantısı.'
-          },
-          CAPABILITIES: {
-            KICKER: 'Public API Ürünleri',
-            TITLE: 'Dış sistemlere açılacak API yetenekleri',
-            DESCRIPTION: 'Harita ekranındaki iç endpointler paylaşılmaz. Aynı iş kurallarını kullanan, x-api-key ile korunan ayrı mikroservis üzerinden aşağıdaki servisler sunulur.',
-            SEARCH: { TITLE: 'Görüntü Arama API', DESCRIPTION: 'AOI ve teknik filtrelere göre kesişen arşiv uydu görüntülerini listeler.' },
-            DETAIL: { TITLE: 'Görüntü Detay API', DESCRIPTION: 'Seçilen görüntünün footprint, metadata, önizleme ve ticari bilgilerini döndürür.' },
-            QUOTE: { TITLE: 'Fiyat Teklifi API', DESCRIPTION: 'Görüntü alanı, birim fiyat ve işleme seçenekleri üzerinden süreli teklif üretir.' },
-            ARCHIVE_ORDER: { TITLE: 'Hazır Görüntü Sipariş API', DESCRIPTION: 'Geçerli fiyat teklifini arşiv görüntüsü siparişine dönüştürür.' },
-            ACQUISITION: { TITLE: 'Yeni Çekim Sipariş API', DESCRIPTION: 'AOI ve çekim parametreleriyle yeni uydu görüntüsü talebi oluşturur.' },
-            STATUS: { TITLE: 'Sipariş Durum API', DESCRIPTION: 'Ödeme, hazırlık ve teslimat durumunu sipariş numarasıyla sorgular.' },
-            DELIVERY: { TITLE: 'Teslimat API', DESCRIPTION: 'Tamamlanmış ve ödenmiş siparişler için süreli indirme bağlantılarını döndürür.' },
-            OPTIONS: { TITLE: 'Katalog Seçenekleri API', DESCRIPTION: 'Uydu, görüntü tipi ve işleme seçenekleri gibi güncel referans verileri sağlar.' }
-          },
-          FLOW: {
-            KICKER: 'Uçtan Uca Akış',
-            TITLE: 'API üzerinden sipariş verin, ödeme ve teslimatı güvenli yönetin',
-            DESCRIPTION: 'Public API sipariş otomasyonunu sağlar; ödeme kart bilgileri API üzerinden taşınmaz.',
-            STEP_1_TITLE: 'API Key alın',
-            STEP_1_DESC: 'Anahtarı x-api-key header değeriyle tüm isteklere ekleyin.',
-            STEP_2_TITLE: 'Ara ve fiyatla',
-            STEP_2_DESC: 'Görüntüyü bulun ve seçilen hizmetlerle güncel teklif oluşturun.',
-            STEP_3_TITLE: 'Sipariş oluştur',
-            STEP_3_DESC: 'API sipariş numarası ve GeoPortal ödeme bağlantısı döndürür.',
-            STEP_4_TITLE: 'Takip et ve indir',
-            STEP_4_DESC: 'Ödeme sonrası durumu takip edin; tamamlandığında teslimat bağlantısını alın.'
-          },
-          PRICING: {
-            KICKER: 'Ücretlendirme',
-            TITLE: 'API aboneliği ile veri satın alımını birbirinden ayırıyoruz',
-            DESCRIPTION: 'Bu yapı API kullanım maliyetini öngörülebilir tutarken uydu verisi maliyetini gerçek kullanım üzerinden hesaplar.',
-            API_ACCESS_TITLE: 'API erişim bedeli',
-            API_ACCESS_DESC: 'Anahtarın geçerlilik süresi, istek kotası, teknik destek ve erişilebilir servisleri kapsar.',
-            DATA_TITLE: 'Veri ve işleme bedeli',
-            DATA_DESC: 'Görüntü alanı × görüntü birim fiyatı + görüntü alanı × seçilen işleme hizmetlerinin birim fiyatı.',
-            PAYMENT_DESC: 'Sipariş API ile oluşturulur ve paymentUrl döner. Müşteri güvenli GeoPortal ödeme ekranında ödemeyi tamamlar; API kart bilgisi almaz.'
-          },
-          CTA: {
-            KICKER: 'Entegrasyona Başlayın',
-            TITLE: 'GeoPortal iş akışlarını kendi sisteminize taşıyın',
-            DESCRIPTION: 'API key satın alın, teknik dokümantasyonu inceleyin ve ayrı Public API mikroservisine güvenli şekilde bağlanın.'
-          }
+            KICKER: 'GeoPortal Public API',
+            TITLE: 'Uydu verisi iş akışlarınızı güvenli API erişimiyle otomatikleştirin',
+            COPY: 'API key satın alarak ayrı Public API mikroservisimize erişin; arşiv görüntüsü arayın, metadata alın, fiyat teklifi oluşturun, hazır görüntü veya yeni çekim siparişi verin ve tamamlanan teslimatları sistemlerinize aktarın.',
+            BUY_API_KEY: 'API Key Satın Al',
+            DOCUMENTATION: 'API Dokümantasyonu',
+            BILLING_NOTICE: {
+                TITLE: 'API erişimi ve veri bedeli ayrıdır',
+                DESCRIPTION: 'API key, servis kullanım hakkı sağlar. Uydu görüntüsü ve görüntü işleme hizmetleri ayrıca alan ve seçilen hizmetlere göre ücretlendirilir.'
+            },
+            MODEL: {
+                KICKER: 'Ticari Model',
+                TITLE: 'Tek API, iki ayrı ücretlendirme katmanı',
+                ITEM_1_TITLE: 'API erişimi',
+                ITEM_1_DESC: 'x-api-key ile güvenli ve kotalı Public API erişimi.',
+                ITEM_2_TITLE: 'Arama ve fiyatlama',
+                ITEM_2_DESC: 'Görüntü keşfi, metadata ve satın alma öncesi teklif.',
+                ITEM_3_TITLE: 'Portal üzerinden ödeme',
+                ITEM_3_DESC: 'Sipariş API ile oluşur; ödeme GeoPortal ödeme sayfasında tamamlanır.',
+                ITEM_4_TITLE: 'Kontrollü teslimat',
+                ITEM_4_DESC: 'Sadece ödenmiş ve tamamlanmış siparişler için süreli indirme bağlantısı.'
+            },
+            CAPABILITIES: {
+                KICKER: 'Public API Ürünleri',
+                TITLE: 'Dış sistemlere açılacak API yetenekleri',
+                DESCRIPTION: 'Harita ekranındaki iç endpointler paylaşılmaz. Aynı iş kurallarını kullanan, x-api-key ile korunan ayrı mikroservis üzerinden aşağıdaki servisler sunulur.',
+                SEARCH: { TITLE: 'Görüntü Arama API', DESCRIPTION: 'AOI ve teknik filtrelere göre kesişen arşiv uydu görüntülerini listeler.' },
+                DETAIL: { TITLE: 'Görüntü Detay API', DESCRIPTION: 'Seçilen görüntünün footprint, metadata, önizleme ve ticari bilgilerini döndürür.' },
+                QUOTE: { TITLE: 'Fiyat Teklifi API', DESCRIPTION: 'Görüntü alanı, birim fiyat ve işleme seçenekleri üzerinden süreli teklif üretir.' },
+                ARCHIVE_ORDER: { TITLE: 'Hazır Görüntü Sipariş API', DESCRIPTION: 'Geçerli fiyat teklifini arşiv görüntüsü siparişine dönüştürür.' },
+                ACQUISITION: { TITLE: 'Yeni Çekim Sipariş API', DESCRIPTION: 'AOI ve çekim parametreleriyle yeni uydu görüntüsü talebi oluşturur.' },
+                STATUS: { TITLE: 'Sipariş Durum API', DESCRIPTION: 'Ödeme, hazırlık ve teslimat durumunu sipariş numarasıyla sorgular.' },
+                DELIVERY: { TITLE: 'Teslimat API', DESCRIPTION: 'Tamamlanmış ve ödenmiş siparişler için süreli indirme bağlantılarını döndürür.' },
+                OPTIONS: { TITLE: 'Katalog Seçenekleri API', DESCRIPTION: 'Uydu, görüntü tipi ve işleme seçenekleri gibi güncel referans verileri sağlar.' }
+            },
+            FLOW: {
+                KICKER: 'Uçtan Uca Akış',
+                TITLE: 'API üzerinden sipariş verin, ödeme ve teslimatı güvenli yönetin',
+                DESCRIPTION: 'Public API sipariş otomasyonunu sağlar; ödeme kart bilgileri API üzerinden taşınmaz.',
+                STEP_1_TITLE: 'API Key alın',
+                STEP_1_DESC: 'Anahtarı x-api-key header değeriyle tüm isteklere ekleyin.',
+                STEP_2_TITLE: 'Ara ve fiyatla',
+                STEP_2_DESC: 'Görüntüyü bulun ve seçilen hizmetlerle güncel teklif oluşturun.',
+                STEP_3_TITLE: 'Sipariş oluştur',
+                STEP_3_DESC: 'API sipariş numarası ve GeoPortal ödeme bağlantısı döndürür.',
+                STEP_4_TITLE: 'Takip et ve indir',
+                STEP_4_DESC: 'Ödeme sonrası durumu takip edin; tamamlandığında teslimat bağlantısını alın.'
+            },
+            PRICING: {
+                KICKER: 'Ücretlendirme',
+                TITLE: 'API aboneliği ile veri satın alımını birbirinden ayırıyoruz',
+                DESCRIPTION: 'Bu yapı API kullanım maliyetini öngörülebilir tutarken uydu verisi maliyetini gerçek kullanım üzerinden hesaplar.',
+                API_ACCESS_TITLE: 'API erişim bedeli',
+                API_ACCESS_DESC: 'Anahtarın geçerlilik süresi, istek kotası, teknik destek ve erişilebilir servisleri kapsar.',
+                DATA_TITLE: 'Veri ve işleme bedeli',
+                DATA_DESC: 'Görüntü alanı × görüntü birim fiyatı + görüntü alanı × seçilen işleme hizmetlerinin birim fiyatı.',
+                PAYMENT_DESC: 'Sipariş API ile oluşturulur ve paymentUrl döner. Müşteri güvenli GeoPortal ödeme ekranında ödemeyi tamamlar; API kart bilgisi almaz.'
+            },
+            CTA: {
+                KICKER: 'Entegrasyona Başlayın',
+                TITLE: 'GeoPortal iş akışlarını kendi sisteminize taşıyın',
+                DESCRIPTION: 'API key satın alın, teknik dokümantasyonu inceleyin ve ayrı Public API mikroservisine güvenli şekilde bağlanın.'
+            }
         },
         "CONTACT": {
             "HERO": {
@@ -639,127 +653,127 @@ export const locale = {
             }
         },
         API_DOC: {
-          SIDEBAR: {
-            KICKER: 'Public API Dokümantasyonu',
-            TITLE: 'GeoPortal Public API v1',
-            SUBTITLE: 'Arama, fiyatlama, sipariş, durum takibi ve teslimat servisleri.',
-            BILLING_NOTE: 'API key yalnızca erişim sağlar. Uydu verisi ve işleme bedelleri sipariş bazında ayrıca tahsil edilir.'
-          },
-          HERO: {
-            KICKER: 'Geliştirici Dokümantasyonu',
-            TITLE: 'GeoPortal Public API',
-            DESCRIPTION: 'Harita uygulamasının iç servislerinden bağımsız, x-api-key ile korunan Public API mikroservisinin uçtan uca entegrasyon rehberi.',
-            BASE_URL: 'Base URL',
-            AUTHENTICATION: 'Kimlik Doğrulama',
-            AVAILABLE_ENDPOINTS: 'Endpoint Sayısı'
-          },
-          NAV: {
-            OVERVIEW: 'Genel Bakış',
-            BUSINESS_MODEL: 'Ticari Model',
-            AUTHENTICATION: 'Kimlik Doğrulama',
-            RESPONSE_FORMAT: 'Response Formatı',
-            CATALOG_OPTIONS: 'Katalog Seçenekleri',
-            IMAGERY_SEARCH: 'Görüntü Arama',
-            IMAGERY_DETAIL: 'Görüntü Detayı',
-            PRICING_QUOTE: 'Fiyat Teklifi',
-            ARCHIVE_ORDER: 'Hazır Görüntü Siparişi',
-            ACQUISITION_ORDER: 'Yeni Çekim Siparişi',
-            ORDER_STATUS: 'Sipariş Durumu',
-            ORDER_DELIVERY: 'Teslimat',
-            ERRORS: 'Hata Kodları'
-          },
-          OVERVIEW: {
-            TITLE: 'Public API mimarisi',
-            DESCRIPTION: 'Bu API, Angular harita uygulamasının kullandığı endpointleri dışarı açmaz. Aynı domain servisleri ve fiyatlandırma kuralları üzerinde çalışan ayrı bir mikroservis olarak tasarlanır.'
-          },
-          BUSINESS_MODEL: {
-            TITLE: 'API erişimi ve uydu verisi ayrı ürünlerdir',
-            DESCRIPTION: 'API key, otomasyon ve entegrasyon hakkıdır; görüntü mülkiyeti veya sınırsız indirme hakkı vermez.',
-            ACCESS_TITLE: 'API aboneliği',
-            ACCESS_DESC: 'x-api-key, kota, anahtar süresi, loglama, rate limit ve teknik destek katmanını kapsar.',
-            DATA_TITLE: 'Sipariş bazlı veri satışı',
-            DATA_DESC: 'Hazır görüntü, yeni çekim ve işleme hizmetleri her siparişte alan bazlı olarak hesaplanır.',
-            PAYMENT_DESC: 'Sipariş oluşturulduğunda paymentUrl döner. Ödeme GeoPortal portalında yapılır; ödeme tamamlanmadan teslimat endpointi dosya bağlantısı döndürmez.'
-          },
-          AUTH: {
-            TITLE: 'x-api-key kullanımı',
-            DESCRIPTION: 'Tüm endpoint çağrılarında satın alınmış ve aktif API key, x-api-key header alanında gönderilmelidir.'
-          },
-          RESPONSE: {
-            TITLE: 'Standart response zarfı',
-            DESCRIPTION: 'Tüm servisler isSuccess, message, data ve errors alanlarını içeren ortak response yapısını kullanır.'
-          },
-          GROUPS: {
-            CATALOG: 'Katalog',
-            IMAGERY: 'Uydu Görüntüsü',
-            COMMERCE: 'Fiyatlama',
-            ORDERS: 'Sipariş'
-          },
-          COMMON: {
-            ENDPOINT: 'Endpoint',
-            AUTHENTICATION: 'Kimlik Doğrulama',
-            REQUEST_BODY: 'Request Body',
-            RESPONSE_EXAMPLE: 'Response Örneği',
-            CURL_EXAMPLE: 'cURL Örneği',
-            NOTES: 'Notlar'
-          },
-          TABLE: { STATUS_CODE: 'Status Code', DESCRIPTION: 'Açıklama' },
-          ENDPOINTS: {
-            CATALOG_OPTIONS: {
-              TITLE: 'Katalog seçeneklerini getir',
-              DESCRIPTION: 'Arama ve sipariş formlarında kullanılacak güncel uydu, görüntü tipi ve işleme seçeneklerini döndürür.',
-              NOTES: { 0: 'İşleme birim fiyatları bu endpoint üzerinden güncel olarak alınmalıdır.', 1: 'İstemci tarafında sabit seçenek listesi tutulmamalıdır.' }
+            SIDEBAR: {
+                KICKER: 'Public API Dokümantasyonu',
+                TITLE: 'GeoPortal Public API v1',
+                SUBTITLE: 'Arama, fiyatlama, sipariş, durum takibi ve teslimat servisleri.',
+                BILLING_NOTE: 'API key yalnızca erişim sağlar. Uydu verisi ve işleme bedelleri sipariş bazında ayrıca tahsil edilir.'
             },
-            IMAGERY_SEARCH: {
-              TITLE: 'Arşiv uydu görüntüsü ara',
-              DESCRIPTION: 'Gönderilen AOI ve teknik filtrelere göre kesişen hazır uydu görüntülerini sayfalı olarak listeler.',
-              NOTES: { 0: 'wkt alanı Polygon veya MultiPolygon olmalıdır.', 1: 'Koordinat sistemi varsayılan olarak EPSG:4326 kabul edilir.', 2: 'Bu endpoint yalnızca keşif yapar; indirme hakkı sağlamaz.' }
+            HERO: {
+                KICKER: 'Geliştirici Dokümantasyonu',
+                TITLE: 'GeoPortal Public API',
+                DESCRIPTION: 'Harita uygulamasının iç servislerinden bağımsız, x-api-key ile korunan Public API mikroservisinin uçtan uca entegrasyon rehberi.',
+                BASE_URL: 'Base URL',
+                AUTHENTICATION: 'Kimlik Doğrulama',
+                AVAILABLE_ENDPOINTS: 'Endpoint Sayısı'
             },
-            IMAGERY_DETAIL: {
-              TITLE: 'Uydu görüntüsü detayını getir',
-              DESCRIPTION: 'Seçilen görüntünün teknik metadata, footprint, önizleme ve güncel görüntü birim fiyatını döndürür.',
-              NOTES: { 0: 'Download link sipariş tamamlanmadan dönmez.', 1: 'Birim fiyat bilgi amaçlıdır; kesin fiyat için quote endpointi kullanılmalıdır.' }
+            NAV: {
+                OVERVIEW: 'Genel Bakış',
+                BUSINESS_MODEL: 'Ticari Model',
+                AUTHENTICATION: 'Kimlik Doğrulama',
+                RESPONSE_FORMAT: 'Response Formatı',
+                CATALOG_OPTIONS: 'Katalog Seçenekleri',
+                IMAGERY_SEARCH: 'Görüntü Arama',
+                IMAGERY_DETAIL: 'Görüntü Detayı',
+                PRICING_QUOTE: 'Fiyat Teklifi',
+                ARCHIVE_ORDER: 'Hazır Görüntü Siparişi',
+                ACQUISITION_ORDER: 'Yeni Çekim Siparişi',
+                ORDER_STATUS: 'Sipariş Durumu',
+                ORDER_DELIVERY: 'Teslimat',
+                ERRORS: 'Hata Kodları'
             },
-            PRICING_QUOTE: {
-              TITLE: 'Fiyat teklifi oluştur',
-              DESCRIPTION: 'Talep alanı, görüntü birim fiyatı ve seçilen işleme seçeneklerine göre süreli fiyat teklifi üretir.',
-              NOTES: { 0: 'Görüntü bedeli = toplam görüntü alanı × görüntü birim fiyatı.', 1: 'İşleme bedeli = toplam görüntü alanı × seçilen hizmetlerin birim fiyatları.', 2: 'Quote süresi dolduğunda yeni teklif oluşturulmalıdır.' }
+            OVERVIEW: {
+                TITLE: 'Public API mimarisi',
+                DESCRIPTION: 'Bu API, Angular harita uygulamasının kullandığı endpointleri dışarı açmaz. Aynı domain servisleri ve fiyatlandırma kuralları üzerinde çalışan ayrı bir mikroservis olarak tasarlanır.'
             },
-            ARCHIVE_ORDER: {
-              TITLE: 'Hazır uydu görüntüsü siparişi oluştur',
-              DESCRIPTION: 'Geçerli quoteId değerini siparişe dönüştürür ve güvenli GeoPortal ödeme bağlantısını döndürür.',
-              NOTES: { 0: 'API kart veya banka bilgisi kabul etmez.', 1: 'Ödeme paymentUrl üzerinden portalda yapılır.', 2: 'Ödeme tamamlanmadan sipariş hazırlama süreci başlamaz.' }
+            BUSINESS_MODEL: {
+                TITLE: 'API erişimi ve uydu verisi ayrı ürünlerdir',
+                DESCRIPTION: 'API key, otomasyon ve entegrasyon hakkıdır; görüntü mülkiyeti veya sınırsız indirme hakkı vermez.',
+                ACCESS_TITLE: 'API aboneliği',
+                ACCESS_DESC: 'x-api-key, kota, anahtar süresi, loglama, rate limit ve teknik destek katmanını kapsar.',
+                DATA_TITLE: 'Sipariş bazlı veri satışı',
+                DATA_DESC: 'Hazır görüntü, yeni çekim ve işleme hizmetleri her siparişte alan bazlı olarak hesaplanır.',
+                PAYMENT_DESC: 'Sipariş oluşturulduğunda paymentUrl döner. Ödeme GeoPortal portalında yapılır; ödeme tamamlanmadan teslimat endpointi dosya bağlantısı döndürmez.'
             },
-            ACQUISITION_ORDER: {
-              TITLE: 'Yeni uydu görüntüsü siparişi oluştur',
-              DESCRIPTION: 'AOI, GSD, tarih, bulutluluk, off-nadir, platform ve işleme seçenekleriyle yeni çekim talebi oluşturur.',
-              NOTES: { 0: 'Parametre uygunluğu sunucu tarafında doğrulanır.', 1: 'Yeni çekim siparişi sağlayıcı onayı gerektirebilir.', 2: 'Response içinde ödeme bağlantısı ve başlangıç sipariş durumu döner.' }
+            AUTH: {
+                TITLE: 'x-api-key kullanımı',
+                DESCRIPTION: 'Tüm endpoint çağrılarında satın alınmış ve aktif API key, x-api-key header alanında gönderilmelidir.'
             },
-            ORDER_STATUS: {
-              TITLE: 'Sipariş durumunu sorgula',
-              DESCRIPTION: 'Siparişin ödeme, hazırlık ve teslimata hazır olma durumunu döndürür.',
-              NOTES: { 0: 'Olası durumlar WaitingPayment, Paid, Preparing, Completed, Cancelled ve Failed olabilir.', 1: 'İstemci polling aralığında rate limit kurallarına uymalıdır.' }
+            RESPONSE: {
+                TITLE: 'Standart response zarfı',
+                DESCRIPTION: 'Tüm servisler isSuccess, message, data ve errors alanlarını içeren ortak response yapısını kullanır.'
             },
-            ORDER_DELIVERY: {
-              TITLE: 'Sipariş teslimat bağlantılarını getir',
-              DESCRIPTION: 'Ödenmiş ve tamamlanmış siparişin süreli imzalı indirme bağlantılarını döndürür.',
-              NOTES: { 0: 'Ödeme tamamlanmadıysa 409 veya 403 dönebilir.', 1: 'Sipariş tamamlanmadıysa teslimat bağlantısı verilmez.', 2: 'İmzalı linkler expiresAt zamanında geçerliliğini kaybeder.' }
+            GROUPS: {
+                CATALOG: 'Katalog',
+                IMAGERY: 'Uydu Görüntüsü',
+                COMMERCE: 'Fiyatlama',
+                ORDERS: 'Sipariş'
+            },
+            COMMON: {
+                ENDPOINT: 'Endpoint',
+                AUTHENTICATION: 'Kimlik Doğrulama',
+                REQUEST_BODY: 'Request Body',
+                RESPONSE_EXAMPLE: 'Response Örneği',
+                CURL_EXAMPLE: 'cURL Örneği',
+                NOTES: 'Notlar'
+            },
+            TABLE: { STATUS_CODE: 'Status Code', DESCRIPTION: 'Açıklama' },
+            ENDPOINTS: {
+                CATALOG_OPTIONS: {
+                    TITLE: 'Katalog seçeneklerini getir',
+                    DESCRIPTION: 'Arama ve sipariş formlarında kullanılacak güncel uydu, görüntü tipi ve işleme seçeneklerini döndürür.',
+                    NOTES: { 0: 'İşleme birim fiyatları bu endpoint üzerinden güncel olarak alınmalıdır.', 1: 'İstemci tarafında sabit seçenek listesi tutulmamalıdır.' }
+                },
+                IMAGERY_SEARCH: {
+                    TITLE: 'Arşiv uydu görüntüsü ara',
+                    DESCRIPTION: 'Gönderilen AOI ve teknik filtrelere göre kesişen hazır uydu görüntülerini sayfalı olarak listeler.',
+                    NOTES: { 0: 'wkt alanı Polygon veya MultiPolygon olmalıdır.', 1: 'Koordinat sistemi varsayılan olarak EPSG:4326 kabul edilir.', 2: 'Bu endpoint yalnızca keşif yapar; indirme hakkı sağlamaz.' }
+                },
+                IMAGERY_DETAIL: {
+                    TITLE: 'Uydu görüntüsü detayını getir',
+                    DESCRIPTION: 'Seçilen görüntünün teknik metadata, footprint, önizleme ve güncel görüntü birim fiyatını döndürür.',
+                    NOTES: { 0: 'Download link sipariş tamamlanmadan dönmez.', 1: 'Birim fiyat bilgi amaçlıdır; kesin fiyat için quote endpointi kullanılmalıdır.' }
+                },
+                PRICING_QUOTE: {
+                    TITLE: 'Fiyat teklifi oluştur',
+                    DESCRIPTION: 'Talep alanı, görüntü birim fiyatı ve seçilen işleme seçeneklerine göre süreli fiyat teklifi üretir.',
+                    NOTES: { 0: 'Görüntü bedeli = toplam görüntü alanı × görüntü birim fiyatı.', 1: 'İşleme bedeli = toplam görüntü alanı × seçilen hizmetlerin birim fiyatları.', 2: 'Quote süresi dolduğunda yeni teklif oluşturulmalıdır.' }
+                },
+                ARCHIVE_ORDER: {
+                    TITLE: 'Hazır uydu görüntüsü siparişi oluştur',
+                    DESCRIPTION: 'Geçerli quoteId değerini siparişe dönüştürür ve güvenli GeoPortal ödeme bağlantısını döndürür.',
+                    NOTES: { 0: 'API kart veya banka bilgisi kabul etmez.', 1: 'Ödeme paymentUrl üzerinden portalda yapılır.', 2: 'Ödeme tamamlanmadan sipariş hazırlama süreci başlamaz.' }
+                },
+                ACQUISITION_ORDER: {
+                    TITLE: 'Yeni uydu görüntüsü siparişi oluştur',
+                    DESCRIPTION: 'AOI, GSD, tarih, bulutluluk, off-nadir, platform ve işleme seçenekleriyle yeni çekim talebi oluşturur.',
+                    NOTES: { 0: 'Parametre uygunluğu sunucu tarafında doğrulanır.', 1: 'Yeni çekim siparişi sağlayıcı onayı gerektirebilir.', 2: 'Response içinde ödeme bağlantısı ve başlangıç sipariş durumu döner.' }
+                },
+                ORDER_STATUS: {
+                    TITLE: 'Sipariş durumunu sorgula',
+                    DESCRIPTION: 'Siparişin ödeme, hazırlık ve teslimata hazır olma durumunu döndürür.',
+                    NOTES: { 0: 'Olası durumlar WaitingPayment, Paid, Preparing, Completed, Cancelled ve Failed olabilir.', 1: 'İstemci polling aralığında rate limit kurallarına uymalıdır.' }
+                },
+                ORDER_DELIVERY: {
+                    TITLE: 'Sipariş teslimat bağlantılarını getir',
+                    DESCRIPTION: 'Ödenmiş ve tamamlanmış siparişin süreli imzalı indirme bağlantılarını döndürür.',
+                    NOTES: { 0: 'Ödeme tamamlanmadıysa 409 veya 403 dönebilir.', 1: 'Sipariş tamamlanmadıysa teslimat bağlantısı verilmez.', 2: 'İmzalı linkler expiresAt zamanında geçerliliğini kaybeder.' }
+                }
+            },
+            ERRORS: {
+                TITLE: 'HTTP hata kodları',
+                CODES: {
+                    200: 'Başarılı istek',
+                    400: 'Geçersiz request veya eksik alan',
+                    401: 'x-api-key eksik veya geçersiz',
+                    403: 'API key endpoint için yetkisiz veya teslimat koşulları sağlanmıyor',
+                    404: 'Görüntü, quote veya sipariş bulunamadı',
+                    409: 'Sipariş durumu istenen işleme uygun değil',
+                    422: 'AOI veya ticari parametreler doğrulanamadı',
+                    429: 'Rate limit aşıldı',
+                    500: 'Beklenmeyen sunucu hatası'
+                }
             }
-          },
-          ERRORS: {
-            TITLE: 'HTTP hata kodları',
-            CODES: {
-              200: 'Başarılı istek',
-              400: 'Geçersiz request veya eksik alan',
-              401: 'x-api-key eksik veya geçersiz',
-              403: 'API key endpoint için yetkisiz veya teslimat koşulları sağlanmıyor',
-              404: 'Görüntü, quote veya sipariş bulunamadı',
-              409: 'Sipariş durumu istenen işleme uygun değil',
-              422: 'AOI veya ticari parametreler doğrulanamadı',
-              429: 'Rate limit aşıldı',
-              500: 'Beklenmeyen sunucu hatası'
-            }
-          }
         },
         "MAP": {
             "KICKER": "Harita",

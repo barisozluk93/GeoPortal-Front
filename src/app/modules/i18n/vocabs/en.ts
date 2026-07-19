@@ -524,7 +524,21 @@ export const locale = {
       "API_TITLE": "Integrate satellite data into your own systems",
       "API_DESC": "Alongside the primary map-based workflow, purchase an API key for programmatic access through authorized endpoints.",
       "MAP_ACTION": "Open the Map",
-      "API_ACTION": "Explore API Access"
+      "API_ACTION": "Explore API Access",
+      "BROWSER": {
+        "MAP": "GeoPortal / Map",
+        "SATELLITE_RESULTS": "GeoPortal / Satellite Results",
+        "READY_IMAGE_PRICING": "GeoPortal / Ready Image Pricing",
+        "NEW_IMAGE_REQUEST": "GeoPortal / New Image Request",
+        "ORDER_SUMMARY": "GeoPortal / Order Summary"
+      },
+      "ALT": {
+        "AOI_SELECTION": "GeoPortal area of interest selection",
+        "SATELLITE_RESULTS": "Satellite imagery results",
+        "READY_IMAGE_PRICING": "Ready satellite image pricing",
+        "NEW_IMAGE_REQUEST": "New satellite image request",
+        "ORDER_SUMMARY": "GeoPortal order summary"
+      }
     },
     API_PAGE: {
       KICKER: 'GeoPortal Public API',
