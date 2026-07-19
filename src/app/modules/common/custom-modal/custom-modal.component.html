@@ -6,7 +6,7 @@
     tabindex="-1"
     role="dialog"
     aria-modal="true"
-    [attr.aria-labelledby]="'custom-modal-title'"
+    aria-labelledby="custom-modal-title"
     (mousedown)="onBackdropClick($event)"
   >
     <div
@@ -25,14 +25,14 @@
         (mousedown)="$event.stopPropagation()"
       >
         <div class="modal-header">
-          <div class="d-flex align-items-center min-w-0">
+          <div class="custom-modal-header-content">
             <div class="symbol symbol-40px me-4 flex-shrink-0">
               <span class="symbol-label bg-light-primary">
                 <i class="fa-solid fa-folder-open fs-2 text-primary"></i>
               </span>
             </div>
 
-            <div class="d-flex flex-column min-w-0">
+            <div class="custom-modal-title-wrapper">
               <h2
                 id="custom-modal-title"
                 class="modal-title fw-bold text-gray-900 mb-0 text-truncate"
@@ -42,7 +42,7 @@
 
               <span
                 *ngIf="subtitle"
-                class="text-gray-500 fw-semibold fs-7 mt-1 text-truncate"
+                class="text-gray-500 fw-semibold fs-7 mt-1 text-truncate d-block"
               >
                 {{ subtitle }}
               </span>
@@ -51,12 +51,14 @@
 
           <button
             type="button"
-            class="btn btn-sm btn-light-danger d-inline-flex align-items-center flex-shrink-0 ms-4"
+            class="custom-modal-close btn btn-sm btn-light-danger"
             (click)="close()"
             [attr.aria-label]="'CLOSE' | translate"
           >
-            <i class="fa-solid fa-xmark me-2"></i>
-            {{ 'CLOSE' | translate }}
+            <i class="fa-solid fa-xmark custom-modal-close-icon"></i>
+            <span class="custom-modal-close-text ms-2">
+              {{ 'CLOSE' | translate }}
+            </span>
           </button>
         </div>
 
