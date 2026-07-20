@@ -467,3 +467,128 @@
     flex: 0 0 auto;
   }
 }
+
+/* =========================================================
+   RIGHT TOOLBAR FINAL LAYOUT
+   - Rotate + North group stays together at the top.
+   - Main action group sits exactly between the top and zoom groups.
+   - Visual gaps above and below the main action group are equal.
+   - Zoom button dimensions remain unchanged.
+   ========================================================= */
+
+.toolbar-right {
+  top: 6px;
+  right: 5px;
+  bottom: 39px;
+}
+
+.map-navigation-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 40px;
+  height: 100%;
+  gap: 0;
+}
+
+.compass-control--stacked,
+.compass-stack {
+  width: 40px;
+}
+
+.compass-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.compass-stack__button {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+}
+
+.compass-stack__button--rotate {
+  border-bottom: 0 !important;
+}
+
+.compass-stack__button--north {
+  margin-top: 0;
+  border-top: 0 !important;
+}
+
+/*
+ * Top group is 80px and zoom group is 68px.
+ * A -10.5px correction places the middle toolbar exactly halfway
+ * between their visible edges, so both visual gaps are equal.
+ */
+.toolbar-left {
+  top: 50%;
+  right: 5px;
+  transform: translateY(calc(-50% - 10.5px));
+}
+
+.zoom-toolbar {
+  flex: 0 0 auto;
+  width: 34px;
+}
+
+/* Proportionally enlarged rotate + north artwork. */
+.rotate-north-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.rotate-north-icon__arrow {
+  font-size: 21px !important;
+}
+
+.rotate-north-icon__label {
+  top: -2px;
+  right: -2px;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 2px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.north-reset-icon__arrow {
+  top: 3px;
+  font-size: 16px;
+}
+
+.north-reset-icon__label {
+  top: 20px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+@media (max-width: 767.98px) {
+  .toolbar-right {
+    top: 6px;
+    right: 5px;
+    bottom: 38px;
+  }
+
+  /* Mobile bottom offset differs by 1px, hence a 10px correction. */
+  .toolbar-left {
+    top: 50%;
+    right: 5px;
+    transform: translateY(calc(-50% - 10px));
+  }
+}
+
+/* =========================================================
+   ZOOM GROUP RIGHT-EDGE ALIGNMENT
+   Zoom buttons keep their existing 34x34 size, but their right edge
+   now matches the 40px compass and middle toolbar button right edge.
+   ========================================================= */
+.zoom-toolbar {
+  align-self: flex-end;
+  margin-right: 0;
+  margin-left: auto;
+  padding-right: 0;
+  transform: none;
+}
